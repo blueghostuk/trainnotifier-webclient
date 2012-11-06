@@ -1,0 +1,36 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{B3B90A1F-C059-4857-984E-313F60433D10}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\NuGet.Config = .nuget\NuGet.Config
+		.nuget\NuGet.exe = .nuget\NuGet.exe
+		.nuget\NuGet.targets = .nuget\NuGet.targets
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrainNotifier.WebClient", "TrainNotifier.WebClient.csproj", "{FCB0778D-D13E-4FBD-873E-671365CB441B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Azure|Any CPU = Azure|Any CPU
+		Debug|Any CPU = Debug|Any CPU
+		Debug-Local|Any CPU = Debug-Local|Any CPU
+		Debug-Staging|Any CPU = Debug-Staging|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FCB0778D-D13E-4FBD-873E-671365CB441B}.Azure|Any CPU.ActiveCfg = Azure|Any CPU
+		{FCB0778D-D13E-4FBD-873E-671365CB441B}.Azure|Any CPU.Build.0 = Azure|Any CPU
+		{FCB0778D-D13E-4FBD-873E-671365CB441B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FCB0778D-D13E-4FBD-873E-671365CB441B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FCB0778D-D13E-4FBD-873E-671365CB441B}.Debug-Local|Any CPU.ActiveCfg = Debug-Local|Any CPU
+		{FCB0778D-D13E-4FBD-873E-671365CB441B}.Debug-Local|Any CPU.Build.0 = Debug-Local|Any CPU
+		{FCB0778D-D13E-4FBD-873E-671365CB441B}.Debug-Staging|Any CPU.ActiveCfg = Debug-Staging|Any CPU
+		{FCB0778D-D13E-4FBD-873E-671365CB441B}.Debug-Staging|Any CPU.Build.0 = Debug-Staging|Any CPU
+		{FCB0778D-D13E-4FBD-873E-671365CB441B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FCB0778D-D13E-4FBD-873E-671365CB441B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
