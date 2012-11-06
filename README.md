@@ -2,7 +2,7 @@ trainnotifier-webclient
 ======================
 Web Interface to Network Rail Data
 
-To gain access to data you need to sign up at https://datafeeds.networkrail.co.uk/ntrod/ 
+To gain access to data you need to sign up at https://datafeeds.networkrail.co.uk/ntrod/
 
 You may be able to access a demo site @ http://www.trainnotifier.co.uk
 
