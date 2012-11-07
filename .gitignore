@@ -96,6 +96,9 @@ UpgradeLog*.XML
 #nuget packages folders
 packages
 
+#program bin
+WebClient.dll
+
 # Local App.config transformation
 *.Debug-Local.config
 *.Debug-Staging.config
