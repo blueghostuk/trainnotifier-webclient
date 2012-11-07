@@ -213,13 +213,6 @@
             var stop = new StopViewModel();
             stop.Stanox(stopEl.Stanox);
 
-            if (stopEl.PlannedTime && stopEl.PlannedTime.length > 0) {
-                var plannedTime = new Date(stopEl.PlannedTime);
-                stop.PlannedTime(formatDateString(plannedTime));
-            } else {
-                stop.PlannedTime("");
-            }
-
             if (stopEl.ActualTimeStamp && stopEl.ActualTimeStamp.length > 0) {
                 var actualTime = new Date(stopEl.ActualTimeStamp);
                 stop.ActualTimeStamp(formatDateString(actualTime));
@@ -227,6 +220,16 @@
             } else {
                 stop.ActualTimeStamp("");
                 stop.Delay(0);
+            }
+
+            if (stopEl.PlannedTime && stopEl.PlannedTime.length > 0) {
+                var plannedTime = new Date(stopEl.PlannedTime);
+                stop.PlannedTime(formatDateString(plannedTime));
+            } else if (stopEl.ActualTimeStamp && stopEl.ActualTimeStamp.length > 0) {
+                var actualTime = new Date(stopEl.ActualTimeStamp);
+                stop.PlannedTime(formatDateString(actualTime));
+            } else {
+                stop.PlannedTime("");
             }
 
             stop.EventType(stopEl.EventType);
