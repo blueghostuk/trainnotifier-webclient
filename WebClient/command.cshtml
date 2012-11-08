@@ -4,14 +4,20 @@
     <title>@System.Configuration.ConfigurationManager.AppSettings["brandingTitle"]</title>
     <!--<meta name="viewport" content="width=device-width, initial-scale=1.0">-->
     <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/style.css" rel="stylesheet" />
     <script src="~/Scripts/jquery-1.8.2.min.js"></script>
     <script src="~/Scripts/bootstrap.min.js"></script>
     <script src="~/Scripts/knockout-2.2.0.js"></script>
     <script src="~/Scripts/websockets.js"></script>
     <script src="~/Scripts/ajax-lookups.js"></script>
+    <script type="text/javascript" 
+        src="http://maps.googleapis.com/maps/api/js?key=@System.Configuration.ConfigurationManager.AppSettings["googleApiKey"]&sensor=false">
+    </script>
+    <script src="~/Scripts/mapping.js"></script>
     <script type="text/javascript">
 
         var server = "@System.Configuration.ConfigurationManager.AppSettings["server"]";
+        var apiKey = "@System.Configuration.ConfigurationManager.AppSettings["googleApiKey"]";
 
         function padTime(time) {
             if (time < 10)
@@ -107,7 +113,7 @@
                         return "error";
                         break;
                     default:
-                    //case "Normal":
+                        //case "Normal":
                         return "";
                 }
             }, self);
@@ -167,6 +173,7 @@
                         currentTrain.LastUpdate(formatDateString(new Date()));
                         for (i in data) {
                             addStop(data[i]);
+                            mapStop(data[i], true);
                         }
                         $(".tooltip-dynamic").tooltip();
                         break;
@@ -191,6 +198,7 @@
                         }
                         currentTrain.SchedDepart(schedDepart);
                         currentTrain.LastUpdate(formatDateString(new Date()));
+                        showCurrentTrainMap();
                         for (i in data.Steps) {
                             addStop(data.Steps[i]);
                         }
@@ -264,6 +272,7 @@
                 $("." + data.Name).html(html);
                 $("." + data.Name).attr('title', data.Description + '(' + data.Name + ')');
                 $("." + data.Name).tooltip();
+                $("." + data.Name).data("title", html);
             });
         }
 
@@ -304,6 +313,83 @@
 
         function parseCommand() {
             sendCommand(true);
+        }
+
+        var currentView = 'table';
+
+        function switchView(view) {
+            currentView = view;
+            switch (currentView) {
+                case 'table':
+                    $("#tableView").show();
+                    $("#map_canvas").hide();
+                    break;
+                case 'map':
+                    $("#map_canvas").show();
+                    $("#tableView").hide();
+                    preLoadMap();
+                    showCurrentTrainMap();
+                    break;
+            }
+        }
+
+        var markers = new Array();
+
+        function showCurrentTrainMap() {
+            clearMarkers();
+            if (!currentTrain || currentTrain.Stops().length == 0) {
+                return;
+            }
+
+            var stops = currentTrain.Stops();
+
+            for (i in stops) {
+                mapStop(stops[i]);
+            }
+            centreMap();
+        }
+
+        function mapStop(stop, centre) {
+            try{
+                var stanox = stop.Stanox();
+                var ts = stop.ActualTimeStamp();
+            } catch (err) {
+                var stanox = stop.Stanox;
+                var ts = stop.ActualTimeStamp;
+            }
+            $.ajax({
+                type: "GET",
+                url: "http://" + server + ":82/Stanox/",
+                data: { id: stanox },
+                dataType: "json",
+                success: function (data) {
+                    if (data.Lat && data.Lon) {
+                        marker = new google.maps.Marker({
+                            position: new google.maps.LatLng(data.Lat, data.Lon),
+                            icon: {
+                                path: google.maps.SymbolPath.CIRCLE,
+                                scale: 3
+                            },
+                            draggable: false,
+                            map: map,
+                            title: $("." + stanox).data("title") + " - " + ts
+                        });
+                        markers.push(marker);
+                    }
+                },
+                async: false
+            });
+            if (centre) {
+                centreMap();
+            }
+        }
+
+        function centreMap() {
+            var latlngbounds = new google.maps.LatLngBounds();
+            for (i in markers)
+                latlngbounds.extend(markers[i].position);
+            map.setCenter(latlngbounds.getCenter());
+            map.fitBounds(latlngbounds);
         }
 
     </script>
@@ -361,7 +447,7 @@
             </div>
             <!--/span3-->
             <div class="span9">
-                <div class="btn-group">
+                <div class="btn-group fixed">
                     <div class="input-prepend">
                         <span class="add-on"><i class="icon-asterisk"></i></span>
                         <input type="text" id="filter-command" class="span9" placeholder="Enter Command" />&nbsp;&nbsp;&nbsp;
@@ -372,7 +458,7 @@
                         <a class="btn" href="#" id="status">Connection Status</a>
                     </div>
                 </div>
-                <div style="height: 800px; overflow: auto;" id="trains">
+                <div id="trains" class="sub-command-bar">
                     <ul class="nav">
                         <li class="nav-header">Train Details</li>
                         <li><strong>Id:</strong> <a onclick="loadTrainSub(this);" data-bind="text: Id, attr: {href :'#subtrain:' + Id()}" title="Subscribe to train" style="display: inline;"></a></li>
@@ -381,28 +467,35 @@
                         <li><strong>Scheduled Origin:</strong> <a onclick="loadStanox(this);" data-bind="text: SchedOrigin, css:SchedOrigin, attr: {href :'#stanox:' + SchedOrigin()}" style="display: inline;"></a></li>
                         <li><strong>Scheduled Departure Time:</strong> <span data-bind="text: SchedDepart"></span></li>
                         <li><strong>Last Update:</strong> <span data-bind="text: LastUpdate"></span></li>
+                        <li><strong>Current View:</strong>
+                            <a data-bind="attr: {href :'#gettrain:' + Id()}" onclick="switchView('table');" style="display: inline;">Tabular</a> 
+                            &nbsp;|&nbsp; 
+                            <a data-bind="attr: {href :'#gettrain:' + Id()}" onclick="switchView('map');" style="display: inline;">Map</a></li>
                         <li class="nav-header">Stops</li>
                     </ul>
-                    <table class="table table-hover table-bordered">
-                        <thead>
-                            <tr>
-                                <th title="Click to load trains for the given location">Location</th>
-                                <th title="Expected time is tooltip. Delay is shown next to time">Time</th>
-                                <th>Action</th>
-                                <th>Line</th>
-                                <th>Platform</th>
-                            </tr>
-                        </thead>
-                        <tbody data-bind="foreach: Stops">
-                            <tr data-bind="css: StateClass, attr: { title: StateTitle }">
-                                <td><a onclick="loadStanox(this);" data-bind="text: Stanox, css:Stanox, attr: {href :'#stanox:' + Stanox()}"></a></td>
-                                <td><span data-bind="text: ActualTimeStamp, attr: { title: PlannedTime }" class="tooltip-dynamic"></span>&nbsp;<span class="label" data-bind="text: Delay, css: DelayResult, attr: { title: DelayTitle }"></span></td>
-                                <td data-bind="text: EventType"></td>
-                                <td data-bind="text: Line"></td>
-                                <td data-bind="text: Platform"></td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <div style="height: 600px; overflow: auto;">
+                        <table class="table table-hover table-bordered" id="tableView">
+                            <thead>
+                                <tr>
+                                    <th title="Click to load trains for the given location">Location</th>
+                                    <th title="Expected time is tooltip. Delay is shown next to time">Time</th>
+                                    <th>Action</th>
+                                    <th>Line</th>
+                                    <th>Platform</th>
+                                </tr>
+                            </thead>
+                            <tbody data-bind="foreach: Stops">
+                                <tr data-bind="css: StateClass, attr: { title: StateTitle }">
+                                    <td><a onclick="loadStanox(this);" data-bind="text: Stanox, css:Stanox, attr: {href :'#stanox:' + Stanox()}"></a></td>
+                                    <td><span data-bind="text: ActualTimeStamp, attr: { title: PlannedTime }" class="tooltip-dynamic"></span>&nbsp;<span class="label" data-bind="text: Delay, css: DelayResult, attr: { title: DelayTitle }"></span></td>
+                                    <td data-bind="text: EventType"></td>
+                                    <td data-bind="text: Line"></td>
+                                    <td data-bind="text: Platform"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="map" id="map_canvas" style="display: none; width: 100%; height: 100%"></div>
+                    </div>
                 </div>
             </div>
             <!--/span9-->
