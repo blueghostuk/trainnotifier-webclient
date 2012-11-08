@@ -226,7 +226,7 @@
                 var plannedTime = new Date(stopEl.PlannedTime);
                 stop.PlannedTime(formatDateString(plannedTime));
             } else if (stopEl.ActualTimeStamp && stopEl.ActualTimeStamp.length > 0) {
-                var actualTime = new Date(stopEl.ActualTimeStamp);
+                var plannedTime = new Date(stopEl.ActualTimeStamp);
                 stop.PlannedTime(formatDateString(actualTime));
             } else {
                 stop.PlannedTime("");
