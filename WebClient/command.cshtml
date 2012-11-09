@@ -205,6 +205,13 @@
                         $(".tooltip-dynamic").tooltip();
                         break;
                     case "getservice":
+                        currentStation.clearTrains();
+                        currentStation.Stanox(data.Args);
+                        data = data.Response;
+                        for (i in data) {
+                            currentStation.addTrain(data[i]);
+                        }
+                        break;
                     case "stanox":
                     case "crs":
                         currentStation.clearTrains();
