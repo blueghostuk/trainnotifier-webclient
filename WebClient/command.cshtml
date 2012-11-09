@@ -190,8 +190,8 @@
                         currentTrain.Activated(activated);
 
                         currentTrain.SchedOrigin(data.SchedOriginStanox);
-                        if (data.SchedOrigin && data.SchedOrigin.length > 0)
-                            fetchLocation(data.SchedOrigin);
+                        if (data.SchedOriginStanox && data.SchedOriginStanox.length > 0)
+                            fetchLocation(data.SchedOriginStanox);
                         var schedDepart = "";
                         if (data.SchedOriginDeparture) {
                             schedDepart = formatDateString(new Date(data.SchedOriginDeparture));
@@ -446,7 +446,7 @@
                 </div>
                 <div class="well sidebar-nav" id="stanox">
                     <ul class="nav nav-list">
-                        <li class="nav-header">Station Trains: <span data-bind="text: Stanox"></span></li>
+                        <li class="nav-header">Trains: <span data-bind="text: Stanox"></span></li>
                     </ul>
                     <ul class="nav nav-list" data-bind="foreach: Trains" style="height: 600px; overflow: auto;">
                         <li><a onclick="loadTrain(this);" data-bind="text: $data, attr: {href :'#gettrain:' + $data}"></a></li>
