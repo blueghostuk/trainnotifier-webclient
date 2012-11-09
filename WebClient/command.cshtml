@@ -191,6 +191,8 @@
                         currentTrain.Activated(activated);
                         if (data.WorkingTTId && data.WorkingTTId.length > 0) {
                             currentTrain.HeadCode(data.WorkingTTId.substring(0, data.WorkingTTId.length - 1));
+                        } else {
+                            currentTrain.HeadCode('');
                         }
 
                         currentTrain.SchedOrigin(data.SchedOriginStanox);
