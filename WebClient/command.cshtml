@@ -62,6 +62,7 @@
             self.SchedDepart = ko.observable();
             self.Stops = ko.observableArray();
             self.LastUpdate = ko.observable();
+            self.HeadCode = ko.observable();
 
             self.addStop = function (stop) {
                 self.Stops.push(stop);
@@ -188,6 +189,9 @@
                             activated = formatDateString(new Date(data.Activated));
                         }
                         currentTrain.Activated(activated);
+                        if (data.WorkingTTId && data.WorkingTTId.length > 0) {
+                            currentTrain.HeadCode(data.WorkingTTId.substring(0, data.WorkingTTId.length - 1));
+                        }
 
                         currentTrain.SchedOrigin(data.SchedOriginStanox);
                         if (data.SchedOriginStanox && data.SchedOriginStanox.length > 0)
@@ -305,6 +309,11 @@
 
         function loadTrain(el) {
             setCommand('gettrain:' + $(el).html());
+            sendCommand(true);
+        }
+
+        function loadHeadCode(el) {
+            setCommand('getservice:' + $(el).html());
             sendCommand(true);
         }
 
@@ -472,6 +481,7 @@
                         <li class="nav-header">Train Details</li>
                         <li><strong>Id:</strong> <a onclick="loadTrainSub(this);" data-bind="text: Id, attr: {href :'#subtrain:' + Id()}" title="Subscribe to train" style="display: inline;"></a></li>
                         <li><strong>Service Code:</strong> <span data-bind="text: ServiceCode"></span></li>
+                        <li><strong>Head Code:</strong> <a onclick="loadHeadCode(this);" data-bind="text: HeadCode, attr: {href :'#getservice:' + HeadCode()}" title="View this headcode" style="display: inline;"></a></li>
                         <li><strong>Activated:</strong> <span data-bind="text: Activated"></span></li>
                         <li><strong>Scheduled Origin:</strong> <a onclick="loadStanox(this);" data-bind="text: SchedOrigin, css:SchedOrigin, attr: {href :'#stanox:' + SchedOrigin()}" style="display: inline;"></a></li>
                         <li><strong>Scheduled Departure Time:</strong> <span data-bind="text: SchedDepart"></span></li>
