@@ -168,7 +168,6 @@
 
                 var data = jQuery.parseJSON(msg.data);
                 switch (data.Command) {
-                    case "subserviceupdate":
                     case "subtrainupdate":
                         data = data.Response;
                         currentTrain.LastUpdate(formatDateString(new Date()));
@@ -180,7 +179,6 @@
                         break;
                     case "subtrain":
                     case "gettrain":
-                    case "getservice":
                         currentTrain.clearStops();
                         data = data.Response;
                         currentTrain.Id(data.Id);
@@ -206,6 +204,7 @@
                         }
                         $(".tooltip-dynamic").tooltip();
                         break;
+                    case "getservice":
                     case "stanox":
                     case "crs":
                         currentStation.clearTrains();
@@ -432,7 +431,6 @@
                     <ul class="nav nav-list">
                         <li class="nav-header">Commands</li>
                         <li><a href="#gettrain:" onclick="setCommand('getservice:');"><strong>Get Service:</strong> getservice:[headcode]</a></li>
-                        <li><a href="#subtrain:" onclick="setCommand('subservice:');"><strong>Subscribe to Service:</strong> subservice:[headcode]</a></li>
                         <li><a href="#gettrain:" onclick="setCommand('gettrain:');"><strong>Get Train:</strong> gettrain:[train id]</a></li>
                         <li><a href="#subtrain:" onclick="setCommand('subtrain:');"><strong>Subscribe to Train:</strong> subtrain:[train id]</a></li>
                         <li><a href="#stanox:" onclick="setCommand('stanox:');"><strong>Get Location Trains:</strong> stanox:[stanox]</a></li>
