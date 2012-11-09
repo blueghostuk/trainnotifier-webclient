@@ -185,7 +185,7 @@
                         </thead>
                         <tbody data-bind="foreach: Trains">
                             <tr>
-                                <td><a onclick="loadTrain(this);" data-bind="text: TrainId"></a></td>
+                                <td><a data-bind="text: TrainId, attr: { href: 'command.cshtml#gettrain:' + TrainId() }"></a></td>
                                 <td data-bind="text: WttId"></td>
                                 <td><span data-bind="text: From, css: From"></span></td>
                                 <td data-bind="text: Depart"></td>
