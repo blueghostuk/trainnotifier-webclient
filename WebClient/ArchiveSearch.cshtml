@@ -84,7 +84,27 @@
                     result.Arrive('');
 
                     currentWttResult.addTrain(result);
+
+                    fetchLocation(data[i].From);
                 }
+            });
+        }
+
+        function fetchLocation(stanox) {
+            loadLocation(stanox, function (data) {
+                var html = "";
+                if (data.StationName) {
+                    html = data.StationName;
+                } else {
+                    html = data.Tiploc;
+                }
+                if (data.CRS) {
+                    html += "(" + data.CRS + ")";
+                }
+                $("." + data.Name).html(html);
+                $("." + data.Name).attr('title', data.Description + '(' + data.Name + ')');
+                $("." + data.Name).tooltip();
+                $("." + data.Name).data("title", html);
             });
         }
 
@@ -167,7 +187,7 @@
                             <tr>
                                 <td><a onclick="loadTrain(this);" data-bind="text: TrainId"></a></td>
                                 <td data-bind="text: WttId"></td>
-                                <td data-bind="text: From"></td>
+                                <td data-bind="text: From, css: From"></td>
                                 <td data-bind="text: Depart"></td>
                                 <td data-bind="text: To"></td>
                                 <td data-bind="text: Arrive"></td>
