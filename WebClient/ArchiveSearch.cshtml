@@ -15,6 +15,86 @@
     </script>
     <script src="~/Scripts/mapping.js"></script>
     <script type="text/javascript">
+        var server = "@System.Configuration.ConfigurationManager.AppSettings["server"]";
+
+        function setCommand(command) {
+            $("#filter-command").val(command);
+        }
+
+        function parseCommand() {
+            var cmdString = $("#filter-command").val();
+            var idx = cmdString.indexOf(":");
+            if (idx == -1)
+                return;
+
+            var cmd = cmdString.substring(0, idx);
+            var args = cmdString.substring(idx + 1);
+
+            switch (cmd) {
+                case 'getservice':
+                    getService(args);
+                    break;
+            }
+        }
+
+        function WttSearchResults() {
+            var self = this;
+
+            self.Trains = ko.observableArray();
+
+            self.addTrain = function (stop) {
+                self.Trains.push(stop);
+            };
+
+            self.clearTrains = function () {
+                self.Trains.removeAll();
+            }
+        }
+
+        function WttSearchResult() {
+            var self = this;
+
+            self.TrainId = ko.observable();
+            self.WttId = ko.observable();
+            self.From = ko.observable();
+            self.Depart = ko.observable();
+            self.To = ko.observable();
+            self.Arrive = ko.observableArray();
+
+            self.addStop = function (stop) {
+                self.Stops.push(stop);
+            };
+
+            self.clearStops = function () {
+                self.Stops.removeAll();
+            }
+        }
+
+        var currentWttResult = new WttSearchResults();
+
+        function getService(headcode) {
+            $.getJSON("http://" + server + ":82/Archive/?GetByWttId&wttId=" + headcode, function (data) {
+                for (i in data) {
+                    var result = new WttSearchResult();
+                    result.TrainId(data[i].TrainId);
+                    result.WttId(data[i].WttId);
+                    result.From(data[i].From);
+                    result.Depart(data[i].Depart);
+                    result.To('');
+                    result.Arrive('');
+
+                    currentWttResult.addTrain(result);
+                }
+            });
+        }
+
+        function clearData() {
+            currentWttResult.clearTrains();
+        }
+
+        $(function () {
+            ko.applyBindings(currentWttResult, $("#train-id-result").get(0));
+        });
 
     </script>
     <style type="text/css">
@@ -83,8 +163,8 @@
                                 <th>Sched Arrival</th>
                             </tr>
                         </thead>
-                        <tbody data-bind="foreach: Stops">
-                            <tr data-bind="css: StateClass, attr: { title: StateTitle }">
+                        <tbody data-bind="foreach: Trains">
+                            <tr>
                                 <td><a onclick="loadTrain(this);" data-bind="text: TrainId"></a></td>
                                 <td data-bind="text: WttId"></td>
                                 <td data-bind="text: From"></td>
