@@ -96,6 +96,7 @@
     <Content Include="index.cshtml" />
     <Content Include="packages.config" />
     <Content Include="command.cshtml" />
+    <None Include="ArchiveSearch.cshtml" />
     <None Include="Properties\PublishProfiles\Azure - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\Azure - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\TNWEBSRV01.pubxml" />
