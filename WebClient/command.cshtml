@@ -180,38 +180,6 @@
                         }
                         $(".tooltip-dynamic").tooltip();
                         break;
-                    case "subtrain":
-                    case "gettrain":
-                        currentTrain.clearStops();
-                        data = data.Response;
-                        currentTrain.Id(data.Id);
-                        currentTrain.ServiceCode(data.ServiceCode);
-                        var activated = "";
-                        if (data.Activated) {
-                            activated = formatDateString(new Date(data.Activated));
-                        }
-                        currentTrain.Activated(activated);
-                        if (data.WorkingTTId && data.WorkingTTId.length > 0) {
-                            currentTrain.WttId(data.WorkingTTId.substring(0, data.WorkingTTId.length - 1));
-                        } else {
-                            currentTrain.WttId('');
-                        }
-
-                        currentTrain.SchedOrigin(data.SchedOriginStanox);
-                        if (data.SchedOriginStanox && data.SchedOriginStanox.length > 0)
-                            fetchLocation(data.SchedOriginStanox);
-                        var schedDepart = "";
-                        if (data.SchedOriginDeparture) {
-                            schedDepart = formatDateString(new Date(data.SchedOriginDeparture));
-                        }
-                        currentTrain.SchedDepart(schedDepart);
-                        currentTrain.LastUpdate(formatDateString(new Date()));
-                        showCurrentTrainMap();
-                        for (i in data.Steps) {
-                            addStop(data.Steps[i]);
-                        }
-                        $(".tooltip-dynamic").tooltip();
-                        break;
                     case "getservice":
                         currentStation.clearTrains();
                         currentStation.Stanox(data.Args);
@@ -309,11 +277,7 @@
 
         function setCommand(command) {
             $("#filter-command").val(command);
-        }
-
-        function loadTrain(el) {
-            setCommand('gettrain:' + $(el).html());
-            sendCommand(true);
+            document.location.hash = command;
         }
 
         function loadStanox(el) {
@@ -341,11 +305,20 @@
                     getService(args);
                     return;
                     break;
+                case 'gettrain':
+                    getTrain(args);
+                    return;
+                    break;
+                case 'subtrain':
+                    getTrain(args, true);
+                    // still send command
+                    break;
             }
             sendCommand(true);
         }
 
         function getService(wttId) {
+            setCommand('getservice:' + wttId);
             $.getJSON("http://" + server + ":82/Archive/?GetByWttId&wttId=" + wttId, function (data) {
                 currentStation.clearTrains();
                 currentStation.Stanox(wttId);
@@ -364,6 +337,43 @@
                     // TODO show properly
                     currentStation.addTrain(data[i].TrainId);
                 }
+            });
+        }
+
+        function getTrain(trainId, dontUnSub) {
+            if (!dontUnSub) {
+                ws.send("unsubtrain:");
+                setCommand('gettrain:' + trainId);
+            }
+            $.getJSON("http://" + server + ":82/Archive/?GetTrainMovementById&trainId=" + trainId, function (data) {
+                currentTrain.clearStops();
+                currentTrain.Id(data.Id);
+                currentTrain.ServiceCode(data.ServiceCode);
+                var activated = "";
+                if (data.Activated) {
+                    activated = formatDateString(new Date(data.Activated));
+                }
+                currentTrain.Activated(activated);
+                if (data.WorkingTTId && data.WorkingTTId.length > 0) {
+                    currentTrain.WttId(data.WorkingTTId.substring(0, data.WorkingTTId.length - 1));
+                } else {
+                    currentTrain.WttId('');
+                }
+
+                currentTrain.SchedOrigin(data.SchedOriginStanox);
+                if (data.SchedOriginStanox && data.SchedOriginStanox.length > 0)
+                    fetchLocation(data.SchedOriginStanox);
+                var schedDepart = "";
+                if (data.SchedOriginDeparture) {
+                    schedDepart = formatDateString(new Date(data.SchedOriginDeparture));
+                }
+                currentTrain.SchedDepart(schedDepart);
+                currentTrain.LastUpdate(formatDateString(new Date()));
+                showCurrentTrainMap();
+                for (i in data.Steps) {
+                    addStop(data.Steps[i]);
+                }
+                $(".tooltip-dynamic").tooltip();
             });
         }
 
@@ -494,7 +504,7 @@
                         <li class="nav-header">Trains: <span data-bind="text: Stanox"></span></li>
                     </ul>
                     <ul class="nav nav-list" data-bind="foreach: Trains" style="height: 600px; overflow: auto;">
-                        <li><a onclick="loadTrain(this);" data-bind="text: $data, attr: {href :'#gettrain:' + $data}"></a></li>
+                        <li><a data-bind="text: $data, attr: {onclick: 'getTrain(\'' + $data + '\');', href :'#gettrain:' + $data}"></a></li>
                     </ul>
                 </div>
                 <!--/.well -->
@@ -519,7 +529,7 @@
                         <li><strong>Service Code:</strong> <span data-bind="text: ServiceCode"></span></li>
                         <li>
                             <strong>WTT ID:</strong>&nbsp;
-                            <a onclick="getService(this);" data-bind="text: WttId, attr: {href :'#getservice:' + WttId()}" title="View this WTT ID" style="display: inline;"></a>
+                            <a data-bind="text: WttId, attr: { onclick: 'getService(\'' + WttId() + '\');', href :'#getservice:' + WttId()}" title="View this WTT ID" style="display: inline;"></a>
                             &nbsp;|&nbsp;
                             <a data-bind="attr: {href :'archivesearch.cshtml#getservice:' + WttId()}" title="View this WTT ID history" style="display: inline;">View Archive</a>
                         </li>
