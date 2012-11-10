@@ -114,6 +114,10 @@
 
         $(function () {
             ko.applyBindings(currentWttResult, $("#train-id-result").get(0));
+
+            if (document.location.hash.length > 0) {
+                setCommand(document.location.hash.substr(1));
+            }
         });
 
     </script>
