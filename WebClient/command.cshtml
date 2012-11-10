@@ -490,7 +490,7 @@
                             <strong>Head Code:</strong>&nbsp;
                             <a onclick="loadHeadCode(this);" data-bind="text: HeadCode, attr: {href :'#getservice:' + HeadCode()}" title="View this headcode" style="display: inline;"></a>
                             &nbsp;|&nbsp;
-                            <a data-bind="text: HeadCode, attr: {href :'archivesearch.cshtml#getservice:' + HeadCode()}" title="View this headcode history" style="display: inline;">View Archive</a>
+                            <a data-bind="attr: {href :'archivesearch.cshtml#getservice:' + HeadCode()}" title="View this headcode history" style="display: inline;">View Archive</a>
                         </li>
                         <li><strong>Activated:</strong> <span data-bind="text: Activated"></span></li>
                         <li><strong>Scheduled Origin:</strong> <a onclick="loadStanox(this);" data-bind="text: SchedOrigin, css:SchedOrigin, attr: {href :'#stanox:' + SchedOrigin()}" style="display: inline;"></a></li>
