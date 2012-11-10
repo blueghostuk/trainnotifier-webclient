@@ -64,7 +64,7 @@
             self.SchedDepart = ko.observable();
             self.Stops = ko.observableArray();
             self.LastUpdate = ko.observable();
-            self.HeadCode = ko.observable();
+            self.WttId = ko.observable();
 
             self.addStop = function (stop) {
                 self.Stops.push(stop);
@@ -192,9 +192,9 @@
                         }
                         currentTrain.Activated(activated);
                         if (data.WorkingTTId && data.WorkingTTId.length > 0) {
-                            currentTrain.HeadCode(data.WorkingTTId.substring(0, data.WorkingTTId.length - 1));
+                            currentTrain.WttId(data.WorkingTTId.substring(0, data.WorkingTTId.length - 1));
                         } else {
-                            currentTrain.HeadCode('');
+                            currentTrain.WttId('');
                         }
 
                         currentTrain.SchedOrigin(data.SchedOriginStanox);
@@ -316,7 +316,7 @@
             sendCommand(true);
         }
 
-        function loadHeadCode(el) {
+        function loadWttId(el) {
             setCommand('getservice:' + $(el).html());
             sendCommand(true);
         }
@@ -333,7 +333,43 @@
         }
 
         function parseCommand() {
+            var cmdString = $("#filter-command").val();
+            var idx = cmdString.indexOf(":");
+            if (idx == -1)
+                return;
+
+            var cmd = cmdString.substring(0, idx);
+            var args = cmdString.substring(idx + 1);
+
+            switch (cmd) {
+                case 'getservice':
+                    getService(args);
+                    return;
+                    break;
+            }
             sendCommand(true);
+        }
+
+        function getService(wttId) {
+            $.getJSON("http://" + server + ":82/Archive/?GetByWttId&wttId=" + wttId, function (data) {
+                currentStation.clearTrains();
+                currentStation.Stanox(wttId);
+                for (i in data) {
+                    /*var result = new WttSearchResult();
+                    result.TrainId(data[i].TrainId);
+                    result.WttId(data[i].WttId);
+                    result.From(data[i].From);
+                    result.Depart(data[i].Depart);
+                    result.To('');
+                    result.Arrive('');
+
+                    currentWttResult.addTrain(result);
+
+                    fetchLocation(data[i].From);*/
+                    // TODO show properly
+                    currentStation.addTrain(data[i]);
+                }
+            });
         }
 
         var currentView = 'table';
@@ -487,10 +523,10 @@
                         <li><strong>Id:</strong> <a onclick="loadTrainSub(this);" data-bind="text: Id, attr: {href :'#subtrain:' + Id()}" title="Subscribe to train" style="display: inline;"></a></li>
                         <li><strong>Service Code:</strong> <span data-bind="text: ServiceCode"></span></li>
                         <li>
-                            <strong>Head Code:</strong>&nbsp;
-                            <a onclick="loadHeadCode(this);" data-bind="text: HeadCode, attr: {href :'#getservice:' + HeadCode()}" title="View this headcode" style="display: inline;"></a>
+                            <strong>WTT ID:</strong>&nbsp;
+                            <a onclick="loadWttId(this);" data-bind="text: WttId, attr: {href :'#getservice:' + WttId()}" title="View this WTT ID" style="display: inline;"></a>
                             &nbsp;|&nbsp;
-                            <a data-bind="attr: {href :'archivesearch.cshtml#getservice:' + HeadCode()}" title="View this headcode history" style="display: inline;">View Archive</a>
+                            <a data-bind="attr: {href :'archivesearch.cshtml#getservice:' + WttId()}" title="View this WTT ID history" style="display: inline;">View Archive</a>
                         </li>
                         <li><strong>Activated:</strong> <span data-bind="text: Activated"></span></li>
                         <li><strong>Scheduled Origin:</strong> <a onclick="loadStanox(this);" data-bind="text: SchedOrigin, css:SchedOrigin, attr: {href :'#stanox:' + SchedOrigin()}" style="display: inline;"></a></li>

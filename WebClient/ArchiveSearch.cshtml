@@ -72,8 +72,8 @@
 
         var currentWttResult = new WttSearchResults();
 
-        function getService(headcode) {
-            $.getJSON("http://" + server + ":82/Archive/?GetByWttId&wttId=" + headcode, function (data) {
+        function getService(wttId) {
+            $.getJSON("http://" + server + ":82/Archive/?GetByWttId&wttId=" + wttId, function (data) {
                 for (i in data) {
                     var result = new WttSearchResult();
                     result.TrainId(data[i].TrainId);
