@@ -79,6 +79,7 @@
         var currentWttResult = new WttSearchResults();
 
         function getService(wttId) {
+            document.location.hash = "getservice:" + wttId;
             $.getJSON("http://" + server + ":82/Archive/?GetByWttId&wttId=" + wttId, function (data) {
                 currentWttResult.clearTrains();
                 for (i in data) {
@@ -99,10 +100,12 @@
 
         function getOrigin(args, convertFromCrs) {
             if (convertFromCrs) {
+                document.location.hash = "listorigin-crs:" + args;
                 $.getJSON("http://" + server + ":82/Stanox/?GetByCrs&crsCode=" + args, function (data) {
                     getOriginByStanox(data.Name);
                 });
             } else {
+                document.location.hash = "listorigin:" + args;
                 getOriginByStanox(args);
             }
         }
@@ -195,8 +198,8 @@
                     <ul class="nav nav-list">
                         <li class="nav-header">Commands</li>
                         <li><a href="#getservice:" onclick="setCommand('getservice:');"><strong>Get Service:</strong> getservice:[wttid]</a></li>
-                        <li><a href="#getservice:" onclick="setCommand('listorigin:');"><strong>List Trains Originating From:</strong> listorigin:[stanox]</a></li>
-                        <li><a href="#getservice:" onclick="setCommand('listorigin-crs:');"><strong>List Trains Originating From:</strong> listorigin-crs:[crs]</a></li>
+                        <li><a href="#listorigin:" onclick="setCommand('listorigin:');"><strong>List Trains Originating From:</strong> listorigin:[stanox]</a></li>
+                        <li><a href="#listorigin-crs:" onclick="setCommand('listorigin-crs:');"><strong>List Trains Originating From:</strong> listorigin-crs:[crs]</a></li>
                     </ul>
                 </div>
             </div>
