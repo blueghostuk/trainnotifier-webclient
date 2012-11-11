@@ -34,6 +34,12 @@
                 case 'getservice':
                     getService(args);
                     break;
+                case 'listorigin':
+                    getOrigin(args);
+                    break;
+                case 'listorigin-crs':
+                    getOrigin(args, true);
+                    break;
             }
         }
 
@@ -74,6 +80,7 @@
 
         function getService(wttId) {
             $.getJSON("http://" + server + ":82/Archive/?GetByWttId&wttId=" + wttId, function (data) {
+                currentWttResult.clearTrains();
                 for (i in data) {
                     var result = new WttSearchResult();
                     result.TrainId(data[i].TrainId);
@@ -87,6 +94,35 @@
 
                     fetchLocation(data[i].From);
                 }
+            });
+        }
+
+        function getOrigin(args, convertFromCrs) {
+            if (convertFromCrs) {
+                $.getJSON("http://" + server + ":82/Stanox/?GetByCrs&crsCode=" + args, function (data) {
+                    getOriginByStanox(data.Name);
+                });
+            } else {
+                getOriginByStanox(args);
+            }
+        }
+
+        function getOriginByStanox(stanox){
+            $.getJSON("http://" + server + ":82/GetTrainMovementsOrigin&stanox=" + stanox, function (data) {
+                currentWttResult.clearTrains();
+                for (i in data) {
+                    var result = new WttSearchResult();
+                    result.TrainId(data[i].TrainId);
+                    result.WttId(data[i].WttId);
+                    result.From(data[i].From);
+                    result.Depart(data[i].Depart);
+                    result.To('');
+                    result.Arrive('');
+
+                    currentWttResult.addTrain(result);
+                }
+
+                fetchLocation(stanox);
             });
         }
 
@@ -159,9 +195,8 @@
                     <ul class="nav nav-list">
                         <li class="nav-header">Commands</li>
                         <li><a href="#getservice:" onclick="setCommand('getservice:');"><strong>Get Service:</strong> getservice:[wttid]</a></li>
-                        @*<li><a href="#gettrain:" onclick="setCommand('gettrain:');"><strong>Get Train:</strong> gettrain:[train id]</a></li>
-                        <li><a href="#stanox:" onclick="setCommand('stanox:');"><strong>Get Location Trains:</strong> stanox:[stanox]</a></li>
-                        <li><a href="#crs:" onclick="setCommand('crs:');"><strong>Get Location Trains:</strong> crs:[crs]</a></li>*@
+                        <li><a href="#getservice:" onclick="setCommand('listorigin:');"><strong>List Trains Originating From:</strong> listorigin:[stanox]</a></li>
+                        <li><a href="#getservice:" onclick="setCommand('listorigin-crs:');"><strong>List Trains Originating From:</strong> listorigin-crs:[crs]</a></li>
                     </ul>
                 </div>
             </div>
