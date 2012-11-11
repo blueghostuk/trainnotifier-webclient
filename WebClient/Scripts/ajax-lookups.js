@@ -44,15 +44,6 @@ function filter(location) {
         $("#table-trains tbody tr").hide();
         $("#table-trains tbody tr." + data.Name).show();
     });
-}       
-function preFilterLocation(location) {
-    if (!location || location.length == 0) {
-        sendPreFilter('');
-    } else {
-        $.getJSON("http://" + server + ":82/Station/", { id: location }, function (data) {
-            sendPreFilter(data.Name);
-        });
-    }
 }
 
 function preLoadStations() {
@@ -71,14 +62,6 @@ function preLoadStations() {
             source: _locations,
             updater: function (item) {
                 filter(item.substring(0, (item.indexOf('(') - 1)));
-                return item;
-            }
-        });
-
-        $("#filter-pre-location").typeahead({
-            source: _locations,
-            update: function (item) {
-                sendPreFilter(item.substring(0, (item.indexOf('(') - 1)));
                 return item;
             }
         });

@@ -63,11 +63,6 @@
 
         var currentFilter = '';
 
-        function sendPreFilter(location) {
-            if (ws /*&& w*/)
-                ws.send(location);
-        }
-
         function clearTable() {
             $("#table-trains tbody tr").detach();
         }
@@ -96,14 +91,6 @@
                 if ($(evt.target).val() == '') {
                     filter(null);
                 }
-            });
-
-            $('#filter-pre-location').on('change', function (evt) {
-                var item = $(evt.target).val();
-                if (item && item.length > 0)
-                    preFilterLocation(item.substring(0, (item.indexOf('(') - 1)));
-                else
-                    sendPreFilter('');
             });
         });
 
@@ -217,7 +204,6 @@
                 <div class="btn-group">
                     <div class="input-prepend">
                         <span class="add-on"><i class="icon-filter"></i></span>
-                        <input type="text" id="filter-pre-location" class="span4" placeholder="Filter Data Location (optional)" title="Clear and press ENTER to reset" />&nbsp;&nbsp;&nbsp;
                         <a class="btn btn_connect" onclick="connectWs()" title="Connect to server"><i class="icon-play"></i></a>
                         <a class="btn btn_disconnect" onclick="disconnect()" disabled="disabled" title="Disconnect from server"><i class="icon-stop"></i></a>
                         <a class="btn" href="#" title="Clear table" onclick="clearTable();"><i class="icon-remove"></i></a>

@@ -13,11 +13,6 @@ function connect() {
         $("#status").addClass("btn-success");
         $(".btn_connect").attr("disabled", true);
 
-        var preFilter = $("#filter-pre-location").val();
-        if (preFilter && preFilter.length > 0) {
-            preFilterLocation(preFilter.substring(0, (preFilter.indexOf('(') - 1)));
-        }
-
         try{
             wsOpenCommand();
         } catch (err) { }
