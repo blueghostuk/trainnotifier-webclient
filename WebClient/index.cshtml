@@ -63,17 +63,6 @@
 
         var currentFilter = '';
 
-        function filterTrain(trainid) {
-            if (!trainid || trainid.length == 0 || trainid == currentFilter) {
-                currentFilter = '';
-                $("#table-trains tbody tr").show();
-                return;
-            }
-            currentFilter = trainid;
-            $("#table-trains tbody tr").hide();
-            $("#table-trains tbody tr." + trainid).show();
-        }
-
         function sendPreFilter(location) {
             if (ws /*&& w*/)
                 ws.send(location);
@@ -161,7 +150,7 @@
 
                     if (!existing) {
                         html += "<tr class=\"" + cls + " info\" style=\"" + style + "\" id=\"" + message.train_id + "\">";
-                        html += "<td><a href=\"#\" onclick=\"filterTrain('" + message.train_id + "');\">" + message.train_id + "</a></td>";
+                        html += "<td><a href=\"command.cshtml#gettrain:" + message.train_id + "\" title=\"View this train\">" + message.train_id + "</a></td>";
                         html += "<td>" + message.train_service_code + "</td>";
                         html += "<td colspan=\"5\"><a href=\"#\" data-toggle=\"modal\" data-target=\"#mapModal\" onclick=\"showMap('" + message.train_id + "');\">View Map</button></td>";
                         html += "</tr>";
@@ -173,7 +162,7 @@
                     html += "<td>" + padTime(date.getUTCHours()) + ":" + padTime(date.getUTCMinutes()) + ":" + padTime(date.getUTCSeconds()) + "</td>";
                     html += "<td>" + message.direction_ind + "</td>";
                     html += "<td>" + message.platform + "</td>";
-                    html += "<td><a href=\"#\" class=\"stanox-" + message.loc_stanox + "\" onclick=\"loadLocation('" + message.loc_stanox + "')\">" + message.loc_stanox + "</a></td>";
+                    html += "<td><a href=\"command.cshtml#stanox:" + message.loc_stanox  + "\" class=\"stanox-" + message.loc_stanox + "\" title=\"View this location\">" + message.loc_stanox + "</a></td>";
 
                     html += "</tr>";
 
@@ -188,25 +177,6 @@
                     fetchStanox(message.loc_stanox);
                 }
             };
-        }
-
-        function loadLocationCallback(data) {
-
-            currentLocation.locationStanox(stanox);
-            currentLocation.locationTiploc(data.Tiploc);
-            currentLocation.locationDescription(data.Description);
-            currentLocation.locationCRS(data.CRS);
-            currentLocation.stationName(data.StationName);
-            currentLocation.stationLocation(data.Lat + ", " + data.Lon);
-            if (data.Lat && data.Lon) {
-                $("#station-loc").attr("src",
-                    "http://maps.googleapis.com/maps/api/staticmap?center=" + data.Lat + "," + data.Lon +
-                    "5&zoom=14&size=310x310&sensor=false&style=feature:transit.station.rail" +
-                    "&key=" + apiKey);
-                $("#station-loc").show();
-            } else {
-                $("#station-loc").hide();
-            }
         }
 
     </script>
@@ -243,25 +213,6 @@
     </div>
     <div class="container-fluid">
         <div class="row-fluid">
-            <div class="span3">
-                <div class="well sidebar-nav" id="locationDetails">
-                    <ul class="nav nav-list">
-                        <li class="nav-header">Location</li>
-                        <li><strong>Stanox:</strong> <span data-bind="text: locationStanox"></span></li>
-                        <li><strong>Tiploc:</strong> <span data-bind="text: locationTiploc"></span></li>
-                        <li><strong>Description:</strong> <span data-bind="text: locationDescription"></span></li>
-                        <li><strong>CRS:</strong> <span data-bind="text: locationCRS"></span></li>
-                        <li class="nav-header">Station</li>
-                        <li><strong>Name:</strong> <span data-bind="text: stationName"></span></li>
-                        <li><span><i class="icon-map-marker"></i></span><span data-bind="text: stationLocation"></span></li>
-                        <li>
-                            <img id="station-loc" style="width: 310px; height: 310px; display: none;" />
-                        </li>
-                    </ul>
-                </div>
-                <!--/.well -->
-            </div>
-            <!--/span3-->
             <div class="span9">
                 <div class="btn-group">
                     <div class="input-prepend">
