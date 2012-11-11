@@ -71,44 +71,6 @@ function preLoadMap() {
 
 var markersArray = [];
 
-function showMap(trainId) {
-    clearMarkers();
-    var classes = $("#" + trainId).attr('class').split(' ');
-
-    for (var i = 0; i < classes.length; i++) {
-        if (classes[i] == "info" || classes[i] == trainId)
-            continue;
-
-        $.ajax({
-            type: "GET",
-            url: "http://" + server + ":82/Stanox/",
-            data: { id: classes[i] },
-            dataType: "json",
-            success: function (data) {
-                if (data.Lat && data.Lon) {
-                    marker = new google.maps.Marker({
-                        position: new google.maps.LatLng(data.Lat, data.Lon),
-                        icon: {
-                            path: google.maps.SymbolPath.CIRCLE,
-                            scale: 3
-                        },
-                        draggable: false,
-                        map: map
-                    });
-                    markersArray.push(marker);
-                }
-            },
-            async: false
-        });
-    }
-
-    var latlngbounds = new google.maps.LatLngBounds();
-    for(i in markersArray)
-        latlngbounds.extend(markersArray[i].position);
-    map.setCenter(latlngbounds.getCenter());
-    map.fitBounds(latlngbounds);
-}
-
 function clearMarkers() {
     if (markersArray) {
         for (i in markersArray) {
@@ -116,4 +78,12 @@ function clearMarkers() {
         }
         markersArray.length = 0;
     }
+}
+
+function centreMap() {
+    var latlngbounds = new google.maps.LatLngBounds();
+    for (i in markersArray)
+        latlngbounds.extend(markersArray[i].position);
+    map.setCenter(latlngbounds.getCenter());
+    map.fitBounds(latlngbounds);
 }

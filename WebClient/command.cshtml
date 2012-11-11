@@ -385,7 +385,7 @@
             }
         }
 
-        var markers = new Array();
+        var markersArray = new Array();
 
         function showCurrentTrainMap() {
             clearMarkers();
@@ -426,7 +426,7 @@
                             map: map,
                             title: $("." + stanox).data("title") + " - " + ts
                         });
-                        markers.push(marker);
+                        markersArray.push(marker);
                     }
                 },
                 async: false
@@ -434,14 +434,6 @@
             if (centre) {
                 centreMap();
             }
-        }
-
-        function centreMap() {
-            var latlngbounds = new google.maps.LatLngBounds();
-            for (i in markers)
-                latlngbounds.extend(markers[i].position);
-            map.setCenter(latlngbounds.getCenter());
-            map.fitBounds(latlngbounds);
         }
 
     </script>
