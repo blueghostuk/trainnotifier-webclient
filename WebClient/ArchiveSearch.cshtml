@@ -213,7 +213,7 @@
                         <a class="btn" href="#" title="Clear data" onclick="clearData();"><i class="icon-remove"></i></a>
                     </div>
                 </div>
-                <div id="train-id-result" style="height: 200px; overflow: auto;">
+                <div id="train-id-result" style="height: 800px; overflow: auto;">
                     <table class="table table-hover table-bordered">
                         <thead>
                             <tr>
@@ -236,29 +236,6 @@
                             </tr>
                         </tbody>
                     </table>
-                </div>
-                <div id="trains" style="height: 600px; overflow: auto;">
-                    <table class="table table-hover table-bordered">
-                        <thead>
-                            <tr>
-                                <th>Location</th>
-                                <th>Time</th>
-                                <th>Action</th>
-                                <th>Line</th>
-                                <th>Platform</th>
-                            </tr>
-                        </thead>
-                        <tbody data-bind="foreach: Stops">
-                            <tr data-bind="css: StateClass, attr: { title: StateTitle }">
-                                <td data-bind="text: Stanox"></td>
-                                <td><span data-bind="text: ActualTimeStamp, attr: { title: PlannedTime }" class="tooltip-dynamic"></span>&nbsp;<span class="label" data-bind="text: Delay, css: DelayResult, attr: { title: DelayTitle }"></span></td>
-                                <td data-bind="text: EventType"></td>
-                                <td data-bind="text: Line"></td>
-                                <td data-bind="text: Platform"></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <div class="map" id="map_canvas" style="display: none; width: 100%; height: 100%"></div>
                 </div>
             </div>
             <!--/span9-->
