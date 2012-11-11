@@ -149,7 +149,7 @@
                     html += "<td>" + padTime(date.getUTCHours()) + ":" + padTime(date.getUTCMinutes()) + ":" + padTime(date.getUTCSeconds()) + "</td>";
                     html += "<td>" + message.direction_ind + "</td>";
                     html += "<td>" + message.platform + "</td>";
-                    html += "<td><a href=\"command.cshtml#stanox:" + message.loc_stanox  + "\" class=\"stanox-" + message.loc_stanox + "\" title=\"View this location\">" + message.loc_stanox + "</a></td>";
+                    html += "<td><a href=\"command.cshtml#stanox:" + message.loc_stanox + "\" class=\"stanox-" + message.loc_stanox + "\" title=\"View this location\">" + message.loc_stanox + "</a></td>";
 
                     html += "</tr>";
 
@@ -164,6 +164,20 @@
                     fetchStanox(message.loc_stanox);
                 }
             };
+        }
+
+        var rawFeed = true;
+
+        function switchRawFeed() {
+            if (rawFeed) {
+                $("#raw_feed").removeClass("btn-inverse");
+            } else {
+                $("#raw_feed").addClass("btn-inverse");
+            }
+
+            // todo - send raw feed command on/off
+
+            rawFeed = !rawFeed;
         }
 
     </script>
@@ -185,6 +199,7 @@
                 <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
                 </a>
                 <a class="brand" href="#">@System.Configuration.ConfigurationManager.AppSettings["brandingTitle"]</a>
                 <div class="nav-collapse collapse">
@@ -203,9 +218,9 @@
             <div class="span9">
                 <div class="btn-group">
                     <div class="input-prepend">
-                        <span class="add-on"><i class="icon-filter"></i></span>
-                        <a class="btn btn_connect" onclick="connectWs()" title="Connect to server"><i class="icon-play"></i></a>
-                        <a class="btn btn_disconnect" onclick="disconnect()" disabled="disabled" title="Disconnect from server"><i class="icon-stop"></i></a>
+                        <a class="btn btn-inverse" id="raw_feed" onclick="switchRawFeed();"><i class="icon-fire"></i></a>
+                        <a class="btn btn_connect" onclick="connectWs();" title="Connect to server"><i class="icon-play"></i></a>
+                        <a class="btn btn_disconnect" onclick="disconnect();" disabled="disabled" title="Disconnect from server"><i class="icon-stop"></i></a>
                         <a class="btn" href="#" title="Clear table" onclick="clearTable();"><i class="icon-remove"></i></a>
                         <a class="btn" href="#" id="status">Connection Status</a>
                     </div>
@@ -222,27 +237,19 @@
                 <div style="height: 800px; overflow: auto;">
                     <table class="table table-hover table-bordered" id="table-trains">
                         <thead>
-                            <th>Train ID</th>
-                            <th>Service Code</th>
-                            <th>Action</th>
-                            <th>Time</th>
-                            <th>Direction</th>
-                            <th>Platform</th>
-                            <th>Location</th>
+                            <tr>
+                                <th>Train ID</th>
+                                <th>Service Code</th>
+                                <th>Action</th>
+                                <th>Time</th>
+                                <th>Direction</th>
+                                <th>Platform</th>
+                                <th>Location</th>
+                            </tr>
                         </thead>
                         <tbody id="data">
                         </tbody>
                     </table>
-                    <div class="pagination pagination-centered">
-                        <ul>
-                            <li><a href="#">Prev</a></li>
-                            <li><a href="#">1</a></li>
-                            <li><a href="#">2</a></li>
-                            <li><a href="#">3</a></li>
-                            <li><a href="#">4</a></li>
-                            <li><a href="#">Next</a></li>
-                        </ul>
-                    </div>
                 </div>
             </div>
             <!--/span9-->
