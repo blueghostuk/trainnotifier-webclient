@@ -1,8 +1,8 @@
 ﻿var ws;
 
 function connect() {
-    $(".btn_connect").attr("disabled", true);
-    $(".btn_disconnect").attr("disabled", false);
+    $(".btn-connect").attr("disabled", true);
+    $(".btn-disconnect").attr("disabled", false);
 
     ws = new WebSocket("ws://" + server + ":81");
     ws.onopen = function () {
@@ -11,7 +11,7 @@ function connect() {
         $("#status").removeClass("btn-warning");
         $("#status").removeClass("btn-info");
         $("#status").addClass("btn-success");
-        $(".btn_connect").attr("disabled", true);
+        $(".btn-connect").attr("disabled", true);
 
         try{
             wsOpenCommand();
@@ -22,14 +22,14 @@ function connect() {
         $("#status").removeClass("btn-success");
         $("#status").removeClass("btn-info");
         $("#status").addClass("btn-warning");
-        $(".btn_connect").attr("disabled", false);
-        $(".btn_disconnect").attr("disabled", true);
+        $(".btn-connect").attr("disabled", false);
+        $(".btn-disconnect").attr("disabled", true);
     };
 }
 
 function disconnect() {
-    $(".btn_connect").attr("disabled", false);
-    $(".btn_disconnect").attr("disabled", true);
+    $(".btn-connect").attr("disabled", false);
+    $(".btn-disconnect").attr("disabled", true);
 
     ws.close();
     setStatus("Closed");
