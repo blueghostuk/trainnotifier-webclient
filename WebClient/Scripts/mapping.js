@@ -3,12 +3,11 @@
 var mapOptions;
 var map;
 var transitLayer;
-var directionsService;
-var directionsDisplay;
 
 function preLoadMap() {
-    directionsDisplay = new google.maps.DirectionsRenderer();
-    directionsService = new google.maps.DirectionsService();
+    if (map)
+        return;
+
     mapOptions = {
         center: new google.maps.LatLng(52.8382, -2.327815),
         zoom: 8,
@@ -68,8 +67,6 @@ function preLoadMap() {
     ];
 
     map.setOptions({ styles: styleArray });
-
-    directionsDisplay.setMap(map);
 }
 
 var markersArray = [];
@@ -110,31 +107,6 @@ function showMap(trainId) {
         latlngbounds.extend(markersArray[i].position);
     map.setCenter(latlngbounds.getCenter());
     map.fitBounds(latlngbounds);
-
-    /*var request = {
-        origin: markersArray[0].position,
-        destination: markersArray[markersArray.length - 1].position,
-        waypoints: [],
-        provideRouteAlternatives: false,
-        travelMode: google.maps.TravelMode.TRANSIT,
-        unitSystem: google.maps.UnitSystem.IMPERIAL
-    };
-
-    for (i in markersArray) {
-        if (i == 0 || (i == markersArray.length -1))
-            continue;
-
-        request.waypoints.push({
-            location: markersArray[i].position,
-            stopover: false
-        });
-    }
-
-    directionsService.route(request, function (result, status) {
-        if (status == google.maps.DirectionsStatus.OK) {
-            directionsDisplay.setDirections(result);
-        }
-    });*/
 }
 
 function clearMarkers() {
