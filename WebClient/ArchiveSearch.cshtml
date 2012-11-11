@@ -108,7 +108,7 @@
         }
 
         function getOriginByStanox(stanox){
-            $.getJSON("http://" + server + ":82/GetTrainMovementsOrigin&stanox=" + stanox, function (data) {
+            $.getJSON("http://" + server + ":82/Archive/?GetTrainMovementsOrigin&stanox=" + stanox, function (data) {
                 currentWttResult.clearTrains();
                 for (i in data) {
                     var result = new WttSearchResult();
