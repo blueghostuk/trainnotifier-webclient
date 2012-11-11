@@ -115,10 +115,10 @@
                 currentWttResult.clearTrains();
                 for (i in data) {
                     var result = new WttSearchResult();
-                    result.TrainId(data[i].TrainId);
-                    result.WttId(data[i].WttId);
-                    result.From(data[i].From);
-                    result.Depart(data[i].Depart);
+                    result.TrainId(data[i].Id);
+                    result.WttId(data[i].WorkingTTId);
+                    result.From(data[i].SchedOriginStanox);
+                    result.Depart(data[i].SchedOriginDeparture);
                     result.To('');
                     result.Arrive('');
 
