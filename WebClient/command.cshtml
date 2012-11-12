@@ -518,7 +518,7 @@
                             <h5>Service Details</h5>
                             <ul>
                                 <li>Id: <a onclick="loadTrainSub(this);" data-bind="text: Id, attr: {href :'#subtrain:' + Id()}" title="Subscribe to train" style="display: inline;"></a></li>
-                                <li>Headcode: <a data-bind="text: Headcode, attr: {href :'archivesearch.cshtml#list-hc:' + Headcode()"></a></li>
+                                <li>Headcode: <a data-bind="text: Headcode, attr: {href :'archivesearch.cshtml#list-hc:' + Headcode() }"></a></li>
                                 <li>Service Code: <span data-bind="text: ServiceCode"></span></li>
                                 <li>WTT ID:&nbsp;
                                     <a data-bind="text: WttId, attr: { onclick: 'getService(\'' + WttId() + '\');', href :'#getservice:' + WttId()}" title="View this WTT ID" style="display: inline;"></a>
