@@ -44,6 +44,7 @@
             var self = this;
 
             self.Id = ko.observable();
+            self.Headcode = ko.observable();
             self.ServiceCode = ko.observable();
             self.Activated = ko.observable();
             self.SchedOrigin = ko.observable();
@@ -343,6 +344,7 @@
             $.getJSON("http://" + server + ":82/Archive/?GetTrainMovementById&trainId=" + trainId, function (data) {
                 currentTrain.clearStops();
                 currentTrain.Id(data.Id);
+                currentTrain.Headcode(data.HeadCode);
                 currentTrain.ServiceCode(data.ServiceCode);
                 var activated = "";
                 if (data.Activated) {
@@ -407,7 +409,7 @@
         }
 
         function mapStop(stop, centre) {
-            try{
+            try {
                 var stanox = stop.Stanox();
                 var ts = stop.ActualTimeStamp();
             } catch (err) {
@@ -511,26 +513,40 @@
                     </div>
                 </div>
                 <div id="trains" class="sub-command-bar">
-                    <ul class="nav">
-                        <li class="nav-header">Train Details</li>
-                        <li><strong>Id:</strong> <a onclick="loadTrainSub(this);" data-bind="text: Id, attr: {href :'#subtrain:' + Id()}" title="Subscribe to train" style="display: inline;"></a></li>
-                        <li><strong>Service Code:</strong> <span data-bind="text: ServiceCode"></span></li>
-                        <li>
-                            <strong>WTT ID:</strong>&nbsp;
-                            <a data-bind="text: WttId, attr: { onclick: 'getService(\'' + WttId() + '\');', href :'#getservice:' + WttId()}" title="View this WTT ID" style="display: inline;"></a>
-                            &nbsp;|&nbsp;
-                            <a data-bind="attr: {href :'archivesearch.cshtml#getservice:' + WttId()}" title="View this WTT ID history" style="display: inline;">View Archive</a>
-                        </li>
-                        <li><strong>Activated:</strong> <span data-bind="text: Activated"></span></li>
-                        <li><strong>Scheduled Origin:</strong> <a onclick="loadStanox(this);" data-bind="text: SchedOrigin, css:SchedOrigin, attr: {href :'#stanox:' + SchedOrigin()}" style="display: inline;"></a></li>
-                        <li><strong>Scheduled Departure Time:</strong> <span data-bind="text: SchedDepart"></span></li>
-                        <li><strong>Last Update:</strong> <span data-bind="text: LastUpdate"></span></li>
-                        <li><strong>Current View:</strong>
-                            <a data-bind="attr: {href :'#gettrain:' + Id()}" onclick="switchView('table');" style="display: inline;">Tabular</a> 
-                            &nbsp;|&nbsp; 
-                            <a data-bind="attr: {href :'#gettrain:' + Id()}" onclick="switchView('map');" style="display: inline;">Map</a></li>
-                        <li class="nav-header">Stops</li>
-                    </ul>
+                    <div class="row">
+                        <div class="span4">
+                            <h5>Service Details</h5>
+                            <ul>
+                                <li>Id: <a onclick="loadTrainSub(this);" data-bind="text: Id, attr: {href :'#subtrain:' + Id()}" title="Subscribe to train" style="display: inline;"></a></li>
+                                <li>Headcode: <a data-bind="text: Headcode, attr: {href :'archivesearch.cshtml#list-hc:' + Headcode()"></a></li>
+                                <li>Service Code: <span data-bind="text: ServiceCode"></span></li>
+                                <li>WTT ID:&nbsp;
+                                    <a data-bind="text: WttId, attr: { onclick: 'getService(\'' + WttId() + '\');', href :'#getservice:' + WttId()}" title="View this WTT ID" style="display: inline;"></a>
+                                    &nbsp;|&nbsp;
+                                    <a data-bind="attr: {href :'archivesearch.cshtml#getservice:' + WttId()}" title="View this WTT ID history" style="display: inline;">View Archive</a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="span4">
+                            <h5>Locations</h5>
+                            <ul>
+                                <li>Scheduled Origin: <a onclick="loadStanox(this);" data-bind="text: SchedOrigin, css:SchedOrigin, attr: {href :'#stanox:' + SchedOrigin()}" style="display: inline;"></a></li>
+                                <li>Scheduled Departure Time: <span data-bind="text: SchedDepart"></span></li>
+                            </ul>
+                        </div>
+                        <div class="span4">
+                            <h5>Updates</h5>
+                            <ul>
+                                <li>Activated: <span data-bind="text: Activated"></span></li>
+                                <li>Last Update: <span data-bind="text: LastUpdate"></span></li>
+                                <li>Current View:
+                                    <a data-bind="attr: {href :'#gettrain:' + Id()}" onclick="switchView('table');" style="display: inline;">Tabular</a>
+                                    &nbsp;|&nbsp; 
+                                    <a data-bind="attr: {href :'#gettrain:' + Id()}" onclick="switchView('map');" style="display: inline;">Map</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
                     <div style="height: 600px; overflow: auto;">
                         <table class="table table-hover table-bordered" id="tableView">
                             <thead>
