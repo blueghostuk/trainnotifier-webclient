@@ -61,6 +61,7 @@
             var self = this;
 
             self.TrainId = ko.observable();
+            self.Headcode = ko.observable();
             self.WttId = ko.observable();
             self.From = ko.observable();
             self.Depart = ko.observable();
@@ -85,6 +86,7 @@
                 for (i in data) {
                     var result = new WttSearchResult();
                     result.TrainId(data[i].TrainId);
+                    result.Headcode(data[i].HeadCode);
                     result.WttId(data[i].WttId);
                     result.From(data[i].From);
                     result.Depart(data[i].Depart);
@@ -111,11 +113,12 @@
         }
 
         function getOriginByStanox(stanox){
-            $.getJSON("http://" + server + ":82/Archive/?GetTrainMovementsOrigin&stanox=" + stanox, function (data) {
+            $.getJSON("http://" + server + ":82/Archive/?GetTrainMovementsByOrigin&stanox=" + stanox, function (data) {
                 currentWttResult.clearTrains();
                 for (i in data) {
                     var result = new WttSearchResult();
                     result.TrainId(data[i].Id);
+                    result.Headcode(data[i].HeadCode);
                     result.WttId(data[i].WorkingTTId);
                     result.From(data[i].SchedOriginStanox);
                     result.Depart(data[i].SchedOriginDeparture);
@@ -218,6 +221,7 @@
                         <thead>
                             <tr>
                                 <th>Train ID</th>
+                                <th>Headcode</th>
                                 <th>WTT ID</th>
                                 <th>From</th>
                                 <th>Sched Departure</th>
@@ -228,6 +232,7 @@
                         <tbody data-bind="foreach: Trains">
                             <tr>
                                 <td><a data-bind="text: TrainId, attr: { href: 'command.cshtml#gettrain:' + TrainId() }"></a></td>
+                                <td data-bind="text: Headcode"></td>
                                 <td data-bind="text: WttId"></td>
                                 <td><span data-bind="text: From, css: From"></span></td>
                                 <td data-bind="text: Depart"></td>
