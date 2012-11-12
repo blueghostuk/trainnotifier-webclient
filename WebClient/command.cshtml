@@ -29,7 +29,27 @@
             $("#status").html(status);
         }
 
+        function preLoadStationsCallback(results) {
+            var commands = [];
+            commands.push('getservice:');
+            commands.push('gettrain:');
+            commands.push('subtrain:');
+            commands.push('stanox:');
+            for (i in results) {
+                commands.push('stanox:' + results[i].Name)
+            }
+            commands.push('crs:');
+            for (i in results) {
+                commands.push('crs:' + results[i].CRS)
+            }
+            $("#filter-command").typeahead({
+                source: commands
+            });
+        }
+
         $(function () {
+            preLoadStations(preLoadStationsCallback);
+
             ko.applyBindings(currentTrain, $("#trains").get(0));
             ko.applyBindings(currentStation, $("#stanox").get(0));
 

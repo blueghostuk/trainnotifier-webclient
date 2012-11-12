@@ -154,7 +154,25 @@
             currentWttResult.clearTrains();
         }
 
+        function preLoadStationsCallback(results) {
+            var commands = [];
+            commands.push('getservice:');
+            commands.push('listorigin:');
+            for (i in results) {
+                commands.push('listorigin:' + results[i].Name)
+            }
+            commands.push('listorigin-crs:');
+            for (i in results) {
+                commands.push('listorigin-crs:' + results[i].CRS)
+            }
+            $("#filter-command").typeahead({
+                source: commands
+            });
+        }
+
         $(function () {
+            preLoadStations(preLoadStationsCallback);
+
             ko.applyBindings(currentWttResult, $("#train-id-result").get(0));
 
             if (document.location.hash.length > 0) {

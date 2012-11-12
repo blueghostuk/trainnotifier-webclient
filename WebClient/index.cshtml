@@ -80,10 +80,24 @@
 
         var currentLocation = new LocationViewModel();
 
+        function preLoadStationsCallback(results) {
+            var locations = [];
+            for (i in results) {
+                locations.push(results[i].StaionName + ' (' + results[i].CRS + ')');
+            }
+            $("#filter-location").typeahead({
+                source: results,
+                updater: function (item) {
+                    filter(item.substring(0, (item.indexOf('(') - 1)));
+                    return item;
+                }
+            });
+        }
+
         $(function () {
             ko.applyBindings(currentLocation, $("#locationDetails").get(0));
 
-            preLoadStations();
+            preLoadStations(preLoadStationsCallback);
 
             preLoadMap();
 

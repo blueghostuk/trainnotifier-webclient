@@ -46,24 +46,11 @@ function filter(location) {
     });
 }
 
-function preLoadStations() {
+function preLoadStations(callback) {
     $.getJSON("http://" + server + ":82/Station/", null, function (results) {
         if (!results || results.length == 0)
             return;
 
-        _locations = Array();
-
-        for (var i = 0; i < results.length; i++) {
-            if (results[i] && results[i].length > 0)
-                _locations.push(results[i]);
-        }
-
-        $("#filter-location").typeahead({
-            source: _locations,
-            updater: function (item) {
-                filter(item.substring(0, (item.indexOf('(') - 1)));
-                return item;
-            }
-        });
+        callback(results);
     });
 }
