@@ -162,7 +162,7 @@
                         data = data.Response;
                         currentTrain.LastUpdate(formatDateString(new Date()));
                         for (i in data) {
-                            addStop(data[i]);
+                            addStop(data[i], true);
                             mapStop(data[i], true);
                         }
                         $(".tooltip-dynamic").tooltip();
@@ -192,7 +192,7 @@
             parseCommand();
         }
 
-        function addStop(stopEl) {
+        function addStop(stopEl, terminateStop) {
             var stop = new StopViewModel();
             stop.Stanox(stopEl.Stanox);
 
@@ -229,7 +229,7 @@
             stop.State(stopEl.State);
 
             // train terminated so unsubscribe
-            if (stopEl.State == 1) {
+            if (terminateStop && stopEl.State == 1) {
                 sendCommand("unsubtrain");
             }
 
@@ -501,7 +501,7 @@
             </div>
             <!--/span3-->
             <div class="span9">
-                <div class="btn-group fixed">
+                <div class="btn-group">
                     <div class="input-prepend">
                         <span class="add-on"><i class="icon-search"></i></span>
                         <input type="text" id="filter-command" class="span9" placeholder="Enter Command" />&nbsp;&nbsp;&nbsp;
@@ -512,7 +512,7 @@
                         <a class="btn" href="#" id="status">Connection Status</a>
                     </div>
                 </div>
-                <div id="trains" class="sub-command-bar">
+                <div id="trains">
                     <div class="row">
                         <div class="span4">
                             <h5>Service Details</h5>
@@ -547,7 +547,7 @@
                             </ul>
                         </div>
                     </div>
-                    <div style="height: 600px; overflow: auto;">
+                    <div class="row">
                         <table class="table table-hover table-bordered" id="tableView">
                             <thead>
                                 <tr>
