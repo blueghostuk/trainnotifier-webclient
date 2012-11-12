@@ -227,6 +227,11 @@
 
             stop.State(stopEl.State);
 
+            // train terminated so unsubscribe
+            if (stopEl.State == 1) {
+                sendCommand("unsubtrain");
+            }
+
             currentTrain.addStop(stop);
 
             fetchLocation(stopEl.Stanox);
