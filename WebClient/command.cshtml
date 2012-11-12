@@ -517,14 +517,9 @@
                         <div class="span4">
                             <h5>Service Details</h5>
                             <ul>
-                                <li>Id: <a onclick="loadTrainSub(this);" data-bind="text: Id, attr: {href :'#subtrain:' + Id()}" title="Subscribe to train" style="display: inline;"></a></li>
-                                <li>Headcode: <a data-bind="text: Headcode, attr: {href :'archivesearch.cshtml#list-hc:' + Headcode() }"></a></li>
+                                <li>Live Id: <a onclick="loadTrainSub(this);" data-bind="text: Id, attr: {href :'#subtrain:' + Id()}" title="Subscribe to train" style="display: inline;"></a></li>
+                                <li>Id: <a data-bind="text: Headcode, attr: {href :'archivesearch.cshtml#getservice:' + Headcode() }"></a></li>
                                 <li>Service Code: <span data-bind="text: ServiceCode"></span></li>
-                                <li>WTT ID:&nbsp;
-                                    <a data-bind="text: WttId, attr: { onclick: 'getService(\'' + WttId() + '\');', href :'#getservice:' + WttId()}" title="View this WTT ID" style="display: inline;"></a>
-                                    &nbsp;|&nbsp;
-                                    <a data-bind="attr: {href :'archivesearch.cshtml#getservice:' + WttId()}" title="View this WTT ID history" style="display: inline;">View Archive</a>
-                                </li>
                             </ul>
                         </div>
                         <div class="span4">
