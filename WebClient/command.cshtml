@@ -40,35 +40,22 @@
             $("#status").html(status);
         }
 
-        function preLoadStationsCallback(results) {
+        $(function () {
+
             var commands = [];
-            commands.push('getservice:');
             commands.push('gettrain:');
             commands.push('subtrain:');
-            commands.push('stanox:');
-            for (i in results) {
-                commands.push('stanox:' + results[i].Name)
-            }
-            commands.push('crs:');
-            for (i in results) {
-                commands.push('crs:' + results[i].CRS)
-            }
             $("#filter-command").typeahead({
                 source: commands
             });
-        }
-
-        $(function () {
-            preLoadStations(preLoadStationsCallback);
 
             ko.applyBindings(currentTrain, $("#trains").get(0));
-            ko.applyBindings(currentStation, $("#stanox").get(0));
-
-            connectWs();
 
             if (document.location.hash.length > 0) {
                 setCommand(document.location.hash.substr(1));
             }
+
+            connectWs();
         });
 
         function TrainViewModel() {
@@ -154,23 +141,7 @@
             }, self);
         }
 
-        function StanoxSearchResultViewModel() {
-            var self = this;
-
-            self.Stanox = ko.observable();
-            self.Trains = ko.observableArray();
-
-            self.addTrain = function (train) {
-                self.Trains.push(train);
-            };
-
-            self.clearTrains = function () {
-                self.Trains.removeAll();
-            }
-        }
-
         var currentTrain = new TrainViewModel();
-        var currentStation = new StanoxSearchResultViewModel();
 
         function formatDateString(d) {
             function pad(n) { return n < 10 ? '0' + n : n }
@@ -197,23 +168,6 @@
                             mapStop(data[i], true);
                         }
                         $(".tooltip-dynamic").tooltip();
-                        break;
-                    case "getservice":
-                        currentStation.clearTrains();
-                        currentStation.Stanox(data.Args);
-                        data = data.Response;
-                        for (i in data) {
-                            currentStation.addTrain(data[i]);
-                        }
-                        break;
-                    case "stanox":
-                    case "crs":
-                        currentStation.clearTrains();
-                        data = data.Response;
-                        currentStation.Stanox(data.Name);
-                        for (i in data.TrainIds) {
-                            currentStation.addTrain(data.TrainIds[i]);
-                        }
                         break;
                 }
             };
@@ -307,11 +261,6 @@
             document.location.hash = command;
         }
 
-        function loadStanox(el) {
-            setCommand('stanox:' + $(el).attr('class'));
-            sendCommand(true);
-        }
-
         function loadTrainSub(el) {
             setCommand('subtrain:' + $(el).html());
             _currentTrainSub = $(el).html();
@@ -344,35 +293,12 @@
             sendCommand(true);
         }
 
-        function getService(wttId) {
-            setCommand('getservice:' + wttId);
-            $.getJSON("http://" + server + ":82/Archive/?GetByWttId&wttId=" + wttId, function (data) {
-                currentStation.clearTrains();
-                currentStation.Stanox(wttId);
-                for (i in data) {
-                    /*var result = new WttSearchResult();
-                    result.TrainId(data[i].TrainId);
-                    result.WttId(data[i].WttId);
-                    result.From(data[i].From);
-                    result.Depart(data[i].Depart);
-                    result.To('');
-                    result.Arrive('');
-
-                    currentWttResult.addTrain(result);
-
-                    fetchLocation(data[i].From);*/
-                    // TODO show properly
-                    currentStation.addTrain(data[i].TrainId);
-                }
-            });
-        }
-
         function getTrain(trainId, dontUnSub) {
             if (!dontUnSub) {
                 ws.send("unsubtrain:");
                 setCommand('gettrain:' + trainId);
             }
-            $.getJSON("http://" + server + ":82/Archive/?GetTrainMovementById&trainId=" + trainId, function (data) {
+            $.getJSON("http://" + server + ":82/TrainMovement/" + trainId, function (data) {
                 currentTrain.clearStops();
                 currentTrain.Id(data.Id);
                 currentTrain.Headcode(data.HeadCode);
@@ -503,22 +429,10 @@
                 <div class="well sidebar-nav" id="locationDetails">
                     <ul class="nav nav-list">
                         <li class="nav-header">Commands</li>
-                        <li><a href="#getservice:" onclick="setCommand('getservice:');"><strong>Get Service:</strong> getservice:[id]</a></li>
                         <li><a href="#gettrain:" onclick="setCommand('gettrain:');"><strong>Get Train:</strong> gettrain:[train id]</a></li>
                         <li><a href="#subtrain:" onclick="setCommand('subtrain:');"><strong>Subscribe to Train:</strong> subtrain:[train id]</a></li>
-                        <li><a href="#stanox:" onclick="setCommand('stanox:');"><strong>Get Location Trains:</strong> stanox:[stanox]</a></li>
-                        <li><a href="#crs:" onclick="setCommand('crs:');"><strong>Get Location Trains:</strong> crs:[crs]</a></li>
                     </ul>
                 </div>
-                <div class="well sidebar-nav" id="stanox">
-                    <ul class="nav nav-list">
-                        <li class="nav-header">Trains: <span data-bind="text: Stanox"></span></li>
-                    </ul>
-                    <ul class="nav nav-list" data-bind="foreach: Trains" style="height: 600px; overflow: auto;">
-                        <li><a data-bind="text: $data, attr: {onclick: 'getTrain(\'' + $data + '\');', href :'#gettrain:' + $data}"></a></li>
-                    </ul>
-                </div>
-                <!--/.well -->
             </div>
             <!--/span3-->
             <div class="span9">
@@ -546,7 +460,7 @@
                         <div class="span4">
                             <h5>Locations</h5>
                             <ul>
-                                <li>Scheduled Origin: <a onclick="loadStanox(this);" data-bind="text: SchedOrigin, css:SchedOrigin, attr: {href :'#stanox:' + SchedOrigin()}" style="display: inline;"></a></li>
+                                <li>Scheduled Origin: <a data-bind="text: SchedOrigin, css:SchedOrigin, attr: {href :'archivesearch.cshtml#listorigin:' + SchedOrigin()}" style="display: inline;"></a></li>
                                 <li>Scheduled Departure Time: <span data-bind="text: SchedDepart"></span></li>
                             </ul>
                         </div>
@@ -576,7 +490,7 @@
                             </thead>
                             <tbody data-bind="foreach: Stops">
                                 <tr data-bind="css: StateClass, attr: { title: StateTitle }">
-                                    <td><a onclick="loadStanox(this);" data-bind="text: Stanox, css:Stanox, attr: {href :'#stanox:' + Stanox()}"></a></td>
+                                    <td><a data-bind="text: Stanox, css:Stanox, attr: {href :'archivesearch.cshtml#listorigin:' + Stanox()}"></a></td>
                                     <td><span data-bind="text: ActualTimeStamp, attr: { title: PlannedTime }" class="tooltip-dynamic"></span>&nbsp;<span class="label" data-bind="text: Delay, css: DelayResult, attr: { title: DelayTitle }"></span></td>
                                     <td data-bind="text: EventType"></td>
                                     <td data-bind="text: Line"></td>

@@ -51,6 +51,12 @@
                 case 'listorigin-crs':
                     getOrigin(args, true);
                     break;
+                case 'liststation':
+                    getStation(args);
+                    break;
+                case 'liststation-crs':
+                    getStation(args, true);
+                    break;
             }
         }
 
@@ -92,7 +98,7 @@
 
         function getService(wttId) {
             document.location.hash = "getservice:" + wttId;
-            $.getJSON("http://" + server + ":82/Archive/?GetByWttId&wttId=" + wttId, function (data) {
+            $.getJSON("http://" + server + ":82/TrainMovement/WithWttId/" + wttId, function (data) {
                 currentWttResult.clearTrains();
                 for (i in data) {
                     var result = new WttSearchResult();
@@ -123,8 +129,40 @@
             }
         }
 
+        function getStation(args, convertFromCrs) {
+            if (convertFromCrs) {
+                document.location.hash = "liststation-crs:" + args;
+                $.getJSON("http://" + server + ":82/Stanox/?GetByCrs&crsCode=" + args, function (data) {
+                    getCallingAtStanox(data.Name);
+                });
+            } else {
+                document.location.hash = "liststation:" + args;
+                getCallingAtStanox(args);
+            }
+        }
+
         function getOriginByStanox(stanox){
-            $.getJSON("http://" + server + ":82/Archive/?GetTrainMovementsByOrigin&stanox=" + stanox, function (data) {
+            $.getJSON("http://" + server + ":82/TrainMovement/StartingAtStation/" + stanox, function (data) {
+                currentWttResult.clearTrains();
+                for (i in data) {
+                    var result = new WttSearchResult();
+                    result.TrainId(data[i].Id);
+                    result.Headcode(data[i].HeadCode);
+                    result.WttId(data[i].WorkingTTId);
+                    result.From(data[i].SchedOriginStanox);
+                    result.Depart(data[i].SchedOriginDeparture);
+                    result.To('');
+                    result.Arrive('');
+
+                    currentWttResult.addTrain(result);
+                }
+
+                fetchLocation(stanox);
+            });
+        }
+
+        function getCallingAtStanox(stanox) {
+            $.getJSON("http://" + server + ":82/TrainMovement/CallingAtStation/" + stanox, function (data) {
                 currentWttResult.clearTrains();
                 for (i in data) {
                     var result = new WttSearchResult();
@@ -176,6 +214,14 @@
             for (i in results) {
                 commands.push('listorigin-crs:' + results[i].CRS)
             }
+            commands.push('liststation:');
+            for (i in results) {
+                commands.push('liststation:' + results[i].Name)
+            }
+            commands.push('liststation-crs:');
+            for (i in results) {
+                commands.push('liststation-crs:' + results[i].CRS)
+            }
             $("#filter-command").typeahead({
                 source: commands
             });
@@ -223,6 +269,8 @@
                         <li><a href="#getservice:" onclick="setCommand('getservice:');"><strong>Get Service:</strong> getservice:[wttid]</a></li>
                         <li><a href="#listorigin:" onclick="setCommand('listorigin:');"><strong>List Trains Originating From:</strong> listorigin:[stanox]</a></li>
                         <li><a href="#listorigin-crs:" onclick="setCommand('listorigin-crs:');"><strong>List Trains Originating From:</strong> listorigin-crs:[crs]</a></li>
+                        <li><a href="#listorigin:" onclick="setCommand('liststation:');"><strong>List Trains Calling At:</strong> liststation:[stanox]</a></li>
+                        <li><a href="#listorigin-crs:" onclick="setCommand('liststation-crs:');"><strong>List Trains Calling At:</strong> liststation-crs:[crs]</a></li>
                     </ul>
                 </div>
             </div>
