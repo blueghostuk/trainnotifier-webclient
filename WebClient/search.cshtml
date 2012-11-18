@@ -251,9 +251,9 @@
                 <a class="brand" href="#">@System.Configuration.ConfigurationManager.AppSettings["brandingTitle"]</a>
                 <div class="nav-collapse collapse">
                     <ul class="nav">
-                        <li><a href="~/index.cshtml">Live Feed</a></li>
-                        <li><a href="~/command.cshtml">Command Screen</a></li>
-                        <li class="active"><a href="#">Archive Search</a></li>
+                        <li><a href="~/">Live Feed</a></li>
+                        <li><a href="~/train">Train</a></li>
+                        <li class="active"><a href="#">Search</a></li>
                     </ul>
                 </div>
                 <!--/.nav-collapse -->
@@ -299,7 +299,7 @@
                         </thead>
                         <tbody data-bind="foreach: Trains">
                             <tr>
-                                <td><a data-bind="text: TrainId, attr: { href: 'command.cshtml#gettrain:' + TrainId() }"></a></td>
+                                <td><a data-bind="text: TrainId, attr: { href: 'train#gettrain:' + TrainId() }"></a></td>
                                 <td data-bind="text: Headcode"></td>
                                 <td data-bind="text: WttId"></td>
                                 <td><span data-bind="text: From, css: From"></span></td>

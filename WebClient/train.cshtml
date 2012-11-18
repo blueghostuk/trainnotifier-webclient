@@ -414,9 +414,9 @@
                 <a class="brand" href="#">@System.Configuration.ConfigurationManager.AppSettings["brandingTitle"]</a>
                 <div class="nav-collapse collapse">
                     <ul class="nav">
-                        <li><a href="~/index.cshtml">Live Feed</a></li>
-                        <li class="active"><a href="#">Command Screen</a></li>
-                        <li><a href="~/archivesearch.cshtml">Archive Search</a></li>
+                        <li><a href="~/">Live Feed</a></li>
+                        <li class="active"><a href="#">Train</a></li>
+                        <li><a href="~/search">Search</a></li>
                     </ul>
                 </div>
                 <!--/.nav-collapse -->
@@ -453,14 +453,14 @@
                             <h5>Service Details</h5>
                             <ul>
                                 <li>Live Id: <a onclick="loadTrainSub(this);" data-bind="text: Id, attr: {href :'#subtrain:' + Id()}" title="Subscribe to train" style="display: inline;"></a></li>
-                                <li>Id: <a data-bind="text: Headcode, attr: {href :'archivesearch.cshtml#getservice:' + Headcode() }"></a></li>
+                                <li>Id: <a data-bind="text: Headcode, attr: {href :'search#getservice:' + Headcode() }"></a></li>
                                 <li>Service Code: <span data-bind="text: ServiceCode"></span></li>
                             </ul>
                         </div>
                         <div class="span4">
                             <h5>Locations</h5>
                             <ul>
-                                <li>Scheduled Origin: <a data-bind="text: SchedOrigin, css:SchedOrigin, attr: {href :'archivesearch.cshtml#listorigin:' + SchedOrigin()}" style="display: inline;"></a></li>
+                                <li>Scheduled Origin: <a data-bind="text: SchedOrigin, css:SchedOrigin, attr: {href :'search#listorigin:' + SchedOrigin()}" style="display: inline;"></a></li>
                                 <li>Scheduled Departure Time: <span data-bind="text: SchedDepart"></span></li>
                             </ul>
                         </div>
@@ -490,7 +490,7 @@
                             </thead>
                             <tbody data-bind="foreach: Stops">
                                 <tr data-bind="css: StateClass, attr: { title: StateTitle }">
-                                    <td><a data-bind="text: Stanox, css:Stanox, attr: {href :'archivesearch.cshtml#listorigin:' + Stanox()}"></a></td>
+                                    <td><a data-bind="text: Stanox, css:Stanox, attr: {href :'search#listorigin:' + Stanox()}"></a></td>
                                     <td><span data-bind="text: ActualTimeStamp, attr: { title: PlannedTime }" class="tooltip-dynamic"></span>&nbsp;<span class="label" data-bind="text: Delay, css: DelayResult, attr: { title: DelayTitle }"></span></td>
                                     <td data-bind="text: EventType"></td>
                                     <td data-bind="text: Line"></td>

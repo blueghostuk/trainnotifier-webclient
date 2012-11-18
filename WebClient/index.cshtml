@@ -162,7 +162,7 @@
 
                     if (!existing) {
                         html += "<tr class=\"" + cls + " info\" style=\"" + style + "\" id=\"" + message.train_id + "\">";
-                        html += "<td><a href=\"command.cshtml#gettrain:" + message.train_id + "\" title=\"View this train\">" + message.train_id + "</a></td>";
+                        html += "<td><a href=\"train#gettrain:" + message.train_id + "\" title=\"View this train\">" + message.train_id + "</a></td>";
                         html += "<td>" + message.train_service_code + "</td>";
                         html += "<td colspan=\"5\"><a href=\"#\" data-toggle=\"modal\" data-target=\"#mapModal\" onclick=\"showMap('" + message.train_id + "');\">View Map</button></td>";
                         html += "</tr>";
@@ -174,7 +174,7 @@
                     html += "<td>" + padTime(date.getUTCHours()) + ":" + padTime(date.getUTCMinutes()) + ":" + padTime(date.getUTCSeconds()) + "</td>";
                     html += "<td>" + message.direction_ind + "</td>";
                     html += "<td>" + message.platform + "</td>";
-                    html += "<td><a href=\"command.cshtml#stanox:" + message.loc_stanox + "\" class=\"stanox-" + message.loc_stanox + "\" title=\"View this location\">" + message.loc_stanox + "</a></td>";
+                    html += "<td><a href=\"train#stanox:" + message.loc_stanox + "\" class=\"stanox-" + message.loc_stanox + "\" title=\"View this location\">" + message.loc_stanox + "</a></td>";
 
                     html += "</tr>";
 
@@ -206,8 +206,8 @@
                 <div class="nav-collapse collapse">
                     <ul class="nav">
                         <li class="active"><a href="#">Live Feed</a></li>
-                        <li><a href="~/command.cshtml">Command Screen</a></li>
-                        <li><a href="~/archivesearch.cshtml">Archive Search</a></li>
+                        <li><a href="~/train">Train</a></li>
+                        <li><a href="~/search">Search</a></li>
                     </ul>
                 </div>
                 <!--/.nav-collapse -->
