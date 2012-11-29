@@ -375,8 +375,7 @@
             }
             $.ajax({
                 type: "GET",
-                url: "http://" + server + ":82/Stanox/",
-                data: { id: stanox },
+                url: "http://" + server + ":82/Stanox/" + stanox,
                 dataType: "json",
                 success: function (data) {
                     if (data.Lat && data.Lon) {
