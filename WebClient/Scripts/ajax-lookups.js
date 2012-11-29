@@ -4,7 +4,7 @@ function fetchStanox(stanox) {
     if (!stanox || stanox.length == 0)
         return;
 
-    $.getJSON("http://" + server + ":82/Stanox/", { id: stanox }, function (data) {
+    $.getJSON("http://" + server + ":82/Stanox/" + stanox, function (data) {
         var html = "";
         if (data.StationName) {
             html = data.StationName;
@@ -25,7 +25,7 @@ function loadLocation(stanox, callback) {
     if (!stanox || stanox.length == 0)
         return;
 
-    $.getJSON("http://" + server + ":82/Stanox/", { id: stanox }, function (data) {
+    $.getJSON("http://" + server + ":82/Stanox/" + stanox, function (data) {
         if (!callback)
             callback = loadLocationCallback;
         callback(data);
