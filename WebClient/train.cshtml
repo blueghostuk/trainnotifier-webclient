@@ -400,7 +400,7 @@
                         <div class="span4">
                             <h5>Locations</h5>
                             <ul>
-                                <li>Scheduled Origin: <a data-bind="text: SchedOrigin, css: SchedOrigin, click: function(d,e) { listStation(d.locationStanox()); }" style="display: inline;"></a></li>
+                                <li>Scheduled Origin: <a href="#" data-bind="text: SchedOrigin, css: SchedOrigin, click: function(d,e) { listStation(d.SchedOrigin()); }" style="display: inline;"></a></li>
                                 <li>Scheduled Departure Time: <span data-bind="text: SchedDepart"></span></li>
                             </ul>
                         </div>
@@ -430,7 +430,7 @@
                             </thead>
                             <tbody data-bind="foreach: Stops">
                                 <tr data-bind="css: StateClass, attr: { title: StateTitle }">
-                                    <td><a href="#stationDetails" data-bind="text: Stanox, css: Stanox, click: function(d,e) { listStation(d.locationStanox()); }"></a></td>
+                                    <td><a href="#stationDetails" data-bind="text: Stanox, css: Stanox, click: function(d,e) { listStation(d.Stanox()); }"></a></td>
                                     <td><span data-bind="text: ActualTimeStamp, attr: { title: PlannedTime }" class="tooltip-dynamic"></span>&nbsp;<span class="label" data-bind="text: Delay, css: DelayResult, attr: { title: DelayTitle }"></span></td>
                                     <td data-bind="text: EventType"></td>
                                     <td data-bind="text: Line"></td>
