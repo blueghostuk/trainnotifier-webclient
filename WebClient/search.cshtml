@@ -29,6 +29,8 @@
     <script type="text/javascript">
         var server = "@System.Configuration.ConfigurationManager.AppSettings["server"]";
 
+        var currentLocation = new LocationViewModel();
+
         function setCommand(command) {
             $("#filter-command").val(command);
         }
@@ -108,7 +110,8 @@
             }
         }
 
-        function getOriginByStanox(stanox){
+        function getOriginByStanox(stanox) {
+            listStation(stanox);
             $.getJSON("http://" + server + ":82/TrainMovement/StartingAtStation/" + stanox, function (data) {
                 currentWttResult.clearTrains();
                 for (i in data) {
@@ -129,6 +132,7 @@
         }
 
         function getCallingAtStanox(stanox) {
+            listStation(stanox);
             $.getJSON("http://" + server + ":82/TrainMovement/CallingAtStation/" + stanox, function (data) {
                 currentWttResult.clearTrains();
                 for (i in data) {
@@ -194,10 +198,26 @@
             });
         }
 
+        function listStation(stanox) {
+            $('html, body').animate({
+                scrollTop: $("#locationDetails").offset().top
+            }, 1000);
+
+            $.getJSON("http://" + server + ":82/Stanox/" + stanox, function (data) {
+                currentLocation.locationStanox(data.Name);
+                currentLocation.locationTiploc(data.Tiploc);
+                currentLocation.locationDescription(data.Description);
+                currentLocation.locationCRS(data.CRS);
+                currentLocation.stationName(data.StationName);
+            });
+        }
+
         $(function () {
             preLoadStations(preLoadStationsCallback);
 
             ko.applyBindings(currentWttResult, $("#train-id-result").get(0));
+
+            ko.applyBindings(currentLocation, $("#stationDetails").get(0));
 
             if (document.location.hash.length > 0) {
                 setCommand(document.location.hash.substr(1));
@@ -238,6 +258,15 @@
                         <li><a href="#listorigin-crs:" onclick="setCommand('listorigin-crs:');"><strong>List Trains Originating From:</strong><br />&nbsp;&nbsp;listorigin-crs:[crs]</a></li>
                         <li><a href="#listorigin:" onclick="setCommand('liststation:');"><strong>List Trains Calling At:</strong><br />&nbsp;&nbsp;liststation:[stanox]</a></li>
                         <li><a href="#listorigin-crs:" onclick="setCommand('liststation-crs:');"><strong>List Trains Calling At:</strong><br />&nbsp;&nbsp;liststation-crs:[crs]</a></li>
+                    </ul>
+                </div>
+                <div class="well sidebar-nav" id="stationDetails">
+                    <ul class="nav nav-list">
+                        <li class="nav-header" data-bind="text: stationName">Station Details</li>
+                        <li><strong>CRS:</strong><span data-bind="text: locationCRS"></span></li>
+                        <li><a data-bind="attr: { href :'search#listorigin:' + locationStanox() }" title="View Trains Starting from this station">Trains Starting From</a></li>
+                        <li><a data-bind="attr: { href :'search#liststation:' + locationStanox() }" title="View Trains Calling from this station">Trains Calling At</a></li>
+                        @*<li><a id="stationDetails-term" title="View Trains Terminating at this station">Terminating At</a></li>*@
                     </ul>
                 </div>
             </div>
