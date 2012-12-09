@@ -25,6 +25,7 @@
         src="http://maps.googleapis.com/maps/api/js?key=@System.Configuration.ConfigurationManager.AppSettings["googleApiKey"]&sensor=false">
     </script>
     <script src="~/Scripts/mapping.js"></script>
+    <script src="~/Scripts/ViewModels.js"></script>
     <script type="text/javascript">
 
         var server = "@System.Configuration.ConfigurationManager.AppSettings["server"]";
@@ -40,6 +41,10 @@
             $("#status").html(status);
         }
 
+        var currentLocation = new LocationViewModel();
+
+        var currentTrain = new TrainViewModel();
+
         $(function () {
 
             var commands = [];
@@ -51,97 +56,14 @@
 
             ko.applyBindings(currentTrain, $("#trains").get(0));
 
+            ko.applyBindings(currentLocation, $("#stationDetails").get(0));
+
             if (document.location.hash.length > 0) {
                 setCommand(document.location.hash.substr(1));
             }
 
             connectWs();
         });
-
-        function TrainViewModel() {
-            var self = this;
-
-            self.Id = ko.observable();
-            self.Headcode = ko.observable();
-            self.ServiceCode = ko.observable();
-            self.Activated = ko.observable();
-            self.SchedOrigin = ko.observable();
-            self.SchedDepart = ko.observable();
-            self.Stops = ko.observableArray();
-            self.LastUpdate = ko.observable();
-            self.WttId = ko.observable();
-
-            self.addStop = function (stop) {
-                self.Stops.push(stop);
-            };
-
-            self.clearStops = function () {
-                self.Stops.removeAll();
-            }
-        }
-
-        function StopViewModel() {
-            var self = this;
-
-            self.Stanox = ko.observable();
-            self.PlannedTime = ko.observable();
-            self.ActualTimeStamp = ko.observable();
-            self.EventType = ko.observable();
-            self.Line = ko.observable();
-            self.Platform = ko.observable();
-            self.Delay = ko.observable();
-
-            self.DelayResult = ko.computed(function () {
-                if (this.Delay() == 0)
-                    return "label-success";
-                if (this.Delay() < 0)
-                    return "label-info";
-                if (this.Delay() > 10)
-                    return "label-important";
-
-                return "label-warning";
-            }, self);
-
-            self.DelayTitle = ko.computed(function () {
-                if (this.Delay() == 0)
-                    return "on time";
-                if (this.Delay() < 0)
-                    return "early";
-                return "late";
-            }, self);
-
-            self.State = ko.observable();
-
-            self.StateClass = ko.computed(function () {
-                switch (this.State()) {
-                    case 1:
-                        return "warning";
-                        break;
-                    case 2:
-                        return "error";
-                        break;
-                    default:
-                        //case "Normal":
-                        return "";
-                }
-            }, self);
-
-            self.StateTitle = ko.computed(function () {
-                switch (this.State()) {
-                    case 1:
-                        return "Terminated";
-                        break;
-                    case 2:
-                        return "Cancelled";
-                        break;
-                    default:
-                        //case "Normal":
-                        return "";
-                }
-            }, self);
-        }
-
-        var currentTrain = new TrainViewModel();
 
         function formatDateString(d) {
             function pad(n) { return n < 10 ? '0' + n : n }
@@ -399,6 +321,16 @@
             }
         }
 
+        function listStation(stanox) {
+            $.getJSON("http://" + server + ":82/Stanox/" + stanox, function (data) {
+                currentLocation.locationStanox(data.Name);
+                currentLocation.locationTiploc(data.Tiploc);
+                currentLocation.locationDescription(data.Description);
+                currentLocation.locationCRS(data.CRS);
+                currentLocation.stationName(data.StationName);
+            });
+        }
+
     </script>
 </head>
 <body>
@@ -432,6 +364,15 @@
                         <li><a href="#subtrain:" onclick="setCommand('subtrain:');"><strong>Subscribe to Train:</strong><br />&nbsp;&nbsp;subtrain:[train id]</a></li>
                     </ul>
                 </div>
+                <div class="well sidebar-nav" id="stationDetails">
+                    <ul class="nav nav-list">
+                        <li class="nav-header" id="stationName">Station Details</li>
+                        <li><em>CRS:</em><span id="locationCRS"></span></li>
+                        <li><a data-bind="attr: { href :'search#listorigin' + locationStanox() }" title="View Trains Starting from this station">Starting From</a></li>
+                        <li><a data-bind="attr: { href :'search#liststation' + locationStanox() }" title="View Trains Calling from this station">Calling At</a></li>
+                        @*<li><a id="stationDetails-term" title="View Trains Terminating at this station">Terminating At</a></li>*@
+                    </ul>
+                </div>
             </div>
             <!--/span2-->
             <div class="span10">
@@ -459,7 +400,7 @@
                         <div class="span4">
                             <h5>Locations</h5>
                             <ul>
-                                <li>Scheduled Origin: <a data-bind="text: SchedOrigin, css:SchedOrigin, attr: {href :'search#listorigin:' + SchedOrigin()}" style="display: inline;"></a></li>
+                                <li>Scheduled Origin: <a data-bind="text: SchedOrigin, css:SchedOrigin, attr: { onclick :'listStation(\'' + Stanox() + '\'');' }" style="display: inline;"></a></li>
                                 <li>Scheduled Departure Time: <span data-bind="text: SchedDepart"></span></li>
                             </ul>
                         </div>
@@ -489,7 +430,7 @@
                             </thead>
                             <tbody data-bind="foreach: Stops">
                                 <tr data-bind="css: StateClass, attr: { title: StateTitle }">
-                                    <td><a data-bind="text: Stanox, css:Stanox, attr: {href :'search#listorigin:' + Stanox()}"></a></td>
+                                    <td><a href="#stationDetails" data-bind="text: Stanox, css:Stanox, attr: { onclick :'listStation(\'' + Stanox() + '\'');' }"></a></td>
                                     <td><span data-bind="text: ActualTimeStamp, attr: { title: PlannedTime }" class="tooltip-dynamic"></span>&nbsp;<span class="label" data-bind="text: Delay, css: DelayResult, attr: { title: DelayTitle }"></span></td>
                                     <td data-bind="text: EventType"></td>
                                     <td data-bind="text: Line"></td>

@@ -98,6 +98,7 @@
     <None Include="Scripts\jquery-1.8.3.intellisense.js" />
     <Content Include="Scripts\jquery-1.8.3.js" />
     <Content Include="Scripts\jquery-1.8.3.min.js" />
+    <Content Include="Scripts\ViewModels.js" />
     <Content Include="train.cshtml" />
     <Content Include="search.cshtml" />
     <None Include="Properties\PublishProfiles\Azure - FTP.pubxml" />

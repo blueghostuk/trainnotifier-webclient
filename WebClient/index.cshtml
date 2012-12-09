@@ -24,6 +24,7 @@
     <script type="text/javascript" 
         src="http://maps.googleapis.com/maps/api/js?key=@System.Configuration.ConfigurationManager.AppSettings["googleApiKey"]&sensor=false">
     </script>
+    <script src="~/Scripts/ViewModels.js"></script>
     <script type="text/javascript">
         var apiKey = "@System.Configuration.ConfigurationManager.AppSettings["googleApiKey"]";
 
@@ -79,15 +80,6 @@
         }
 
         var _locations;
-
-        function LocationViewModel() {
-            this.locationStanox = ko.observable();
-            this.locationTiploc = ko.observable();
-            this.locationDescription = ko.observable();
-            this.locationCRS = ko.observable();
-            this.stationName = ko.observable();
-            this.stationLocation = ko.observable();
-        }
 
         var currentLocation = new LocationViewModel();
 

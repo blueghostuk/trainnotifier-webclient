@@ -25,6 +25,7 @@
         src="http://maps.googleapis.com/maps/api/js?key=@System.Configuration.ConfigurationManager.AppSettings["googleApiKey"]&sensor=false">
     </script>
     <script src="~/Scripts/mapping.js"></script>
+    <script src="~/Scripts/ViewModels.js"></script>
     <script type="text/javascript">
         var server = "@System.Configuration.ConfigurationManager.AppSettings["server"]";
 
@@ -57,40 +58,6 @@
                 case 'liststation-crs':
                     getStation(args, true);
                     break;
-            }
-        }
-
-        function WttSearchResults() {
-            var self = this;
-
-            self.Trains = ko.observableArray();
-
-            self.addTrain = function (stop) {
-                self.Trains.push(stop);
-            };
-
-            self.clearTrains = function () {
-                self.Trains.removeAll();
-            }
-        }
-
-        function WttSearchResult() {
-            var self = this;
-
-            self.TrainId = ko.observable();
-            self.Headcode = ko.observable();
-            self.WttId = ko.observable();
-            self.From = ko.observable();
-            self.Depart = ko.observable();
-            self.To = ko.observable();
-            self.Arrive = ko.observableArray();
-
-            self.addStop = function (stop) {
-                self.Stops.push(stop);
-            };
-
-            self.clearStops = function () {
-                self.Stops.removeAll();
             }
         }
 
