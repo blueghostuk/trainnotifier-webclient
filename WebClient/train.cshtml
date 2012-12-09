@@ -322,6 +322,10 @@
         }
 
         function listStation(stanox) {
+            $('html, body').animate({
+                scrollTop: $("#stationDetails").offset().top
+            }, 2000);
+
             $.getJSON("http://" + server + ":82/Stanox/" + stanox, function (data) {
                 currentLocation.locationStanox(data.Name);
                 currentLocation.locationTiploc(data.Tiploc);
@@ -368,8 +372,8 @@
                     <ul class="nav nav-list">
                         <li class="nav-header" data-bind="text: stationName">Station Details</li>
                         <li><strong>CRS:</strong><span data-bind="text: locationCRS"></span></li>
-                        <li><a data-bind="attr: { href :'search#listorigin' + locationStanox() }" title="View Trains Starting from this station">Trains Starting From</a></li>
-                        <li><a data-bind="attr: { href :'search#liststation' + locationStanox() }" title="View Trains Calling from this station">Trains Calling At</a></li>
+                        <li><a data-bind="attr: { href :'search#listorigin:' + locationStanox() }" title="View Trains Starting from this station">Trains Starting From</a></li>
+                        <li><a data-bind="attr: { href :'search#liststation:' + locationStanox() }" title="View Trains Calling from this station">Trains Calling At</a></li>
                         @*<li><a id="stationDetails-term" title="View Trains Terminating at this station">Terminating At</a></li>*@
                     </ul>
                 </div>
@@ -400,7 +404,7 @@
                         <div class="span4">
                             <h5>Locations</h5>
                             <ul>
-                                <li>Scheduled Origin: <a href="#" data-bind="text: SchedOrigin, css: SchedOrigin, click: function(d,e) { listStation(d.SchedOrigin()); }" style="display: inline;"></a></li>
+                                <li>Scheduled Origin: <a class="pointer" data-bind="text: SchedOrigin, css: SchedOrigin, click: function(d,e) { listStation(d.SchedOrigin()); }" style="display: inline;"></a></li>
                                 <li>Scheduled Departure Time: <span data-bind="text: SchedDepart"></span></li>
                             </ul>
                         </div>
@@ -430,7 +434,7 @@
                             </thead>
                             <tbody data-bind="foreach: Stops">
                                 <tr data-bind="css: StateClass, attr: { title: StateTitle }">
-                                    <td><a href="#stationDetails" data-bind="text: Stanox, css: Stanox, click: function(d,e) { listStation(d.Stanox()); }"></a></td>
+                                    <td><a class="pointer" data-bind="text: Stanox, css: Stanox, click: function(d,e) { listStation(d.Stanox()); }"></a></td>
                                     <td><span data-bind="text: ActualTimeStamp, attr: { title: PlannedTime }" class="tooltip-dynamic"></span>&nbsp;<span class="label" data-bind="text: Delay, css: DelayResult, attr: { title: DelayTitle }"></span></td>
                                     <td data-bind="text: EventType"></td>
                                     <td data-bind="text: Line"></td>
