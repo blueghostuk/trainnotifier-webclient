@@ -220,7 +220,15 @@
                 ws.send("unsubtrain:");
                 setCommand('gettrain:' + trainId);
             }
+            var split = trainId.split(':');
+            if (split && split.length == 2){
+                trainId = split[0] + '/' + split[1];
+            }
             $.getJSON("http://" + server + ":82/TrainMovement/" + trainId, function (data) {
+                // if multiple, take first
+                if (data.length && data.length > 1)
+                    data = data[0];
+
                 currentTrain.clearStops();
                 currentTrain.Id(data.Id);
                 currentTrain.Headcode(data.HeadCode);

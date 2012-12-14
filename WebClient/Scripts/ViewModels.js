@@ -13,6 +13,7 @@ function WttSearchResult() {
     var self = this;
 
     self.TrainId = ko.observable();
+    self.TrainUid = ko.observable();
     self.Headcode = ko.observable();
     self.WttId = ko.observable();
     self.From = ko.observable();

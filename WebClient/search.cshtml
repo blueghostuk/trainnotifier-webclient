@@ -117,6 +117,7 @@
                 for (i in data) {
                     var result = new WttSearchResult();
                     result.TrainId(data[i].Id);
+                    result.TrainUid(data[i].TrainUid);
                     result.Headcode(data[i].HeadCode);
                     result.WttId(data[i].WorkingTTId);
                     result.From(data[i].SchedOriginStanox);
@@ -138,6 +139,7 @@
                 for (i in data) {
                     var result = new WttSearchResult();
                     result.TrainId(data[i].Id);
+                    result.TrainUid(data[i].TrainUid);
                     result.Headcode(data[i].HeadCode);
                     result.WttId(data[i].WorkingTTId);
                     result.From(data[i].SchedOriginStanox);
@@ -291,7 +293,7 @@
                         </thead>
                         <tbody data-bind="foreach: Trains">
                             <tr>
-                                <td><a data-bind="text: TrainId, attr: { href: 'train#gettrain:' + TrainId() }"></a></td>
+                                <td><a data-bind="text: TrainId, attr: { href: 'train#gettrain:' + TrainId() + ':' + TrainUid() }"></a></td>
                                 <td data-bind="text: Headcode"></td>
                                 <td data-bind="text: WttId"></td>
                                 <td><span data-bind="text: From, css: From"></span></td>
