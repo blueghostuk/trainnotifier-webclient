@@ -1,8 +1,7 @@
-﻿<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-    <title>@System.Configuration.ConfigurationManager.AppSettings["brandingTitle"]</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+﻿@{
+    Layout = "~/_Layout.cshtml";
+}
+@section CustomCss{
     <style type="text/css">
         body {
             padding-top: 60px;
@@ -13,19 +12,11 @@
             padding: 9px 0;
         }
     </style>
-    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
-    <link href="~/Content/bootstrap-responsive.min.css" rel="stylesheet" />
-    <link href="~/Content/style.css" rel="stylesheet" />
-    <script src="~/Scripts/jquery-1.8.3.min.js"></script>
-    <script src="~/Scripts/bootstrap.min.js"></script>
-    <script src="~/Scripts/knockout-2.2.0.js"></script>
-    <script src="~/Scripts/websockets.js"></script>
-    <script src="~/Scripts/ajax-lookups.js"></script>
+}
+@section FooterJs{
     <script type="text/javascript" 
         src="http://maps.googleapis.com/maps/api/js?key=@System.Configuration.ConfigurationManager.AppSettings["googleApiKey"]&sensor=false">
     </script>
-    <script src="~/Scripts/mapping.js"></script>
-    <script src="~/Scripts/ViewModels.js"></script>
     <script type="text/javascript">
         var server = "@System.Configuration.ConfigurationManager.AppSettings["server"]";
 
@@ -224,104 +215,77 @@
         });
 
     </script>
-</head>
-<body>
-    <div class="navbar navbar-fixed-top">
-        <div class="navbar-inner">
-            <div class="container-fluid">
-                <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </a>
-                <a class="brand" href="#">@System.Configuration.ConfigurationManager.AppSettings["brandingTitle"]</a>
-                <div class="nav-collapse collapse">
-                    <ul class="nav">
-                        <li><a href="~/">Live Feed</a></li>
-                        <li><a href="~/train">Train</a></li>
-                        <li class="active"><a href="#">Search</a></li>
-                    </ul>
-                </div>
-                <!--/.nav-collapse -->
-            </div>
+}
+@section TopMenu{
+    <li><a href="~/">Live Feed</a></li>
+    <li><a href="~/train">Train</a></li>
+    <li class="active"><a href="#">Search</a></li>
+}
+
+<div class="row-fluid">
+    <div class="span2">
+        <div class="well sidebar-nav" id="locationDetails">
+            <ul class="nav nav-list">
+                <li class="nav-header">Commands</li>
+                <li><a href="#getservice:" onclick="setCommand('getservice:');"><strong>Get Service:</strong><br />
+                    &nbsp;&nbsp;getservice:[wttid]</a></li>
+                <li><a href="#listorigin:" onclick="setCommand('listorigin:');"><strong>List Trains Originating From:</strong><br />
+                    &nbsp;&nbsp;listorigin:[stanox]</a></li>
+                <li><a href="#listorigin-crs:" onclick="setCommand('listorigin-crs:');"><strong>List Trains Originating From:</strong><br />
+                    &nbsp;&nbsp;listorigin-crs:[crs]</a></li>
+                <li><a href="#listorigin:" onclick="setCommand('liststation:');"><strong>List Trains Calling At:</strong><br />
+                    &nbsp;&nbsp;liststation:[stanox]</a></li>
+                <li><a href="#listorigin-crs:" onclick="setCommand('liststation-crs:');"><strong>List Trains Calling At:</strong><br />
+                    &nbsp;&nbsp;liststation-crs:[crs]</a></li>
+            </ul>
+        </div>
+        <div class="well sidebar-nav" id="stationDetails">
+            <ul class="nav nav-list">
+                <li class="nav-header" data-bind="text: stationName">Station Details</li>
+                <li><strong>CRS:</strong><span data-bind="text: locationCRS"></span></li>
+                <li><a data-bind="attr: { href :'search#listorigin:' + locationStanox() }" title="View Trains Starting from this station">Trains Starting From</a></li>
+                <li><a data-bind="attr: { href :'search#liststation:' + locationStanox() }" title="View Trains Calling from this station">Trains Calling At</a></li>
+                @*<li><a id="stationDetails-term" title="View Trains Terminating at this station">Terminating At</a></li>*@
+            </ul>
         </div>
     </div>
-    <div class="container-fluid">
-        <div class="row-fluid">
-            <div class="span2">
-                <div class="well sidebar-nav" id="locationDetails">
-                    <ul class="nav nav-list">
-                        <li class="nav-header">Commands</li>
-                        <li><a href="#getservice:" onclick="setCommand('getservice:');"><strong>Get Service:</strong><br />&nbsp;&nbsp;getservice:[wttid]</a></li>
-                        <li><a href="#listorigin:" onclick="setCommand('listorigin:');"><strong>List Trains Originating From:</strong><br />&nbsp;&nbsp;listorigin:[stanox]</a></li>
-                        <li><a href="#listorigin-crs:" onclick="setCommand('listorigin-crs:');"><strong>List Trains Originating From:</strong><br />&nbsp;&nbsp;listorigin-crs:[crs]</a></li>
-                        <li><a href="#listorigin:" onclick="setCommand('liststation:');"><strong>List Trains Calling At:</strong><br />&nbsp;&nbsp;liststation:[stanox]</a></li>
-                        <li><a href="#listorigin-crs:" onclick="setCommand('liststation-crs:');"><strong>List Trains Calling At:</strong><br />&nbsp;&nbsp;liststation-crs:[crs]</a></li>
-                    </ul>
-                </div>
-                <div class="well sidebar-nav" id="stationDetails">
-                    <ul class="nav nav-list">
-                        <li class="nav-header" data-bind="text: stationName">Station Details</li>
-                        <li><strong>CRS:</strong><span data-bind="text: locationCRS"></span></li>
-                        <li><a data-bind="attr: { href :'search#listorigin:' + locationStanox() }" title="View Trains Starting from this station">Trains Starting From</a></li>
-                        <li><a data-bind="attr: { href :'search#liststation:' + locationStanox() }" title="View Trains Calling from this station">Trains Calling At</a></li>
-                        @*<li><a id="stationDetails-term" title="View Trains Terminating at this station">Terminating At</a></li>*@
-                    </ul>
-                </div>
-            </div>
-            <!--/span2-->
-            <div class="span10">
-                <div class="row btn-group">
-                    <div class="input-prepend">
-                        <span class="add-on"><i class="icon-asterisk"></i></span>
-                        <input type="text" id="filter-command" class="span9" placeholder="Enter Command" />&nbsp;&nbsp;&nbsp;
+    <!--/span2-->
+    <div class="span10">
+        <div class="row btn-group">
+            <div class="input-prepend">
+                <span class="add-on"><i class="icon-asterisk"></i></span>
+                <input type="text" id="filter-command" class="span9" placeholder="Enter Command" />&nbsp;&nbsp;&nbsp;
                         <a class="btn btn_disconnect" id="btn_Command" onclick="parseCommand();" title="Send Command"><i class="icon-arrow-right"></i></a>
-                        <a class="btn" href="#" title="Clear data" onclick="clearData();"><i class="icon-remove"></i></a>
-                    </div>
-                </div>
-                <div class="row" id="train-id-result" style="height: 800px; overflow: auto;">
-                    <table class="table table-hover table-bordered">
-                        <thead>
-                            <tr>
-                                <th>Train ID</th>
-                                <th>Headcode</th>
-                                <th>WTT ID</th>
-                                <th>From</th>
-                                <th>Sched Departure</th>
-                                <th>To</th>
-                                <th>Sched Arrival</th>
-                            </tr>
-                        </thead>
-                        <tbody data-bind="foreach: Trains">
-                            <tr>
-                                <td><a data-bind="text: TrainId, attr: { href: 'train#gettrain:' + TrainId() + ':' + TrainUid() }"></a></td>
-                                <td data-bind="text: Headcode"></td>
-                                <td data-bind="text: WttId"></td>
-                                <td><span data-bind="text: From, css: From"></span></td>
-                                <td data-bind="text: Depart"></td>
-                                <td data-bind="text: To"></td>
-                                <td data-bind="text: Arrive"></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+                <a class="btn" href="#" title="Clear data" onclick="clearData();"><i class="icon-remove"></i></a>
             </div>
-            <!--/span10-->
         </div>
-        <!--/row-fluid-->
-        <hr />
-        <footer>
-            <p>
-                Copyright &copy; Michael Pritchard 2012. <a href="https://twitter.com/blueghostuk" class="twitter-follow-button" data-show-count="false">Follow @@blueghostuk</a>
-                <script>!function (d, s, id) { var js, fjs = d.getElementsByTagName(s)[0]; if (!d.getElementById(id)) { js = d.createElement(s); js.id = id; js.src = "//platform.twitter.com/widgets.js"; fjs.parentNode.insertBefore(js, fjs); } }(document, "script", "twitter-wjs");</script>
-                <br />
-                Contains information of Network Rail Infrastructure Limited licensed under the following licence:
-                <a href="http://www.networkrail.co.uk/data-feeds/terms-and-conditions" target="_blank" title="Opens in new window"><i class="icon-share-alt" title="Opens in new window"></i>www.networkrail.co.uk/data-feeds/terms-and-conditions</a>
-                <br />
-                <a href="http://blueghostuk.github.com/trainnotifier-webclient/">About this project</a>
-                <br />
-                Built: @TrainNotifier.WebClient.VersionInfo.CreationTime.ToString("ddd dd-MM-yyyy HH:mm:ss")
-            </p>
-        </footer>
+        <div class="row" id="train-id-result" style="height: 800px; overflow: auto;">
+            <table class="table table-hover table-bordered">
+                <thead>
+                    <tr>
+                        <th>Train ID</th>
+                        <th>Headcode</th>
+                        <th>WTT ID</th>
+                        <th>From</th>
+                        <th>Sched Departure</th>
+                        <th>To</th>
+                        <th>Sched Arrival</th>
+                    </tr>
+                </thead>
+                <tbody data-bind="foreach: Trains">
+                    <tr>
+                        <td><a data-bind="text: TrainId, attr: { href: 'train#gettrain:' + TrainId() + ':' + TrainUid() }"></a></td>
+                        <td data-bind="text: Headcode"></td>
+                        <td data-bind="text: WttId"></td>
+                        <td><span data-bind="text: From, css: From"></span></td>
+                        <td data-bind="text: Depart"></td>
+                        <td data-bind="text: To"></td>
+                        <td data-bind="text: Arrive"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
-</body>
-</html>
+    <!--/span10-->
+</div>
+<!--/row-fluid-->
