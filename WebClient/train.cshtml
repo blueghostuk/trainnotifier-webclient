@@ -128,7 +128,7 @@
 
             // train terminated so unsubscribe
             if (terminateStop && stopEl.State == 1) {
-                sendCommand("unsubtrain");
+                sendWsCommand("unsubtrain");
             }
 
             currentTrain.addStop(stop);
@@ -167,6 +167,10 @@
             var cmd = $("#filter-command").val();
             ws.send(cmd);
             document.location.hash = cmd;
+        }
+
+        function sendWsCommand(command) {
+            ws.send(command);
         }
 
         function setCommand(command) {
