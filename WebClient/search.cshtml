@@ -60,19 +60,24 @@
             document.location.hash = "getservice:" + wttId;
             $.getJSON("http://" + server + ":82/TrainMovement/WithWttId/" + wttId, function (data) {
                 currentWttResult.clearTrains();
-                for (i in data) {
-                    var result = new WttSearchResult();
-                    result.TrainId(data[i].TrainId);
-                    result.Headcode(data[i].HeadCode);
-                    result.WttId(data[i].WttId);
-                    result.From(data[i].From);
-                    result.Depart(data[i].Depart);
-                    result.To('');
-                    result.Arrive('');
+                if (data.length > 0) {
+                    $("#no-results-row").hide();
+                    for (i in data) {
+                        var result = new WttSearchResult();
+                        result.TrainId(data[i].TrainId);
+                        result.Headcode(data[i].HeadCode);
+                        result.WttId(data[i].WttId);
+                        result.From(data[i].From);
+                        result.Depart(data[i].Depart);
+                        result.To('');
+                        result.Arrive('');
 
-                    currentWttResult.addTrain(result);
+                        currentWttResult.addTrain(result);
 
-                    fetchLocation(data[i].From);
+                        fetchLocation(data[i].From);
+                    }
+                } else {
+                    $("#no-results-row").show();
                 }
             });
         }
@@ -105,18 +110,23 @@
             listStation(stanox);
             $.getJSON("http://" + server + ":82/TrainMovement/StartingAtStation/" + stanox, function (data) {
                 currentWttResult.clearTrains();
-                for (i in data) {
-                    var result = new WttSearchResult();
-                    result.TrainId(data[i].Id);
-                    result.TrainUid(data[i].TrainUid);
-                    result.Headcode(data[i].HeadCode);
-                    result.WttId(data[i].WorkingTTId);
-                    result.From(data[i].SchedOriginStanox);
-                    result.Depart(data[i].SchedOriginDeparture);
-                    result.To('');
-                    result.Arrive('');
+                if (data.length > 0) {
+                    $("#no-results-row").hide();
+                    for (i in data) {
+                        var result = new WttSearchResult();
+                        result.TrainId(data[i].Id);
+                        result.TrainUid(data[i].TrainUid);
+                        result.Headcode(data[i].HeadCode);
+                        result.WttId(data[i].WorkingTTId);
+                        result.From(data[i].SchedOriginStanox);
+                        result.Depart(data[i].SchedOriginDeparture);
+                        result.To('');
+                        result.Arrive('');
 
-                    currentWttResult.addTrain(result);
+                        currentWttResult.addTrain(result);
+                    }
+                } else {
+                    $("#no-results-row").show();
                 }
 
                 fetchLocation(stanox);
@@ -127,20 +137,25 @@
             listStation(stanox);
             $.getJSON("http://" + server + ":82/TrainMovement/CallingAtStation/" + stanox, function (data) {
                 currentWttResult.clearTrains();
-                for (i in data) {
-                    var result = new WttSearchResult();
-                    result.TrainId(data[i].Id);
-                    result.TrainUid(data[i].TrainUid);
-                    result.Headcode(data[i].HeadCode);
-                    result.WttId(data[i].WorkingTTId);
-                    result.From(data[i].SchedOriginStanox);
-                    result.Depart(data[i].SchedOriginDeparture);
-                    result.To('');
-                    result.Arrive('');
+                if (data.length > 0) {
+                    $("#no-results-row").hide();
+                    for (i in data) {
+                        var result = new WttSearchResult();
+                        result.TrainId(data[i].Id);
+                        result.TrainUid(data[i].TrainUid);
+                        result.Headcode(data[i].HeadCode);
+                        result.WttId(data[i].WorkingTTId);
+                        result.From(data[i].SchedOriginStanox);
+                        result.Depart(data[i].SchedOriginDeparture);
+                        result.To('');
+                        result.Arrive('');
 
-                    currentWttResult.addTrain(result);
+                        currentWttResult.addTrain(result);
 
-                    fetchLocation(data[i].SchedOriginStanox);
+                        fetchLocation(data[i].SchedOriginStanox);
+                    }
+                } else {
+                    $("#no-results-row").show();
                 }
             });
         }
@@ -251,6 +266,10 @@
     </div>
     <!--/span2-->
     <div class="span10">
+        <div class="row alert alert-info" id="no-results-row" style="display:none">
+            <button type="button" class="close" data-dismiss="alert">×</button>
+            <strong>No Results Found</strong>
+        </div>
         <div class="row btn-group">
             <div class="input-prepend">
                 <span class="add-on"><i class="icon-asterisk"></i></span>
@@ -259,7 +278,7 @@
                 <a class="btn" href="#" title="Clear data" onclick="clearData();"><i class="icon-remove"></i></a>
             </div>
         </div>
-        <div class="row" id="train-id-result" style="height: 800px; overflow: auto;">
+        <div class="row" id="train-id-result">
             <table class="table table-hover table-bordered">
                 <thead>
                     <tr>
