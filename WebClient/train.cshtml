@@ -128,7 +128,7 @@
 
             // train terminated so unsubscribe
             if (terminateStop && stopEl.State == 1) {
-                sendWsCommand("unsubtrain");
+                sendWsCommand("unsubtrain:");
             }
 
             currentTrain.addStop(stop);
@@ -162,10 +162,10 @@
 
         function sendCommand(resetSub) {
             if (resetSub) {
-                ws.send("unsubtrain:");
+                sendWsCommand("unsubtrain:");
             }
             var cmd = $("#filter-command").val();
-            ws.send(cmd);
+            sendWsCommand(cmd);
             document.location.hash = cmd;
         }
 
@@ -212,7 +212,7 @@
 
         function getTrain(trainId, dontUnSub) {
             if (!dontUnSub) {
-                ws.send("unsubtrain:");
+                sendWsCommand("unsubtrain:");
                 setCommand('gettrain:' + trainId);
             }
             var split = trainId.split(':');
