@@ -234,6 +234,11 @@
             return false;
         }
 
+        function setHash(hash) {
+            document.location.hash = hash;
+            loadHashCommand();
+        }
+
     </script>
 }
 @section TopMenu{
@@ -263,8 +268,8 @@
             <ul class="nav nav-list">
                 <li class="nav-header" data-bind="text: stationName">Station Details</li>
                 <li><strong>CRS:</strong><span data-bind="text: locationCRS"></span></li>
-                <li><a data-bind="attr: { href :'search#listorigin:' + locationStanox() }" onclick="loadHashCommand();" title="View Trains Starting from this station">Trains Starting From</a></li>
-                <li><a data-bind="attr: { href :'search#liststation:' + locationStanox() }" onclick="loadHashCommand();" title="View Trains Calling from this station">Trains Calling At</a></li>
+                <li><a data-bind="attr: { href :'search#listorigin:' + locationStanox(), onclick: 'setHash(\'listorigin:' + locationStanox() + '\');' }" title="View Trains Starting from this station">Trains Starting From</a></li>
+                <li><a data-bind="attr: { href :'search#liststation:' + locationStanox(), onclick: 'setHash(\'liststation:' + locationStanox() + '\');' }" title="View Trains Calling from this station">Trains Calling At</a></li>
                 @*<li><a id="stationDetails-term" title="View Trains Terminating at this station">Terminating At</a></li>*@
             </ul>
         </div>
