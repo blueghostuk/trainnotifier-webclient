@@ -1,4 +1,6 @@
-﻿function padTime(time) {
+﻿/// <reference path="jquery-1.9.1.js" />
+
+function padTime(time) {
     if (time < 10)
         return "0" + time;
     return time;
@@ -46,7 +48,6 @@ function connectWs() {
     connect();
 
     ws.onmessage = function (msg) {
-
         var data = jQuery.parseJSON(msg.data);
         switch (data.Command) {
             case "subtrainupdate":
@@ -57,6 +58,25 @@ function connectWs() {
                     mapStop(data[i], true);
                 }
                 $(".tooltip-dynamic").tooltip();
+                // scroll to last table element
+                $('html, body').animate({
+                    scrollTop: $("#train-id-result table tr:last").offset().top
+                }, 1000);
+                // highlight last element and last update
+                $("#train-id-result table tr:last, #lastUpdate").animate(
+                {
+                    // essentially bootstrap success class
+                    backgroundColor: '#dff0d8'
+                },
+                {
+                    duration: 1000,
+                    complete: function () {
+                        $(this).animate({
+                            // white
+                            backgroundColor: '#FFF'
+                        });
+                    }
+                });
                 break;
         }
     };
