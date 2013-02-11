@@ -2,7 +2,6 @@
     Layout = "~/_Layout.cshtml";
 }
 @using System.Web.Optimization;
-
 @section CustomCss{
     <style type="text/css">
         body {
@@ -15,7 +14,6 @@
         }
     </style>
 }
-
 @section FooterJs{
     <script type="text/javascript" 
         src="http://maps.googleapis.com/maps/api/js?key=@System.Configuration.ConfigurationManager.AppSettings["googleApiKey"]&sensor=false">
@@ -28,13 +26,11 @@
     
     @Scripts.Render("~/bundles/index")
 }
-
 @section TopMenu{
     <li class="active"><a href="#">Live Feed</a></li>
     <li><a href="~/train">Train</a></li>
     <li><a href="~/search">Search</a></li>
 }
-
 <div class="row-fluid">
     <div class="span12">
         <div class="btn-group">
