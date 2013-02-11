@@ -60,10 +60,10 @@ function connectWs() {
                 $(".tooltip-dynamic").tooltip();
                 // scroll to last table element
                 $('html, body').animate({
-                    scrollTop: $("#train-id-result table tr:last").offset().top
+                    scrollTop: $("#tableView tr:last").offset().top
                 }, 1000);
                 // highlight last element and last update
-                $("#train-id-result table tr:last, #lastUpdate").animate(
+                $("#tableView tr:last, #lastUpdate").animate(
                 {
                     // essentially bootstrap success class
                     backgroundColor: '#dff0d8'
