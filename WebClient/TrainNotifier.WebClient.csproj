@@ -111,10 +111,13 @@
     <Content Include="index.cshtml" />
     <Content Include="packages.config" />
     <None Include="Scripts\jquery-1.9.1.intellisense.js" />
+    <Content Include="Scripts\index.js" />
     <Content Include="Scripts\jquery-1.9.1.js" />
     <Content Include="Scripts\jquery-1.9.1.min.js" />
     <Content Include="Scripts\knockout-2.2.1.debug.js" />
     <Content Include="Scripts\knockout-2.2.1.js" />
+    <Content Include="Scripts\search.js" />
+    <Content Include="Scripts\train.js" />
     <Content Include="Scripts\ViewModels.js" />
     <Content Include="train.cshtml" />
     <Content Include="search.cshtml" />

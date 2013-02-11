@@ -22,6 +22,15 @@ namespace TrainNotifier.WebClient
                 "~/Scripts/mapping.js",
                 "~/Scripts/ViewModels.js"));
 
+            bundles.Add(new ScriptBundle("~/bundles/index").Include(
+                "~/Scripts/index.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/train").Include(
+                "~/Scripts/train.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/search").Include(
+                "~/Scripts/search.js"));
+
             bundles.Add(new StyleBundle("~/Content/css").Include(
                 "~/Content/bootstrap.css",
                 "~/Content/bootstrap-responsive.min.css",
