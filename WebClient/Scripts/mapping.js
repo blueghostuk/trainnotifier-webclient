@@ -81,6 +81,9 @@ function clearMarkers() {
 }
 
 function centreMap() {
+    if (!map)
+        return;
+
     var latlngbounds = new google.maps.LatLngBounds();
     for (i in markersArray)
         latlngbounds.extend(markersArray[i].position);

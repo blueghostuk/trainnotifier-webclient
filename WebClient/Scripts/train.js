@@ -15,7 +15,7 @@ var currentLocation = new LocationViewModel();
 var currentTrain = new TrainViewModel();
 
 $(function () {
-
+    
     var commands = [];
     commands.push('gettrain:');
     commands.push('subtrain:');
