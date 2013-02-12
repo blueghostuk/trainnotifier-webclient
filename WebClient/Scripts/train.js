@@ -69,7 +69,7 @@ function connectWs() {
                     backgroundColor: '#dff0d8'
                 },
                 {
-                    duration: 1000,
+                    duration: 30000,
                     complete: function () {
                         $(this).animate({
                             // white
