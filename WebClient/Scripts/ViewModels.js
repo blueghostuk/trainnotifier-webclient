@@ -1,4 +1,7 @@
-﻿function LocationViewModel() {
+﻿/// <reference path="knockout-2.2.0.js" />
+/// <reference path="common.js" />
+
+function LocationViewModel() {
     this.locationStanox = ko.observable();
     this.locationTiploc = ko.observable();
     this.locationDescription = ko.observable();
@@ -57,8 +60,33 @@ function TrainViewModel() {
     self.LastUpdate = ko.observable();
     self.WttId = ko.observable();
 
-    self.addStop = function (stop) {
-        self.Stops.push(stop);
+    self.addStop = function (stopEl) {
+        if (self.Stops().length == 0) {
+            var stopModel = new StopViewModel();
+            switch (stopEl.EventType.toLowerCase()) {
+                case "arrival":
+                    setArrival(stopEl, stopModel);
+                    break;
+                case "departure":
+                    setDeparture(stopEl, stopModel);
+                    break;
+            }
+            self.Stops.push(stopModel);
+        } else {
+            var stopModel = self.Stops()[self.Stops().length - 1];
+            if (stopModel.Stanox() != stopEl.Stanox) {
+                stopModel = new StopViewModel();
+                self.Stops.push(stopModel);
+            } 
+            switch (stopEl.EventType.toLowerCase()) {
+                case "arrival":
+                    setArrival(stopEl, stopModel);
+                    break;
+                case "departure":
+                    setDeparture(stopEl, stopModel);
+                    break;
+            }
+        }
     };
 
     self.clearStops = function () {
@@ -66,32 +94,120 @@ function TrainViewModel() {
     }
 }
 
+function setArrival(stopEl, stopModel) {
+    var times = getTimes(stopEl);
+
+    stopModel.ArrivalActualTimeStamp(times.ActualTimeStamp);
+    stopModel.ArrivalPlannedTime(times.PlannedTimeStamp);
+    stopModel.ArrivalDelay(times.Delay);
+
+    setCommon(stopEl, stopModel);
+}
+
+function setDeparture(stopEl, stopModel) {
+    var times = getTimes(stopEl);
+
+    stopModel.DepartActualTimeStamp (times.ActualTimeStamp);
+    stopModel.DepartPlannedTime(times.PlannedTimeStamp);
+    stopModel.DepartDelay(times.Delay);
+
+    setCommon(stopEl, stopModel);
+}
+
+function setCommon(stopEl, stopModel) {
+    var existingLine = stopModel.Line();
+    if (!existingLine || existingLine == "") {
+        stopModel.Line(stopEl.Line);
+    }
+    var existingPlatform = stopModel.Platform();
+    if (!existingPlatform || existingPlatform == "") {
+        stopModel.Platform(stopEl.Platform);
+    }
+
+    stopModel.State(stopEl.State);
+    stopModel.Stanox(stopEl.Stanox);
+}
+
+function getTimes(stopEl) {
+    var setTimes = true;
+    var result = {
+        ActualTimeStamp: null,
+        PlannedTimeStamp: null,
+        Delay: 0
+    };
+    if (stopEl.ActualTimeStamp && stopEl.ActualTimeStamp.length > 0) {
+        var actualTime = new Date(stopEl.ActualTimeStamp);
+        result.ActualTimeStamp = formatTimeString(actualTime);
+    } else {
+        result.ActualTimeStamp = "";
+        setTimes = false;
+    }
+
+    if (stopEl.PlannedTime && stopEl.PlannedTime.length > 0) {
+        var plannedTime = new Date(stopEl.PlannedTime);
+        result.PlannedTimeStamp = formatTimeString(plannedTime);
+    } else if (stopEl.ActualTimeStamp && stopEl.ActualTimeStamp.length > 0) {
+        var plannedTime = new Date(stopEl.ActualTimeStamp);
+        result.PlannedTimeStamp = formatTimeString(actualTime);
+    } else {
+        result.PlannedTimeStamp = "";
+        setTimes = false;
+    }
+
+    if (setTimes) {
+        result.Delay = ((actualTime - plannedTime) / 60000);
+    }
+
+    return result;
+}
+
 function StopViewModel() {
     var self = this;
 
     self.Stanox = ko.observable();
-    self.PlannedTime = ko.observable();
-    self.ActualTimeStamp = ko.observable();
-    self.EventType = ko.observable();
+    self.ArrivalPlannedTime = ko.observable();
+    self.ArrivalActualTimeStamp = ko.observable();
+    self.DepartPlannedTime = ko.observable();
+    self.DepartActualTimeStamp = ko.observable();
     self.Line = ko.observable();
     self.Platform = ko.observable();
-    self.Delay = ko.observable();
+    self.ArrivalDelay = ko.observable();
+    self.DepartDelay = ko.observable();
 
-    self.DelayResult = ko.computed(function () {
-        if (this.Delay() == 0)
+    self.ArrivalDelayResult = ko.computed(function () {
+        if (this.ArrivalDelay() == 0)
             return "label-success";
-        if (this.Delay() < 0)
+        if (this.ArrivalDelay() < 0)
             return "label-info";
-        if (this.Delay() > 10)
+        if (this.ArrivalDelay() > 10)
             return "label-important";
 
-        return "label-warning";
+        return "hidden";
     }, self);
 
-    self.DelayTitle = ko.computed(function () {
-        if (this.Delay() == 0)
+    self.ArrivalDelayTitle = ko.computed(function () {
+        if (this.ArrivalDelay() == 0)
             return "on time";
-        if (this.Delay() < 0)
+        if (this.ArrivalDelay() < 0)
+            return "early";
+        return "late";
+    }, self);
+
+    self.DepartDelayResult = ko.computed(function () {
+        if (this.DepartDelay() == 0)
+            return "label-success";
+        if (this.DepartDelay() < 0)
+            return "label-info";
+        if (this.DepartDelay() > 10)
+            return "label-important";
+
+        return "hidden";
+    }, self);
+
+    self.DepartDelayTitle = ko.computed(function () {
+        if (this.DepartDelay() == 0)
+            return "on time";
+        if (this.DepartDelay() < 0)
             return "early";
         return "late";
     }, self);

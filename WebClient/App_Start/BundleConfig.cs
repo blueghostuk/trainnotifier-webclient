@@ -18,6 +18,7 @@ namespace TrainNotifier.WebClient
                 "~/Scripts/bootstrap*"));
 
             bundles.Add(new ScriptBundle("~/bundles/app").Include(
+                "~/Scripts/common.js",
                 "~/Scripts/websockets.js",
                 "~/Scripts/ajax-lookups.js",
                 "~/Scripts/mapping.js",

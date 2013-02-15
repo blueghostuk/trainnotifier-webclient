@@ -98,9 +98,9 @@
                 <table class="table table-hover table-bordered" id="tableView">
                     <thead>
                         <tr>
-                            <th title="Click to load trains for the given location">Location</th>
-                            <th title="Expected time is tooltip. Delay is shown next to time">Time</th>
-                            <th>Action</th>
+                            <th>Location</th>
+                            <th title="Expected WTT time is tooltip. Delay is shown next to time">Arrive</th>
+                            <th title="Expected WTT time is tooltip. Delay is shown next to time">Depart</th>
                             <th>Line</th>
                             <th>Platform</th>
                         </tr>
@@ -108,8 +108,8 @@
                     <tbody data-bind="foreach: Stops">
                         <tr data-bind="css: StateClass, attr: { title: StateTitle }">
                             <td><a class="pointer" data-bind="text: Stanox, css: Stanox, click: function(d,e) { listStation(d.Stanox()); }"></a></td>
-                            <td><span data-bind="text: ActualTimeStamp, attr: { title: PlannedTime }" class="tooltip-dynamic"></span>&nbsp;<span class="label" data-bind="text: Delay, css: DelayResult, attr: { title: DelayTitle }"></span></td>
-                            <td data-bind="text: EventType"></td>
+                            <td><span data-bind="text: ArrivalActualTimeStamp, attr: { title: ArrivalPlannedTime }" class="tooltip-dynamic"></span>&nbsp;<span class="label" data-bind="text: ArrivalDelay, css: ArrivalDelayResult, attr: { title: ArrivalDelayTitle }"></span></td>
+                            <td><span data-bind="text: DepartActualTimeStamp, attr: { title: DepartPlannedTime }" class="tooltip-dynamic"></span>&nbsp;<span class="label" data-bind="text: DepartDelay, css: DepartDelayResult, attr: { title: DepartDelayTitle }"></span></td>
                             <td data-bind="text: Line"></td>
                             <td data-bind="text: Platform"></td>
                         </tr>

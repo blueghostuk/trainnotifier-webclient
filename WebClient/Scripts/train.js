@@ -1,4 +1,6 @@
 ﻿/// <reference path="jquery-1.9.1.js" />
+/// <reference path="common.js" />
+/// <reference path="ViewModels.js" />
 
 function padTime(time) {
     if (time < 10)
@@ -33,16 +35,6 @@ $(function () {
 
     connectWs();
 });
-
-function formatDateString(d) {
-    function pad(n) { return n < 10 ? '0' + n : n }
-    return pad(d.getUTCDate()) + '/'
-        + pad(d.getUTCMonth() + 1) + '/'
-        + d.getUTCFullYear() + ' '
-        + pad(d.getUTCHours()) + ':'
-        + pad(d.getUTCMinutes()) + ':'
-        + pad(d.getUTCSeconds());
-}
 
 function connectWs() {
     connect();
@@ -87,47 +79,12 @@ function wsOpenCommand() {
 }
 
 function addStop(stopEl, terminateStop) {
-    var stop = new StopViewModel();
-    stop.Stanox(stopEl.Stanox);
-
-    var setTimes = true;
-    if (stopEl.ActualTimeStamp && stopEl.ActualTimeStamp.length > 0) {
-        var actualTime = new Date(stopEl.ActualTimeStamp);
-        stop.ActualTimeStamp(formatDateString(actualTime));
-    } else {
-        stop.ActualTimeStamp("");
-        setTimes = false;
-    }
-
-    if (stopEl.PlannedTime && stopEl.PlannedTime.length > 0) {
-        var plannedTime = new Date(stopEl.PlannedTime);
-        stop.PlannedTime(formatDateString(plannedTime));
-    } else if (stopEl.ActualTimeStamp && stopEl.ActualTimeStamp.length > 0) {
-        var plannedTime = new Date(stopEl.ActualTimeStamp);
-        stop.PlannedTime(formatDateString(actualTime));
-    } else {
-        stop.PlannedTime("");
-        setTimes = false;
-    }
-
-    if (setTimes) {
-        stop.Delay((actualTime - plannedTime) / 60000);
-    } else {
-        stop.Delay(0);
-    }
-
-    stop.EventType(stopEl.EventType);
-    stop.Line(stopEl.Line);
-    stop.Platform(stopEl.Platform);
-
-    stop.State(stopEl.State);
-
     // train terminated so unsubscribe
     if (terminateStop && stopEl.State == 1) {
         sendWsCommand("unsubtrain:");
     }
 
-    currentTrain.addStop(stop);
+    currentTrain.addStop(stopEl);
 
     fetchLocation(stopEl.Stanox);
 }
