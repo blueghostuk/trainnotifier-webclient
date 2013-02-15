@@ -175,47 +175,51 @@ function StopViewModel() {
     self.DepartDelay = ko.observable();
 
     self.ArrivalDelayResult = ko.computed(function () {
-        if (this.ArrivalDelay() == 0)
+        if (self.ArrivalDelay() == 0)
             return "label-success";
-        if (this.ArrivalDelay() < 0)
+        if (self.ArrivalDelay() < 0)
             return "label-info";
-        if (this.ArrivalDelay() > 10)
+        if (self.ArrivalDelay() > 10)
             return "label-important";
+        if (self.ArrivalDelay() > 0)
+            return "label-warning";
 
         return "hidden";
-    }, self);
+    });
 
     self.ArrivalDelayTitle = ko.computed(function () {
-        if (this.ArrivalDelay() == 0)
+        if (self.ArrivalDelay() == 0)
             return "on time";
-        if (this.ArrivalDelay() < 0)
+        if (self.ArrivalDelay() < 0)
             return "early";
         return "late";
-    }, self);
+    });
 
     self.DepartDelayResult = ko.computed(function () {
-        if (this.DepartDelay() == 0)
+        if (self.DepartDelay() == 0)
             return "label-success";
-        if (this.DepartDelay() < 0)
+        if (self.DepartDelay() < 0)
             return "label-info";
-        if (this.DepartDelay() > 10)
+        if (self.DepartDelay() > 10)
             return "label-important";
+        if (self.DepartDelay() > 0)
+            return "label-warning";
 
         return "hidden";
-    }, self);
+    });
 
     self.DepartDelayTitle = ko.computed(function () {
-        if (this.DepartDelay() == 0)
+        if (self.DepartDelay() == 0)
             return "on time";
-        if (this.DepartDelay() < 0)
+        if (self.DepartDelay() < 0)
             return "early";
         return "late";
-    }, self);
+    });
 
     self.State = ko.observable();
 
     self.StateClass = ko.computed(function () {
-        switch (this.State()) {
+        switch (self.State()) {
             case 1:
                 return "warning";
                 break;
@@ -226,10 +230,10 @@ function StopViewModel() {
                 //case "Normal":
                 return "";
         }
-    }, self);
+    });
 
     self.StateTitle = ko.computed(function () {
-        switch (this.State()) {
+        switch (self.State()) {
             case 1:
                 return "Terminated";
                 break;
@@ -240,5 +244,5 @@ function StopViewModel() {
                 //case "Normal":
                 return "";
         }
-    }, self);
+    });
 }
