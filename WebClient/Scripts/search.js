@@ -32,6 +32,19 @@ function parseCommand() {
     }
 }
 
+function createWttSearchResult(trainMovement) {
+    var result = new WttSearchResult();
+    result.TrainId(trainMovement.Id);
+    result.TrainUid(trainMovement.TrainUid);
+    result.Headcode(trainMovement.HeadCode);
+    result.WttId(trainMovement.WorkingTTId);
+    result.From(trainMovement.SchedOriginStanox);
+    result.Depart(trainMovement.SchedOriginDeparture);
+    result.To('');
+    result.Arrive('');
+    return result;
+}
+
 var currentWttResult = new WttSearchResults();
 
 function getService(wttId) {
@@ -41,14 +54,7 @@ function getService(wttId) {
         if (data.length > 0) {
             $("#no-results-row").hide();
             for (i in data) {
-                var result = new WttSearchResult();
-                result.TrainId(data[i].TrainId);
-                result.Headcode(data[i].HeadCode);
-                result.WttId(data[i].WttId);
-                result.From(data[i].From);
-                result.Depart(data[i].Depart);
-                result.To('');
-                result.Arrive('');
+                var result = createWttSearchResult(data[i]);
 
                 currentWttResult.addTrain(result);
 
@@ -91,15 +97,7 @@ function getOriginByStanox(stanox) {
         if (data.length > 0) {
             $("#no-results-row").hide();
             for (i in data) {
-                var result = new WttSearchResult();
-                result.TrainId(data[i].Id);
-                result.TrainUid(data[i].TrainUid);
-                result.Headcode(data[i].HeadCode);
-                result.WttId(data[i].WorkingTTId);
-                result.From(data[i].SchedOriginStanox);
-                result.Depart(data[i].SchedOriginDeparture);
-                result.To('');
-                result.Arrive('');
+                var result = createWttSearchResult(data[i]);
 
                 currentWttResult.addTrain(result);
             }
@@ -118,15 +116,7 @@ function getCallingAtStanox(stanox) {
         if (data.length > 0) {
             $("#no-results-row").hide();
             for (i in data) {
-                var result = new WttSearchResult();
-                result.TrainId(data[i].Id);
-                result.TrainUid(data[i].TrainUid);
-                result.Headcode(data[i].HeadCode);
-                result.WttId(data[i].WorkingTTId);
-                result.From(data[i].SchedOriginStanox);
-                result.Depart(data[i].SchedOriginDeparture);
-                result.To('');
-                result.Arrive('');
+                var result = createWttSearchResult(data[i]);
 
                 currentWttResult.addTrain(result);
 
