@@ -157,6 +157,9 @@ function preLoadStationsCallback(results) {
 }
 
 function listStation(stanox) {
+    $('html, body').animate({
+        scrollTop: $("#locationDetails").offset().top
+    }, 1000);
     $.getJSON("http://" + server + ":82/Stanox/" + stanox, function (data) {
         currentLocation.locationStanox(data.Name);
         currentLocation.locationTiploc(data.Tiploc);

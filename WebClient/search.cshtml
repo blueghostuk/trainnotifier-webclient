@@ -87,7 +87,7 @@
                         <td><a data-bind="text: TrainId, attr: { href: 'train#gettrain:' + TrainId() + ':' + TrainUid() }"></a></td>
                         <td data-bind="text: Headcode"></td>
                         <td data-bind="text: WttId"></td>
-                        <td><span data-bind="text: From, css: From"></span></td>
+                        <td><a data-bind="text: From, css: From, attr: { href: 'search#listorigin:' + From() }" onclick="listStation(this.className); return false;" title="Click to view options for this station"></a></td>
                         <td data-bind="text: Depart"></td>
                         <td data-bind="text: To"></td>
                         <td data-bind="text: Arrive"></td>
