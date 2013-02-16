@@ -45,24 +45,28 @@ function createWttSearchResult(trainMovement) {
     return result;
 }
 
+function showWttResults(trainMovements) {
+    currentWttResult.clearTrains();
+    if (trainMovements.length > 0) {
+        $("#no-results-row").hide();
+        for (i in trainMovements) {
+            var result = createWttSearchResult(trainMovements[i]);
+
+            currentWttResult.addTrain(result);
+
+            fetchLocation(trainMovements[i].SchedOriginStanox);
+        }
+    } else {
+        $("#no-results-row").show();
+    }
+}
+
 var currentWttResult = new WttSearchResults();
 
 function getService(wttId) {
     document.location.hash = "getservice:" + wttId;
     $.getJSON("http://" + server + ":82/TrainMovement/WithWttId/" + wttId, function (data) {
-        currentWttResult.clearTrains();
-        if (data.length > 0) {
-            $("#no-results-row").hide();
-            for (i in data) {
-                var result = createWttSearchResult(data[i]);
-
-                currentWttResult.addTrain(result);
-
-                fetchLocation(data[i].From);
-            }
-        } else {
-            $("#no-results-row").show();
-        }
+        showWttResults(data);
     });
 }
 
@@ -93,17 +97,7 @@ function getStation(args, convertFromCrs) {
 function getOriginByStanox(stanox) {
     listStation(stanox);
     $.getJSON("http://" + server + ":82/TrainMovement/StartingAtStation/" + stanox, function (data) {
-        currentWttResult.clearTrains();
-        if (data.length > 0) {
-            $("#no-results-row").hide();
-            for (i in data) {
-                var result = createWttSearchResult(data[i]);
-
-                currentWttResult.addTrain(result);
-            }
-        } else {
-            $("#no-results-row").show();
-        }
+        showWttResults(data);
 
         fetchLocation(stanox);
     });
@@ -112,19 +106,7 @@ function getOriginByStanox(stanox) {
 function getCallingAtStanox(stanox) {
     listStation(stanox);
     $.getJSON("http://" + server + ":82/TrainMovement/CallingAtStation/" + stanox, function (data) {
-        currentWttResult.clearTrains();
-        if (data.length > 0) {
-            $("#no-results-row").hide();
-            for (i in data) {
-                var result = createWttSearchResult(data[i]);
-
-                currentWttResult.addTrain(result);
-
-                fetchLocation(data[i].SchedOriginStanox);
-            }
-        } else {
-            $("#no-results-row").show();
-        }
+        showWttResults(data);
     });
 }
 
