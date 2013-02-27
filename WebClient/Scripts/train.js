@@ -284,10 +284,10 @@ function showCurrentTrainMap() {
 function mapStop(stop, centre) {
     try {
         var stanox = stop.Stanox();
-        var ts = stop.ActualTimeStamp();
+        var ts = stop.DepartActualTimeStamp();
     } catch (err) {
         var stanox = stop.Stanox;
-        var ts = stop.ActualTimeStamp;
+        var ts = stop.DepartActualTimeStamp;
     }
     $.ajax({
         type: "GET",
