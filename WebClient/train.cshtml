@@ -2,6 +2,7 @@
     Layout = "~/_Layout.cshtml";
 }
 @using System.Web.Optimization;
+
 @section CustomCss{
     <style type="text/css">
         body {
@@ -64,58 +65,26 @@
                 <a class="btn" href="#" id="status">Connection Status</a>
             </div>
         </div>
-        <div id="trains">
-            <div class="row">
-                <div class="span4">
-                    <h5>Service Details</h5>
-                    <ul>
-                        <li>Live Id: <a onclick="loadTrainSub(this);" data-bind="text: Id, attr: {href :'#subtrain:' + Id()}" title="Subscribe to train" style="display: inline;"></a></li>
-                        <li>Id: <a data-bind="text: Headcode, attr: {href :'search#getservice:' + Headcode() }"></a></li>
-                        <li>Service Code: <span data-bind="text: ServiceCode"></span></li>
-                    </ul>
+        <div class="row">
+            <ul class="nav nav-tabs">
+                <li><a href="#mix" data-toggle="tab">Schedule &amp; Live</a></li>
+                <li><a href="#schedule" data-toggle="tab">Schedule</a></li>
+                <li class="active"><a href="#trains" data-toggle="tab">Live</a></li>
+                <li><a href="#livemap" onclick="showCurrentTrainMap();" data-toggle="tab">Live Map</a></li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane" id="mix">
+                    @RenderPage("_trainMix.cshtml")
                 </div>
-                <div class="span4">
-                    <h5>Locations</h5>
-                    <ul>
-                        <li>Scheduled Origin: <a class="pointer" data-bind="text: SchedOrigin, css: SchedOrigin, click: function(d,e) { listStation(d.SchedOrigin()); }" style="display: inline;"></a></li>
-                        <li>Scheduled Departure Time: <span data-bind="text: SchedDepart"></span></li>
-                    </ul>
+                <div class="tab-pane" id="schedule">
+                    @RenderPage("_trainSchedule.cshtml")
                 </div>
-                <div class="span4">
-                    <h5>Updates</h5>
-                    <ul>
-                        <li>Activated: <span data-bind="text: Activated"></span></li>
-                        <li>Last Update: <span data-bind="text: LastUpdate" id="lastUpdate"></span></li>
-                        <li>Current View:
-                                    <a data-bind="attr: {href :'#gettrain:' + Id()}" onclick="switchView('table');" style="display: inline;">Tabular</a>
-                            &nbsp;|&nbsp; 
-                                    <a data-bind="attr: {href :'#gettrain:' + Id()}" onclick="switchView('map');" style="display: inline;">Map</a>
-                        </li>
-                    </ul>
+                <div class="tab-pane active" id="trains">
+                    @RenderPage("_trainLive.cshtml")
                 </div>
-            </div>
-            <div class="row">
-                <table class="table table-hover table-bordered" id="tableView">
-                    <thead>
-                        <tr>
-                            <th>Location</th>
-                            <th title="Expected WTT time is tooltip. Delay is shown next to time">Arrive</th>
-                            <th title="Expected WTT time is tooltip. Delay is shown next to time">Depart</th>
-                            <th>Line</th>
-                            <th>Platform</th>
-                        </tr>
-                    </thead>
-                    <tbody data-bind="foreach: Stops">
-                        <tr data-bind="css: StateClass, attr: { title: StateTitle }">
-                            <td><a class="pointer" data-bind="text: Stanox, css: Stanox, click: function(d,e) { listStation(d.Stanox()); }"></a></td>
-                            <td><span data-bind="text: ArrivalActualTimeStamp, attr: { title: ArrivalPlannedTime }" class="tooltip-dynamic"></span>&nbsp;<span class="label" data-bind="text: ArrivalDelay, css: ArrivalDelayResult, attr: { title: ArrivalDelayTitle }"></span></td>
-                            <td><span data-bind="text: DepartActualTimeStamp, attr: { title: DepartPlannedTime }" class="tooltip-dynamic"></span>&nbsp;<span class="label" data-bind="text: DepartDelay, css: DepartDelayResult, attr: { title: DepartDelayTitle }"></span></td>
-                            <td data-bind="text: Line"></td>
-                            <td data-bind="text: Platform"></td>
-                        </tr>
-                    </tbody>
-                </table>
-                <div class="map" id="map_canvas" style="display: none; width: 100%; height: 800px"></div>
+                <div class="tab-pane" id="livemap">
+                    @RenderPage("_trainMap.cshtml")
+                </div>
             </div>
         </div>
     </div>

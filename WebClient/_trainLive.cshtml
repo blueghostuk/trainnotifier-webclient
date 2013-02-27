@@ -1,0 +1,42 @@
+﻿<div class="span4">
+    <h5>Service Details</h5>
+    <ul>
+        <li>Live Id: <a onclick="loadTrainSub(this);" data-bind="text: Id, attr: {href :'#subtrain:' + Id()}" title="Subscribe to train" style="display: inline;"></a></li>
+        <li>Id: <a data-bind="text: Headcode, attr: {href :'search#getservice:' + Headcode() }"></a></li>
+        <li>Service Code: <span data-bind="text: ServiceCode"></span></li>
+    </ul>
+</div>
+<div class="span4">
+    <h5>Locations</h5>
+    <ul>
+        <li>Scheduled Origin: <a class="pointer" data-bind="text: SchedOrigin, css: SchedOrigin, click: function(d,e) { listStation(d.SchedOrigin()); }" style="display: inline;"></a></li>
+        <li>Scheduled Departure Time: <span data-bind="text: SchedDepart"></span></li>
+    </ul>
+</div>
+<div class="span4">
+    <h5>Updates</h5>
+    <ul>
+        <li>Activated: <span data-bind="text: Activated"></span></li>
+        <li>Last Update: <span data-bind="text: LastUpdate" id="lastUpdate"></span></li>
+    </ul>
+</div>
+<table class="table table-hover table-bordered" id="tableView">
+    <thead>
+        <tr>
+            <th>Location</th>
+            <th title="Expected WTT time is tooltip. Delay is shown next to time">Arrive</th>
+            <th title="Expected WTT time is tooltip. Delay is shown next to time">Depart</th>
+            <th>Line</th>
+            <th>Platform</th>
+        </tr>
+    </thead>
+    <tbody data-bind="foreach: Stops">
+        <tr data-bind="css: StateClass, attr: { title: StateTitle }">
+            <td><a class="pointer" data-bind="text: Stanox, css: Stanox, click: function(d,e) { listStation(d.Stanox()); }"></a></td>
+            <td><span data-bind="text: ArrivalActualTimeStamp, attr: { title: ArrivalPlannedTime }" class="tooltip-dynamic"></span>&nbsp;<span class="label" data-bind="text: ArrivalDelay, css: ArrivalDelayResult, attr: { title: ArrivalDelayTitle }"></span></td>
+            <td><span data-bind="text: DepartActualTimeStamp, attr: { title: DepartPlannedTime }" class="tooltip-dynamic"></span>&nbsp;<span class="label" data-bind="text: DepartDelay, css: DepartDelayResult, attr: { title: DepartDelayTitle }"></span></td>
+            <td data-bind="text: Line"></td>
+            <td data-bind="text: Platform"></td>
+        </tr>
+    </tbody>
+</table>

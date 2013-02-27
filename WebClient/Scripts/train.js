@@ -1,6 +1,8 @@
 ﻿/// <reference path="jquery-1.9.1.js" />
 /// <reference path="common.js" />
 /// <reference path="ViewModels.js" />
+/// <reference path="knockout.mapping-latest.js" />
+/// <reference path="knockout-2.2.1.js" />
 
 function padTime(time) {
     if (time < 10)
@@ -34,6 +36,8 @@ $(function () {
     }
 
     connectWs();
+
+    preLoadMap();
 });
 
 function connectWs() {
@@ -206,24 +210,55 @@ function getTrain(trainId, dontUnSub) {
             addStop(data.Steps[i]);
         }
         $(".tooltip-dynamic").tooltip();
+    }).then(function (data) {
+        $.getJSON("http://" + server + ":82/Schedule?trainId=" + data[0].TrainId + "&trainUid=" + data[0].TrainUid, function (schedule) {
+            var viewModel = ko.mapping.fromJS(schedule);
+
+            viewModel.STPValue = ko.observable(getSTP(schedule.STPIndicator));
+            viewModel.Runs = ko.observable(getRuns(schedule.Schedule));
+
+            ko.applyBindings(viewModel, $("#schedule").get(0));
+        });
     });
+    
 }
 
-var currentView = 'table';
+function getRuns(schedule) {
+    var result = "Runs:";
+    if (schedule.Monday) {
+        result += "M,";
+    }
+    if (schedule.Tuesday) {
+        result += "Tu,";
+    }
+    if (schedule.Wednesday) {
+        result += "W,";
+    }
+    if (schedule.Thursday) {
+        result += "Th,";
+    }
+    if (schedule.Friday) {
+        result += "F,";
+    }
+    if (schedule.Saturday) {
+        result += "Sa,";
+    }
+    if (schedule.Sunday) {
+        result += "Su,";
+    }
+    return result.substring(0, result.length - 1);
+}
 
-function switchView(view) {
-    currentView = view;
-    switch (currentView) {
-        case 'table':
-            $("#tableView").show();
-            $("#map_canvas").hide();
-            break;
-        case 'map':
-            $("#map_canvas").show();
-            $("#tableView").hide();
-            preLoadMap();
-            showCurrentTrainMap();
-            break;
+function getSTP(stpIndicatorId) {
+    switch (stpIndicatorId) {
+        case 1:
+            return "Cancellation";
+        case 2:
+            return "STP";
+        case 3:
+            return "Overlay";
+        case 4:
+            return "Permanent";
     }
 }
 
