@@ -276,8 +276,9 @@ function showCurrentTrainMap() {
     var stops = currentTrain.Stops();
 
     for (i in stops) {
-        mapStop(stops[i], true);
+        mapStop(stops[i]);
     }
+    centreMap();
 }
 
 function mapStop(stop, centre) {
