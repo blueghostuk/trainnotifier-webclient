@@ -51,7 +51,9 @@ function connectWs() {
                 currentTrain.LastUpdate(formatDateString(new Date()));
                 for (i in data) {
                     addStop(data[i], true);
-                    mapStop(data[i], true);
+                    $.when(mapStop(data[i])).then(function () {
+                        centreMap();
+                    });
                 }
                 $(".tooltip-dynamic").tooltip();
                 // scroll to last table element
@@ -274,14 +276,16 @@ function showCurrentTrainMap() {
     }
 
     var stops = currentTrain.Stops();
-
+    var deffered = new Array();
     for (i in stops) {
-        mapStop(stops[i]);
+        deffered.push(mapStop(stops[i]));
     }
-    centreMap();
+    $.when(deffered).then(function () {
+        centreMap();
+    });
 }
 
-function mapStop(stop, centre) {
+function mapStop(stop) {
     try {
         var stanox = stop.Stanox();
         var ts = stop.DepartActualTimeStamp();
@@ -289,7 +293,7 @@ function mapStop(stop, centre) {
         var stanox = stop.Stanox;
         var ts = stop.DepartActualTimeStamp;
     }
-    $.getJSON("http://" + server + ":82/Stanox/" + stanox, function (data) {
+    return $.getJSON("http://" + server + ":82/Stanox/" + stanox, function (data) {
         if (data.Lat && data.Lon) {
             marker = new google.maps.Marker({
                 position: new google.maps.LatLng(data.Lat, data.Lon),
@@ -304,9 +308,6 @@ function mapStop(stop, centre) {
             markersArray.push(marker);
         }
     });
-    if (centre) {
-        centreMap();
-    }
 }
 
 function listStation(stanox) {
