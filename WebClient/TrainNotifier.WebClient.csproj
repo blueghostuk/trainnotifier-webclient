@@ -145,7 +145,7 @@
     <Content Include="_Layout.cshtml" />
     <Content Include="_trainLive.cshtml" />
     <Content Include="_trainMap.cshtml" />
-    <None Include="_trainMix.cshtml" />
+    <Content Include="_trainMix.cshtml" />
     <Content Include="_trainSchedule.cshtml" />
   </ItemGroup>
   <ItemGroup>
