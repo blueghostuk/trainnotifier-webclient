@@ -280,7 +280,7 @@ function showCurrentTrainMap() {
     for (i in stops) {
         deffered.push(mapStop(stops[i]));
     }
-    $.when(deffered).then(function () {
+    $.when.apply(null, deffered).then(function () {
         centreMap();
     });
 }
