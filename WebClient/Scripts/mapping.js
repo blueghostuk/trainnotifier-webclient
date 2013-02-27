@@ -89,4 +89,7 @@ function centreMap() {
         latlngbounds.extend(markersArray[i].position);
     map.setCenter(latlngbounds.getCenter());
     map.fitBounds(latlngbounds);
+
+    console.log("markersArray.length:" + markersArray.length);
+    console.log("latlngbounds.getCenter():" + latlngbounds.getCenter()h);
 }
