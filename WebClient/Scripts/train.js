@@ -211,7 +211,10 @@ function getTrain(trainId, dontUnSub) {
         }
         $(".tooltip-dynamic").tooltip();
     }).then(function (data) {
-        $.getJSON("http://" + server + ":82/Schedule?trainId=" + data[0].TrainId + "&trainUid=" + data[0].TrainUid, function (schedule) {
+        if (data.length && data.length >= 0)
+            data = data[0];
+
+        $.getJSON("http://" + server + ":82/Schedule?trainId=" + data.TrainId + "&trainUid=" + data.TrainUid, function (schedule) {
             var viewModel = ko.mapping.fromJS(schedule);
 
             viewModel.STPValue = ko.observable(getSTP(schedule.STPIndicator));
