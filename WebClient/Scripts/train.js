@@ -221,6 +221,12 @@ function getTrain(trainId, dontUnSub) {
 
             viewModel.STPValue = ko.observable(getSTP(schedule.STPIndicator));
             viewModel.Runs = ko.observable(getRuns(schedule.Schedule));
+            viewModel.StartDateValue = ko.computed(function () {
+                return new Date(this.StartDate()).toDateString();
+            });
+            viewModel.EndDateValue = ko.computed(function () {
+                return new Date(this.EndDate()).toDateString();
+            });
 
             ko.applyBindings(viewModel, $("#schedule").get(0));
         });
