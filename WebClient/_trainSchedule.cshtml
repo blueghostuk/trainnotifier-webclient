@@ -39,9 +39,9 @@
             <td data-bind="text: Line"></td>
             <td data-bind="text: Platform"></td>
             <td>
-                <span title="Engineering Allowance" data-bind="visible: (EngineeringAllowance != null)">E:<span data-bind="text: EngineeringAllowance"></span>,</span>
-                <span title="Pathing Allowance" data-bind="visible: (PathingAllowance != null)">Pa:<span data-bind="    text: PathingAllowance"></span>,</span>
-                <span title="Performance Allowance" data-bind="visible: (PerformanceAllowance != null)">Pe:<span data-bind="    text: PerformanceAllowance"></span></span>
+                <span title="Engineering Allowance" data-bind="visible: EngineeringAllowance()">E:<span data-bind="text: EngineeringAllowance"></span>,</span>
+                <span title="Pathing Allowance" data-bind="visible: PathingAllowance()">Pa:<span data-bind="    text: PathingAllowance"></span>,</span>
+                <span title="Performance Allowance" data-bind="visible: PerformanceAllowance()">Pe:<span data-bind="    text: PerformanceAllowance"></span></span>
             </td>
         </tr>
     </tbody>
