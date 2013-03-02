@@ -114,6 +114,8 @@
     <Content Include="index.cshtml" />
     <Content Include="packages.config" />
     <None Include="Scripts\jquery-1.9.1.intellisense.js" />
+    <Content Include="Scripts\bootstrap.js" />
+    <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\common.js" />
     <Content Include="Scripts\index.js" />
     <Content Include="Scripts\jquery-1.9.1.js" />
@@ -135,8 +137,6 @@
     <None Include="Properties\PublishProfiles\Azure - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\TNWEBSRV01.pubxml" />
     <Content Include="Scripts\ajax-lookups.js" />
-    <Content Include="Scripts\bootstrap.js" />
-    <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\mapping.js" />
     <Content Include="Scripts\websockets.js" />
     <Content Include="Web.config">
