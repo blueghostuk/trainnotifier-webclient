@@ -1,9 +1,120 @@
-﻿<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-    <title></title>
-</head>
-<body>
+﻿@{
+    Layout = "~/_Layout.cshtml";
+}
+@using System.Web.Optimization;
+@section CustomCss{
+    <style type="text/css">
+        body {
+            padding-top: 60px;
+            padding-bottom: 40px;
+        }
 
-</body>
-</html>
+        .sidebar-nav {
+            padding: 9px 0;
+        }
+    </style>
+}
+@section FooterJs{
+    <script type="text/javascript">
+        var server = "@System.Configuration.ConfigurationManager.AppSettings["server"]";
+    </script>
+
+    @Scripts.Render("~/bundles/search-schedule")
+}
+@section TopMenu{
+    <li><a href="~/">Live Feed</a></li>
+    <li><a href="~/train">Train</a></li>
+    <li><a href="~/search">Search</a></li>
+    <li class="active"><a href="#">Search Schedule</a></li>
+}
+<div class="row-fluid">
+    <div class="span2">
+        <div class="well sidebar-nav" id="locationDetails">
+            <ul class="nav nav-list">
+                <li class="nav-header">Commands</li>
+                <li><a href="#listorigin:" onclick="setCommand('listorigin:');"><strong>List Trains Originating From:</strong><br />
+                    &nbsp;&nbsp;listorigin:[stanox]</a></li>
+                <li><a href="#listorigin-crs:" onclick="setCommand('listorigin-crs:');"><strong>List Trains Originating From:</strong><br />
+                    &nbsp;&nbsp;listorigin-crs:[CRS]</a></li>
+            </ul>
+        </div>
+        <div class="well sidebar-nav" id="stationDetails">
+            <ul class="nav nav-list">
+                <li class="nav-header" data-bind="text: stationName">Station Details</li>
+                <li><strong>CRS:</strong><span data-bind="text: locationCRS"></span></li>
+                <li><a data-bind="attr: { href :'search#listorigin:' + locationStanox(), onclick: 'setHash(\'listorigin:' + locationStanox() + '\');' }" title="View Trains Starting from this station">Trains Starting From</a></li>
+            </ul>
+        </div>
+        <div class="well sidebar-nav">
+            <p style="text-align: center; padding: 2px;">
+                At the moment this only shows Activated Schedules
+            </p>
+        </div>
+    </div>
+    <!--/span2-->
+    <div class="span10">
+        <div class="row alert alert-info" id="no-results-row" style="display: none">
+            <strong>No Results Found</strong>
+        </div>
+        <div class="row btn-group">
+            <div class="input-prepend">
+                <span class="add-on"><i class="icon-asterisk"></i></span>
+                <input type="text" id="filter-command" class="span9" placeholder="Enter Command" />&nbsp;&nbsp;&nbsp;
+                        <a class="btn btn_disconnect" id="btn_Command" onclick="parseCommand();" title="Send Command"><i class="icon-arrow-right"></i></a>
+                <a class="btn" href="#" title="Clear data" onclick="clearData();"><i class="icon-remove"></i></a>
+            </div>
+        </div>
+        <div class="row">
+            <table class="table table-hover table-bordered"  id="search-results">
+                <thead>
+                    <tr> 
+                        <th><a style="cursor: pointer;" onclick="previousDate(); return false;" title="Previous Day">&lt;<span data-bind="text: PreviousDay"></span></a></th>
+                        <th colspan="6" style="text-align: center;" data-bind="text: Day"></th>
+                        <th><a style="cursor: pointer;" onclick="nextDate(); return false;" title="Next Day">&gt;<span data-bind="text: NextDay"></span></a></th>
+                    </tr>
+                    <tr>
+                        <th colspan="3"></th>
+                        <th colspan="2">Departure</th>
+                        <th></th>
+                        <th colspan="2">Arrival</th>
+                    </tr>
+                    <tr>
+                        <th>Train ID</th>
+                        <th>Operator</th>
+                        <th>From</th>
+                        <th>Public</th>
+                        <th>WTT</th>
+                        <th>To</th>
+                        <th>Public</th>
+                        <th>WTT</th>
+                    </tr>
+                </thead>
+                <tbody data-bind="foreach: Trains">
+                    <tr>
+                        <td><a data-bind="text: TrainId, attr: { href: 'train#gettrain:' + TrainId() + ':' + TrainUid() }"></a></td>
+                        <td data-bind="text: AtocCode.Code, attr: { title: AtocCode.Name }"></td>
+                        <td>
+                            <a data-bind="text: Origin.Description, attr: { href: 'search#listorigin-crs:' + Origin.CRS }" onclick="listStation(this); return false;" title="Click to view options for this station"></a>
+                        </td>
+                        <td data-bind="text: OriginPublicDeparture"></td>
+                        <td data-bind="text: OriginDeparture"></td>
+                        <td>
+                            <a data-bind="text: Destination.Description, attr: { href: 'search#listorigin-crs:' + Destination.CRS }" onclick="listStation(this); return false;" title="Click to view options for this station"></a>
+                        </td>
+                        <td data-bind="text: DestinationPublicArrival"></td>
+                        <td data-bind="text: DestinationArrival"></td>
+                    </tr>
+                </tbody>
+                <tfoot>                    
+                    <tr> 
+                        <th><a style="cursor: pointer;" onclick="previousDate(); return false;" title="Previous Day">&lt;<span data-bind="text: PreviousDay"></span></a></th>
+                        <th colspan="6" style="text-align: center;" data-bind="text: Day"></th>
+                        <th><a style="cursor: pointer;" onclick="nextDate(); return false;" title="Next Day">&gt;<span data-bind="text: NextDay"></span></a></th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+    <!--/span10-->
+</div>
+<!--/row-fluid-->

@@ -47,6 +47,24 @@ function WttSearchResults() {
     }
 }
 
+function ScheduleSearchResults() {
+    var self = this;
+
+    self.PreviousDay = ko.observable();
+    self.NextDay = ko.observable();
+    self.Day = ko.observable();
+
+    self.Trains = ko.observableArray();
+
+    self.addTrain = function (stop) {
+        self.Trains.push(stop);
+    };
+
+    self.clearTrains = function () {
+        self.Trains.removeAll();
+    }
+}
+
 function TrainViewModel() {
     var self = this;
 
