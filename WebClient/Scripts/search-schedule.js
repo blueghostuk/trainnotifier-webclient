@@ -95,7 +95,11 @@ function getOriginByStanox(stanox, date) {
                 currentOriginResults.Day(now.format(dateFormat));
 
                 for (i in data) {
-                    currentOriginResults.addTrain(ko.mapping.fromJS(data[i]));
+                    var train = ko.mapping.fromJS(data[i]);
+                    train.CssClass = "";
+                    if (data[i].Pass)
+                        train.CssClass = "warning pass";
+                    currentOriginResults.addTrain(train);
                 }
             } else {
                 $("#no-results-row").show();
@@ -138,7 +142,11 @@ function getCallingAtStanox(stanox, date) {
                 currentCallingAtResults.Day(now.format(dateFormat));
 
                 for (i in data) {
-                    currentCallingAtResults.addTrain(ko.mapping.fromJS(data[i]));
+                    var train = ko.mapping.fromJS(data[i]);
+                    train.CssClass = "";
+                    if (data[i].Pass)
+                        train.CssClass = "warning pass";
+                    currentCallingAtResults.addTrain(train);
                 }
             } else {
                 $("#no-results-row").show();

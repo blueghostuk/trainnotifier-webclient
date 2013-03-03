@@ -39,7 +39,7 @@
         </tr>
     </thead>
     <tbody data-bind="foreach: Stops">
-        <tr data-bind="css: Tiploc.Stanox, attr: { title: Tiploc.Description }">
+        <tr data-bind="css: CssClass">
             <td><a class="pointer" data-bind="text: Tiploc.Description, css: Tiploc.Stanox, click: function(d,e) { listStation(d.Tiploc.Stanox()); }"></a></td>
             <td data-bind="text: Arrival"></td>
             <td data-bind="text: Departure"></td>

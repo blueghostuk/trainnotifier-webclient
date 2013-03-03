@@ -149,7 +149,7 @@
                     </tr>
                 </thead>
                 <tbody data-bind="foreach: Trains">
-                    <tr>
+                    <tr data-bind="css: CssClass">
                         <td><a data-bind="text: TrainId, attr: { href: 'train#gettrain:' + TrainId() + ':' + TrainUid() }"></a></td>
                         <td data-bind="text: AtocCode.Code, attr: { title: AtocCode.Name }"></td>
                         <td data-bind="text: Origin.Description"></td>

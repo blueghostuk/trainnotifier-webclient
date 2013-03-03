@@ -217,6 +217,13 @@ function getTrain(trainId, dontUnSub) {
             data = data[0];
 
         $.getJSON("http://" + server + ":82/Schedule?trainId=" + data.TrainId + "&trainUid=" + data.TrainUid, function (schedule) {
+            if (schedule && schedule.Stops) {
+                for (i in schedule.Stops) {
+                    schedule.Stops[i].CssClass = "";
+                    if (schedule.Stops[i].Pass)
+                        schedule.Stops[i].CssClass = "warning pass";
+                }
+            }
             var viewModel = ko.mapping.fromJS(schedule);
 
             viewModel.STPValue = ko.observable(getSTP(schedule.STPIndicator));
