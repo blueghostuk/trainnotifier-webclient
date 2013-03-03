@@ -73,18 +73,21 @@
                         <th><a style="cursor: pointer;" onclick="nextDate(); return false;" title="Next Day"><span data-bind="text: NextDay"></span>&nbsp;&gt;</a></th>
                     </tr>
                     <tr>
-                        <th colspan="3"></th>
+                        <th colspan="2"></th>
+                        <th colspan="2">From</th>
                         <th colspan="2">Departure</th>
-                        <th></th>
+                        <th colspan="2">To</th>
                         <th colspan="2">Arrival</th>
                     </tr>
                     <tr>
                         <th>Train ID</th>
                         <th>Operator</th>
-                        <th>From</th>
+                        <th>Station</th>
+                        <th>Platform</th>
                         <th>Public</th>
                         <th>WTT</th>
-                        <th>To</th>
+                        <th>Station</th>
+                        <th>Platform</th>
                         <th>Public</th>
                         <th>WTT</th>
                     </tr>
@@ -96,13 +99,15 @@
                         <td>
                             <a data-bind="text: Origin.Description, attr: { href: 'search#listorigin-crs:' + Origin.CRS }" onclick="listStation(this); return false;" title="Click to view options for this station"></a>
                         </td>
-                        <td data-bind="text: OriginPublicDeparture"></td>
-                        <td data-bind="text: OriginDeparture"></td>
+                        <td data-bind="Origin.Platform"></td>
+                        <td data-bind="text: Origin.PublicDeparture"></td>
+                        <td data-bind="text: Origin.Departure"></td>
                         <td>
                             <a data-bind="text: Destination.Description, attr: { href: 'search#listorigin-crs:' + Destination.CRS }" onclick="listStation(this); return false;" title="Click to view options for this station"></a>
                         </td>
-                        <td data-bind="text: DestinationPublicArrival"></td>
-                        <td data-bind="text: DestinationArrival"></td>
+                        <td data-bind="Destination.Platform"></td>
+                        <td data-bind="text: Destination.PublicArrival"></td>
+                        <td data-bind="text: Destination.Arrival"></td>
                     </tr>
                 </tbody>
                 <tfoot>                    
