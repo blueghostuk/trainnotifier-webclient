@@ -36,6 +36,10 @@
                     &nbsp;&nbsp;listorigin:[stanox]</a></li>
                 <li><a href="#listorigin-crs:" onclick="setCommand('listorigin-crs:');"><strong>List Trains Originating From:</strong><br />
                     &nbsp;&nbsp;listorigin-crs:[CRS]</a></li>
+                <li><a href="#listorigin:" onclick="setCommand('liststation:');"><strong>List Trains Calling At:</strong><br />
+                    &nbsp;&nbsp;liststation:[stanox]</a></li>
+                <li><a href="#listorigin-crs:" onclick="setCommand('liststation-crs:');"><strong>List Trains Calling At:</strong><br />
+                    &nbsp;&nbsp;liststation-crs:[CRS]</a></li>
             </ul>
         </div>
         <div class="well sidebar-nav" id="stationDetails">
@@ -47,7 +51,8 @@
         </div>
         <div class="well sidebar-nav">
             <p class="centerText" style="padding: 2px;">
-                At the moment this only shows Activated Schedules
+                At the moment this only shows Activated Schedules.<br />
+                Empty rows are probably cancellations.
             </p>
         </div>
     </div>
@@ -65,7 +70,7 @@
             </div>
         </div>
         <div class="row">
-            <table class="table table-hover table-bordered" id="search-results">
+            <table class="table table-hover table-bordered" id="origin-search-results" data-bind="visible: Trains().length > 0">
                 <thead>
                     <tr>
                         <th><a style="cursor: pointer;" onclick="previousDate(); return false;" title="Previous Day">&lt;&nbsp;<span data-bind="text: PreviousDay"></span></a></th>
@@ -111,6 +116,54 @@
                         <th><a style="cursor: pointer;" onclick="previousDate(); return false;" title="Previous Day">&lt;&nbsp;<span data-bind="text: PreviousDay"></span></a></th>
                         <th colspan="8" class="centerText" data-bind="text: Day"></th>
                         <th><a style="cursor: pointer;" onclick="nextDate(); return false;" title="Next Day"><span data-bind="text: NextDay"></span>&nbsp;&gt;</a></th>
+                    </tr>
+                </tfoot>
+            </table>
+            <table class="table table-hover table-bordered" id="callingAt-search-results" data-bind="visible: Trains().length > 0">
+                <thead>
+                    <tr>
+                        <th><a style="cursor: pointer;" onclick="previousCallingAtDate(); return false;" title="Previous Day">&lt;&nbsp;<span data-bind="text: PreviousDay"></span></a></th>
+                        <th colspan="7" class="centerText" data-bind="text: Day"></th>
+                        <th><a style="cursor: pointer;" onclick="nextCallingAtDate(); return false;" title="Next Day"><span data-bind="text: NextDay"></span>&nbsp;&gt;</a></th>
+                    </tr>
+                    <tr>
+                        <th colspan="2"></th>
+                        <th>From</th>
+                        <th></th>
+                        <th colspan="2">Arrival</th>
+                        <th colspan="2">Departure</th>
+                        <th>To</th>
+                    </tr>
+                    <tr>
+                        <th>Train ID</th>
+                        <th>Operator</th>
+                        <th>Station</th>
+                        <th>Platform</th>
+                        <th>Public</th>
+                        <th>WTT</th>
+                        <th>Public</th>
+                        <th>WTT</th>
+                        <th>Station</th>
+                    </tr>
+                </thead>
+                <tbody data-bind="foreach: Trains">
+                    <tr>
+                        <td><a data-bind="text: TrainId, attr: { href: 'train#gettrain:' + TrainId() + ':' + TrainUid() }"></a></td>
+                        <td data-bind="text: AtocCode.Code, attr: { title: AtocCode.Name }"></td>
+                        <td data-bind="text: Origin.Description"></td>
+                        <td data-bind="text: Origin.Platform"></td>
+                        <td data-bind="text: Origin.PublicDeparture"></td>
+                        <td data-bind="text: Origin.Departure"></td>
+                        <td data-bind="text: Destination.PublicArrival"></td>
+                        <td data-bind="text: Destination.Arrival"></td>
+                        <td data-bind="text: Destination.Description"></td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th><a style="cursor: pointer;" onclick="previousCallingAtDate(); return false;" title="Previous Day">&lt;&nbsp;<span data-bind="text: PreviousDay"></span></a></th>
+                        <th colspan="7" class="centerText" data-bind="text: Day"></th>
+                        <th><a style="cursor: pointer;" onclick="nextCallingAtDate(); return false;" title="Next Day"><span data-bind="text: NextDay"></span>&nbsp;&gt;</a></th>
                     </tr>
                 </tfoot>
             </table>

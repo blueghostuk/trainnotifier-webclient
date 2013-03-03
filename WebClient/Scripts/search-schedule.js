@@ -5,7 +5,8 @@
 /// <reference path="ViewModels.js" />
 
 var currentLocation = new LocationViewModel();
-var currentResults = new ScheduleSearchResults();
+var currentOriginResults = new ScheduleSearchResults();
+var currentCallingAtResults = new ScheduleSearchResults();
 
 function setCommand(command) {
     $("#filter-command").val(command);
@@ -27,6 +28,12 @@ function parseCommand() {
         case 'listorigin-crs':
             getOrigin(args, true);
             break;
+        case 'liststation':
+            getStation(args);
+            break;
+        case 'liststation-crs':
+            getStation(args, true);
+            break;
     }
 }
 function getOrigin(args, convertFromCrs) {
@@ -41,10 +48,27 @@ function getOrigin(args, convertFromCrs) {
     }
 }
 
+function getStation(args, convertFromCrs) {
+    if (convertFromCrs) {
+        document.location.hash = "liststation-crs:" + args;
+        $.getJSON("http://" + server + ":82/Stanox/?GetByCrs&crsCode=" + args, function (data) {
+            getCallingAtStanox(data.Name);
+        });
+    } else {
+        document.location.hash = "liststation:" + args;
+        getCallingAtStanox(args);
+    }
+}
+
 var currentDate = new moment();
 var currentStanox = "";
 var dateFormat = "ddd DD MMM YY";
 var dateFormatQuery = "YYYY-MM-DD";
+
+function clear() {
+    currentOriginResults.clearTrains();
+    currentCallingAtResults.clearTrains();
+}
 
 function getOriginByStanox(stanox, date) {
     if (!date) {
@@ -58,21 +82,20 @@ function getOriginByStanox(stanox, date) {
         listStation(currentStanox);
     }
 
-    currentResults.clearTrains();
-
     $.getJSON("http://" + server + ":82/TrainMovement/StartingAtStation/" + currentStanox +
         "?startDate=" + now.format(dateFormatQuery) +
         "&endDate=" + new moment(now).add('days', 1).format(dateFormatQuery),
         function (data) {
+            clear();
             if (data && data.length) {
                 $("#no-results-row").hide();
 
-                currentResults.PreviousDay(new moment(now).add('days', -1).format(dateFormat));
-                currentResults.NextDay(new moment(now).add('days', 1).format(dateFormat));
-                currentResults.Day(now.format(dateFormat));
+                currentOriginResults.PreviousDay(new moment(now).add('days', -1).format(dateFormat));
+                currentOriginResults.NextDay(new moment(now).add('days', 1).format(dateFormat));
+                currentOriginResults.Day(now.format(dateFormat));
 
                 for (i in data) {
-                    currentResults.addTrain(ko.mapping.fromJS(data[i]));
+                    currentOriginResults.addTrain(ko.mapping.fromJS(data[i]));
                 }
             } else {
                 $("#no-results-row").show();
@@ -89,6 +112,49 @@ function nextDate() {
     getOriginByStanox(null, new moment(currentDate).add('days', 1));
 }
 
+function getCallingAtStanox(stanox, date) {
+    if (!date) {
+        var now = new moment();
+    } else {
+        now = date;
+    }
+    currentDate = new moment(now);
+    if (stanox) {
+        currentStanox = stanox;
+        listStation(currentStanox);
+    }
+
+    $.getJSON("http://" + server + ":82/TrainMovement/CallingAtStation/" + currentStanox +
+        "?startDate=" + now.format(dateFormatQuery) +
+        "&endDate=" + new moment(now).add('days', 1).format(dateFormatQuery),
+        function (data) {
+            clear();
+
+            if (data && data.length) {
+                $("#no-results-row").hide();
+
+                currentCallingAtResults.PreviousDay(new moment(now).add('days', -1).format(dateFormat));
+                currentCallingAtResults.NextDay(new moment(now).add('days', 1).format(dateFormat));
+                currentCallingAtResults.Day(now.format(dateFormat));
+
+                for (i in data) {
+                    currentCallingAtResults.addTrain(ko.mapping.fromJS(data[i]));
+                }
+            } else {
+                $("#no-results-row").show();
+            }
+        }
+    );
+}
+
+function previousCallingAtDate() {
+    getCallingAtStanox(null, new moment(currentDate).add('days', -1));
+}
+
+function nextCallingAtDate() {
+    getCallingAtStanox(null, new moment(currentDate).add('days', 1));
+}
+
 function preLoadStationsCallback(results) {
     var commands = [];
     commands.push('listorigin:');
@@ -98,6 +164,14 @@ function preLoadStationsCallback(results) {
     commands.push('listorigin-crs:');
     for (i in results) {
         commands.push('listorigin-crs:' + results[i].CRS)
+    }
+    commands.push('liststation:');
+    for (i in results) {
+        commands.push('liststation:' + results[i].Name)
+    }
+    commands.push('liststation-crs:');
+    for (i in results) {
+        commands.push('liststation-crs:' + results[i].CRS)
     }
     $("#filter-command").typeahead({
         source: commands
@@ -121,7 +195,8 @@ $(function () {
     preLoadStations(preLoadStationsCallback);
 
     ko.applyBindings(currentLocation, $("#stationDetails").get(0));
-    ko.applyBindings(currentResults, $("#search-results").get(0));
+    ko.applyBindings(currentOriginResults, $("#origin-search-results").get(0));
+    ko.applyBindings(currentCallingAtResults, $("#callingAt-search-results").get(0));
 
     loadHashCommand();
 });
