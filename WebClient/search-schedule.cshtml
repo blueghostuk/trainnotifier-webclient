@@ -82,7 +82,6 @@
                         <th colspan="2">From</th>
                         <th colspan="2">Departure</th>
                         <th colspan="2">To</th>
-                        <th></th>
                         <th colspan="2">Arrival</th>
                     </tr>
                     <tr>
@@ -95,7 +94,6 @@
                         <th>Station</th>
                         <th>Platform</th>
                         <th>Public</th>
-                        <th>Pass</th>
                         <th>WTT</th>
                     </tr>
                 </thead>
@@ -110,7 +108,6 @@
                         <td data-bind="text: Destination.Description"></td>
                         <td data-bind="text: Destination.Platform"></td>
                         <td data-bind="text: Destination.PublicArrival"></td>
-                        <td data-bind="text: Pass"></td>
                         <td data-bind="text: Destination.Arrival"></td>
                     </tr>
                 </tbody>
@@ -126,7 +123,7 @@
                 <thead>
                     <tr>
                         <th><a style="cursor: pointer;" onclick="previousCallingAtDate(); return false;" title="Previous Day">&lt;&nbsp;<span data-bind="text: PreviousDay"></span></a></th>
-                        <th colspan="7" class="centerText" data-bind="text: Day"></th>
+                        <th colspan="8" class="centerText" data-bind="text: Day"></th>
                         <th><a style="cursor: pointer;" onclick="nextCallingAtDate(); return false;" title="Next Day"><span data-bind="text: NextDay"></span>&nbsp;&gt;</a></th>
                     </tr>
                     <tr>
@@ -135,6 +132,7 @@
                         <th></th>
                         <th colspan="2">Arrival</th>
                         <th colspan="2">Departure</th>
+                        <th></th>
                         <th>To</th>
                     </tr>
                     <tr>
@@ -146,6 +144,7 @@
                         <th>WTT</th>
                         <th>Public</th>
                         <th>WTT</th>
+                        <th>Pass</th>
                         <th>Station</th>
                     </tr>
                 </thead>
@@ -159,13 +158,14 @@
                         <td data-bind="text: Origin.Departure"></td>
                         <td data-bind="text: Destination.PublicArrival"></td>
                         <td data-bind="text: Destination.Arrival"></td>
+                        <td data-bind="text: Pass"></td>
                         <td data-bind="text: Destination.Description"></td>
                     </tr>
                 </tbody>
                 <tfoot>
                     <tr>
                         <th><a style="cursor: pointer;" onclick="previousCallingAtDate(); return false;" title="Previous Day">&lt;&nbsp;<span data-bind="text: PreviousDay"></span></a></th>
-                        <th colspan="7" class="centerText" data-bind="text: Day"></th>
+                        <th colspan="8" class="centerText" data-bind="text: Day"></th>
                         <th><a style="cursor: pointer;" onclick="nextCallingAtDate(); return false;" title="Next Day"><span data-bind="text: NextDay"></span>&nbsp;&gt;</a></th>
                     </tr>
                 </tfoot>
