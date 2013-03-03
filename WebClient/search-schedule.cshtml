@@ -96,15 +96,11 @@
                     <tr>
                         <td><a data-bind="text: TrainId, attr: { href: 'train#gettrain:' + TrainId() + ':' + TrainUid() }"></a></td>
                         <td data-bind="text: AtocCode.Code, attr: { title: AtocCode.Name }"></td>
-                        <td>
-                            <a data-bind="text: Origin.Description, attr: { href: 'search#listorigin-crs:' + Origin.CRS }" onclick="listStation(this); return false;" title="Click to view options for this station"></a>
-                        </td>
+                        <td data-bind="text: Origin.Description"></td>
                         <td data-bind="text: Origin.Platform"></td>
                         <td data-bind="text: Origin.PublicDeparture"></td>
                         <td data-bind="text: Origin.Departure"></td>
-                        <td>
-                            <a data-bind="text: Destination.Description, attr: { href: 'search#listorigin-crs:' + Destination.CRS }" onclick="listStation(this); return false;" title="Click to view options for this station"></a>
-                        </td>
+                        <td data-bind="text: Destination.Description"></td>
                         <td data-bind="text: Destination.Platform"></td>
                         <td data-bind="text: Destination.PublicArrival"></td>
                         <td data-bind="text: Destination.Arrival"></td>
