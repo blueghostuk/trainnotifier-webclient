@@ -106,9 +106,7 @@ function getOriginByStanox(stanox, date) {
                 $("#no-results-row").show();
             }
         }
-    ).complete(function () {
-        $('#origin-search-results').fixedHeader();
-    });
+    );
 }
 
 function previousDate() {
@@ -155,9 +153,7 @@ function getCallingAtStanox(stanox, date) {
                 $("#no-results-row").show();
             }
         }
-    ).complete(function () {
-        $('#callingAt-search-results').fixedHeader();
-    });
+    );
 }
 
 function previousCallingAtDate() {
