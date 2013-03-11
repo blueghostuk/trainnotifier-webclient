@@ -1,5 +1,5 @@
-﻿/// <reference path="jquery-1.9.1.js" />
-/// <reference path="common.js" />
+﻿/// <reference path="moment.js" />
+/// <reference path="jquery-1.9.1.js" />
 /// <reference path="ViewModels.js" />
 /// <reference path="knockout.mapping-latest.js" />
 /// <reference path="knockout-2.2.1.js" />
@@ -48,7 +48,7 @@ function connectWs() {
         switch (data.Command) {
             case "subtrainupdate":
                 data = data.Response;
-                currentTrain.LastUpdate(formatDateString(new Date()));
+                currentTrain.LastUpdate(moment().format("DD/MM/YY HH:mm:ss"));
                 for (i in data) {
                     addStop(data[i], true);
                     $.when(mapStop(data[i])).then(function () {
@@ -178,7 +178,7 @@ function getTrain(trainId, dontUnSub) {
     if (split && split.length == 2) {
         trainId = split[0] + '/' + split[1];
     }
-    $.getJSON("http://" + server + ":82/TrainMovement/" + trainId, function (data) {
+    $.getJSON("http://" + server + "/TrainMovement/" + trainId, function (data) {
         // if multiple, take first
         if (data.length && data.length > 0)
             data = data[0];
@@ -189,7 +189,7 @@ function getTrain(trainId, dontUnSub) {
         currentTrain.ServiceCode(data.ServiceCode);
         var activated = "";
         if (data.Activated) {
-            activated = formatDateString(new Date(data.Activated));
+            activated = moment(data.Activated).format("DD/MM/YY HH:mm:ss");
         }
         currentTrain.Activated(activated);
         if (data.WorkingTTId && data.WorkingTTId.length > 0) {
@@ -203,10 +203,10 @@ function getTrain(trainId, dontUnSub) {
             fetchLocation(data.SchedOriginStanox);
         var schedDepart = "";
         if (data.SchedOriginDeparture) {
-            schedDepart = formatDateString(new Date(data.SchedOriginDeparture));
+            schedDepart = moment(data.SchedOriginDeparture).format("DD/MM/YY HH:mm:ss");
         }
         currentTrain.SchedDepart(schedDepart);
-        currentTrain.LastUpdate(formatDateString(new Date()));
+        currentTrain.LastUpdate(moment().format("DD/MM/YY HH:mm:ss"));
         showCurrentTrainMap();
         for (i in data.Steps) {
             addStop(data.Steps[i]);
@@ -216,7 +216,7 @@ function getTrain(trainId, dontUnSub) {
         if (data.length && data.length >= 0)
             data = data[0];
 
-        $.getJSON("http://" + server + ":82/Schedule?trainId=" + data.TrainId + "&trainUid=" + data.TrainUid, function (schedule) {
+        $.getJSON("http://" + server + "/Schedule?trainId=" + data.TrainId + "&trainUid=" + data.TrainUid, function (schedule) {
             if (schedule && schedule.Stops) {
                 for (i in schedule.Stops) {
                     schedule.Stops[i].CssClass = "";
@@ -302,7 +302,7 @@ function mapStop(stop) {
         var stanox = stop.Stanox;
         var ts = stop.DepartActualTimeStamp;
     }
-    return $.getJSON("http://" + server + ":82/Stanox/" + stanox, function (data) {
+    return $.getJSON("http://" + server + "/Stanox/" + stanox, function (data) {
         if (data.Lat && data.Lon) {
             marker = new google.maps.Marker({
                 position: new google.maps.LatLng(data.Lat, data.Lon),
@@ -324,7 +324,7 @@ function listStation(stanox) {
         scrollTop: $("#locationDetails").offset().top
     }, 1000);
 
-    $.getJSON("http://" + server + ":82/Stanox/" + stanox, function (data) {
+    $.getJSON("http://" + server + "/Stanox/" + stanox, function (data) {
         currentLocation.locationStanox(data.Name);
         currentLocation.locationTiploc(data.Tiploc);
         currentLocation.locationDescription(data.Description);

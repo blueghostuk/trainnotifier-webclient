@@ -1,5 +1,5 @@
-﻿/// <reference path="knockout-2.2.0.js" />
-/// <reference path="common.js" />
+﻿/// <reference path="moment.js" />
+/// <reference path="knockout-2.2.0.js" />
 
 function LocationViewModel() {
     this.locationStanox = ko.observable();
@@ -10,41 +10,6 @@ function LocationViewModel() {
     this.stationLocation = ko.observable();
     this.Lat = ko.observable();
     this.Lon = ko.observable();
-}
-
-function WttSearchResult() {
-    var self = this;
-
-    self.TrainId = ko.observable();
-    self.TrainUid = ko.observable();
-    self.Headcode = ko.observable();
-    self.WttId = ko.observable();
-    self.From = ko.observable();
-    self.Depart = ko.observable();
-    self.To = ko.observable();
-    self.Arrive = ko.observableArray();
-
-    self.addStop = function (stop) {
-        self.Stops.push(stop);
-    };
-
-    self.clearStops = function () {
-        self.Stops.removeAll();
-    }
-}
-
-function WttSearchResults() {
-    var self = this;
-
-    self.Trains = ko.observableArray();
-
-    self.addTrain = function (stop) {
-        self.Trains.push(stop);
-    };
-
-    self.clearTrains = function () {
-        self.Trains.removeAll();
-    }
 }
 
 function ScheduleSearchResults() {
@@ -154,8 +119,7 @@ function getTimes(stopEl) {
         Delay: 0
     };
     if (stopEl.ActualTimeStamp && stopEl.ActualTimeStamp.length > 0) {
-        var actualTime = new Date(stopEl.ActualTimeStamp);
-        result.ActualTimeStamp = formatTimeString(actualTime);
+        result.ActualTimeStamp = moment(stopEl.ActualTimeStamp).format("HH:mm:ss");
     } else {
         result.ActualTimeStamp = "";
         setTimes = false;
@@ -163,10 +127,9 @@ function getTimes(stopEl) {
 
     if (stopEl.PlannedTime && stopEl.PlannedTime.length > 0) {
         var plannedTime = new Date(stopEl.PlannedTime);
-        result.PlannedTimeStamp = formatTimeString(plannedTime);
+        result.PlannedTimeStamp = moment(stopEl.PlannedTime).format("HH:mm:ss");
     } else if (stopEl.ActualTimeStamp && stopEl.ActualTimeStamp.length > 0) {
-        var plannedTime = new Date(stopEl.ActualTimeStamp);
-        result.PlannedTimeStamp = formatTimeString(actualTime);
+        result.PlannedTimeStamp = moment(stopEl.ActualTimeStamp).format("HH:mm:ss");
     } else {
         result.PlannedTimeStamp = "";
         setTimes = false;

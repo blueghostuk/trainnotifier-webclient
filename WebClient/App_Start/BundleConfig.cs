@@ -22,7 +22,6 @@ namespace TrainNotifier.WebClient
                 "~/Scripts/moment*"));
 
             bundles.Add(new ScriptBundle("~/bundles/app").Include(
-                "~/Scripts/common.js",
                 "~/Scripts/websockets.js",
                 "~/Scripts/ajax-lookups.js",
                 "~/Scripts/mapping.js",
@@ -33,9 +32,6 @@ namespace TrainNotifier.WebClient
 
             bundles.Add(new ScriptBundle("~/bundles/train").Include(
                 "~/Scripts/train.js"));
-
-            bundles.Add(new ScriptBundle("~/bundles/search").Include(
-                "~/Scripts/search.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/search-schedule").Include(
                 "~/Scripts/search-schedule.js"));

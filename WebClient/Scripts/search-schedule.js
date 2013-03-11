@@ -39,7 +39,7 @@ function parseCommand() {
 function getOrigin(args, convertFromCrs) {
     if (convertFromCrs) {
         document.location.hash = "listorigin-crs:" + args;
-        $.getJSON("http://" + server + ":82/Stanox/?GetByCrs&crsCode=" + args, function (data) {
+        $.getJSON("http://" + server + "/Stanox/?GetByCrs&crsCode=" + args, function (data) {
             getOriginByStanox(data.Name);
         });
     } else {
@@ -51,7 +51,7 @@ function getOrigin(args, convertFromCrs) {
 function getStation(args, convertFromCrs) {
     if (convertFromCrs) {
         document.location.hash = "liststation-crs:" + args;
-        $.getJSON("http://" + server + ":82/Stanox/?GetByCrs&crsCode=" + args, function (data) {
+        $.getJSON("http://" + server + "/Stanox/?GetByCrs&crsCode=" + args, function (data) {
             getCallingAtStanox(data.Name);
         });
     } else {
@@ -82,7 +82,7 @@ function getOriginByStanox(stanox, date) {
         listStation(currentStanox);
     }
 
-    $.getJSON("http://" + server + ":82/TrainMovement/StartingAtStation/" + currentStanox +
+    $.getJSON("http://" + server + "/TrainMovement/StartingAtStation/" + currentStanox +
         "?startDate=" + now.format(dateFormatQuery) +
         "&endDate=" + new moment(now).add('days', 1).format(dateFormatQuery),
         function (data) {
@@ -128,7 +128,7 @@ function getCallingAtStanox(stanox, date) {
         listStation(currentStanox);
     }
 
-    $.getJSON("http://" + server + ":82/TrainMovement/CallingAtStation/" + currentStanox +
+    $.getJSON("http://" + server + "/TrainMovement/CallingAtStation/" + currentStanox +
         "?startDate=" + now.format(dateFormatQuery) +
         "&endDate=" + new moment(now).add('days', 1).format(dateFormatQuery),
         function (data) {
@@ -190,7 +190,7 @@ function listStation(stanox) {
     $('html, body').animate({
         scrollTop: $("#locationDetails").offset().top
     }, 1000);
-    $.getJSON("http://" + server + ":82/Stanox/" + stanox, function (data) {
+    $.getJSON("http://" + server + "/Stanox/" + stanox, function (data) {
         currentLocation.locationStanox(data.Name);
         currentLocation.locationTiploc(data.Tiploc);
         currentLocation.locationDescription(data.Description);
