@@ -1,4 +1,5 @@
 ﻿/// <reference path="jquery-1.9.1.js" />
+/// <reference path="table-fixed-header.js" />
 /// <reference path="knockout-2.2.1.js" />
 /// <reference path="knockout.mapping-latest.js" />
 /// <reference path="moment.js" />
@@ -39,7 +40,7 @@ function parseCommand() {
 function getOrigin(args, convertFromCrs) {
     if (convertFromCrs) {
         document.location.hash = "listorigin-crs:" + args;
-        $.getJSON("http://" + server + "/Stanox/?GetByCrs&crsCode=" + args, function (data) {
+        $.getJSON("http://" + server + ":" + apiPort + "/Stanox/?GetByCrs&crsCode=" + args, function (data) {
             getOriginByStanox(data.Name);
         });
     } else {
@@ -51,7 +52,7 @@ function getOrigin(args, convertFromCrs) {
 function getStation(args, convertFromCrs) {
     if (convertFromCrs) {
         document.location.hash = "liststation-crs:" + args;
-        $.getJSON("http://" + server + "/Stanox/?GetByCrs&crsCode=" + args, function (data) {
+        $.getJSON("http://" + server + ":" + apiPort + "/Stanox/?GetByCrs&crsCode=" + args, function (data) {
             getCallingAtStanox(data.Name);
         });
     } else {
@@ -82,7 +83,7 @@ function getOriginByStanox(stanox, date) {
         listStation(currentStanox);
     }
 
-    $.getJSON("http://" + server + "/TrainMovement/StartingAtStation/" + currentStanox +
+    $.getJSON("http://" + server + ":" + apiPort + "/TrainMovement/StartingAtStation/" + currentStanox +
         "?startDate=" + now.format(dateFormatQuery) +
         "&endDate=" + new moment(now).add('days', 1).format(dateFormatQuery),
         function (data) {
@@ -105,7 +106,9 @@ function getOriginByStanox(stanox, date) {
                 $("#no-results-row").show();
             }
         }
-    );
+    ).complete(function () {
+        $('#origin-search-results').fixedHeader();
+    });
 }
 
 function previousDate() {
@@ -128,7 +131,7 @@ function getCallingAtStanox(stanox, date) {
         listStation(currentStanox);
     }
 
-    $.getJSON("http://" + server + "/TrainMovement/CallingAtStation/" + currentStanox +
+    $.getJSON("http://" + server + ":" + apiPort + "/TrainMovement/CallingAtStation/" + currentStanox +
         "?startDate=" + now.format(dateFormatQuery) +
         "&endDate=" + new moment(now).add('days', 1).format(dateFormatQuery),
         function (data) {
@@ -152,7 +155,9 @@ function getCallingAtStanox(stanox, date) {
                 $("#no-results-row").show();
             }
         }
-    );
+    ).complete(function () {
+        $('#callingAt-search-results').fixedHeader();
+    });
 }
 
 function previousCallingAtDate() {
@@ -190,7 +195,7 @@ function listStation(stanox) {
     $('html, body').animate({
         scrollTop: $("#locationDetails").offset().top
     }, 1000);
-    $.getJSON("http://" + server + "/Stanox/" + stanox, function (data) {
+    $.getJSON("http://" + server + ":" + apiPort + "/Stanox/" + stanox, function (data) {
         currentLocation.locationStanox(data.Name);
         currentLocation.locationTiploc(data.Tiploc);
         currentLocation.locationDescription(data.Description);

@@ -4,22 +4,12 @@
 /// <reference path="knockout.mapping-latest.js" />
 /// <reference path="knockout-2.2.1.js" />
 
-function padTime(time) {
-    if (time < 10)
-        return "0" + time;
-    return time;
-}
-
-function setStatus(status) {
-    $("#status").html(status);
-}
-
 var currentLocation = new LocationViewModel();
 
 var currentTrain = new TrainViewModel();
 
 $(function () {
-    
+
     var commands = [];
     commands.push('gettrain:');
     commands.push('subtrain:');
@@ -39,6 +29,10 @@ $(function () {
 
     preLoadMap();
 });
+
+function setStatus(status) {
+    $("#status").html(status);
+}
 
 function connectWs() {
     connect();
@@ -178,7 +172,7 @@ function getTrain(trainId, dontUnSub) {
     if (split && split.length == 2) {
         trainId = split[0] + '/' + split[1];
     }
-    $.getJSON("http://" + server + "/TrainMovement/" + trainId, function (data) {
+    $.getJSON("http://" + server + ":" + apiPort + "/TrainMovement/" + trainId, function (data) {
         // if multiple, take first
         if (data.length && data.length > 0)
             data = data[0];
@@ -216,7 +210,7 @@ function getTrain(trainId, dontUnSub) {
         if (data.length && data.length >= 0)
             data = data[0];
 
-        $.getJSON("http://" + server + "/Schedule?trainId=" + data.TrainId + "&trainUid=" + data.TrainUid, function (schedule) {
+        $.getJSON("http://" + server + ":" + apiPort + "/Schedule?trainId=" + data.TrainId + "&trainUid=" + data.TrainUid, function (schedule) {
             if (schedule && schedule.Stops) {
                 for (i in schedule.Stops) {
                     schedule.Stops[i].CssClass = "";
@@ -302,7 +296,7 @@ function mapStop(stop) {
         var stanox = stop.Stanox;
         var ts = stop.DepartActualTimeStamp;
     }
-    return $.getJSON("http://" + server + "/Stanox/" + stanox, function (data) {
+    return $.getJSON("http://" + server + ":" + apiPort + "/Stanox/" + stanox, function (data) {
         if (data.Lat && data.Lon) {
             marker = new google.maps.Marker({
                 position: new google.maps.LatLng(data.Lat, data.Lon),
@@ -324,7 +318,7 @@ function listStation(stanox) {
         scrollTop: $("#locationDetails").offset().top
     }, 1000);
 
-    $.getJSON("http://" + server + "/Stanox/" + stanox, function (data) {
+    $.getJSON("http://" + server + ":" + apiPort + "/Stanox/" + stanox, function (data) {
         currentLocation.locationStanox(data.Name);
         currentLocation.locationTiploc(data.Tiploc);
         currentLocation.locationDescription(data.Description);

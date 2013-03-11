@@ -17,6 +17,8 @@
 @section FooterJs{
     <script type="text/javascript">
         var server = "@System.Configuration.ConfigurationManager.AppSettings["server"]";
+        var apiPort = "@System.Configuration.ConfigurationManager.AppSettings["apiPort"]";
+        var wsPort = "@System.Configuration.ConfigurationManager.AppSettings["wsPort"]";
     </script>
 
     @Scripts.Render("~/bundles/search-schedule")
@@ -71,7 +73,7 @@
         </div>
         <div class="row">
             <table class="table table-hover table-bordered" id="origin-search-results" data-bind="visible: Trains().length > 0">
-                <thead>
+                <thead class="header">
                     <tr>
                         <th><a style="cursor: pointer;" onclick="previousDate(); return false;" title="Previous Day">&lt;&nbsp;<span data-bind="text: PreviousDay"></span></a></th>
                         <th colspan="8" class="centerText" data-bind="text: Day"></th>
@@ -120,7 +122,7 @@
                 </tfoot>
             </table>
             <table class="table table-hover table-bordered" id="callingAt-search-results" data-bind="visible: Trains().length > 0">
-                <thead>
+                <thead class="header">
                     <tr>
                         <th><a style="cursor: pointer;" onclick="previousCallingAtDate(); return false;" title="Previous Day">&lt;&nbsp;<span data-bind="text: PreviousDay"></span></a></th>
                         <th colspan="8" class="centerText" data-bind="text: Day"></th>

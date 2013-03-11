@@ -4,7 +4,7 @@ function fetchStanox(stanox) {
     if (!stanox || stanox.length == 0)
         return;
 
-    $.getJSON("http://" + server + "/Stanox/" + stanox, function (data) {
+    $.getJSON("http://" + server + ":" + apiPort + "/Stanox/" + stanox, function (data) {
         var html = "";
         if (data.StationName) {
             html = data.StationName;
@@ -25,7 +25,7 @@ function loadLocation(stanox, callback) {
     if (!stanox || stanox.length == 0)
         return;
 
-    $.getJSON("http://" + server + "/Stanox/" + stanox, function (data) {
+    $.getJSON("http://" + server + ":" + apiPort + "/Stanox/" + stanox, function (data) {
         if (!callback)
             callback = loadLocationCallback;
         callback(data);
@@ -39,7 +39,7 @@ function filter(location) {
         return;
     }
 
-    $.getJSON("http://" + server + "/Station/", { id: location }, function (data) {
+    $.getJSON("http://" + server + ":" + apiPort + "/Station/", { id: location }, function (data) {
         currentFilter = data.Name;
         $("#table-trains tbody tr").hide();
         $("#table-trains tbody tr." + data.Name).show();
@@ -47,7 +47,7 @@ function filter(location) {
 }
 
 function preLoadStations(callback) {
-    $.getJSON("http://" + server + "/Station/", null, function (results) {
+    $.getJSON("http://" + server + ":" + apiPort + "/Station/", null, function (results) {
         if (!results || results.length == 0)
             return;
 

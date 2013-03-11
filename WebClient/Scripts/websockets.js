@@ -4,7 +4,7 @@ function connect() {
     $(".btn-connect").attr("disabled", true);
     $(".btn-disconnect").attr("disabled", false);
 
-    ws = new WebSocket("ws://" + server + ":81");
+    ws = new WebSocket("ws://" + server + ":" + wsPort);
     ws.onopen = function () {
         setStatus("Connected");
 

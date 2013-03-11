@@ -17,6 +17,8 @@
 @section FooterJs{
     <script type="text/javascript">
         var server = "@System.Configuration.ConfigurationManager.AppSettings["server"]";
+        var apiPort = "@System.Configuration.ConfigurationManager.AppSettings["apiPort"]";
+        var wsPort = "@System.Configuration.ConfigurationManager.AppSettings["wsPort"]";
     </script>
     
     @Scripts.Render("~/bundles/index")
