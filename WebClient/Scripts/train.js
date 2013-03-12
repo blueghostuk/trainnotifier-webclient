@@ -207,28 +207,38 @@ function getTrain(trainId, dontUnSub) {
         }
         $(".tooltip-dynamic").tooltip();
     }).then(function (data) {
+        // if have uid already then get schedule already called
+        if (split && split.length == 2)
+            return;
+        // if array returned, use the first value
         if (data.length && data.length >= 0)
             data = data[0];
 
-        $.getJSON("http://" + server + ":" + apiPort + "/Schedule?trainId=" + data.TrainId + "&trainUid=" + data.TrainUid, function (schedule) {
-            if (schedule && schedule.Stops) {
-                for (i in schedule.Stops) {
-                    schedule.Stops[i].CssClass = "";
-                    if (schedule.Stops[i].Pass)
-                        schedule.Stops[i].CssClass = "warning pass";
-                }
-            }
-            var viewModel = ko.mapping.fromJS(schedule);
-
-            viewModel.STPValue = ko.observable(getSTP(schedule.STPIndicator));
-            viewModel.Runs = ko.observable(getRuns(schedule.Schedule));
-            viewModel.StartDateValue = ko.observable(new Date(schedule.StartDate).toDateString());
-            viewModel.EndDateValue = ko.observable(new Date(schedule.EndDate).toDateString());
-
-            ko.applyBindings(viewModel, $("#schedule").get(0));
-        });
+        getSchedule(data.TrainId, data.TrainUid);
     });
-    
+    // if have uid already then get schedule straight away
+    if (split && split.length == 2)
+        getSchedule(split[0], split[1]);
+}
+
+function getSchedule(trainId, trainUid) {
+    $.getJSON("http://" + server + ":" + apiPort + "/Schedule?trainId=" + trainId + "&trainUid=" + trainUid, function (schedule) {
+        if (schedule && schedule.Stops) {
+            for (i in schedule.Stops) {
+                schedule.Stops[i].CssClass = "";
+                if (schedule.Stops[i].Pass)
+                    schedule.Stops[i].CssClass = "warning pass";
+            }
+        }
+        var viewModel = ko.mapping.fromJS(schedule);
+
+        viewModel.STPValue = ko.observable(getSTP(schedule.STPIndicator));
+        viewModel.Runs = ko.observable(getRuns(schedule.Schedule));
+        viewModel.StartDateValue = ko.observable(new Date(schedule.StartDate).toDateString());
+        viewModel.EndDateValue = ko.observable(new Date(schedule.EndDate).toDateString());
+
+        ko.applyBindings(viewModel, $("#schedule").get(0));
+    });
 }
 
 function getRuns(schedule) {
