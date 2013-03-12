@@ -17,3 +17,7 @@
 .table tbody tr.pass > td {
     font-style: italic;
 }
+
+table.table-header-colour thead th{
+    background-color: #EEE;
+}

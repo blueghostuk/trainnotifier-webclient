@@ -72,8 +72,8 @@
             </div>
         </div>
         <div class="row">
-            <table class="table table-hover table-bordered" id="origin-search-results" data-bind="visible: Trains().length > 0">
-                <thead class="header">
+            <table class="table table-hover table-bordered table-header-colour" id="origin-search-results" data-bind="visible: Trains().length > 0">
+                <thead>
                     <tr>
                         <th><a style="cursor: pointer;" onclick="previousDate(); return false;" title="Previous Day">&lt;&nbsp;<span data-bind="text: PreviousDay"></span></a></th>
                         <th colspan="8" class="centerText" data-bind="text: Day"></th>
@@ -121,8 +121,8 @@
                     </tr>
                 </tfoot>
             </table>
-            <table class="table table-hover table-bordered" id="callingAt-search-results" data-bind="visible: Trains().length > 0">
-                <thead class="header">
+            <table class="table table-hover table-bordered table-header-colour" id="callingAt-search-results" data-bind="visible: Trains().length > 0">
+                <thead>
                     <tr>
                         <th><a style="cursor: pointer;" onclick="previousCallingAtDate(); return false;" title="Previous Day">&lt;&nbsp;<span data-bind="text: PreviousDay"></span></a></th>
                         <th colspan="8" class="centerText" data-bind="text: Day"></th>
