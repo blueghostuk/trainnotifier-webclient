@@ -54,7 +54,7 @@
         <div class="well sidebar-nav">
             <p class="centerText" style="padding: 2px;">
                 At the moment this only shows Activated Schedules.<br />
-                Empty rows are probably cancellations.
+                Empty rows are activations not matched to a schedule.
             </p>
         </div>
     </div>
@@ -100,7 +100,7 @@
                     </tr>
                 </thead>
                 <tbody data-bind="foreach: Trains">
-                    <tr>
+                    <tr data-bind="css: { error: Cancellation }, attr: { title: Tooltip }">
                         <td><a data-bind="text: TrainId, attr: { href: 'train#gettrain:' + TrainId() + ':' + TrainUid() }"></a></td>
                         <td data-bind="text: AtocCode.Code, attr: { title: AtocCode.Name }"></td>
                         <td data-bind="text: Origin.Description"></td>

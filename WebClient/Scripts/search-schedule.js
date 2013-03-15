@@ -65,6 +65,7 @@ var currentDate = new moment();
 var currentStanox = "";
 var dateFormat = "ddd DD MMM YY";
 var dateFormatQuery = "YYYY-MM-DD";
+var timeFormat = "HH:mm:ss";
 
 function clear() {
     currentOriginResults.clearTrains();
@@ -97,9 +98,11 @@ function getOriginByStanox(stanox, date) {
 
                 for (i in data) {
                     var train = ko.mapping.fromJS(data[i]);
-                    train.CssClass = "";
-                    if (data[i].Pass)
-                        train.CssClass = "warning pass";
+                    train.Tooltip = "";
+                    if (data[i].Cancellation) {
+                        train.Tooltip = "Train Cancelled " + data[i].Cancellation.Type + " @ " + data[i].Cancellation.CancelledStanox
+                            + " @ " + moment(data[i].Cancellation.CancelledTimestamp).format(timeFormat) + " (Code: " + data[i].Cancellation.ReasonCode + ")";
+                    }
                     currentOriginResults.addTrain(train);
                 }
             } else {
