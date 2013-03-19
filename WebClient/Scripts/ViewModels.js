@@ -42,6 +42,7 @@ function TrainViewModel() {
     self.Stops = ko.observableArray();
     self.LastUpdate = ko.observable();
     self.WttId = ko.observable();
+    self.Cancellation = ko.observable();
 
     self.addStop = function (stopEl) {
         if (self.Stops().length == 0) {
@@ -159,13 +160,13 @@ function StopViewModel() {
 
     self.ArrivalDelayResult = ko.computed(function () {
         if (self.ArrivalDelay() == 0)
-            return "label-success";
+            return "badge-success";
         if (self.ArrivalDelay() < 0)
-            return "label-info";
+            return "badge-info";
         if (self.ArrivalDelay() > 10)
-            return "label-important";
+            return "badge-important";
         if (self.ArrivalDelay() > 0)
-            return "label-warning";
+            return "badge-warning";
 
         return "hidden";
     });
@@ -180,13 +181,13 @@ function StopViewModel() {
 
     self.DepartDelayResult = ko.computed(function () {
         if (self.DepartDelay() == 0)
-            return "label-success";
+            return "badge-success";
         if (self.DepartDelay() < 0)
-            return "label-info";
+            return "badge-info";
         if (self.DepartDelay() > 10)
-            return "label-important";
+            return "badge-important";
         if (self.DepartDelay() > 0)
-            return "label-warning";
+            return "badge-warning";
 
         return "hidden";
     });

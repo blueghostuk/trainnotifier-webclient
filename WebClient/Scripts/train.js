@@ -202,6 +202,17 @@ function getTrain(trainId, dontUnSub) {
         }
         currentTrain.SchedDepart(schedDepart);
         currentTrain.LastUpdate(moment().format("DD/MM/YY HH:mm:ss"));
+
+        if (data.Cancellation) {
+            currentTrain.Cancellation(
+                data.Cancellation.Type
+                + " @ " + data.Cancellation.CancelledAt.Description
+                + " @ " + moment(data.Cancellation.CancelledTimestamp).format("HH:mm:ss")
+                + " (" + data.Cancellation.ReasonCode + ")");
+        } else {
+            currentTrain.Cancellation(null);
+        }
+
         showCurrentTrainMap();
         for (i in data.Steps) {
             addStop(data.Steps[i]);
@@ -248,7 +259,7 @@ function getSchedule(trainId, trainUid) {
 }
 
 function getRuns(schedule) {
-    var result = "Runs:";
+    var result = "";
     if (schedule.Monday) {
         result += "M,";
     }
