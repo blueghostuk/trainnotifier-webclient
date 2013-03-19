@@ -128,7 +128,7 @@
                 <thead class="header">
                     <tr>
                         <th><a style="cursor: pointer;" onclick="previousCallingAtDate(); return false;" title="Previous Day">&lt;&nbsp;<span data-bind="text: PreviousDay"></span></a></th>
-                        <th colspan="8" class="centerText" data-bind="text: Day"></th>
+                        <th colspan="7" class="centerText" data-bind="text: Day"></th>
                         <th><a style="cursor: pointer;" onclick="nextCallingAtDate(); return false;" title="Next Day"><span data-bind="text: NextDay"></span>&nbsp;&gt;</a></th>
                     </tr>
                     <tr>
@@ -137,7 +137,6 @@
                         <th></th>
                         <th colspan="2">Arrival</th>
                         <th colspan="2">Departure</th>
-                        <th></th>
                         <th>To</th>
                     </tr>
                     <tr>
@@ -149,7 +148,6 @@
                         <th>WTT</th>
                         <th>Public</th>
                         <th>WTT</th>
-                        <th>Pass</th>
                         <th>Station</th>
                     </tr>
                 </thead>
@@ -159,18 +157,17 @@
                         <td data-bind="text: AtocCode.Code, attr: { title: AtocCode.Name }"></td>
                         <td data-bind="text: Origin.Description"></td>
                         <td data-bind="text: Origin.Platform"></td>
-                        <td data-bind="text: Origin.PublicArrival"></td>
-                        <td data-bind="text: Origin.Arrival"></td>
-                        <td data-bind="text: Destination.PublicDeparture"></td>
-                        <td data-bind="text: Destination.Departure"></td>
-                        <td data-bind="text: Pass"></td>
+                        <td data-bind="text: Origin.PublicArrival, visible: !Pass()"></td>
+                        <td data-bind="text: Pass() ? 'Pass' : Origin.Arrival, attr: { colspan: Pass() ? 2 : 0 }"></td>
+                        <td data-bind="text: Destination.PublicDeparture, visible: !Pass()"></td>
+                        <td data-bind="text: Pass() ? Pass : Destination.Departure, attr: { colspan: Pass() ? 2 : 0 }"></td>
                         <td data-bind="text: Destination.Description"></td>
                     </tr>
                 </tbody>
                 <tfoot>
                     <tr>
                         <th><a style="cursor: pointer;" onclick="previousCallingAtDate(); return false;" title="Previous Day">&lt;&nbsp;<span data-bind="text: PreviousDay"></span></a></th>
-                        <th colspan="8" class="centerText" data-bind="text: Day"></th>
+                        <th colspan="7" class="centerText" data-bind="text: Day"></th>
                         <th><a style="cursor: pointer;" onclick="nextCallingAtDate(); return false;" title="Next Day"><span data-bind="text: NextDay"></span>&nbsp;&gt;</a></th>
                     </tr>
                 </tfoot>
