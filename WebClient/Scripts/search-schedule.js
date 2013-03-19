@@ -83,12 +83,13 @@ function getOriginByStanox(stanox, date) {
         currentStanox = stanox;
         listStation(currentStanox);
     }
+    clear();
 
+    $(".progress").show();
     $.getJSON("http://" + server + ":" + apiPort + "/TrainMovement/StartingAtStation/" + currentStanox +
         "?startDate=" + now.format(dateFormatQuery) +
         "&endDate=" + new moment(now).add('days', 1).format(dateFormatQuery),
         function (data) {
-            clear();
             if (data && data.length) {
                 $("#no-results-row").hide();
 
@@ -109,7 +110,9 @@ function getOriginByStanox(stanox, date) {
                 $("#no-results-row").show();
             }
         }
-    );
+    ).complete(function () {
+        $(".progress").hide();
+    });
 }
 
 function previousDate() {
@@ -131,13 +134,13 @@ function getCallingAtStanox(stanox, date) {
         currentStanox = stanox;
         listStation(currentStanox);
     }
+    clear();
 
+    $(".progress").show();
     $.getJSON("http://" + server + ":" + apiPort + "/TrainMovement/CallingAtStation/" + currentStanox +
         "?startDate=" + now.format(dateFormatQuery) +
         "&endDate=" + new moment(now).add('days', 1).format(dateFormatQuery),
         function (data) {
-            clear();
-
             if (data && data.length) {
                 $("#no-results-row").hide();
 
@@ -147,16 +150,21 @@ function getCallingAtStanox(stanox, date) {
 
                 for (i in data) {
                     var train = ko.mapping.fromJS(data[i]);
-                    train.CssClass = "";
-                    if (data[i].Pass)
-                        train.CssClass = "warning pass";
+                    train.Tooltip = "";
+                    if (data[i].Cancellation) {
+                        train.Tooltip = "Train Cancelled " + data[i].Cancellation.Type + " @ " + data[i].Cancellation.CancelledStanox
+                            + " @ " + moment(data[i].Cancellation.CancelledTimestamp).format(timeFormat) + " (Code: " + data[i].Cancellation.ReasonCode + ")";
+                    }
                     currentCallingAtResults.addTrain(train);
                 }
             } else {
                 $("#no-results-row").show();
             }
         }
-    );
+    ).complete(function () {
+        $(".progress").hide();
+    });
+    
 }
 
 function previousCallingAtDate() {
@@ -191,9 +199,6 @@ function preLoadStationsCallback(results) {
 }
 
 function listStation(stanox) {
-    $('html, body').animate({
-        scrollTop: $("#locationDetails").offset().top
-    }, 1000);
     $.getJSON("http://" + server + ":" + apiPort + "/Stanox/" + stanox, function (data) {
         currentLocation.locationStanox(data.Name);
         currentLocation.locationTiploc(data.Tiploc);

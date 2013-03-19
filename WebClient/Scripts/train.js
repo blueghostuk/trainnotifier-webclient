@@ -172,6 +172,7 @@ function getTrain(trainId, dontUnSub) {
     if (split && split.length == 2) {
         trainId = split[0] + '/' + split[1];
     }
+    $(".progress").show();
     $.getJSON("http://" + server + ":" + apiPort + "/TrainMovement/" + trainId, function (data) {
         // if multiple, take first
         if (data.length && data.length > 0)
@@ -215,14 +216,19 @@ function getTrain(trainId, dontUnSub) {
             data = data[0];
 
         getSchedule(data.TrainId, data.TrainUid);
+    }).done(function () {
+        $(".progress").hide();
     });
     // if have uid already then get schedule straight away
     if (split && split.length == 2)
-        getSchedule(split[0], split[1]);
+        getSchedule(split[0], split[1]).complete(function () {
+            $(".progress").hide();
+        });
 }
 
 function getSchedule(trainId, trainUid) {
-    $.getJSON("http://" + server + ":" + apiPort + "/Schedule?trainId=" + trainId + "&trainUid=" + trainUid, function (schedule) {
+    $(".progress").show();
+    return $.getJSON("http://" + server + ":" + apiPort + "/Schedule?trainId=" + trainId + "&trainUid=" + trainUid, function (schedule) {
         if (schedule && schedule.Stops) {
             for (i in schedule.Stops) {
                 schedule.Stops[i].CssClass = "";
