@@ -15,6 +15,7 @@
 }
 
 .table tbody tr.pass > td {
+    background-color: #faf2cc;
     font-style: italic;
 }
 

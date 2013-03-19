@@ -240,13 +240,6 @@ function getTrain(trainId, dontUnSub) {
 function getSchedule(trainId, trainUid) {
     $(".progress").show();
     return $.getJSON("http://" + server + ":" + apiPort + "/Schedule?trainId=" + trainId + "&trainUid=" + trainUid, function (schedule) {
-        if (schedule && schedule.Stops) {
-            for (i in schedule.Stops) {
-                schedule.Stops[i].CssClass = "";
-                if (schedule.Stops[i].Pass)
-                    schedule.Stops[i].CssClass = "warning pass";
-            }
-        }
         var viewModel = ko.mapping.fromJS(schedule);
 
         viewModel.STPValue = ko.observable(getSTP(schedule.STPIndicator));
