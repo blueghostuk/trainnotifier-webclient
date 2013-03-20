@@ -25,7 +25,11 @@ $(function () {
         setCommand(document.location.hash.substr(1));
     }
 
-    connectWs();
+    try{
+        connectWs();
+    } catch (err) {
+        console.error("Failed to connect to web socket server: {0}", err)
+    }
 
     preLoadMap();
 });
@@ -218,28 +222,19 @@ function getTrain(trainId, dontUnSub) {
             addStop(data.Steps[i]);
         }
         $(".tooltip-dynamic").tooltip();
-    }).then(function (data) {
-        // if have uid already then get schedule already called
-        if (split && split.length == 2)
-            return;
+    }).done(function (data) {
         // if array returned, use the first value
         if (data.length && data.length >= 0)
             data = data[0];
 
-        getSchedule(data.TrainId, data.TrainUid);
+        return getSchedule(data, data.TrainId, data.TrainUid);
     }).done(function () {
         $(".progress").hide();
     });
-    // if have uid already then get schedule straight away
-    if (split && split.length == 2)
-        getSchedule(split[0], split[1]).complete(function () {
-            $(".progress").hide();
-        });
 }
 
-function getSchedule(trainId, trainUid) {
-    $(".progress").show();
-    return $.getJSON("http://" + server + ":" + apiPort + "/Schedule?trainId=" + trainId + "&trainUid=" + trainUid, function (schedule) {
+function getSchedule(data) {
+    return $.getJSON("http://" + server + ":" + apiPort + "/Schedule?trainId=" + data.TrainId + "&trainUid=" + data.TrainUid, function (schedule) {
         var viewModel = ko.mapping.fromJS(schedule);
 
         viewModel.STPValue = ko.observable(getSTP(schedule.STPIndicator));
@@ -248,6 +243,18 @@ function getSchedule(trainId, trainUid) {
         viewModel.EndDateValue = ko.observable(new Date(schedule.EndDate).toDateString());
 
         ko.applyBindings(viewModel, $("#schedule").get(0));
+
+        // do mix
+        var mixModel = ko.mapping.fromJS(schedule);
+
+        var liveStep = 0;
+        for (var i = 0; i < mixModel.Stops().length; i++) {
+            mixModel.Stops()[i].ActualArrival = "";
+            mixModel.Stops()[i].ActualDeparture = "";
+            //TODO:complete
+        }
+
+        ko.applyBindings(mixModel, $("#mix").get(0));
     });
 }
 
