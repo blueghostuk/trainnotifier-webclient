@@ -6,7 +6,7 @@ To gain access to data you need to sign up at https://datafeeds.networkrail.co.u
 
 You may be able to access a demo site @ http://www.trainnotifier.co.uk
 
-Copyright (C) 2012 Michael Pritchard
+Copyright (C) 2012-13 Michael Pritchard
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
