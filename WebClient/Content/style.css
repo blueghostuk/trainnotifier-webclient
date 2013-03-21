@@ -23,11 +23,18 @@
     background-color: #f2dede !important;
 }
 
-table.table-header-colour thead th{
+table.table-header-colour thead th {
     background-color: #EEE;
 }
 
 /* override bootstrap */
-ul.nav.nav-tabs{
+ul.nav.nav-tabs {
     margin-bottom: 0px;
+}
+
+/* override bootstrap responsive*/
+@media (max-width: 979px) {
+    .navbar-fixed-top {
+        position: fixed;
+    }
 }
