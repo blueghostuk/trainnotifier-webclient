@@ -113,6 +113,7 @@
     <Content Include="Global.asax" />
     <Content Include="live.cshtml" />
     <Content Include="packages.config" />
+    <Content Include="index.cshtml" />
     <None Include="Scripts\jquery-1.9.1.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
