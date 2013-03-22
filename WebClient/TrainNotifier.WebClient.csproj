@@ -111,7 +111,7 @@
     <Content Include="Content\images\glyphicons-halflings.png" />
     <Content Include="Content\style.css" />
     <Content Include="Global.asax" />
-    <Content Include="index.cshtml" />
+    <Content Include="live.cshtml" />
     <Content Include="packages.config" />
     <None Include="Scripts\jquery-1.9.1.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
