@@ -3,6 +3,7 @@
     <ul>
         <li><span class="label label-info">Operator:</span> <span data-bind="text: AtocCode.Name" style="display: inline;"></span></li>
         <li><span class="label label-info">Runs:</span> <span data-bind="text: Runs"></span></li>
+        <li><span class="label label-info">Type:</span> <span data-bind="text: STPValue"></span></li>
     </ul>
 </div>
 <div class="span4">
@@ -10,6 +11,7 @@
     <ul>
         <li><span class="label label-info">Live Id:</span> <a onclick="loadTrainSub(this);" data-bind="text: Id, attr: {href :'#subtrain:' + Id()}" title="View Live Updates for this train" style="display: inline;"></a></li>
         <li><span class="label label-info">Id:</span> <span data-bind="text: Headcode"></span></li>
+        <li data-bind="visible: Cancellation" style="display:none;"><span class="label label-important">Cancelled:</span> <span data-bind="text: Cancellation"></span></li>
     </ul>
 </div>
 <div class="span4">

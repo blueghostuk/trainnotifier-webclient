@@ -265,6 +265,16 @@ function getSchedule(data) {
             activated = moment(_lastLiveData.Activated).format(dateFormat);
         }
         mixModel.Activated = ko.observable(activated);
+        mixModel.Cancellation = ko.observable();
+        if (_lastLiveData.Cancellation) {
+            mixModel.Cancellation(
+                _lastLiveData.Cancellation.Type
+                + " @ " + _lastLiveData.Cancellation.CancelledAt.Description
+                + " @ " + moment(_lastLiveData.Cancellation.CancelledTimestamp).format(timeFormat)
+                + " (" + _lastLiveData.Cancellation.ReasonCode + ")");
+        } else {
+            currentTrain.Cancellation(null);
+        }
 
         for (var i = 0; i < mixModel.Stops().length; i++) {
             mixModel.Stops()[i].ActualArrival = ko.observable("");
