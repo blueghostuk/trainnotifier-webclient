@@ -222,11 +222,16 @@ function getTrain(trainId, dontUnSub) {
         currentTrain.LastUpdate(moment().format(dateFormat));
 
         if (data.Cancellation) {
-            currentTrain.Cancellation(
+            var canxTxt = 
                 data.Cancellation.Type
                 + " @ " + data.Cancellation.CancelledAt.Description
                 + " @ " + moment(data.Cancellation.CancelledTimestamp).format(timeFormat)
-                + " (" + data.Cancellation.ReasonCode + ")");
+                + " - Reason: ";
+            if (data.Cancellation.Description) {
+                canxTxt += data.Cancellation.Description;
+            }
+            canxTxt += " (" + data.Cancellation.ReasonCode + ")";
+            currentTrain.Cancellation(canxTxt);
         } else {
             currentTrain.Cancellation(null);
         }
@@ -265,15 +270,21 @@ function getSchedule(data) {
             activated = moment(_lastLiveData.Activated).format(dateFormat);
         }
         mixModel.Activated = ko.observable(activated);
+
         mixModel.Cancellation = ko.observable();
         if (_lastLiveData.Cancellation) {
-            mixModel.Cancellation(
+            var canxTxt =
                 _lastLiveData.Cancellation.Type
                 + " @ " + _lastLiveData.Cancellation.CancelledAt.Description
                 + " @ " + moment(_lastLiveData.Cancellation.CancelledTimestamp).format(timeFormat)
-                + " (" + _lastLiveData.Cancellation.ReasonCode + ")");
+                + " - Reason: ";
+            if (_lastLiveData.Cancellation.Description) {
+                canxTxt += _lastLiveData.Cancellation.Description;
+            }
+            canxTxt += " (" + _lastLiveData.Cancellation.ReasonCode + ")";
+            mixModel.Cancellation(canxTxt);
         } else {
-            currentTrain.Cancellation(null);
+            mixModel.Cancellation(null);
         }
 
         for (var i = 0; i < mixModel.Stops().length; i++) {

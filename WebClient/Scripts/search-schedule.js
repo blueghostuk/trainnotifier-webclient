@@ -101,8 +101,12 @@ function getOriginByStanox(stanox, date) {
                     var train = ko.mapping.fromJS(data[i]);
                     train.Tooltip = "";
                     if (data[i].Cancellation) {
-                        train.Tooltip = "Train Cancelled " + data[i].Cancellation.Type + " @ " + data[i].Cancellation.CancelledStanox
-                            + " @ " + moment(data[i].Cancellation.CancelledTimestamp).format(timeFormat) + " (Code: " + data[i].Cancellation.ReasonCode + ")";
+                        train.Tooltip = "Train Cancelled " + data[i].Cancellation.Type + " at " + data[i].Cancellation.CancelledStanox
+                            + " @ " + moment(data[i].Cancellation.CancelledTimestamp).format(timeFormat) + " - Reason : ";
+                        if (data[i].Cancellation.Description) {
+                            train.Tooltip += data[i].Cancellation.Description;
+                        }
+                        train.Tooltip += " (" + data[i].Cancellation.ReasonCode + ")";
                     }
                     currentOriginResults.addTrain(train);
                 }
@@ -152,8 +156,12 @@ function getCallingAtStanox(stanox, date) {
                     var train = ko.mapping.fromJS(data[i]);
                     train.Tooltip = "";
                     if (data[i].Cancellation) {
-                        train.Tooltip = "Train Cancelled " + data[i].Cancellation.Type + " @ " + data[i].Cancellation.CancelledStanox
-                            + " @ " + moment(data[i].Cancellation.CancelledTimestamp).format(timeFormat) + " (Code: " + data[i].Cancellation.ReasonCode + ")";
+                        train.Tooltip = "Train Cancelled " + data[i].Cancellation.Type + " at " + data[i].Cancellation.CancelledStanox
+                            + " @ " + moment(data[i].Cancellation.CancelledTimestamp).format(timeFormat) + " - Reason : ";
+                        if (data[i].Cancellation.Description) {
+                            train.Tooltip += data[i].Cancellation.Description;
+                        }
+                        train.Tooltip += " (" + data[i].Cancellation.ReasonCode + ")";
                     }
                     currentCallingAtResults.addTrain(train);
                 }
