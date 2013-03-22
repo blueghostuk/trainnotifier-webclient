@@ -72,19 +72,19 @@
         </div>
         <div class="row">
             <ul class="nav nav-tabs">
-                <li><a href="#mix" data-toggle="tab">Schedule &amp; Live</a></li>
+                <li class="active"><a href="#mix" data-toggle="tab">Schedule &amp; Live</a></li>
                 <li><a href="#schedule" data-toggle="tab">Schedule</a></li>
-                <li class="active"><a href="#trains" data-toggle="tab">Live</a></li>
+                <li><a href="#trains" data-toggle="tab">Live</a></li>
                 <li><a href="#livemap" onclick="showCurrentTrainMap();" data-toggle="tab">Live Map</a></li>
             </ul>
             <div class="tab-content">
-                <div class="tab-pane" id="mix">
+                <div class="tab-pane active" id="mix">
                     @RenderPage("_trainMix.cshtml")
                 </div>
                 <div class="tab-pane" id="schedule">
                     @RenderPage("_trainSchedule.cshtml")
                 </div>
-                <div class="tab-pane active" id="trains">
+                <div class="tab-pane" id="trains">
                     @RenderPage("_trainLive.cshtml")
                 </div>
                 <div class="tab-pane" id="livemap">

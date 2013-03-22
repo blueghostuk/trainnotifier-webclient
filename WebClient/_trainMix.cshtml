@@ -1,6 +1,23 @@
-﻿<div class="alert alert-info" style="margin-top: 5px;">
-    <button type="button" class="close" data-dismiss="alert">×</button>
-    Work in progress
+﻿<div class="span4">
+    <h5>Schedule Details</h5>
+    <ul>
+        <li><span class="label label-info">Operator:</span> <span data-bind="text: AtocCode.Name" style="display: inline;"></span></li>
+        <li><span class="label label-info">Runs:</span> <span data-bind="text: Runs"></span></li>
+    </ul>
+</div>
+<div class="span4">
+    <h5>Live Details</h5>
+    <ul>
+        <li><span class="label label-info">Live Id:</span> <a onclick="loadTrainSub(this);" data-bind="text: Id, attr: {href :'#subtrain:' + Id()}" title="View Live Updates for this train" style="display: inline;"></a></li>
+        <li><span class="label label-info">Id:</span> <span data-bind="text: Headcode"></span></li>
+    </ul>
+</div>
+<div class="span4">
+    <h5>Updates</h5>
+    <ul>
+        <li><span class="label label-info">Activated:</span> <span data-bind="text: Activated"></span></li>
+        <li><span class="label label-info">Last Update:</span> <span data-bind="text: LastUpdate" id="lastUpdate"></span></li>
+    </ul>
 </div>
 <table class="table table-hover table-bordered table-header-colour" id="mixView">
     <thead>

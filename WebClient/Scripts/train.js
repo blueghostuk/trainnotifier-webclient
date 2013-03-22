@@ -8,6 +8,13 @@ var currentLocation = new LocationViewModel();
 
 var currentTrain = new TrainViewModel();
 
+var mixModel;
+
+var timeFormat = "HH:mm:ss";
+var dateFormat = "DD/MM/YY HH:mm:ss";
+var _lastLiveData;
+var _lastStopNumber = 0;
+
 $(function () {
 
     var commands = [];
@@ -25,7 +32,7 @@ $(function () {
         setCommand(document.location.hash.substr(1));
     }
 
-    try{
+    try {
         connectWs();
     } catch (err) {
         console.error("Failed to connect to web socket server: {0}", err)
@@ -46,9 +53,13 @@ function connectWs() {
         switch (data.Command) {
             case "subtrainupdate":
                 data = data.Response;
-                currentTrain.LastUpdate(moment().format("DD/MM/YY HH:mm:ss"));
+                var lu = moment().format(dateFormat);
+                currentTrain.LastUpdate(lu);
+                if (mixModel) {
+                    mixModel.LastUpdate(lu);
+                }
                 for (i in data) {
-                    addStop(data[i], true);
+                    addStop(data[i], true, true);
                     $.when(mapStop(data[i])).then(function () {
                         centreMap();
                     });
@@ -82,13 +93,16 @@ function wsOpenCommand() {
     parseCommand();
 }
 
-function addStop(stopEl, terminateStop) {
+function addStop(stopEl, terminateStop, mixIn) {
     // train terminated so unsubscribe
     if (terminateStop && stopEl.State == 1) {
         sendWsCommand("unsubtrain:");
     }
 
     currentTrain.addStop(stopEl);
+
+    if (mixIn)
+        mixInLiveStop(stopEl);
 
     fetchLocation(stopEl.Stanox);
 }
@@ -188,7 +202,7 @@ function getTrain(trainId, dontUnSub) {
         currentTrain.ServiceCode(data.ServiceCode);
         var activated = "";
         if (data.Activated) {
-            activated = moment(data.Activated).format("DD/MM/YY HH:mm:ss");
+            activated = moment(data.Activated).format(dateFormat);
         }
         currentTrain.Activated(activated);
         if (data.WorkingTTId && data.WorkingTTId.length > 0) {
@@ -202,16 +216,16 @@ function getTrain(trainId, dontUnSub) {
             fetchLocation(data.SchedOriginStanox);
         var schedDepart = "";
         if (data.SchedOriginDeparture) {
-            schedDepart = moment(data.SchedOriginDeparture).format("DD/MM/YY HH:mm:ss");
+            schedDepart = moment(data.SchedOriginDeparture).format(dateFormat);
         }
         currentTrain.SchedDepart(schedDepart);
-        currentTrain.LastUpdate(moment().format("DD/MM/YY HH:mm:ss"));
+        currentTrain.LastUpdate(moment().format(dateFormat));
 
         if (data.Cancellation) {
             currentTrain.Cancellation(
                 data.Cancellation.Type
                 + " @ " + data.Cancellation.CancelledAt.Description
-                + " @ " + moment(data.Cancellation.CancelledTimestamp).format("HH:mm:ss")
+                + " @ " + moment(data.Cancellation.CancelledTimestamp).format(timeFormat)
                 + " (" + data.Cancellation.ReasonCode + ")");
         } else {
             currentTrain.Cancellation(null);
@@ -234,28 +248,63 @@ function getTrain(trainId, dontUnSub) {
 }
 
 function getSchedule(data) {
+    _lastLiveData = data;
     return $.getJSON("http://" + server + ":" + apiPort + "/Schedule?trainId=" + data.TrainId + "&trainUid=" + data.TrainUid, function (schedule) {
-        var viewModel = ko.mapping.fromJS(schedule);
+        mixModel = ko.mapping.fromJS(schedule);
 
-        viewModel.STPValue = ko.observable(getSTP(schedule.STPIndicator));
-        viewModel.Runs = ko.observable(getRuns(schedule.Schedule));
-        viewModel.StartDateValue = ko.observable(new Date(schedule.StartDate).toDateString());
-        viewModel.EndDateValue = ko.observable(new Date(schedule.EndDate).toDateString());
+        mixModel.STPValue = ko.observable(getSTP(schedule.STPIndicator));
+        mixModel.Runs = ko.observable(getRuns(schedule.Schedule));
+        mixModel.StartDateValue = ko.observable(new Date(schedule.StartDate).toDateString());
+        mixModel.EndDateValue = ko.observable(new Date(schedule.EndDate).toDateString());
+        mixModel.Id = ko.observable(_lastLiveData.Id);
+        mixModel.Headcode = ko.observable(_lastLiveData.HeadCode);
+        mixModel.ServiceCode = ko.observable(_lastLiveData.ServiceCode);
+        mixModel.LastUpdate = ko.observable(moment().format(dateFormat));
+        var activated = "";
+        if (_lastLiveData.Activated) {
+            activated = moment(_lastLiveData.Activated).format(dateFormat);
+        }
+        mixModel.Activated = ko.observable(activated);
 
-        ko.applyBindings(viewModel, $("#schedule").get(0));
-
-        // do mix
-        var mixModel = ko.mapping.fromJS(schedule);
-
-        var liveStep = 0;
         for (var i = 0; i < mixModel.Stops().length; i++) {
-            mixModel.Stops()[i].ActualArrival = "";
-            mixModel.Stops()[i].ActualDeparture = "";
-            //TODO:complete
+            mixModel.Stops()[i].ActualArrival = ko.observable("");
+            mixModel.Stops()[i].ActualDeparture = ko.observable("");
+        }
+        for (var i = 0; i < _lastLiveData.Steps.length; i++) {
+            mixInStop(_lastLiveData.Steps[i]);
         }
 
+        ko.applyBindings(mixModel, $("#schedule").get(0));
         ko.applyBindings(mixModel, $("#mix").get(0));
     });
+}
+
+function mixInStop(step, stopNumber) {
+    var stopNumber = stopNumber || step.ScheduleStopNumber;
+    if (stopNumber || stopNumber == 0) {
+        var time = moment(step.ActualTimeStamp).format(timeFormat);
+        switch (step.EventType) {
+            case "DEPARTURE":
+                mixModel.Stops()[stopNumber].ActualDeparture(time);
+                break;
+            case "ARRIVAL":
+                mixModel.Stops()[stopNumber].ActualArrival(time);
+                break;
+        }
+        _lastStopNumber = stopNumber;
+    }
+}
+
+function mixInLiveStop(stop, stopNumber) {
+    var stopLook = stopNumber || _lastStopNumber;
+    try {
+        var latestStanox = mixModel.Stops()[stopLook].Tiploc.Stanox();
+        if (stop.Stanox == latestStanox) {
+            mixInStop(stop, stopLook);
+        } else {
+            mixInLiveStop(stop, ++stopLook);
+        }
+    } catch (err) { }
 }
 
 function getRuns(schedule) {
