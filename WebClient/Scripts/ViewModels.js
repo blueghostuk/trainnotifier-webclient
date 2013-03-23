@@ -242,19 +242,34 @@ function LiveTrainViewModel() {
                     setDeparture(stopEl, stopModel);
                     break;
             }
+
             self.Stops.push(stopModel);
         } else {
             var stopModel = self.Stops()[self.Stops().length - 1];
             if (stopModel.Stanox() != stopEl.Stanox) {
                 stopModel = new StopViewModel();
+
                 self.Stops.push(stopModel);
             } 
             switch (stopEl.EventType.toLowerCase()) {
                 case "arrival":
                     setArrival(stopEl, stopModel);
+                    if (stopEl.OffRoute) {
+                        stopModel.OffRoute("Off Route.");
+                    }
                     break;
                 case "departure":
                     setDeparture(stopEl, stopModel);
+
+                    if (stopEl.OffRoute) {
+                        stopModel.OffRoute("Off Route.");
+                    }
+                    if (stopEl.NextStanox && stopEl.NextStanox.length > 0) {
+                        stopModel.NextStanox(stopEl.NextStanox);
+                    }
+                    if (stopEl.ExpectedAtNextStanox && stopEl.ExpectedAtNextStanox.length > 0) {
+                        stopModel.ExpectedAtNextStanox(moment(stopEl.ExpectedAtNextStanox, "HH:mm:ss").format("mm:ss"));
+                    }
                     break;
             }
         }
@@ -384,6 +399,9 @@ function StopViewModel() {
     self.Platform = ko.observable();
     self.ArrivalDelay = ko.observable();
     self.DepartDelay = ko.observable();
+    self.NextStanox = ko.observable();
+    self.ExpectedAtNextStanox = ko.observable();
+    self.OffRoute = ko.observable();
 
     self.ArrivalDelayResult = ko.computed(function () {
         if (self.ArrivalDelay() == 0)

@@ -29,6 +29,7 @@
             <th title="Expected WTT time is tooltip. Delay is shown next to time">Depart</th>
             <th>Line</th>
             <th>Platform</th>
+            <th>Notes</th>
         </tr>
     </thead>
     <tbody data-bind="foreach: Stops">
@@ -38,6 +39,7 @@
             <td><span data-bind="text: DepartActualTimeStamp, attr: { title: DepartPlannedTime }" class="tooltip-dynamic"></span>&nbsp;<span class="badge" data-bind="text: DepartDelay, css: DepartDelayResult, attr: { title: DepartDelayTitle }"></span></td>
             <td data-bind="text: Line"></td>
             <td data-bind="text: Platform"></td>
+            <td><span data-bind="text: OffRoute"></span><span data-bind="visible: NextStanox">Next @@ <span data-bind="css: NextStanox()"></span> in <span data-bind="text: ExpectedAtNextStanox"></span></span></td>
         </tr>
     </tbody>
 </table>

@@ -104,6 +104,8 @@ function addStop(stopEl, terminateStop, mixIn) {
         mixInLiveStop(stopEl);
 
     fetchLocation(stopEl.Stanox);
+    if (stopEl.NextStanox && stopEl.NextStanox.length > 0)
+        fetchLocation(stopEl.NextStanox);
 }
 
 function fetchLocation(stanox) {
