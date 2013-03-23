@@ -217,7 +217,7 @@ function ScheduleSearchResults() {
     }
 }
 
-function TrainViewModel() {
+function LiveTrainViewModel() {
     var self = this;
 
     self.Id = ko.observable();
@@ -262,6 +262,46 @@ function TrainViewModel() {
 
     self.clearStops = function () {
         self.Stops.removeAll();
+    }
+
+    self.updateFromJSON = function (data) {
+        self.clearStops();
+        self.Id(data.Id);
+        self.Headcode(data.HeadCode);
+        self.ServiceCode(data.ServiceCode);
+        var activated = "";
+        if (data.Activated) {
+            activated = moment(data.Activated).format(dateFormat);
+        }
+        self.Activated(activated);
+        if (data.WorkingTTId && data.WorkingTTId.length > 0) {
+            self.WttId(data.WorkingTTId.substring(0, data.WorkingTTId.length - 1));
+        } else {
+            self.WttId('');
+        }
+
+        self.SchedOrigin(data.SchedOriginStanox);
+        var schedDepart = "";
+        if (data.SchedOriginDeparture) {
+            schedDepart = moment(data.SchedOriginDeparture).format(dateFormat);
+        }
+        self.SchedDepart(schedDepart);
+        self.LastUpdate(moment().format(dateFormat));
+
+        if (data.Cancellation) {
+            var canxTxt =
+                data.Cancellation.Type
+                + " @ " + data.Cancellation.CancelledAt.Description
+                + " @ " + moment(data.Cancellation.CancelledTimestamp).format(timeFormat)
+                + " - Reason: ";
+            if (data.Cancellation.Description) {
+                canxTxt += data.Cancellation.Description;
+            }
+            canxTxt += " (" + data.Cancellation.ReasonCode + ")";
+            self.Cancellation(canxTxt);
+        } else {
+            self.Cancellation(null);
+        }
     }
 }
 

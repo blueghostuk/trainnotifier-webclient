@@ -5,9 +5,7 @@
 /// <reference path="knockout-2.2.1.js" />
 
 var currentLocation = new LocationViewModel();
-
-var currentTrain = new TrainViewModel();
-
+var currentTrain = new LiveTrainViewModel();
 var mixModel = new ScheduleTrainViewModel();
 
 var timeFormat = "HH:mm:ss";
@@ -126,11 +124,6 @@ function fetchLocation(stanox) {
     });
 }
 
-function clearData() {
-    currentTrain.Id('');
-    currentTrain.ServiceCode('');
-    currentTrain.clearStops();
-}
 
 function sendCommand(resetSub) {
     if (resetSub) {
@@ -193,45 +186,10 @@ function getTrain(trainId, dontUnSub) {
         if (data.length && data.length > 0)
             data = data[0];
 
-        currentTrain.clearStops();
-        currentTrain.Id(data.Id);
-        currentTrain.Headcode(data.HeadCode);
-        currentTrain.ServiceCode(data.ServiceCode);
-        var activated = "";
-        if (data.Activated) {
-            activated = moment(data.Activated).format(dateFormat);
-        }
-        currentTrain.Activated(activated);
-        if (data.WorkingTTId && data.WorkingTTId.length > 0) {
-            currentTrain.WttId(data.WorkingTTId.substring(0, data.WorkingTTId.length - 1));
-        } else {
-            currentTrain.WttId('');
-        }
+        currentTrain.updateFromJSON(data);
 
-        currentTrain.SchedOrigin(data.SchedOriginStanox);
         if (data.SchedOriginStanox && data.SchedOriginStanox.length > 0)
             fetchLocation(data.SchedOriginStanox);
-        var schedDepart = "";
-        if (data.SchedOriginDeparture) {
-            schedDepart = moment(data.SchedOriginDeparture).format(dateFormat);
-        }
-        currentTrain.SchedDepart(schedDepart);
-        currentTrain.LastUpdate(moment().format(dateFormat));
-
-        if (data.Cancellation) {
-            var canxTxt = 
-                data.Cancellation.Type
-                + " @ " + data.Cancellation.CancelledAt.Description
-                + " @ " + moment(data.Cancellation.CancelledTimestamp).format(timeFormat)
-                + " - Reason: ";
-            if (data.Cancellation.Description) {
-                canxTxt += data.Cancellation.Description;
-            }
-            canxTxt += " (" + data.Cancellation.ReasonCode + ")";
-            currentTrain.Cancellation(canxTxt);
-        } else {
-            currentTrain.Cancellation(null);
-        }
 
         showCurrentTrainMap();
         for (i in data.Steps) {
