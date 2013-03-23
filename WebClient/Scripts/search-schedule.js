@@ -108,6 +108,14 @@ function getOriginByStanox(stanox, date) {
                         }
                         train.Tooltip += " (" + data[i].Cancellation.ReasonCode + ")";
                     }
+                    train.ActualArrival = "";
+                    if (data[i].ActualArrival) {
+                        train.ActualArrival = moment(data[i].ActualArrival).format(timeFormat);
+                    }
+                    train.ActualDeparture = "";
+                    if (data[i].ActualDeparture) {
+                        train.ActualDeparture = moment(data[i].ActualDeparture).format(timeFormat);
+                    }
                     currentOriginResults.addTrain(train);
                 }
             } else {
@@ -162,6 +170,14 @@ function getCallingAtStanox(stanox, date) {
                             train.Tooltip += data[i].Cancellation.Description;
                         }
                         train.Tooltip += " (" + data[i].Cancellation.ReasonCode + ")";
+                    }
+                    train.ActualArrival = "";
+                    if (data[i].ActualArrival) {
+                        train.ActualArrival = moment(data[i].ActualArrival).format(timeFormat);
+                    }
+                    train.ActualDeparture = "";
+                    if (data[i].ActualDeparture) {
+                        train.ActualDeparture = moment(data[i].ActualDeparture).format(timeFormat);
                     }
                     currentCallingAtResults.addTrain(train);
                 }
