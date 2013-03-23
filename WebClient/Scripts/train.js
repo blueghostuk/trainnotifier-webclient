@@ -8,7 +8,7 @@ var currentLocation = new LocationViewModel();
 
 var currentTrain = new TrainViewModel();
 
-var mixModel;
+var mixModel = new ScheduleTrainViewModel();
 
 var timeFormat = "HH:mm:ss";
 var dateFormat = "DD/MM/YY HH:mm:ss";
@@ -25,8 +25,9 @@ $(function () {
     });
 
     ko.applyBindings(currentTrain, $("#trains").get(0));
-
     ko.applyBindings(currentLocation, $("#stationDetails").get(0));
+    ko.applyBindings(mixModel, $("#schedule").get(0));
+    ko.applyBindings(mixModel, $("#mix").get(0));
 
     if (document.location.hash.length > 0) {
         setCommand(document.location.hash.substr(1));
@@ -165,10 +166,6 @@ function parseCommand() {
     var args = cmdString.substring(idx + 1);
 
     switch (cmd) {
-        case 'getservice':
-            getService(args);
-            return;
-            break;
         case 'gettrain':
             getTrain(args);
             return;
@@ -255,48 +252,12 @@ function getTrain(trainId, dontUnSub) {
 function getSchedule(data) {
     _lastLiveData = data;
     return $.getJSON("http://" + server + ":" + apiPort + "/Schedule?trainId=" + data.TrainId + "&trainUid=" + data.TrainUid, function (schedule) {
-        mixModel = ko.mapping.fromJS(schedule);
+        
+        mixModel.updateFromJson(schedule, _lastLiveData);
 
-        mixModel.STPValue = ko.observable(getSTP(schedule.STPIndicator));
-        mixModel.Runs = ko.observable(getRuns(schedule.Schedule));
-        mixModel.StartDateValue = ko.observable(new Date(schedule.StartDate).toDateString());
-        mixModel.EndDateValue = ko.observable(new Date(schedule.EndDate).toDateString());
-        mixModel.Id = ko.observable(_lastLiveData.Id);
-        mixModel.Headcode = ko.observable(_lastLiveData.HeadCode);
-        mixModel.ServiceCode = ko.observable(_lastLiveData.ServiceCode);
-        mixModel.LastUpdate = ko.observable(moment().format(dateFormat));
-        var activated = "";
-        if (_lastLiveData.Activated) {
-            activated = moment(_lastLiveData.Activated).format(dateFormat);
-        }
-        mixModel.Activated = ko.observable(activated);
-
-        mixModel.Cancellation = ko.observable();
-        if (_lastLiveData.Cancellation) {
-            var canxTxt =
-                _lastLiveData.Cancellation.Type
-                + " @ " + _lastLiveData.Cancellation.CancelledAt.Description
-                + " @ " + moment(_lastLiveData.Cancellation.CancelledTimestamp).format(timeFormat)
-                + " - Reason: ";
-            if (_lastLiveData.Cancellation.Description) {
-                canxTxt += _lastLiveData.Cancellation.Description;
-            }
-            canxTxt += " (" + _lastLiveData.Cancellation.ReasonCode + ")";
-            mixModel.Cancellation(canxTxt);
-        } else {
-            mixModel.Cancellation(null);
-        }
-
-        for (var i = 0; i < mixModel.Stops().length; i++) {
-            mixModel.Stops()[i].ActualArrival = ko.observable("");
-            mixModel.Stops()[i].ActualDeparture = ko.observable("");
-        }
         for (var i = 0; i < _lastLiveData.Steps.length; i++) {
             mixInStop(_lastLiveData.Steps[i]);
         }
-
-        ko.applyBindings(mixModel, $("#schedule").get(0));
-        ko.applyBindings(mixModel, $("#mix").get(0));
     });
 }
 
@@ -326,45 +287,6 @@ function mixInLiveStop(stop, stopNumber) {
             mixInLiveStop(stop, ++stopLook);
         }
     } catch (err) { }
-}
-
-function getRuns(schedule) {
-    var result = "";
-    if (schedule.Monday) {
-        result += "M,";
-    }
-    if (schedule.Tuesday) {
-        result += "Tu,";
-    }
-    if (schedule.Wednesday) {
-        result += "W,";
-    }
-    if (schedule.Thursday) {
-        result += "Th,";
-    }
-    if (schedule.Friday) {
-        result += "F,";
-    }
-    if (schedule.Saturday) {
-        result += "Sa,";
-    }
-    if (schedule.Sunday) {
-        result += "Su,";
-    }
-    return result.substring(0, result.length - 1);
-}
-
-function getSTP(stpIndicatorId) {
-    switch (stpIndicatorId) {
-        case 1:
-            return "Cancellation";
-        case 2:
-            return "STP";
-        case 3:
-            return "Overlay";
-        case 4:
-            return "Permanent";
-    }
 }
 
 var markersArray = new Array();

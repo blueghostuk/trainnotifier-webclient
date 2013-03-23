@@ -12,6 +12,193 @@ function LocationViewModel() {
     this.Lon = ko.observable();
 }
 
+function ScheduleTrainViewModel() {
+    var self = this;
+
+    var timeFormat = "HH:mm:ss";
+    var dateFormat = "DD/MM/YY HH:mm:ss";
+
+    self.Activated = ko.observable();
+    self.AtocCode = new AtocCodeViewModel();
+    self.Cancellation = ko.observable();
+    self.Destination = new TiplocViewModel();
+    self.EndDateValue = ko.observable();
+    self.Headcode = ko.observable();
+    self.Id = ko.observable();
+    self.Origin = new TiplocViewModel();
+    self.Runs = ko.observable();
+    self.STPValue = ko.observable();
+    self.ServiceCode = ko.observable();
+    self.StartDateValue = ko.observable();
+    self.Status = ko.observable();
+    self.ServiceCode = ko.observable();
+    self.LastUpdate = ko.observable();
+    self.Stops = ko.observableArray();
+    self.TrainUid = ko.observable();
+
+    self.addStop = function (stop) {
+        self.Stops.push(new ScheduleStopViewModel(stop));
+    };
+
+    self.clearStops = function () {
+        self.Stops.removeAll();
+    }
+
+    self.updateFromJson = function (schedule, liveData) {
+        self.clearStops();
+
+        self.updateActivated(liveData.Activated);
+        self.AtocCode.updateFromJson(schedule.AtocCode);
+        if (liveData.Cancellation) {
+            var canxTxt =
+                liveData.Cancellation.Type
+                + " @ " + liveData.Cancellation.CancelledAt.Description
+                + " @ " + moment(liveData.Cancellation.CancelledTimestamp).format(timeFormat)
+                + " - Reason: ";
+            if (liveData.Cancellation.Description) {
+                canxTxt += liveData.Cancellation.Description;
+            }
+            canxTxt += " (" + liveData.Cancellation.ReasonCode + ")";
+            self.Cancellation(canxTxt);
+        } else {
+            self.Cancellation(null);
+        }
+
+        self.Destination.updateFromJson(schedule.Destination);
+        self.EndDateValue(moment(schedule.EndDate).format(dateFormat));
+        self.Headcode(liveData.HeadCode);
+        self.Id(liveData.Id);
+        self.Origin.updateFromJson(schedule.Origin);
+        self.updateRuns(schedule.Schedule);
+        self.STPValue(self.getSTPValue(schedule.STPIndicator));
+        self.ServiceCode(liveData.ServiceCode);
+        self.StartDateValue(moment(schedule.StartDate).format(dateFormat));
+        self.LastUpdate(moment().format(dateFormat));
+        self.TrainUid(schedule.TrainUid);
+
+        for (var stop in schedule.Stops) {
+            self.addStop(schedule.Stops[stop]);
+        }
+    }
+
+    self.updateActivated = function (activated) {
+        if (activated) {
+            self.Activated(moment(activated).format(dateFormat));
+        } else {
+            self.Activated(null);
+        }
+    };
+
+    self.updateRuns = function (schedule) {
+        var days = Array();
+        if (schedule.Monday) {
+            days.push("M");
+        }
+        if (schedule.Tuesday) {
+            days.push("Tu");
+        }
+        if (schedule.Wednesday) {
+            days.push("W");
+        }
+        if (schedule.Thursday) {
+            days.push("Th");
+        }
+        if (schedule.Friday) {
+            days.push("F");
+        }
+        if (schedule.Saturday) {
+            days.push("Sa");
+        }
+        if (schedule.Sunday) {
+            days.push("Su");
+        }
+        self.Runs(days.join(","));
+    };
+
+    self.getSTPValue = function (stpIndicatorId) {
+        switch (stpIndicatorId) {
+            case 1:
+                return "Cancellation";
+            case 2:
+                return "STP";
+            case 3:
+                return "Overlay";
+            case 4:
+                return "Permanent";
+        }
+    }
+}
+
+function ScheduleStopViewModel(stop) {
+    var self = this;
+
+    self.ActualArrival = ko.observable();
+    self.ActualDeparture = ko.observable();
+    self.Arrival = stop.Arrival;
+    self.Departure = stop.Departure;
+    self.EngineeringAllowance = stop.EngineeringAllowance;
+    self.Intermediate = stop.Intermediate;
+    self.Line = stop.Line;
+    self.Origin = stop.Origin;
+    self.Pass = stop.Pass;
+    self.Path = stop.Path;
+    self.PathingAllowance = stop.PathingAllowance;
+    self.PerformanceAllowance = stop.PerformanceAllowance;
+    self.Platform = stop.Platform;
+    self.PublicArrival = stop.PublicArrival;
+    self.PublicDeparture = stop.PublicDeparture;
+    self.StopNumber = stop.StopNumber;
+    self.Terminate = stop.Terminate;
+    self.Origin = stop.Origin;
+    self.Tiploc = new TiplocViewModel(stop.Tiploc);
+}
+
+function AtocCodeViewModel() {
+    var self = this;
+
+    self.Code = ko.observable();
+    self.Name = ko.observable();
+
+    self.updateFromJson = function (atocCode) {
+        if (atocCode){
+            self.Code(atocCode.Code);
+            self.Name(atocCode.Name);
+        }else{
+            self.Code(null);
+            self.Name(null);
+        }
+    };
+}
+
+function TiplocViewModel(tiploc) {
+    var self = this;
+
+    self.CRS = ko.observable(tiploc ? tiploc.CRS : null);
+    self.Description = ko.observable(tiploc ? tiploc.Description : null);
+    self.Nalco = ko.observable(tiploc ? tiploc.Nalco : null);
+    self.Stanox = ko.observable(tiploc ? tiploc.Stanox : null);
+    self.Tiploc = ko.observable(tiploc ? tiploc.Tiploc : null);
+    self.TiplocId = ko.observable(tiploc ? tiploc.TiplocId : null);
+
+    self.updateFromJson = function (tiploc) {
+        if (tiploc) {
+            self.CRS(tiploc.CRS);
+            self.Description(tiploc.CRS);
+            self.Nalco(tiploc.Nalco);
+            self.Stanox(tiploc.Stanox);
+            self.Tiploc(tiploc.Tiploc);
+            self.TiplocId(tiploc.TiplocId);
+        } else {
+            self.CRS(null);
+            self.Description(null);
+            self.Nalco(null);
+            self.Stanox(null);
+            self.Tiploc(null);
+            self.TiplocId(null);
+        }
+    }
+}
+
 function ScheduleSearchResults() {
     var self = this;
 
