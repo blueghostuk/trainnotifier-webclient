@@ -19,45 +19,53 @@ function parseCommand() {
     if (idx == -1)
         return;
 
+
     var cmd = cmdString.substring(0, idx);
     var args = cmdString.substring(idx + 1);
+    var dateIdx = args.indexOf("#");
+    var date = null;
+    if (dateIdx != -1) {
+        date = args.substring(dateIdx + 1);
+        date = moment(date, dateHashFormat);
+        args = args.substring(0, dateIdx);
+    }
 
     switch (cmd) {
         case 'listorigin':
-            getOrigin(args);
+            getOrigin(args, false, date);
             break;
         case 'listorigin-crs':
-            getOrigin(args, true);
+            getOrigin(args, true, date);
             break;
         case 'liststation':
-            getStation(args);
+            getStation(args, false, date);
             break;
         case 'liststation-crs':
-            getStation(args, true);
+            getStation(args, true, date);
             break;
     }
 }
-function getOrigin(args, convertFromCrs) {
+function getOrigin(args, convertFromCrs, date) {
     if (convertFromCrs) {
-        document.location.hash = "listorigin-crs:" + args;
+        setHash("listorigin-crs:" + args, null, true);
         $.getJSON("http://" + server + ":" + apiPort + "/Stanox/?GetByCrs&crsCode=" + args, function (data) {
-            getOriginByStanox(data.Name);
+            getOriginByStanox(data.Name, date);
         });
     } else {
-        document.location.hash = "listorigin:" + args;
-        getOriginByStanox(args);
+        setHash("listorigin:" + args, null, true);
+        getOriginByStanox(args, date);
     }
 }
 
-function getStation(args, convertFromCrs) {
+function getStation(args, convertFromCrs, date) {
     if (convertFromCrs) {
-        document.location.hash = "liststation-crs:" + args;
+        setHash("liststation-crs:" + args, null, true);
         $.getJSON("http://" + server + ":" + apiPort + "/Stanox/?GetByCrs&crsCode=" + args, function (data) {
-            getCallingAtStanox(data.Name);
+            getCallingAtStanox(data.Name, date);
         });
     } else {
-        document.location.hash = "liststation:" + args;
-        getCallingAtStanox(args);
+        setHash("liststation:" + args, null, true);
+        getCallingAtStanox(args, date);
     }
 }
 
@@ -65,6 +73,7 @@ var currentDate = new moment();
 var currentStanox = "";
 var dateFormat = "ddd DD MMM YY";
 var dateFormatQuery = "YYYY-MM-DD";
+var dateHashFormat = "DDMMYYYY";
 var timeFormat = "HH:mm:ss";
 
 function clear() {
@@ -77,6 +86,7 @@ function getOriginByStanox(stanox, date) {
         var now = new moment();
     } else {
         now = date;
+        setHash(null, now.format(dateHashFormat), true);
     }
     currentDate = new moment(now);
     if (stanox) {
@@ -140,6 +150,7 @@ function getCallingAtStanox(stanox, date) {
         var now = new moment();
     } else {
         now = date;
+        setHash(null, now.format(dateHashFormat), true);
     }
     currentDate = new moment(now);
     if (stanox) {
@@ -250,7 +261,20 @@ function loadHashCommand() {
     return false;
 }
 
-function setHash(hash) {
+var _lastHash;
+
+function setHash(hash, dateHash, dontLoad) {
+    if (!hash) {
+        hash = _lastHash;
+    } else {
+        _lastHash = hash;
+    }
+    if (dateHash) {
+        hash += "#" + dateHash;
+    }
     document.location.hash = hash;
-    loadHashCommand();
+    if (!dontLoad) {
+        loadHashCommand();
+    }
+    setCommand(hash);
 }
