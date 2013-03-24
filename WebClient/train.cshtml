@@ -38,6 +38,8 @@
         <div class="well sidebar-nav" id="locationDetails">
             <ul class="nav nav-list">
                 <li class="nav-header">Commands</li>
+                <li><a href="#getuid:" onclick="setCommand('getuid:');"><strong>Get Train:</strong><br />
+                    &nbsp;&nbsp;getuid:[train uid]#[date:YYYY-MM-DD]</a></li>
                 <li><a href="#gettrain:" onclick="setCommand('gettrain:');"><strong>Get Train:</strong><br />
                     &nbsp;&nbsp;gettrain:[train id]</a></li>
                 <li><a href="#subtrain:" onclick="setCommand('subtrain:');"><strong>Subscribe to Train:</strong><br />
@@ -50,7 +52,6 @@
                 <li><strong>CRS:</strong><span data-bind="text: locationCRS"></span></li>
                 <li><a data-bind="attr: { href :'search-schedule#listorigin:' + locationStanox() }" title="View Trains Starting from this station">Trains Starting From</a></li>
                 <li><a data-bind="attr: { href :'search#liststation:' + locationStanox() }" title="View Trains Calling from this station">Trains Calling At</a></li>
-                @*<li><a id="stationDetails-term" title="View Trains Terminating at this station">Terminating At</a></li>*@
             </ul>
         </div>
     </div>

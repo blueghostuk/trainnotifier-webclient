@@ -16,6 +16,9 @@
     <h5>Schedule Details</h5>
     <ul>
         <li><span class="label label-info">Runs:</span> <span data-bind="text: Runs"></span></li>
+        <!-- ko foreach: Associations -->
+        <li><span class="label label-info" data-bind="text: Title"></span> <a data-bind="text: Train, attr: { href: 'train#getuid:' + ViewCommand(), onclick: 'setCommand(\'getuid:' + ViewCommand() + '\');parseCommand();' }"></a> @@ <span data-bind="text: Location.Description()"></span></li>
+        <!-- /ko -->
     </ul>
 </div>
 <table class="table table-hover table-bordered table-header-colour" id="scheduleView">

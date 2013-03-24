@@ -35,6 +35,7 @@ function ScheduleTrainViewModel() {
     self.LastUpdate = ko.observable();
     self.Stops = ko.observableArray();
     self.TrainUid = ko.observable();
+    self.Associations = ko.observableArray();
 
     self.addStop = function (stop) {
         self.Stops.push(new ScheduleStopViewModel(stop));
@@ -42,6 +43,14 @@ function ScheduleTrainViewModel() {
 
     self.clearStops = function () {
         self.Stops.removeAll();
+    }
+
+    self.addAssociation = function (assoc, trainUid, date) {
+        self.Associations.push(new TrainAssociation(assoc, trainUid, date));
+    };
+
+    self.clearAssociations = function () {
+        self.Associations.removeAll();
     }
 
     self.updateFromJson = function (schedule, liveData) {
@@ -215,6 +224,60 @@ function ScheduleSearchResults() {
     self.clearTrains = function () {
         self.Trains.removeAll();
     }
+}
+
+function TrainAssociation(association, trainUid, date) {
+    var self = this;
+    var _trainUid = trainUid;
+    var _date = date;
+
+    self.AssocTrainUid = ko.observable(association.AssocTrainUid);
+    self.AssociationType = ko.observable(association.AssociationType);
+    self.DateType = ko.observable(association.DateType);
+    self.EndDate = ko.observable(association.EndDate);
+    self.Location = new TiplocViewModel(association.Location);
+    self.MainTrainUid = ko.observable(association.MainTrainUid);
+    self.StartDate = ko.observable(association.StartDate);
+
+    self.Title = ko.computed(function () {
+        switch (self.AssociationType()) {
+            case 0:
+                if (self.MainTrainUid() == _trainUid)
+                    return "Forms Next Train:";
+                else
+                    return "Formed of Train";
+            case 1:
+                return "Joins with Train:";
+            case 2:
+                return "Splits from Train:";
+            default:
+                return "";
+        }
+    });
+
+    self.getTrain = function () {
+        if (self.MainTrainUid() == _trainUid)
+            return self.AssocTrainUid();
+        else
+            return self.MainTrainUid();
+    };
+
+    self.Train = ko.computed(function () {
+        return self.getTrain();
+    });
+    
+    self.ViewCommand = ko.computed(function () {
+        var date = _date;
+        switch (self.DateType()) {
+            case 1:
+                date.subtract('days', 1);
+                break;
+            case 2:
+                data.add('days', 1);
+                break;
+        }
+        return self.getTrain() + "#" + date.format("YYYY-MM-DD");
+    });
 }
 
 function LiveTrainViewModel() {
