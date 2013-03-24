@@ -45,7 +45,7 @@
         </div>
         <div class="well sidebar-nav" id="stationDetails">
             <ul class="nav nav-list">
-                <li class="nav-header" data-bind="text: stationName">Station Details</li>
+                <li class="nav-header" data-bind="text: toDisplay()">Station Details</li>
                 <li><strong>CRS:</strong><span data-bind="text: locationCRS"></span></li>
                 <li><a data-bind="attr: { href :'search-schedule#listorigin:' + locationStanox(), onclick: 'setHash(\'listorigin:' + locationStanox() + '\');' }" title="View Trains Starting from this station">Trains Starting From</a></li>
                 <li><a data-bind="attr: { href :'search-schedule#liststation:' + locationStanox(), onclick: 'setHash(\'liststation:' + locationStanox() + '\');' }" title="View Trains Calling from this station">Trains Calling At</a></li>

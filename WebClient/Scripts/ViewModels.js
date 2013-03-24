@@ -2,14 +2,20 @@
 /// <reference path="knockout-2.2.0.js" />
 
 function LocationViewModel() {
-    this.locationStanox = ko.observable();
-    this.locationTiploc = ko.observable();
-    this.locationDescription = ko.observable();
-    this.locationCRS = ko.observable();
-    this.stationName = ko.observable();
-    this.stationLocation = ko.observable();
-    this.Lat = ko.observable();
-    this.Lon = ko.observable();
+    var self = this;
+
+    self.locationStanox = ko.observable();
+    self.locationTiploc = ko.observable();
+    self.locationDescription = ko.observable();
+    self.locationCRS = ko.observable();
+    self.stationName = ko.observable();
+    self.stationLocation = ko.observable();
+    self.Lat = ko.observable();
+    self.Lon = ko.observable();
+
+    self.toDisplay = ko.computed(function(){
+	    return self.stationName() ? self.stationName() : self.locationDescription();
+    });
 }
 
 function ScheduleTrainViewModel() {
