@@ -110,6 +110,9 @@ function addStop(stopEl, terminateStop, mixIn) {
 
 function fetchLocation(stanox) {
     loadLocation(stanox, function (data) {
+        if (!data)
+            return;
+
         var html = "";
         if (data.StationName) {
             html = data.StationName;
