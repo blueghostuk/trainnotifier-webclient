@@ -182,35 +182,8 @@ function parseCommand() {
 function getByUid(trainUid, date) {
     sendWsCommand("unsubtrain:");
     $(".progress").show();
-    $.getJSON("http://" + server + ":" + apiPort + "/TrainMovement/Uid/" + trainUid + "/" + date, function (data) {
-        // if multiple, take first
-        if (data.length && data.length > 0)
-            data = data[0];
-
-        currentTrain.updateFromJSON(data);
-
-        if (data.SchedOriginStanox && data.SchedOriginStanox.length > 0)
-            fetchLocation(data.SchedOriginStanox);
-
-        showCurrentTrainMap();
-        for (i in data.Steps) {
-            addStop(data.Steps[i]);
-        }
-        $(".tooltip-dynamic").tooltip();
-    }).done(function (data) {
-        // if array returned, use the first value
-        if (data.length && data.length >= 0)
-            data = data[0];
-
-        return getSchedule(data, data.TrainId, data.TrainUid);
-    }).done(function (data) {
-        if (data.length && data.length >= 0)
-            data = data[0];
-        getAssociations(data);
-    })
-    .done(function () {
-        $(".progress").hide();
-    });
+    getTrainData("http://" + server + ":" + apiPort + "/TrainMovement/Uid/" + trainUid + "/" + date);
+    
 }
 
 function getTrain(trainId, dontUnSub) {
@@ -222,8 +195,11 @@ function getTrain(trainId, dontUnSub) {
     if (split && split.length == 2) {
         trainId = split[0] + '/' + split[1];
     }
-    $(".progress").show();
-    $.getJSON("http://" + server + ":" + apiPort + "/TrainMovement/" + trainId, function (data) {
+    getTrainData("http://" + server + ":" + apiPort + "/TrainMovement/" + trainId);
+}
+
+function getTrainData(url) {
+    $.getJSON(url, function (data) {
         // if multiple, take first
         if (data.length && data.length > 0)
             data = data[0];
@@ -238,18 +214,16 @@ function getTrain(trainId, dontUnSub) {
             addStop(data.Steps[i]);
         }
         $(".tooltip-dynamic").tooltip();
-    }).done(function (data) {
+    }).then(function (data) {
         // if array returned, use the first value
         if (data.length && data.length >= 0)
             data = data[0];
 
         return getSchedule(data, data.TrainId, data.TrainUid);
-    }).done(function (data) {
-        if (data.length && data.length >= 0)
-            data = data[0];
-        getAssociations(data);
+    }).then(function () {
+        return getAssociations(_lastLiveData);
     })
-    .done(function () {
+    .then(function () {
         $(".progress").hide();
     });
 }
