@@ -57,7 +57,7 @@ function ScheduleTrainViewModel() {
         self.clearStops();
 
         self.updateActivated(liveData.Activated);
-        self.AtocCode.updateFromJson(schedule.AtocCode);
+        self.AtocCode.updateFromJson(schedule? schedule.AtocCode : null);
         if (liveData.Cancellation) {
             var canxTxt =
                 liveData.Cancellation.Type
@@ -73,20 +73,22 @@ function ScheduleTrainViewModel() {
             self.Cancellation(null);
         }
 
-        self.Destination.updateFromJson(schedule.Destination);
-        self.EndDateValue(moment(schedule.EndDate).format(dateFormat));
+        self.Destination.updateFromJson(schedule? schedule.Destination : null);
+        self.EndDateValue(schedule? moment(schedule.EndDate).format(dateFormat) : null);
         self.Headcode(liveData.HeadCode);
         self.Id(liveData.Id);
-        self.Origin.updateFromJson(schedule.Origin);
-        self.updateRuns(schedule.Schedule);
-        self.STPValue(self.getSTPValue(schedule.STPIndicator));
+        self.Origin.updateFromJson(schedule? schedule.Origin : null);
+        self.updateRuns(schedule? schedule.Schedule : null);
+        self.STPValue(schedule ? self.getSTPValue(schedule.STPIndicator) : null);
         self.ServiceCode(liveData.ServiceCode);
-        self.StartDateValue(moment(schedule.StartDate).format(dateFormat));
+        self.StartDateValue(schedule? moment(schedule.StartDate).format(dateFormat) : null);
         self.LastUpdate(moment().format(dateFormat));
-        self.TrainUid(schedule.TrainUid);
+        self.TrainUid(schedule? schedule.TrainUid : liveData.TrainUid);
 
-        for (var stop in schedule.Stops) {
-            self.addStop(schedule.Stops[stop]);
+        if (schedule && schedule.Stops){
+            for (var stop in schedule.Stops) {
+                self.addStop(schedule.Stops[stop]);
+            }
         }
     }
 
@@ -99,6 +101,10 @@ function ScheduleTrainViewModel() {
     };
 
     self.updateRuns = function (schedule) {
+        if (!schedule) {
+            self.Runs(null);
+            return;
+        }
         var days = Array();
         if (schedule.Monday) {
             days.push("M");
