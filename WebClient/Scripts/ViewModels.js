@@ -57,12 +57,12 @@ function ScheduleTrainViewModel() {
         self.clearStops();
 
         self.updateActivated(liveData.Activated);
-        self.AtocCode.updateFromJson(schedule? schedule.AtocCode : null);
+        self.AtocCode.updateFromJson(schedule ? schedule.AtocCode : null);
         if (liveData.Cancellation) {
-            var canxTxt =
-                liveData.Cancellation.Type
-                + " @ " + liveData.Cancellation.CancelledAt.Description
-                + " @ " + moment(liveData.Cancellation.CancelledTimestamp).format(timeFormat)
+            var canxTxt = liveData.Cancellation.Type;
+            if (liveData.Cancellation.CancelledAt)
+                canxTxt += " @ " + liveData.Cancellation.CancelledAt.Description;
+            canxTxt += " @ " + moment(liveData.Cancellation.CancelledTimestamp).format(timeFormat)
                 + " - Reason: ";
             if (liveData.Cancellation.Description) {
                 canxTxt += liveData.Cancellation.Description;
@@ -73,19 +73,19 @@ function ScheduleTrainViewModel() {
             self.Cancellation(null);
         }
 
-        self.Destination.updateFromJson(schedule? schedule.Destination : null);
-        self.EndDateValue(schedule? moment(schedule.EndDate).format(dateFormat) : null);
+        self.Destination.updateFromJson(schedule ? schedule.Destination : null);
+        self.EndDateValue(schedule ? moment(schedule.EndDate).format(dateFormat) : null);
         self.Headcode(liveData.HeadCode);
         self.Id(liveData.Id);
-        self.Origin.updateFromJson(schedule? schedule.Origin : null);
-        self.updateRuns(schedule? schedule.Schedule : null);
+        self.Origin.updateFromJson(schedule ? schedule.Origin : null);
+        self.updateRuns(schedule ? schedule.Schedule : null);
         self.STPValue(schedule ? self.getSTPValue(schedule.STPIndicator) : null);
         self.ServiceCode(liveData.ServiceCode);
-        self.StartDateValue(schedule? moment(schedule.StartDate).format(dateFormat) : null);
+        self.StartDateValue(schedule ? moment(schedule.StartDate).format(dateFormat) : null);
         self.LastUpdate(moment().format(dateFormat));
-        self.TrainUid(schedule? schedule.TrainUid : liveData.TrainUid);
+        self.TrainUid(schedule ? schedule.TrainUid : liveData.TrainUid);
 
-        if (schedule && schedule.Stops){
+        if (schedule && schedule.Stops) {
             for (var stop in schedule.Stops) {
                 self.addStop(schedule.Stops[stop]);
             }
@@ -175,10 +175,10 @@ function AtocCodeViewModel() {
     self.Name = ko.observable();
 
     self.updateFromJson = function (atocCode) {
-        if (atocCode){
+        if (atocCode) {
             self.Code(atocCode.Code);
             self.Name(atocCode.Name);
-        }else{
+        } else {
             self.Code(null);
             self.Name(null);
         }
@@ -271,7 +271,7 @@ function TrainAssociation(association, trainUid, date) {
     self.Train = ko.computed(function () {
         return self.getTrain();
     });
-    
+
     self.ViewCommand = ko.computed(function () {
         var date = _date;
         switch (self.DateType()) {
@@ -319,7 +319,7 @@ function LiveTrainViewModel() {
                 stopModel = new StopViewModel();
 
                 self.Stops.push(stopModel);
-            } 
+            }
             switch (stopEl.EventType.toLowerCase()) {
                 case "arrival":
                     setArrival(stopEl, stopModel);
@@ -373,10 +373,10 @@ function LiveTrainViewModel() {
         self.LastUpdate(moment().format(dateFormat));
 
         if (data.Cancellation) {
-            var canxTxt =
-                data.Cancellation.Type
-                + " @ " + data.Cancellation.CancelledAt.Description
-                + " @ " + moment(data.Cancellation.CancelledTimestamp).format(timeFormat)
+            var canxTxt = data.Cancellation.Type;
+            if (data.Cancellation.CancelledAt)
+                canxTxt += " @ " + data.Cancellation.CancelledAt.Description;
+            canxTxt += " @ " + moment(data.Cancellation.CancelledTimestamp).format(timeFormat)
                 + " - Reason: ";
             if (data.Cancellation.Description) {
                 canxTxt += data.Cancellation.Description;
@@ -402,7 +402,7 @@ function setArrival(stopEl, stopModel) {
 function setDeparture(stopEl, stopModel) {
     var times = getTimes(stopEl);
 
-    stopModel.DepartActualTimeStamp (times.ActualTimeStamp);
+    stopModel.DepartActualTimeStamp(times.ActualTimeStamp);
     stopModel.DepartPlannedTime(times.PlannedTimeStamp);
     stopModel.DepartDelay(times.Delay);
 
