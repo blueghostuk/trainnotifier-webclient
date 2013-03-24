@@ -25,16 +25,16 @@
     <thead>
         <tr>
             <th>&nbsp;</th>
-            <th colspan="2">WTT</th>
-            <th colspan="2">Public</th>
+            <th colspan="2">Arrive</th>
+            <th colspan="2">Depart</th>
             <th colspan="3"></th>
         </tr>
         <tr>
             <th>Location</th>
-            <th>Arrive</th>
-            <th>Depart</th>
-            <th>Arrive</th>
-            <th>Depart</th>
+            <th>WTT</th>
+            <th>Public</th>
+            <th>WTT</th>
+            <th>Public</th>
             <th>Line</th>
             <th>Platform</th>
             <th>Allowances</th>
@@ -43,9 +43,9 @@
     <tbody data-bind="foreach: Stops">
         <tr data-bind="css: { pass : Pass }">
             <td><a class="pointer" data-bind="text: Tiploc.Description, css: Tiploc.Stanox, click: function(d,e) { listStation(d.Tiploc.Stanox()); }"></a></td>
-            <td data-bind="text: Pass ? 'Pass' : Arrival"></td>
+            <td data-bind="text: Pass ? 'Pass' : Arrival, attr: { colspan: Pass ? 2 : 0 }"></td>
+            <td data-bind="text: Pass ? 'Pass' : PublicArrival, visible: !Pass"></td>
             <td data-bind="text: Pass ? Pass : Departure"></td>
-            <td data-bind="text: PublicArrival"></td>
             <td data-bind="text: PublicDeparture"></td>
             <td data-bind="text: Line"></td>
             <td data-bind="text: Platform"></td>
