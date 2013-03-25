@@ -184,9 +184,7 @@ function parseCommand() {
 
 function getByUid(trainUid, date) {
     sendWsCommand("unsubtrain:");
-    $(".progress").show();
     getTrainData("http://" + server + ":" + apiPort + "/TrainMovement/Uid/" + trainUid + "/" + date);
-    
 }
 
 function getTrain(trainId, dontUnSub) {
@@ -202,7 +200,15 @@ function getTrain(trainId, dontUnSub) {
 }
 
 function getTrainData(url) {
-    $.getJSON(url, function (data) {
+    $(".progress").show();
+    $("#no-results-row").hide();
+
+    $.getJSON(url)
+    .done(function (data, textStatus, jqXHR) {
+        if (!data) {
+            $("#no-results-row").show();
+            return;
+        }
         // if multiple, take first
         if (data.length && data.length > 0)
             data = data[0];
@@ -218,6 +224,9 @@ function getTrainData(url) {
         }
         $(".tooltip-dynamic").tooltip();
     }).then(function (data) {
+        if (!data) {
+            return;
+        }
         // if array returned, use the first value
         if (data.length && data.length >= 0)
             data = data[0];
@@ -226,16 +235,19 @@ function getTrainData(url) {
     }).then(function () {
         return getAssociations(_lastLiveData);
     })
-    .then(function () {
+    .always(function () {
         $(".progress").hide();
     });
 }
 
 function getAssociations(data) {
+    mixModel.clearAssociations();
+    if (!data) {
+        return;
+    }
     return $.getJSON("http://" + server + ":" + apiPort + "/Association/" + data.TrainUid, {
         date: data.SchedOriginDeparture
-    }, function (associations) {
-        mixModel.clearAssociations();
+    }).done(function (associations) {
         if (associations.length == 0)
             return;
 
@@ -247,14 +259,14 @@ function getAssociations(data) {
 
 function getSchedule(data) {
     _lastLiveData = data;
-    return $.getJSON("http://" + server + ":" + apiPort + "/Schedule?trainId=" + data.TrainId + "&trainUid=" + data.TrainUid, function (schedule) {
+    return $.getJSON("http://" + server + ":" + apiPort + "/Schedule?trainId=" + data.TrainId + "&trainUid=" + data.TrainUid)
+        .done(function (schedule) {
+            mixModel.updateFromJson(schedule, _lastLiveData);
 
-        mixModel.updateFromJson(schedule, _lastLiveData);
-
-        for (var i = 0; i < _lastLiveData.Steps.length; i++) {
-            mixInStop(_lastLiveData.Steps[i]);
-        }
-    });
+            for (var i = 0; i < _lastLiveData.Steps.length; i++) {
+                mixInStop(_lastLiveData.Steps[i]);
+            }
+        });
 }
 
 function mixInStop(step, stopNumber) {
@@ -333,11 +345,12 @@ function listStation(stanox) {
         scrollTop: $("#locationDetails").offset().top
     }, 1000);
 
-    $.getJSON("http://" + server + ":" + apiPort + "/Stanox/" + stanox, function (data) {
-        currentLocation.locationStanox(data.Name);
-        currentLocation.locationTiploc(data.Tiploc);
-        currentLocation.locationDescription(data.Description);
-        currentLocation.locationCRS(data.CRS);
-        currentLocation.stationName(data.StationName);
-    });
+    $.getJSON("http://" + server + ":" + apiPort + "/Stanox/" + stanox)
+        .done(function (data) {
+            currentLocation.locationStanox(data.Name);
+            currentLocation.locationTiploc(data.Tiploc);
+            currentLocation.locationDescription(data.Description);
+            currentLocation.locationCRS(data.CRS);
+            currentLocation.stationName(data.StationName);
+        });
 }
