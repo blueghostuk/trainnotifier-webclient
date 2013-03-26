@@ -7,6 +7,7 @@
 var currentLocation = new LocationViewModel();
 var currentTrain = new LiveTrainViewModel();
 var mixModel = new ScheduleTrainViewModel();
+var titleModel = new TrainTitleViewModel();
 
 var timeFormat = "HH:mm:ss";
 var dateFormat = "DD/MM/YY HH:mm:ss";
@@ -27,6 +28,7 @@ $(function () {
     ko.applyBindings(currentLocation, $("#stationDetails").get(0));
     ko.applyBindings(mixModel, $("#schedule").get(0));
     ko.applyBindings(mixModel, $("#mix").get(0));
+    ko.applyBindings(titleModel, $("#title").get(0));
 
     if (document.location.hash.length > 0) {
         setCommand(document.location.hash.substr(1));
@@ -214,6 +216,8 @@ function getTrainData(url) {
         if (data.length && data.length > 0)
             data = data[0];
 
+        titleModel.Id(data.HeadCode);        
+
         currentTrain.updateFromJSON(data);
 
         if (data.SchedOriginStanox && data.SchedOriginStanox.length > 0)
@@ -263,6 +267,13 @@ function getSchedule(data) {
     return $.getJSON("http://" + server + ":" + apiPort + "/Schedule?trainId=" + data.TrainId + "&trainUid=" + data.TrainUid)
         .done(function (schedule) {
             mixModel.updateFromJson(schedule, _lastLiveData);
+
+            if (schedule.Stops && schedule.Stops.length > 0) {
+                titleModel.From(schedule.Stops[0].Tiploc.Description.toLowerCase());
+                if (schedule.Stops.length > 1) {
+                    titleModel.To(schedule.Stops[schedule.Stops.length - 1].Tiploc.Description.toLowerCase());
+                }
+            }
 
             for (var i = 0; i < _lastLiveData.Steps.length; i++) {
                 mixInStop(_lastLiveData.Steps[i]);

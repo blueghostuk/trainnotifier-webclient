@@ -73,6 +73,12 @@
         <div class="progress progress-striped active hide">
             <div class="bar" style="width: 100%"></div>
         </div>
+        <div class="row" id="title" style="margin-top: 5px;" data-bind="visible: Id">
+            <span data-bind="text: Id" style="font-weight: bold; font-size: xx-large; margin-left: 5px;"></span> 
+            <span data-bind="text: From" class="stationName" style="font-weight: bold; font-size: x-large;"></span> <span data-bind="visible: To"  style="font-size: large;">to</span> 
+            <span data-bind="text: To" class="stationName" style="font-weight: bold; font-size: x-large;"></span>
+            <hr style="margin: 5px 0px;" />
+        </div>
         <div class="row">
             <ul class="nav nav-tabs">
                 <li class="active"><a href="#mix" data-toggle="tab">Schedule &amp; Live</a></li>

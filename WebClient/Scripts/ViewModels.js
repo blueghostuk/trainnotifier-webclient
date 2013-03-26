@@ -18,6 +18,14 @@ function LocationViewModel() {
     });
 }
 
+function TrainTitleViewModel() {
+    var self = this;
+
+    self.Id = ko.observable();
+    self.From = ko.observable();
+    self.To = ko.observable();
+}
+
 function ScheduleTrainViewModel() {
     var self = this;
 
@@ -206,7 +214,7 @@ function TiplocViewModel(tiploc) {
     var self = this;
 
     self.CRS = ko.observable(tiploc ? tiploc.CRS : null);
-    self.Description = ko.observable(tiploc ? tiploc.Description : null);
+    self.Description = ko.observable(tiploc ? tiploc.Description.toLowerCase() : null);
     self.Nalco = ko.observable(tiploc ? tiploc.Nalco : null);
     self.Stanox = ko.observable(tiploc ? tiploc.Stanox : null);
     self.Tiploc = ko.observable(tiploc ? tiploc.Tiploc : null);

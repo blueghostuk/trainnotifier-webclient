@@ -107,14 +107,14 @@
                 </thead>
                 <tbody data-bind="foreach: Trains">
                     <tr data-bind="css: { error: Cancellation, info: ChangeOfOrigin }, attr: { title: Tooltip }">
-                        <td><a data-bind="text: TrainId, attr: { href: 'train#gettrain:' + TrainId() + ':' + TrainUid() }"></a></td>
+                        <td><a data-bind="text: HeadCode, attr: { href: 'train#getuid:' + TrainUid() + '#' + SchedOriginDeparture().substring(0, 9) }"></a></td>
                         <td data-bind="text: AtocCode.Code, attr: { title: AtocCode.Name }"></td>
-                        <td data-bind="text: Origin.Description"></td>
+                        <td  class="stationName" data-bind="text: Origin.Description"></td>
                         <td data-bind="text: Origin.Platform"></td>
                         <td title="Public Departure" data-bind="text: Origin.PublicDeparture"></td>
                         <td title="WTT Departure" data-bind="text: Origin.Departure"></td>
                         <td title="Actual Departure" data-bind="text: ActualDeparture"></td>
-                        <td data-bind="text: Destination.Description"></td>
+                        <td class="stationName" data-bind="text: Destination.Description"></td>
                         <td data-bind="text: Destination.Platform"></td>
                         <td title="Public Arrival" data-bind="text: Destination.PublicArrival"></td>
                         <td title="WTT Arrival" data-bind="text: Destination.Arrival"></td>
@@ -160,9 +160,9 @@
                 </thead>
                 <tbody data-bind="foreach: Trains">
                     <tr data-bind="css: { pass: Pass, cancel: Cancellation, info: ChangeOfOrigin  }, attr: { title: Tooltip }">
-                        <td><a data-bind="text: TrainId, attr: { href: 'train#gettrain:' + TrainId() + ':' + TrainUid() }"></a></td>
+                        <td><a data-bind="text: HeadCode, attr: { href: 'train#getuid:' + TrainUid() + '#' + SchedOriginDeparture().substring(0, 10) }"></a></td>
                         <td data-bind="text: AtocCode.Code, attr: { title: AtocCode.Name }"></td>
-                        <td data-bind="text: Origin.Description"></td>
+                        <td class="stationName" data-bind="text: Origin.Description"></td>
                         <td data-bind="text: Origin.Platform"></td>
                         <td title="Public Arrival" data-bind="text: Origin.PublicArrival, visible: !Pass()"></td>
                         <td title="WTT Arrival" data-bind="text: Pass() ? 'Pass' : Origin.Arrival, attr: { colspan: Pass() ? 2 : 0 }"></td>
@@ -170,7 +170,7 @@
                         <td title="Public Departure" data-bind="text: Destination.PublicDeparture, visible: !Pass()"></td>
                         <td title="WTT Departure" data-bind="text: Pass() ? Pass : Destination.Departure, attr: { colspan: Pass() ? 2 : 0 }"></td>
                         <td title="Actual Departure" data-bind="text: ActualDeparture"></td>
-                        <td data-bind="text: Destination.Description"></td>
+                        <td class="stationName" data-bind="text: Destination.Description"></td>
                     </tr>
                 </tbody>
                 <tfoot>

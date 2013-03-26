@@ -27,6 +27,10 @@ table.table-header-colour thead th {
     background-color: #EEE;
 }
 
+.stationName{
+    text-transform: capitalize;
+}
+
 /* override bootstrap */
 ul.nav.nav-tabs {
     margin-bottom: 0px;

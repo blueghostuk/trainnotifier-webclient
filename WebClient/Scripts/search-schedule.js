@@ -135,6 +135,12 @@ function getOriginByStanox(stanox, date) {
                 if (data[i].ActualDeparture) {
                     train.ActualDeparture = moment(data[i].ActualDeparture).format(timeFormat);
                 }
+                if (train.Origin.Description) {
+                    train.Origin.Description(train.Origin.Description().toLowerCase());
+                }
+                if (train.Destination.Description) {
+                    train.Destination.Description(train.Destination.Description().toLowerCase());
+                }
                 currentOriginResults.addTrain(train);
             }
         } else {
@@ -205,6 +211,12 @@ function getCallingAtStanox(stanox, date) {
                 train.ActualDeparture = "";
                 if (data[i].ActualDeparture) {
                     train.ActualDeparture = moment(data[i].ActualDeparture).format(timeFormat);
+                }
+                if (train.Origin) {
+                    train.Origin.Description(train.Origin.Description().toLowerCase());
+                }
+                if (train.Destination) {
+                    train.Destination.Description(train.Destination.Description().toLowerCase());
                 }
                 currentCallingAtResults.addTrain(train);
             }
