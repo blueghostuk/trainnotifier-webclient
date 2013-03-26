@@ -268,7 +268,7 @@ function getSchedule(data) {
         .done(function (schedule) {
             mixModel.updateFromJson(schedule, _lastLiveData);
 
-            if (schedule.Stops && schedule.Stops.length > 0) {
+            if (schedule && schedule.Stops && schedule.Stops.length > 0) {
                 titleModel.From(schedule.Stops[0].Tiploc.Description.toLowerCase());
                 if (schedule.Stops.length > 1) {
                     titleModel.To(schedule.Stops[schedule.Stops.length - 1].Tiploc.Description.toLowerCase());
