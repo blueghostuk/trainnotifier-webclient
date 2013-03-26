@@ -27,6 +27,7 @@ function ScheduleTrainViewModel() {
     self.Activated = ko.observable();
     self.AtocCode = new AtocCodeViewModel();
     self.Cancellation = ko.observable();
+    self.ChangeOfOrigin = ko.observable();
     self.Destination = new TiplocViewModel();
     self.EndDateValue = ko.observable();
     self.Headcode = ko.observable();
@@ -77,6 +78,16 @@ function ScheduleTrainViewModel() {
             self.Cancellation(canxTxt);
         } else {
             self.Cancellation(null);
+        }
+        if (liveData.ChangeOfOrigin) {
+            var originText = liveData.ChangeOfOrigin.NewOrigin.Description
+                        + " @ " + moment(liveData.ChangeOfOrigin.NewDepartureTime).format(timeFormat);
+            if (liveData.ChangeOfOrigin.ReasonCode) {
+                originText += " (" + liveData.ChangeOfOrigin.ReasonCode + ": " + liveData.ChangeOfOrigin.Description + ")";
+            }
+            self.ChangeOfOrigin(originText);
+        } else {
+            self.ChangeOfOrigin(null);
         }
 
         self.Destination.updateFromJson(schedule ? schedule.Destination : null);
@@ -305,6 +316,7 @@ function LiveTrainViewModel() {
     self.LastUpdate = ko.observable();
     self.WttId = ko.observable();
     self.Cancellation = ko.observable();
+    self.ChangeOfOrigin = ko.observable();
 
     self.addStop = function (stopEl) {
         if (self.Stops().length == 0) {
@@ -391,6 +403,16 @@ function LiveTrainViewModel() {
             self.Cancellation(canxTxt);
         } else {
             self.Cancellation(null);
+        }
+        if (data.ChangeOfOrigin) {
+            var originText = data.ChangeOfOrigin.NewOrigin.Description
+                        + " @ " + moment(data.ChangeOfOrigin.NewDepartureTime).format(timeFormat);
+            if (data.ChangeOfOrigin.ReasonCode) {
+                originText += " (" + data.ChangeOfOrigin.ReasonCode + ": " + data.ChangeOfOrigin.Description + ")";
+            }
+            self.ChangeOfOrigin(originText);
+        } else {
+            self.ChangeOfOrigin(null);
         }
     }
 }

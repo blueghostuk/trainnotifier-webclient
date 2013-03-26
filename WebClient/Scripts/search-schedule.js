@@ -121,7 +121,7 @@ function getOriginByStanox(stanox, date) {
                     train.Tooltip += " (" + data[i].Cancellation.ReasonCode + ")";
                 }
                 if (data[i].ChangeOfOrigin) {
-                    train.Tooltip += "Change Of Origin to " + data[i].ChangeOfOrigin.NewOrigin.Description
+                    train.Tooltip += "Will start from " + data[i].ChangeOfOrigin.NewOrigin.Description
                         + " @ " + moment(data[i].ChangeOfOrigin.NewDepartureTime).format(timeFormat);
                     if (data[i].ChangeOfOrigin.ReasonCode) {
                         train.Tooltip += " (" + data[i].ChangeOfOrigin.ReasonCode + ": " + data[i].ChangeOfOrigin.Description + ")";
@@ -192,7 +192,7 @@ function getCallingAtStanox(stanox, date) {
                     train.Tooltip += " (" + data[i].Cancellation.ReasonCode + ")";
                 }
                 if (data[i].ChangeOfOrigin) {
-                    train.Tooltip += "Change Of Origin to " + data[i].ChangeOfOrigin.NewOrigin.Description
+                    train.Tooltip += "Will start from " + data[i].ChangeOfOrigin.NewOrigin.Description
                         + " @ " + moment(data[i].ChangeOfOrigin.NewDepartureTime).format(timeFormat);
                     if (data[i].ChangeOfOrigin.ReasonCode) {
                         train.Tooltip += " (" + data[i].ChangeOfOrigin.ReasonCode + ": " + data[i].ChangeOfOrigin.Description + ")";

@@ -12,6 +12,7 @@
         <li><span class="label label-info">Live Id:</span> <a onclick="loadTrainSub(this);" data-bind="text: Id, attr: {href :'#subtrain:' + Id()}" title="View Live Updates for this train" style="display: inline;"></a></li>
         <li><span class="label label-info">Id:</span> <span data-bind="text: Headcode"></span></li>
         <li data-bind="visible: Cancellation" style="display:none;"><span class="label label-important">Cancelled:</span> <span data-bind="text: Cancellation"></span></li>
+        <li data-bind="visible: ChangeOfOrigin" style="display:none;"><span class="label label-info">Will start from:</span> <span data-bind="text: ChangeOfOrigin"></span></li>
     </ul>
 </div>
 <div class="span4">
