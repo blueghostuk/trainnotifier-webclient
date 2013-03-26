@@ -324,21 +324,22 @@ function mapStop(stop) {
         var stanox = stop.Stanox;
         var ts = stop.DepartActualTimeStamp;
     }
-    return $.getJSON("http://" + server + ":" + apiPort + "/Stanox/" + stanox, function (data) {
-        if (data.Lat && data.Lon) {
-            marker = new google.maps.Marker({
-                position: new google.maps.LatLng(data.Lat, data.Lon),
-                icon: {
-                    path: google.maps.SymbolPath.CIRCLE,
-                    scale: 3
-                },
-                draggable: false,
-                map: map,
-                title: $("." + stanox).data("title") + " - " + ts
-            });
-            markersArray.push(marker);
-        }
-    });
+    return $.getJSON("http://" + server + ":" + apiPort + "/Stanox/" + stanox)
+        .done(function (data) {
+            if (data.Lat && data.Lon) {
+                marker = new google.maps.Marker({
+                    position: new google.maps.LatLng(data.Lat, data.Lon),
+                    icon: {
+                        path: google.maps.SymbolPath.CIRCLE,
+                        scale: 3
+                    },
+                    draggable: false,
+                    map: map,
+                    title: $("." + stanox).data("title") + " - " + ts
+                });
+                markersArray.push(marker);
+            }
+        });
 }
 
 function listStation(stanox) {

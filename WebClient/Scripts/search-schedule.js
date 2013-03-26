@@ -48,9 +48,10 @@ function parseCommand() {
 function getOrigin(args, convertFromCrs, date) {
     if (convertFromCrs) {
         setHash("listorigin-crs:" + args, null, true);
-        $.getJSON("http://" + server + ":" + apiPort + "/Stanox/?GetByCrs&crsCode=" + args, function (data) {
-            getOriginByStanox(data.Name, date);
-        });
+        $.getJSON("http://" + server + ":" + apiPort + "/Stanox/?GetByCrs&crsCode=" + args)
+            .done(function (data) {
+                getOriginByStanox(data.Name, date);
+            });
     } else {
         setHash("listorigin:" + args, null, true);
         getOriginByStanox(args, date);
@@ -60,9 +61,10 @@ function getOrigin(args, convertFromCrs, date) {
 function getStation(args, convertFromCrs, date) {
     if (convertFromCrs) {
         setHash("liststation-crs:" + args, null, true);
-        $.getJSON("http://" + server + ":" + apiPort + "/Stanox/?GetByCrs&crsCode=" + args, function (data) {
-            getCallingAtStanox(data.Name, date);
-        });
+        $.getJSON("http://" + server + ":" + apiPort + "/Stanox/?GetByCrs&crsCode=" + args)
+            .done(function (data) {
+                getCallingAtStanox(data.Name, date);
+            });
     } else {
         setHash("liststation:" + args, null, true);
         getCallingAtStanox(args, date);
@@ -98,40 +100,40 @@ function getOriginByStanox(stanox, date) {
     $(".progress").show();
     $.getJSON("http://" + server + ":" + apiPort + "/TrainMovement/StartingAtStation/" + currentStanox +
         "?startDate=" + now.format(dateFormatQuery) +
-        "&endDate=" + new moment(now).add('days', 1).format(dateFormatQuery),
-        function (data) {
-            if (data && data.length) {
-                $("#no-results-row").hide();
+        "&endDate=" + new moment(now).add('days', 1).format(dateFormatQuery)
+    ).done(function (data) {
+        if (data && data.length) {
+            $("#no-results-row").hide();
 
-                currentOriginResults.PreviousDay(new moment(now).add('days', -1).format(dateFormat));
-                currentOriginResults.NextDay(new moment(now).add('days', 1).format(dateFormat));
-                currentOriginResults.Day(now.format(dateFormat));
+            currentOriginResults.PreviousDay(new moment(now).add('days', -1).format(dateFormat));
+            currentOriginResults.NextDay(new moment(now).add('days', 1).format(dateFormat));
+            currentOriginResults.Day(now.format(dateFormat));
 
-                for (i in data) {
-                    var train = ko.mapping.fromJS(data[i]);
-                    train.Tooltip = "";
-                    if (data[i].Cancellation) {
-                        train.Tooltip = "Train Cancelled " + data[i].Cancellation.Type + " at " + data[i].Cancellation.CancelledStanox
-                            + " @ " + moment(data[i].Cancellation.CancelledTimestamp).format(timeFormat) + " - Reason : ";
-                        if (data[i].Cancellation.Description) {
-                            train.Tooltip += data[i].Cancellation.Description;
-                        }
-                        train.Tooltip += " (" + data[i].Cancellation.ReasonCode + ")";
+            for (i in data) {
+                var train = ko.mapping.fromJS(data[i]);
+                train.Tooltip = "";
+                if (data[i].Cancellation) {
+                    train.Tooltip = "Train Cancelled " + data[i].Cancellation.Type + " at " + data[i].Cancellation.CancelledStanox
+                        + " @ " + moment(data[i].Cancellation.CancelledTimestamp).format(timeFormat) + " - Reason : ";
+                    if (data[i].Cancellation.Description) {
+                        train.Tooltip += data[i].Cancellation.Description;
                     }
-                    train.ActualArrival = "";
-                    if (data[i].ActualArrival) {
-                        train.ActualArrival = moment(data[i].ActualArrival).format(timeFormat);
-                    }
-                    train.ActualDeparture = "";
-                    if (data[i].ActualDeparture) {
-                        train.ActualDeparture = moment(data[i].ActualDeparture).format(timeFormat);
-                    }
-                    currentOriginResults.addTrain(train);
+                    train.Tooltip += " (" + data[i].Cancellation.ReasonCode + ")";
                 }
-            } else {
-                $("#no-results-row").show();
+                train.ActualArrival = "";
+                if (data[i].ActualArrival) {
+                    train.ActualArrival = moment(data[i].ActualArrival).format(timeFormat);
+                }
+                train.ActualDeparture = "";
+                if (data[i].ActualDeparture) {
+                    train.ActualDeparture = moment(data[i].ActualDeparture).format(timeFormat);
+                }
+                currentOriginResults.addTrain(train);
             }
+        } else {
+            $("#no-results-row").show();
         }
+    }
     ).complete(function () {
         $(".progress").hide();
     });
@@ -162,44 +164,44 @@ function getCallingAtStanox(stanox, date) {
     $(".progress").show();
     $.getJSON("http://" + server + ":" + apiPort + "/TrainMovement/CallingAtStation/" + currentStanox +
         "?startDate=" + now.format(dateFormatQuery) +
-        "&endDate=" + new moment(now).add('days', 1).format(dateFormatQuery),
-        function (data) {
-            if (data && data.length) {
-                $("#no-results-row").hide();
+        "&endDate=" + new moment(now).add('days', 1).format(dateFormatQuery)
+    ).done(function (data) {
+        if (data && data.length) {
+            $("#no-results-row").hide();
 
-                currentCallingAtResults.PreviousDay(new moment(now).add('days', -1).format(dateFormat));
-                currentCallingAtResults.NextDay(new moment(now).add('days', 1).format(dateFormat));
-                currentCallingAtResults.Day(now.format(dateFormat));
+            currentCallingAtResults.PreviousDay(new moment(now).add('days', -1).format(dateFormat));
+            currentCallingAtResults.NextDay(new moment(now).add('days', 1).format(dateFormat));
+            currentCallingAtResults.Day(now.format(dateFormat));
 
-                for (i in data) {
-                    var train = ko.mapping.fromJS(data[i]);
-                    train.Tooltip = "";
-                    if (data[i].Cancellation) {
-                        train.Tooltip = "Train Cancelled " + data[i].Cancellation.Type + " at " + data[i].Cancellation.CancelledStanox
-                            + " @ " + moment(data[i].Cancellation.CancelledTimestamp).format(timeFormat) + " - Reason : ";
-                        if (data[i].Cancellation.Description) {
-                            train.Tooltip += data[i].Cancellation.Description;
-                        }
-                        train.Tooltip += " (" + data[i].Cancellation.ReasonCode + ")";
+            for (i in data) {
+                var train = ko.mapping.fromJS(data[i]);
+                train.Tooltip = "";
+                if (data[i].Cancellation) {
+                    train.Tooltip = "Train Cancelled " + data[i].Cancellation.Type + " at " + data[i].Cancellation.CancelledStanox
+                        + " @ " + moment(data[i].Cancellation.CancelledTimestamp).format(timeFormat) + " - Reason : ";
+                    if (data[i].Cancellation.Description) {
+                        train.Tooltip += data[i].Cancellation.Description;
                     }
-                    train.ActualArrival = "";
-                    if (data[i].ActualArrival) {
-                        train.ActualArrival = moment(data[i].ActualArrival).format(timeFormat);
-                    }
-                    train.ActualDeparture = "";
-                    if (data[i].ActualDeparture) {
-                        train.ActualDeparture = moment(data[i].ActualDeparture).format(timeFormat);
-                    }
-                    currentCallingAtResults.addTrain(train);
+                    train.Tooltip += " (" + data[i].Cancellation.ReasonCode + ")";
                 }
-            } else {
-                $("#no-results-row").show();
+                train.ActualArrival = "";
+                if (data[i].ActualArrival) {
+                    train.ActualArrival = moment(data[i].ActualArrival).format(timeFormat);
+                }
+                train.ActualDeparture = "";
+                if (data[i].ActualDeparture) {
+                    train.ActualDeparture = moment(data[i].ActualDeparture).format(timeFormat);
+                }
+                currentCallingAtResults.addTrain(train);
             }
+        } else {
+            $("#no-results-row").show();
         }
+    }
     ).complete(function () {
         $(".progress").hide();
     });
-    
+
 }
 
 function previousCallingAtDate() {
