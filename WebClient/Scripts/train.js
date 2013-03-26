@@ -16,6 +16,7 @@ var _lastStopNumber = 0;
 $(function () {
 
     var commands = [];
+    commands.push('getuid:');
     commands.push('gettrain:');
     commands.push('subtrain:');
     $("#filter-command").typeahead({
