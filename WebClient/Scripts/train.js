@@ -274,9 +274,12 @@ function getSchedule(data) {
                     titleModel.Start(moment(_lastLiveData.ChangeOfOrigin.NewDepartureTime).format(timeFormat));
                 } else {
                     titleModel.From(schedule.Stops[0].Tiploc.Description.toLowerCase());
-                    titleModel.Start(moment(schedule.Stops[0].PublicDeparture).format(timeFormat));
+                    titleModel.Start(moment(schedule.Stops[0].PublicDeparture, "HH:mm:ss").format(timeFormat));
                 }
-                if (schedule.Stops.length > 1) {
+                if (_lastLiveData && _lastLiveData.Cancellation && _lastLiveData.Cancellation.CancelledAt) {
+                    titleModel.To(_lastLiveData.Cancellation.CancelledAt.Description.toLowerCase());
+                    titleModel.End(moment(_lastLiveData.Cancellation.CancelledTimestamp).format(timeFormat));
+                }else if (schedule.Stops.length > 1) {
                     titleModel.To(schedule.Stops[schedule.Stops.length - 1].Tiploc.Description.toLowerCase());
                     titleModel.End(moment(schedule.Stops[schedule.Stops.length - 1].PublicArrival, "HH:mm:ss").format(timeFormat));
                 } else {
