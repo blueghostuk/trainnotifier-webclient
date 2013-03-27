@@ -13,8 +13,8 @@ function LocationViewModel() {
     self.Lat = ko.observable();
     self.Lon = ko.observable();
 
-    self.toDisplay = ko.computed(function(){
-	    return self.stationName() ? self.stationName() : self.locationDescription();
+    self.toDisplay = ko.computed(function () {
+        return self.stationName() ? self.stationName() : self.locationDescription();
     });
 }
 
@@ -38,6 +38,7 @@ function ScheduleTrainViewModel() {
     self.AtocCode = new AtocCodeViewModel();
     self.Cancellation = ko.observable();
     self.ChangeOfOrigin = ko.observable();
+    self.Reinstatement = ko.observable();
     self.Destination = new TiplocViewModel();
     self.EndDateValue = ko.observable();
     self.Headcode = ko.observable();
@@ -99,7 +100,12 @@ function ScheduleTrainViewModel() {
         } else {
             self.ChangeOfOrigin(null);
         }
-
+        if (liveData.Reinstatement) {
+            self.Reinstatement(liveData.Reinstatement.NewOrigin.Description + " @ "
+                + moment(liveData.Reinstatement.PlannedDepartureTime).format(timeFormat));
+        } else {
+            self.Reinstatement(null);
+        }
         self.Destination.updateFromJson(schedule ? schedule.Destination : null);
         self.EndDateValue(schedule ? moment(schedule.EndDate).format(dateFormat) : null);
         self.Headcode(liveData.HeadCode);
@@ -327,6 +333,7 @@ function LiveTrainViewModel() {
     self.WttId = ko.observable();
     self.Cancellation = ko.observable();
     self.ChangeOfOrigin = ko.observable();
+    self.Reinstatement = ko.observable();
 
     self.addStop = function (stopEl) {
         if (self.Stops().length == 0) {
@@ -423,6 +430,12 @@ function LiveTrainViewModel() {
             self.ChangeOfOrigin(originText);
         } else {
             self.ChangeOfOrigin(null);
+        }
+        if (data.Reinstatement) {
+            self.Reinstatement(data.Reinstatement.NewOrigin.Description + " @ "
+                + moment(data.Reinstatement.PlannedDepartureTime).format(timeFormat));
+        } else {
+            self.Reinstatement(null);
         }
     }
 }

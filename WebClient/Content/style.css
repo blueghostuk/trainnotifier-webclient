@@ -39,6 +39,10 @@ table.table-header-colour thead th {
     text-decoration: line-through;
 }
 
+.table tbody tr.reinstatement > td  {
+    background-color: white !important;
+}
+
 /* override bootstrap */
 ul.nav.nav-tabs {
     margin-bottom: 0px;

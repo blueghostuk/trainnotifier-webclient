@@ -216,7 +216,7 @@ function getTrainData(url) {
         if (data.length && data.length > 0)
             data = data[0];
 
-        titleModel.Id(data.HeadCode);        
+        titleModel.Id(data.HeadCode);
 
         currentTrain.updateFromJSON(data);
 
@@ -279,7 +279,7 @@ function getSchedule(data) {
                 if (_lastLiveData && _lastLiveData.Cancellation && _lastLiveData.Cancellation.CancelledAt) {
                     titleModel.To(_lastLiveData.Cancellation.CancelledAt.Description.toLowerCase());
                     titleModel.End(moment(_lastLiveData.Cancellation.CancelledTimestamp).format(timeFormat));
-                }else if (schedule.Stops.length > 1) {
+                } else if (schedule.Stops.length > 1) {
                     titleModel.To(schedule.Stops[schedule.Stops.length - 1].Tiploc.Description.toLowerCase());
                     titleModel.End(moment(schedule.Stops[schedule.Stops.length - 1].PublicArrival, "HH:mm:ss").format(timeFormat));
                 } else {

@@ -110,43 +110,7 @@ function getOriginByStanox(stanox, date) {
             currentOriginResults.Day(now.format(dateFormat));
 
             for (i in data) {
-                var train = ko.mapping.fromJS(data[i]);
-                train.Tooltip = "";
-                if (data[i].Cancellation) {
-                    train.Tooltip = "Train Cancelled " + data[i].Cancellation.Type + " at ";
-                    if (data[i].Cancellation.CancelledAt) {
-                        train.Tooltip += data[i].Cancellation.CancelledAt.Description;
-                    } else {
-                        train.Tooltip += data[i].Cancellation.CancelledStanox;
-                    }
-                    train.Tooltip +=  " @ " + moment(data[i].Cancellation.CancelledTimestamp).format(timeFormat) + " - Reason : ";
-                    if (data[i].Cancellation.Description) {
-                        train.Tooltip += data[i].Cancellation.Description;
-                    }
-                    train.Tooltip += " (" + data[i].Cancellation.ReasonCode + ")";
-                }
-                if (data[i].ChangeOfOrigin) {
-                    train.Tooltip += "Will start from " + data[i].ChangeOfOrigin.NewOrigin.Description
-                        + " @ " + moment(data[i].ChangeOfOrigin.NewDepartureTime).format(timeFormat);
-                    if (data[i].ChangeOfOrigin.ReasonCode) {
-                        train.Tooltip += " (" + data[i].ChangeOfOrigin.ReasonCode + ": " + data[i].ChangeOfOrigin.Description + ")";
-                    }
-                }
-                train.ActualArrival = "";
-                if (data[i].ActualArrival) {
-                    train.ActualArrival = moment(data[i].ActualArrival).format(timeFormat);
-                }
-                train.ActualDeparture = "";
-                if (data[i].ActualDeparture) {
-                    train.ActualDeparture = moment(data[i].ActualDeparture).format(timeFormat);
-                }
-                if (train.Origin.Description) {
-                    train.Origin.Description(train.Origin.Description().toLowerCase());
-                }
-                if (train.Destination.Description) {
-                    train.Destination.Description(train.Destination.Description().toLowerCase());
-                }
-                currentOriginResults.addTrain(train);
+                currentOriginResults.addTrain(createTrainElement(data[i]));
             }
         } else {
             $("#no-results-row").show();
@@ -192,43 +156,7 @@ function getCallingAtStanox(stanox, date) {
             currentCallingAtResults.Day(now.format(dateFormat));
 
             for (i in data) {
-                var train = ko.mapping.fromJS(data[i]);
-                train.Tooltip = "";
-                if (data[i].Cancellation) {
-                    train.Tooltip = "Train Cancelled " + data[i].Cancellation.Type + " at ";
-                    if (data[i].Cancellation.CancelledAt) {
-                        train.Tooltip += data[i].Cancellation.CancelledAt.Description;
-                    } else {
-                        train.Tooltip += data[i].Cancellation.CancelledStanox;
-                    }
-                    train.Tooltip += " @ " + moment(data[i].Cancellation.CancelledTimestamp).format(timeFormat) + " - Reason : ";
-                    if (data[i].Cancellation.Description) {
-                        train.Tooltip += data[i].Cancellation.Description;
-                    }
-                    train.Tooltip += " (" + data[i].Cancellation.ReasonCode + ")";
-                }
-                if (data[i].ChangeOfOrigin) {
-                    train.Tooltip += "Will start from " + data[i].ChangeOfOrigin.NewOrigin.Description
-                        + " @ " + moment(data[i].ChangeOfOrigin.NewDepartureTime).format(timeFormat);
-                    if (data[i].ChangeOfOrigin.ReasonCode) {
-                        train.Tooltip += " (" + data[i].ChangeOfOrigin.ReasonCode + ": " + data[i].ChangeOfOrigin.Description + ")";
-                    }
-                }
-                train.ActualArrival = "";
-                if (data[i].ActualArrival) {
-                    train.ActualArrival = moment(data[i].ActualArrival).format(timeFormat);
-                }
-                train.ActualDeparture = "";
-                if (data[i].ActualDeparture) {
-                    train.ActualDeparture = moment(data[i].ActualDeparture).format(timeFormat);
-                }
-                if (train.Origin) {
-                    train.Origin.Description(train.Origin.Description().toLowerCase());
-                }
-                if (train.Destination) {
-                    train.Destination.Description(train.Destination.Description().toLowerCase());
-                }
-                currentCallingAtResults.addTrain(train);
+                currentCallingAtResults.addTrain(createTrainElement(data[i]));
             }
         } else {
             $("#no-results-row").show();
@@ -237,7 +165,50 @@ function getCallingAtStanox(stanox, date) {
     ).complete(function () {
         $(".progress").hide();
     });
+}
 
+function createTrainElement(data) {
+    var train = ko.mapping.fromJS(data);
+    train.Tooltip = "";
+    if (data.Cancellation) {
+        train.Tooltip = "Train Cancelled " + data.Cancellation.Type + " at ";
+        if (data.Cancellation.CancelledAt) {
+            train.Tooltip += data.Cancellation.CancelledAt.Description;
+        } else {
+            train.Tooltip += data.Cancellation.CancelledStanox;
+        }
+        train.Tooltip += " @ " + moment(data.Cancellation.CancelledTimestamp).format(timeFormat) + " - Reason : ";
+        if (data.Cancellation.Description) {
+            train.Tooltip += data.Cancellation.Description;
+        }
+        train.Tooltip += " (" + data.Cancellation.ReasonCode + ")";
+    }
+    if (data.ChangeOfOrigin) {
+        train.Tooltip += "Will start from " + data.ChangeOfOrigin.NewOrigin.Description
+            + " @ " + moment(data.ChangeOfOrigin.NewDepartureTime).format(timeFormat);
+        if (data.ChangeOfOrigin.ReasonCode) {
+            train.Tooltip += " (" + data.ChangeOfOrigin.ReasonCode + ": " + data.ChangeOfOrigin.Description + ")";
+        }
+    }
+    if (data.Reinstatement) {
+        train.Tooltip += "\r\n Train Reinstated from " + data.Reinstatement.NewOrigin.Description + " @ "
+            + moment(data.Reinstatement.PlannedDepartureTime).format(timeFormat);
+    }
+    train.ActualArrival = "";
+    if (data.ActualArrival) {
+        train.ActualArrival = moment(data.ActualArrival).format(timeFormat);
+    }
+    train.ActualDeparture = "";
+    if (data.ActualDeparture) {
+        train.ActualDeparture = moment(data.ActualDeparture).format(timeFormat);
+    }
+    if (train.Origin) {
+        train.Origin.Description(train.Origin.Description().toLowerCase());
+    }
+    if (train.Destination) {
+        train.Destination.Description(train.Destination.Description().toLowerCase());
+    }
+    return train;
 }
 
 function previousCallingAtDate() {
