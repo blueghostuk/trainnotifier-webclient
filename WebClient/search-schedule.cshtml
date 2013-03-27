@@ -53,8 +53,10 @@
         </div>
         <div class="well sidebar-nav">
             <p class="centerText" style="padding: 4px;">
-                At the moment this only shows trains that have been Activated.<br /><br />
-                Empty rows are activations not matched to a schedule.<br /><br />
+                At the moment this only shows trains that have been Activated.<br />
+                <br />
+                Empty rows are activations not matched to a schedule.<br />
+                <br />
                 Use #DDMMYYY at the end of a command to specify a date manually
             </p>
         </div>
@@ -109,7 +111,13 @@
                     <tr data-bind="css: { error: Cancellation, info: ChangeOfOrigin }, attr: { title: Tooltip }">
                         <td><a data-bind="text: HeadCode, attr: { href: 'train#getuid:' + TrainUid() + '#' + SchedOriginDeparture().substring(0, 10) }"></a></td>
                         <td data-bind="text: AtocCode.Code, attr: { title: AtocCode.Name }"></td>
-                        <td  class="stationName" data-bind="text: Origin.Description"></td>
+                        <td class="stationName">
+                            <span data-bind="text: Origin.Description, css: { changeOfOrigin: ChangeOfOrigin }"></span>
+                            <!-- ko if: ChangeOfOrigin -->
+                            <br />
+                            <span data-bind="text: ChangeOfOrigin.NewOrigin.Description().toLowerCase()"></span>
+                            <!-- /ko -->
+                        </td>
                         <td data-bind="text: Origin.Platform"></td>
                         <td title="Public Departure" data-bind="text: Origin.PublicDeparture"></td>
                         <td title="WTT Departure" data-bind="text: Origin.Departure"></td>
@@ -162,7 +170,13 @@
                     <tr data-bind="css: { pass: Pass, cancel: Cancellation, info: ChangeOfOrigin  }, attr: { title: Tooltip }">
                         <td><a data-bind="text: HeadCode, attr: { href: 'train#getuid:' + TrainUid() + '#' + SchedOriginDeparture().substring(0, 10) }"></a></td>
                         <td data-bind="text: AtocCode.Code, attr: { title: AtocCode.Name }"></td>
-                        <td class="stationName" data-bind="text: Origin.Description"></td>
+                        <td class="stationName">
+                            <span data-bind="text: Origin.Description, css: { changeOfOrigin: ChangeOfOrigin }"></span>
+                            <!-- ko if: ChangeOfOrigin -->
+                            <br />
+                            <span data-bind="text: ChangeOfOrigin.NewOrigin.Description().toLowerCase()"></span>
+                            <!-- /ko -->
+                        </td>
                         <td data-bind="text: Origin.Platform"></td>
                         <td title="Public Arrival" data-bind="text: Origin.PublicArrival, visible: !Pass()"></td>
                         <td title="WTT Arrival" data-bind="text: Pass() ? 'Pass' : Origin.Arrival, attr: { colspan: Pass() ? 2 : 0 }"></td>

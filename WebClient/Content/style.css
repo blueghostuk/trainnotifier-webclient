@@ -27,8 +27,12 @@ table.table-header-colour thead th {
     background-color: #EEE;
 }
 
-.stationName{
+.stationName {
     text-transform: capitalize;
+}
+
+.changeOfOrigin {
+    text-decoration: line-through;
 }
 
 /* override bootstrap */

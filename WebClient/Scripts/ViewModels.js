@@ -24,6 +24,8 @@ function TrainTitleViewModel() {
     self.Id = ko.observable();
     self.From = ko.observable();
     self.To = ko.observable();
+    self.Start = ko.observable();
+    self.End = ko.observable();
 }
 
 function ScheduleTrainViewModel() {

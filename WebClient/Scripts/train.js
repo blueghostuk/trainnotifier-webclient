@@ -269,10 +269,24 @@ function getSchedule(data) {
             mixModel.updateFromJson(schedule, _lastLiveData);
 
             if (schedule && schedule.Stops && schedule.Stops.length > 0) {
-                titleModel.From(schedule.Stops[0].Tiploc.Description.toLowerCase());
+                if (_lastLiveData && _lastLiveData.ChangeOfOrigin && _lastLiveData.ChangeOfOrigin.NewOrigin) {
+                    titleModel.From(_lastLiveData.ChangeOfOrigin.NewOrigin.Description.toLowerCase());
+                    titleModel.Start(moment(_lastLiveData.ChangeOfOrigin.NewDepartureTime).format(timeFormat));
+                } else {
+                    titleModel.From(schedule.Stops[0].Tiploc.Description.toLowerCase());
+                    titleModel.Start(moment(schedule.Stops[0].PublicDeparture).format(timeFormat));
+                }
                 if (schedule.Stops.length > 1) {
                     titleModel.To(schedule.Stops[schedule.Stops.length - 1].Tiploc.Description.toLowerCase());
+                    titleModel.End(moment(schedule.Stops[schedule.Stops.length - 1].PublicArrival, "HH:mm:ss").format(timeFormat));
+                } else {
+                    titleModel.To(null);
                 }
+            } else {
+                titleModel.To(null);
+                titleModel.From(null);
+                titleModel.Start(null);
+                titleModel.End(null);
             }
 
             for (var i = 0; i < _lastLiveData.Steps.length; i++) {
