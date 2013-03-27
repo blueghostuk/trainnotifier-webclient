@@ -122,7 +122,13 @@
                         <td title="Public Departure" data-bind="text: Origin.PublicDeparture"></td>
                         <td title="WTT Departure" data-bind="text: Origin.Departure"></td>
                         <td title="Actual Departure" data-bind="text: ActualDeparture"></td>
-                        <td class="stationName" data-bind="text: Destination.Description"></td>
+                        <td class="stationName">
+                            <span data-bind="text: Destination.Description, css: { changeOfDestination: Cancellation && Cancellation.Type && Cancellation.Type() == 'EN ROUTE' }"></span>
+                            <!-- ko if: Cancellation && Cancellation.Type && Cancellation.Type() == 'EN ROUTE' -->
+                            <br />
+                            <span data-bind="text: Cancellation.CancelledAt.Description().toLowerCase()"></span>
+                            <!-- /ko -->
+                        </td>
                         <td data-bind="text: Destination.Platform"></td>
                         <td title="Public Arrival" data-bind="text: Destination.PublicArrival"></td>
                         <td title="WTT Arrival" data-bind="text: Destination.Arrival"></td>
@@ -184,7 +190,13 @@
                         <td title="Public Departure" data-bind="text: Destination.PublicDeparture, visible: !Pass()"></td>
                         <td title="WTT Departure" data-bind="text: Pass() ? Pass : Destination.Departure, attr: { colspan: Pass() ? 2 : 0 }"></td>
                         <td title="Actual Departure" data-bind="text: ActualDeparture"></td>
-                        <td class="stationName" data-bind="text: Destination.Description"></td>
+                        <td class="stationName">
+                            <span data-bind="text: Destination.Description, css: { changeOfDestination: Cancellation && Cancellation.Type && Cancellation.Type() == 'EN ROUTE' }"></span>
+                            <!-- ko if: Cancellation && Cancellation.Type && Cancellation.Type() == 'EN ROUTE' -->
+                            <br />
+                            <span data-bind="text: Cancellation.CancelledAt.Description().toLowerCase()"></span>
+                            <!-- /ko -->
+                        </td>
                     </tr>
                 </tbody>
                 <tfoot>

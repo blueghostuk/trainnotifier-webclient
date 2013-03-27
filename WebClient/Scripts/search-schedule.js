@@ -113,8 +113,13 @@ function getOriginByStanox(stanox, date) {
                 var train = ko.mapping.fromJS(data[i]);
                 train.Tooltip = "";
                 if (data[i].Cancellation) {
-                    train.Tooltip = "Train Cancelled " + data[i].Cancellation.Type + " at " + data[i].Cancellation.CancelledStanox
-                        + " @ " + moment(data[i].Cancellation.CancelledTimestamp).format(timeFormat) + " - Reason : ";
+                    train.Tooltip = "Train Cancelled " + data[i].Cancellation.Type + " at ";
+                    if (data[i].Cancellation.CancelledAt) {
+                        train.Tooltip += data[i].Cancellation.CancelledAt.Description;
+                    } else {
+                        train.Tooltip += data[i].Cancellation.CancelledStanox;
+                    }
+                    train.Tooltip +=  " @ " + moment(data[i].Cancellation.CancelledTimestamp).format(timeFormat) + " - Reason : ";
                     if (data[i].Cancellation.Description) {
                         train.Tooltip += data[i].Cancellation.Description;
                     }
@@ -190,8 +195,13 @@ function getCallingAtStanox(stanox, date) {
                 var train = ko.mapping.fromJS(data[i]);
                 train.Tooltip = "";
                 if (data[i].Cancellation) {
-                    train.Tooltip = "Train Cancelled " + data[i].Cancellation.Type + " at " + data[i].Cancellation.CancelledStanox
-                        + " @ " + moment(data[i].Cancellation.CancelledTimestamp).format(timeFormat) + " - Reason : ";
+                    train.Tooltip = "Train Cancelled " + data[i].Cancellation.Type + " at ";
+                    if (data[i].Cancellation.CancelledAt) {
+                        train.Tooltip += data[i].Cancellation.CancelledAt.Description;
+                    } else {
+                        train.Tooltip += data[i].Cancellation.CancelledStanox;
+                    }
+                    train.Tooltip += " @ " + moment(data[i].Cancellation.CancelledTimestamp).format(timeFormat) + " - Reason : ";
                     if (data[i].Cancellation.Description) {
                         train.Tooltip += data[i].Cancellation.Description;
                     }
