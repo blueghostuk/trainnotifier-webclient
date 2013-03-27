@@ -61,6 +61,10 @@ table.table-header-colour thead th {
         display: none !important;
     }
 
+    div.tab-pane.active > table{
+        margin-top: 10px;
+    }
+
     div#title span:first-child {
         margin-left: 0px !important;
         display: block !important;
