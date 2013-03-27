@@ -1,4 +1,4 @@
-﻿<div class="span4">
+﻿<div class="span4 phone-hide">
     <h5>Service Details</h5>
     <ul>
         <li><span class="label label-info">Live Id:</span> <a onclick="loadTrainSub(this);" data-bind="text: Id, attr: {href :'#subtrain:' + Id()}" title="View Live Updates for this train" style="display: inline;"></a></li>
@@ -6,7 +6,7 @@
         <li><span class="label label-info">Service Code:</span> <span data-bind="text: ServiceCode"></span></li>
     </ul>
 </div>
-<div class="span4">
+<div class="span4 phone-hide">
     <h5>Locations</h5>
     <ul>
         <li><span class="label label-info">Scheduled Origin:</span> <a class="pointer" data-bind="text: SchedOrigin, css: SchedOrigin, click: function(d,e) { listStation(d.SchedOrigin()); }" style="display: inline;"></a></li>
@@ -16,7 +16,7 @@
         <li data-bind="visible: Reinstatement" style="display:none;"><span class="label label-important">Reinstated:</span> <span data-bind="text: Reinstatement"></span></li>
     </ul>
 </div>
-<div class="span4">
+<div class="span4 phone-hide">
     <h5>Updates</h5>
     <ul>
         <li><span class="label label-info">Activated:</span> <span data-bind="text: Activated"></span></li>
@@ -29,9 +29,9 @@
             <th>Location</th>
             <th title="Expected WTT time is tooltip. Delay is shown next to time">Arrive</th>
             <th title="Expected WTT time is tooltip. Delay is shown next to time">Depart</th>
-            <th>Line</th>
+            <th class="phone-hide">Line</th>
             <th>Platform</th>
-            <th>Notes</th>
+            <th class="phone-hide">Notes</th>
         </tr>
     </thead>
     <tbody data-bind="foreach: Stops">
@@ -39,9 +39,9 @@
             <td class="stationName"><a class="pointer" data-bind="text: Stanox, css: Stanox, click: function(d,e) { listStation(d.Stanox()); }"></a></td>
             <td><span data-bind="text: ArrivalActualTimeStamp, attr: { title: ArrivalPlannedTime }" class="tooltip-dynamic"></span>&nbsp;<span class="badge" data-bind="text: ArrivalDelay, css: ArrivalDelayResult, attr: { title: ArrivalDelayTitle }"></span></td>
             <td><span data-bind="text: DepartActualTimeStamp, attr: { title: DepartPlannedTime }" class="tooltip-dynamic"></span>&nbsp;<span class="badge" data-bind="text: DepartDelay, css: DepartDelayResult, attr: { title: DepartDelayTitle }"></span></td>
-            <td data-bind="text: Line"></td>
+            <td class="phone-hide" data-bind="text: Line"></td>
             <td data-bind="text: Platform"></td>
-            <td><span data-bind="text: OffRoute"></span><span data-bind="visible: NextStanox">Next @@ <span data-bind="css: NextStanox()"></span> in <span data-bind="text: ExpectedAtNextStanox"></span></span></td>
+            <td class="phone-hide"><span data-bind="text: OffRoute"></span><span data-bind="visible: NextStanox">Next @@ <span data-bind="css: NextStanox()"></span> in <span data-bind="text: ExpectedAtNextStanox"></span></span></td>
         </tr>
     </tbody>
 </table>

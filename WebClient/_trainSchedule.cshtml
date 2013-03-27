@@ -23,7 +23,7 @@
 </div>
 <table class="table table-hover table-bordered table-header-colour" id="scheduleView">
     <thead>
-        <tr>
+        <tr class="phone-hide">
             <th>&nbsp;</th>
             <th colspan="2">Arrive</th>
             <th colspan="2">Depart</th>
@@ -31,25 +31,30 @@
         </tr>
         <tr>
             <th>Location</th>
-            <th>WTT</th>
-            <th>Public</th>
-            <th>WTT</th>
-            <th>Public</th>
-            <th>Line</th>
+            <th class="phone-hide">WTT</th>
+            <th class="phone-hide">Public</th>
+            <th class="phone-show">Arrive</th>
+            <th class="phone-hide">WTT</th>
+            <th class="phone-hide">Public</th>
+            <th class="phone-show">Depart</th>
+            <th class="phone-hide">Line</th>
             <th>Platform</th>
-            <th>Allowances</th>
+            <th class="phone-hide">Allowances</th>
         </tr>
     </thead>
     <tbody data-bind="foreach: Stops">
         <tr data-bind="css: { pass : Pass }">
             <td class="stationName"><a class="pointer" data-bind="text: Tiploc.Description, click: function(d,e) { listStation(d.Tiploc.Stanox()); }"></a></td>
-            <td data-bind="text: Pass ? 'Pass' : Arrival, attr: { colspan: Pass ? 2 : 0 }"></td>
-            <td data-bind="text: Pass ? 'Pass' : PublicArrival, visible: !Pass"></td>
-            <td data-bind="text: Pass ? Pass : Departure"></td>
-            <td data-bind="text: PublicDeparture"></td>
-            <td data-bind="text: Line"></td>
+            <td class="phone-hide" data-bind="text: Pass ? 'Pass' : Arrival, attr: { colspan: Pass ? 2 : 0 }"></td>
+            <td class="phone-hide" data-bind="text: Pass ? 'Pass' : PublicArrival, visible: !Pass"></td>
+            <td class="phone-show" data-bind="text: PublicArrival, visible: !Pass"></td>
+            <td class="phone-show" data-bind="visible: Pass">Pass</td>
+            <td class="phone-hide" data-bind="text: Pass ? Pass : Departure"></td>
+            <td class="phone-hide" data-bind="text: PublicDeparture"></td>
+            <td class="phone-show" data-bind="text: Pass ? Pass : PublicDeparture"></td>
+            <td class="phone-hide" data-bind="text: Line"></td>
             <td data-bind="text: Platform"></td>
-            <td>
+            <td class="phone-hide">
                 <span title="Engineering Allowance" data-bind="visible: EngineeringAllowance">E:<span data-bind="text: EngineeringAllowance"></span>,</span>
                 <span title="Pathing Allowance" data-bind="visible: PathingAllowance">Pa:<span data-bind="text: PathingAllowance"></span>,</span>
                 <span title="Performance Allowance" data-bind="visible: PerformanceAllowance">Pe:<span data-bind="text: PerformanceAllowance"></span></span>

@@ -55,10 +55,10 @@ table.table-header-colour thead th {
     }
     div#title span:first-child{
         margin-left: 0px !important;
-        display: block;
+        display: block !important;
     }
-    .phone-show {
-        display: list-item;
+    tr.phone-show {
+        display: table-cell !important;
     }
 }
 
