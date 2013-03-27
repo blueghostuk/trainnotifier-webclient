@@ -39,28 +39,38 @@ table.table-header-colour thead th {
     text-decoration: line-through;
 }
 
-.table tbody tr.reinstatement > td  {
+.table tbody tr.reinstatement > td {
     background-color: white !important;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 979px) {
     .phone-show {
         display: none;
     }
 }
 
-@media (max-width: 767px) {
+/* override bootstrap */
+@media (max-width: 979px) and (min-width: 768px) {
+    .row-fluid .span10 {
+        width: 97%;
+    }
+}
+
+@media (max-width: 979px) {
     .phone-hide {
         display: none !important;
     }
-    div#title span:first-child{
+
+    div#title span:first-child {
         margin-left: 0px !important;
         display: block !important;
     }
+
     tr.phone-show {
         display: table-cell !important;
     }
-    .time{
+
+    .time {
         max-width: 3.5ex;
         overflow: hidden;
     }
