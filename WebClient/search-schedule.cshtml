@@ -81,30 +81,41 @@
             <table class="table table-hover table-bordered table-header-colour" id="origin-search-results" data-bind="visible: Trains().length > 0">
                 <thead class="header">
                     <tr>
-                        <th><a style="cursor: pointer;" onclick="previousDate(); return false;" title="Previous Day">&lt;&nbsp;<span data-bind="text: PreviousDay"></span></a></th>
-                        <th colspan="10" class="centerText" data-bind="text: Day"></th>
-                        <th><a style="cursor: pointer;" onclick="nextDate(); return false;" title="Next Day"><span data-bind="text: NextDay"></span>&nbsp;&gt;</a></th>
+                        <th><a style="cursor: pointer;" onclick="previousDate(); return false;" title="Previous Day">&lt;&nbsp;<span class="phone-hide" data-bind="text: PreviousDay"></span></a></th>
+                        <th colspan="10" class="centerText phone-hide" data-bind="text: Day"></th>
+                        <th colspan="8" class="centerText phone-show" data-bind="text: Day"></th>
+                        <th><a style="cursor: pointer;" onclick="nextDate(); return false;" title="Next Day"><span class="phone-hide" data-bind="text: NextDay"></span>&nbsp;&gt;</a></th>
                     </tr>
                     <tr>
                         <th colspan="2"></th>
                         <th colspan="2">From</th>
-                        <th colspan="3">Departure</th>
+                        <th class="phone-hide" colspan="3">Departure</th>
+                        <th class="phone-show" colspan="2">Departure</th>
                         <th colspan="2">To</th>
-                        <th colspan="3">Arrival</th>
+                        <th class="phone-hide" colspan="3">Arrival</th>
+                        <th class="phone-show" colspan="2">Arrival</th>
                     </tr>
                     <tr>
-                        <th>Train ID</th>
-                        <th>Operator</th>
+                        <th class="phone-hide">Train ID</th>
+                        <th class="phone-show">ID</th>
+                        <th class="phone-hide">Operator</th>
+                        <th class="phone-show">Op</th>
                         <th>Station</th>
-                        <th>Platform</th>
-                        <th>Public</th>
-                        <th>WTT</th>
-                        <th>Actual</th>
+                        <th class="phone-hide">Platform</th>
+                        <th class="phone-show">P</th>
+                        <th class="phone-hide">Public</th>
+                        <th class="phone-show">Ex</th>
+                        <th class="phone-hide">WTT</th>
+                        <th class="phone-hide">Actual</th>
+                        <th class="phone-show">Act</th>
                         <th>Station</th>
-                        <th>Platform</th>
-                        <th>Public</th>
-                        <th>WTT</th>
-                        <th>Actual</th>
+                        <th class="phone-hide">Platform</th>
+                        <th class="phone-show">P</th>
+                        <th class="phone-hide">Public</th>
+                        <th class="phone-show">Ex</th>
+                        <th class="phone-hide">WTT</th>
+                        <th class="phone-hide">Actual</th>
+                        <th class="phone-show">Act</th>
                     </tr>
                 </thead>
                 <tbody data-bind="foreach: Trains">
@@ -119,9 +130,9 @@
                             <!-- /ko -->
                         </td>
                         <td data-bind="text: Origin.Platform"></td>
-                        <td title="Public Departure" data-bind="text: Origin.PublicDeparture"></td>
-                        <td title="WTT Departure" data-bind="text: Origin.Departure"></td>
-                        <td title="Actual Departure" data-bind="text: ActualDeparture"></td>
+                        <td class="time" title="Public Departure" data-bind="text: Origin.PublicDeparture"></td>
+                        <td class="phone-hide" title="WTT Departure" data-bind="text: Origin.Departure"></td>
+                        <td class="time" title="Actual Departure" data-bind="text: ActualDeparture"></td>
                         <td class="stationName">
                             <span data-bind="text: Destination.Description, css: { changeOfDestination: Cancellation && Cancellation.Type && Cancellation.Type() == 'EN ROUTE' }"></span>
                             <!-- ko if: Cancellation && Cancellation.Type && Cancellation.Type() == 'EN ROUTE' -->
@@ -130,45 +141,56 @@
                             <!-- /ko -->
                         </td>
                         <td data-bind="text: Destination.Platform"></td>
-                        <td title="Public Arrival" data-bind="text: Destination.PublicArrival"></td>
-                        <td title="WTT Arrival" data-bind="text: Destination.Arrival"></td>
-                        <td title="Actual Arrival" data-bind="text: ActualArrival"></td>
+                        <td class="time" title="Public Arrival" data-bind="text: Destination.PublicArrival"></td>
+                        <td class="phone-hide" title="WTT Arrival" data-bind="text: Destination.Arrival"></td>
+                        <td class="time" title="Actual Arrival" data-bind="text: ActualArrival"></td>
                     </tr>
                 </tbody>
                 <tfoot>
                     <tr>
-                        <th><a style="cursor: pointer;" onclick="previousDate(); return false;" title="Previous Day">&lt;&nbsp;<span data-bind="text: PreviousDay"></span></a></th>
-                        <th colspan="10" class="centerText" data-bind="text: Day"></th>
-                        <th><a style="cursor: pointer;" onclick="nextDate(); return false;" title="Next Day"><span data-bind="text: NextDay"></span>&nbsp;&gt;</a></th>
+                        <th><a style="cursor: pointer;" onclick="previousDate(); return false;" title="Previous Day">&lt;&nbsp;<span class="phone-hide" data-bind="text: PreviousDay"></span></a></th>
+                        <th colspan="10" class="centerText phone-hide" data-bind="text: Day"></th>
+                        <th colspan="8" class="centerText phone-show" data-bind="text: Day"></th>
+                        <th><a style="cursor: pointer;" onclick="nextDate(); return false;" title="Next Day"><span class="phone-hide" data-bind="text: NextDay"></span>&nbsp;&gt;</a></th>
                     </tr>
                 </tfoot>
             </table>
             <table class="table table-hover table-bordered table-header-colour" id="callingAt-search-results" data-bind="visible: Trains().length > 0">
                 <thead class="header">
                     <tr>
-                        <th><a style="cursor: pointer;" onclick="previousCallingAtDate(); return false;" title="Previous Day">&lt;&nbsp;<span data-bind="text: PreviousDay"></span></a></th>
-                        <th colspan="9" class="centerText" data-bind="text: Day"></th>
-                        <th><a style="cursor: pointer;" onclick="nextCallingAtDate(); return false;" title="Next Day"><span data-bind="text: NextDay"></span>&nbsp;&gt;</a></th>
+                        <th><a style="cursor: pointer;" onclick="previousCallingAtDate(); return false;" title="Previous Day">&lt;&nbsp;<span class="phone-hide" data-bind="text: PreviousDay"></span></a></th>
+                        <th colspan="9" class="centerText phone-hide" data-bind="text: Day"></th>
+                        <th colspan="7" class="centerText phone-show" data-bind="text: Day"></th>
+                        <th><a style="cursor: pointer;" onclick="nextCallingAtDate(); return false;" title="Next Day"><span class="phone-hide" data-bind="text: NextDay"></span>&nbsp;&gt;</a></th>
                     </tr>
                     <tr>
                         <th colspan="2"></th>
                         <th>From</th>
                         <th></th>
-                        <th colspan="3">Arrival</th>
-                        <th colspan="3">Departure</th>
+                        <th class="phone-hide" colspan="3">Arrival</th>
+                        <th class="phone-show" colspan="2">Arrival</th>
+                        <th class="phone-hide" colspan="3">Departure</th>
+                        <th class="phone-show" colspan="2">Departure</th>
                         <th>To</th>
                     </tr>
                     <tr>
-                        <th>Train ID</th>
-                        <th>Operator</th>
+                        <th class="phone-hide">Train ID</th>
+                        <th class="phone-show">ID</th>
+                        <th class="phone-hide">Operator</th>
+                        <th class="phone-show">Op</th>
                         <th>Station</th>
-                        <th>Platform</th>
-                        <th>Public</th>
-                        <th>WTT</th>
-                        <th>Actual</th>
-                        <th>Public</th>
-                        <th>WTT</th>
-                        <th>Actual</th>
+                        <th class="phone-hide">Platform</th>
+                        <th class="phone-show">P</th>
+                        <th class="phone-hide">Public</th>
+                        <th class="phone-show">Ex</th>
+                        <th class="phone-hide">WTT</th>
+                        <th class="phone-hide">Actual</th>
+                        <th class="phone-show">Act</th>
+                        <th class="phone-hide">Public</th>
+                        <th class="phone-show">Ex</th>
+                        <th class="phone-hide">WTT</th>
+                        <th class="phone-hide">Actual</th>
+                        <th class="phone-show">Act</th>
                         <th>Station</th>
                     </tr>
                 </thead>
@@ -185,11 +207,14 @@
                         </td>
                         <td data-bind="text: Origin.Platform"></td>
                         <td title="Public Arrival" data-bind="text: Origin.PublicArrival, visible: !Pass()"></td>
-                        <td title="WTT Arrival" data-bind="text: Pass() ? 'Pass' : Origin.Arrival, attr: { colspan: Pass() ? 2 : 0 }"></td>
+                        <td class="phone-hide" title="WTT Arrival" data-bind="text: Pass() ? 'Pass' : Origin.Arrival, attr: { colspan: Pass() ? 2 : 0 }"></td>
+                        <td class="phone-show" colspan="2" data-bind="visible: Pass()">Pass</td>
                         <td title="Actual Arrival" data-bind="text: ActualArrival"></td>
                         <td title="Public Departure" data-bind="text: Destination.PublicDeparture, visible: !Pass()"></td>
-                        <td title="WTT Departure" data-bind="text: Pass() ? Pass : Destination.Departure, attr: { colspan: Pass() ? 2 : 0 }"></td>
-                        <td title="Actual Departure" data-bind="text: ActualDeparture"></td>
+                        <td class="phone-hide" title="WTT Departure" data-bind="text: Pass() ? Pass : Destination.Departure, attr: { colspan: Pass() ? 2 : 0 }"></td>
+                        <td class="phone-show" data-bind="text: Pass, visible: Pass()"></td>
+                        <td class="phone-hide" title="Actual Departure" data-bind="text: ActualDeparture"></td>
+                        <td class="phone-show" title="Actual Departure" data-bind="text: ActualDeparture, visible: !Pass()"></td>
                         <td class="stationName">
                             <span data-bind="text: Destination.Description, css: { changeOfDestination: Cancellation && Cancellation.Type && Cancellation.Type() == 'EN ROUTE' }"></span>
                             <!-- ko if: Cancellation && Cancellation.Type && Cancellation.Type() == 'EN ROUTE' -->
@@ -201,9 +226,10 @@
                 </tbody>
                 <tfoot>
                     <tr>
-                        <th><a style="cursor: pointer;" onclick="previousCallingAtDate(); return false;" title="Previous Day">&lt;&nbsp;<span data-bind="text: PreviousDay"></span></a></th>
-                        <th colspan="9" class="centerText" data-bind="text: Day"></th>
-                        <th><a style="cursor: pointer;" onclick="nextCallingAtDate(); return false;" title="Next Day"><span data-bind="text: NextDay"></span>&nbsp;&gt;</a></th>
+                        <th><a style="cursor: pointer;" onclick="previousCallingAtDate(); return false;" title="Previous Day">&lt;&nbsp;<span class="phone-hide" data-bind="text: PreviousDay"></span></a></th>
+                        <th colspan="9" class="centerText phone-hide" data-bind="text: Day"></th>
+                        <th colspan="7" class="centerText phone-show" data-bind="text: Day"></th>
+                        <th><a style="cursor: pointer;" onclick="nextCallingAtDate(); return false;" title="Next Day"><span class="phone-hide" data-bind="text: NextDay"></span>&nbsp;&gt;</a></th>
                     </tr>
                 </tfoot>
             </table>

@@ -202,10 +202,10 @@ function createTrainElement(data) {
     if (data.ActualDeparture) {
         train.ActualDeparture = moment(data.ActualDeparture).format(timeFormat);
     }
-    if (train.Origin) {
+    if (train.Origin && train.Origin.Description) {
         train.Origin.Description(train.Origin.Description().toLowerCase());
     }
-    if (train.Destination) {
+    if (train.Destination && train.Destination.Description) {
         train.Destination.Description(train.Destination.Description().toLowerCase());
     }
     return train;

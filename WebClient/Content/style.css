@@ -60,6 +60,10 @@ table.table-header-colour thead th {
     tr.phone-show {
         display: table-cell !important;
     }
+    .time{
+        max-width: 3.5ex;
+        overflow: hidden;
+    }
 }
 
 /* override bootstrap */
