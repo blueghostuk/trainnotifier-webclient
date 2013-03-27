@@ -55,8 +55,9 @@
             <td data-bind="text: PublicArrival, visible: !Pass"></td>
             <td data-bind="text: ActualArrival, visible: !Pass"></td>
             <td class="phone-hide" data-bind="text: Pass ? Pass : Departure"></td>
-            <td class="phone-show" data-bind="text: Pass ? Pass : Departure"></td>
-            <td data-bind="text: PublicDeparture"></td>
+            <td class="phone-show" data-bind="text: Pass ? Pass : Departure, visible: Pass"></td>
+            <td class="phone-hide" data-bind="text: PublicDeparture"></td>
+            <td class="phone-show" data-bind="text: PublicDeparture, visible: !Pass"></td>
             <td data-bind="text: ActualDeparture"></td>
             <td class="phone-hide" data-bind="text: Line"></td>
             <td data-bind="text: Platform"></td>
