@@ -9,7 +9,8 @@ namespace TrainNotifier.WebClient
         {
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
                 "~/Scripts/jquery-{version}.js",
-                "~/Scripts/jquery.color-{version}.js"));
+                "~/Scripts/jquery.color-{version}.js",
+                "~/Scripts/jquery.ba-hashchange.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/knockout").Include(
                 "~/Scripts/knockout-{version}.js",
