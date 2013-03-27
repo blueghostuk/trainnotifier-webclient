@@ -45,7 +45,7 @@
     </thead>
     <tbody data-bind="foreach: Stops">
         <tr data-bind="css: { pass: Pass }">
-            <td class="stationName"><a class="pointer" data-bind="text: Tiploc.Description, css: Tiploc.Stanox, click: function (d, e) { listStation(d.Tiploc.Stanox()); }"></a></td>
+            <td class="stationName"><a class="pointer" data-bind="text: Tiploc.Description, click: function (d, e) { listStation(d.Tiploc.Stanox()); }"></a></td>
             <td data-bind="text: Pass ? 'Pass' : Arrival, attr: { colspan: Pass ? 3 : 0 }"></td>
             <td data-bind="text: PublicArrival, visible: !Pass"></td>
             <td data-bind="text: ActualArrival, visible: !Pass"></td>
