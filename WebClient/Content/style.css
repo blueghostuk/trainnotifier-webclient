@@ -43,6 +43,25 @@ table.table-header-colour thead th {
     background-color: white !important;
 }
 
+@media (min-width: 768px) {
+    .phone-show {
+        display: none;
+    }
+}
+
+@media (max-width: 767px) {
+    .phone-hide {
+        display: none !important;
+    }
+    div#title span:first-child{
+        margin-left: 0px !important;
+        display: block;
+    }
+    .phone-show {
+        display: list-item;
+    }
+}
+
 /* override bootstrap */
 ul.nav.nav-tabs {
     margin-bottom: 0px;
