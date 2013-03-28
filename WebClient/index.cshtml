@@ -9,13 +9,19 @@
                 font-size: 30px;
             }
 
-            span.add-on, input, button {
+            span.add-on, input, select {
                 width: 200px !important;
+            }
+
+            button {
+                width: 214px !important;
             }
 
             .hero-unit {
                 padding-left: 20px !important;
             }
+
+
         }
 
         span.add-on {
@@ -50,12 +56,12 @@
         <h1>@System.Configuration.ConfigurationManager.AppSettings["brandingTitle"]</h1>
         <div class="row btn-group" style="margin-top: 30px;">
             <div class="input-prepend">
-                <span class="add-on">List Trains 
+                <span class="add-on"><span class="phone-hide">List Trains</span>
                     <select id="type">
                         <option value="listorigin-crs">Starting at</option>
                         <option value="liststation-crs">Calling at</option>
                     </select>
-                    &nbsp;<i class="icon-search"></i></span><br class="phone-show" />
+                    <i class="icon-search phone-hide"></i></span><br class="phone-show" />
                 <input type="text" id="station-lookup" autocomplete="off" placeholder="Type station name here" style="width: 350px;" /><br class="phone-show" />
                 <button type="button" class="btn" onclick="showLocation();">Go</button>
             </div>
