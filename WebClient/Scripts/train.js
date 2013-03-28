@@ -11,6 +11,7 @@ var titleModel = new TrainTitleViewModel();
 
 var timeFormat = "HH:mm:ss";
 var dateFormat = "DD/MM/YY HH:mm:ss";
+var dateQueryFormat = "YYYY-MM-DD";
 var _lastLiveData;
 var _lastStopNumber = 0;
 
@@ -250,21 +251,20 @@ function getAssociations(data) {
     if (!data) {
         return;
     }
-    return $.getJSON("http://" + server + ":" + apiPort + "/Association/" + data.TrainUid, {
-        date: data.SchedOriginDeparture
-    }).done(function (associations) {
-        if (associations.length == 0)
-            return;
+    return $.getJSON("http://" + server + ":" + apiPort + "/Association/" + data.TrainUid + "/" + moment(data.SchedOriginDeparture).format(dateQueryFormat))
+        .done(function (associations) {
+            if (associations.length == 0)
+                return;
 
-        for (var i in associations) {
-            mixModel.addAssociation(associations[i], data.TrainUid, moment(data.SchedOriginDeparture));
-        }
-    });
+            for (var i in associations) {
+                mixModel.addAssociation(associations[i], data.TrainUid, moment(data.SchedOriginDeparture));
+            }
+        });
 }
 
 function getSchedule(data) {
     _lastLiveData = data;
-    return $.getJSON("http://" + server + ":" + apiPort + "/Schedule?trainId=" + data.TrainId + "&trainUid=" + data.TrainUid)
+    return $.getJSON("http://" + server + ":" + apiPort + "/Schedule/" + data.TrainUid + "/" + moment(data.SchedOriginDeparture).format(dateQueryFormat))
         .done(function (schedule) {
             mixModel.updateFromJson(schedule, _lastLiveData);
 
