@@ -17,6 +17,18 @@
                 padding-left: 20px !important;
             }
         }
+
+        span.add-on {
+            height: 32px !important;
+            line-height: 2em !important;
+        }
+
+        .input-prepend input {
+            height: 32px !important;
+        }
+        .input-prepend button {
+            height: 42px !important;
+        }
     </style>
 }
 @section FooterJs{
@@ -38,7 +50,12 @@
         <h1>@System.Configuration.ConfigurationManager.AppSettings["brandingTitle"]</h1>
         <div class="row btn-group" style="margin-top: 30px;">
             <div class="input-prepend">
-                <span class="add-on">List Trains Originating From&nbsp;<i class="icon-search"></i></span><br class="phone-show" />
+                <span class="add-on">List Trains 
+                    <select id="type">
+                        <option value="listorigin-crs">Starting at</option>
+                        <option value="liststation-crs">Calling at</option>
+                    </select>
+                    &nbsp;<i class="icon-search"></i></span><br class="phone-show" />
                 <input type="text" id="station-lookup" autocomplete="off" placeholder="Type station name here" style="width: 350px;" /><br class="phone-show" />
                 <button type="button" class="btn" onclick="showLocation();">Go</button>
             </div>

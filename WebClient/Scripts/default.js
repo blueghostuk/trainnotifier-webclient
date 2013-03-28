@@ -12,10 +12,11 @@ function preLoadStationsCallback(results) {
 }
 
 function showLocation() {
+    var action = $("#type").val();
     var station = $("#station-lookup").val();
     var crs = station.substr(station.indexOf('(') + 1, 3);
-    if (crs && crs.length == 3) {
-        document.location.href = 'search-schedule#listorigin-crs:' + crs;
+    if (action && crs && crs.length == 3) {
+        document.location.href = 'search-schedule#' + action + ':' + crs;
     }
 }
 
