@@ -117,7 +117,8 @@
     <None Include="Scripts\jquery-1.9.1.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
-    <Content Include="Scripts\index.js" />
+    <Content Include="Scripts\default.js" />
+    <Content Include="Scripts\live.js" />
     <Content Include="Scripts\jquery-1.9.1.js" />
     <Content Include="Scripts\jquery-1.9.1.min.js" />
     <Content Include="Scripts\jquery.ba-hashchange.js" />
@@ -136,7 +137,6 @@
     <Content Include="Scripts\train.js" />
     <Content Include="Scripts\ViewModels.js" />
     <Content Include="train.cshtml" />
-    <Content Include="search.cshtml" />
     <None Include="Properties\PublishProfiles\Azure - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\Azure - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\TNWEBSRV01.pubxml" />

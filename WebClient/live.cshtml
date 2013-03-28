@@ -21,12 +21,13 @@
         var wsPort = "@System.Configuration.ConfigurationManager.AppSettings["wsPort"]";
     </script>
     
-    @Scripts.Render("~/bundles/index")
+    @Scripts.Render("~/bundles/live")
 }
 @section TopMenu{
+    <li><a href="~/index">Home</a></li>
     <li><a href="~/search-schedule">Search Schedule</a></li>
     <li><a href="~/train">Train</a></li>
-    <li class="active"><a href="~/live">Live Feed</a></li>
+    <li class="active"><a>Live Feed</a></li>
 }
 <div class="row-fluid">
     <div class="span12">
