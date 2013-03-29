@@ -6,7 +6,7 @@
 
 var currentLocation = new LocationViewModel();
 var currentTrain = new LiveTrainViewModel();
-var mixModel = new ScheduleTrainViewModel();
+var mixModel = new ScheduleTrainViewModel(currentLocation);
 var titleModel = new TrainTitleViewModel();
 
 var timeFormat = "HH:mm:ss";
@@ -26,7 +26,7 @@ $(function () {
     });
 
     ko.applyBindings(currentTrain, $("#trains").get(0));
-    ko.applyBindings(currentLocation, $("#stationDetails").get(0));
+    ko.applyBindings(currentLocation, $(".station-details").get(0));
     ko.applyBindings(mixModel, $("#schedule").get(0));
     ko.applyBindings(mixModel, $("#mix").get(0));
     ko.applyBindings(titleModel, $("#title").get(0));

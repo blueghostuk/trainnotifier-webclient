@@ -28,11 +28,13 @@ function TrainTitleViewModel() {
     self.End = ko.observable();
 }
 
-function ScheduleTrainViewModel() {
+function ScheduleTrainViewModel(currentLocation) {
     var self = this;
 
     var timeFormat = "HH:mm:ss";
     var dateFormat = "DD/MM/YY HH:mm:ss";
+
+    self.CurrentLocation = currentLocation;
 
     self.Activated = ko.observable();
     self.AtocCode = new AtocCodeViewModel();
