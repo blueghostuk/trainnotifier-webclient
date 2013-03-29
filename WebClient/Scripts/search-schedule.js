@@ -202,11 +202,19 @@ function createTrainElement(data) {
     if (data.ActualDeparture) {
         train.ActualDeparture = moment(data.ActualDeparture).format(timeFormat);
     }
-    if (train.Origin && train.Origin.Description) {
-        train.Origin.Description(train.Origin.Description().toLowerCase());
+    if (train.Origin) {
+        if (train.Origin.Description()) {
+            train.Origin.Description(train.Origin.Description().toLowerCase());
+        } else if (train.Origin.Tiploc()) {
+            train.Origin.Description(train.Origin.Tiploc().toLowerCase());
+        }
     }
-    if (train.Destination && train.Destination.Description) {
-        train.Destination.Description(train.Destination.Description().toLowerCase());
+    if (train.Destination) {
+        if (train.Destination.Description()) {
+            train.Destination.Description(train.Destination.Description().toLowerCase());
+        } else if (train.Destination.Tiploc()) {
+            train.Destination.Description(train.Destination.Tiploc().toLowerCase());
+        }
     }
     return train;
 }
