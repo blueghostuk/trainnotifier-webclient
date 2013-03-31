@@ -20,8 +20,6 @@
             .hero-unit {
                 padding-left: 20px !important;
             }
-
-
         }
 
         span.add-on {
@@ -32,6 +30,7 @@
         .input-prepend input {
             height: 32px !important;
         }
+
         .input-prepend button {
             height: 42px !important;
         }
@@ -57,13 +56,16 @@
         <div class="row btn-group" style="margin-top: 30px;">
             <div class="input-prepend">
                 <span class="add-on"><span class="phone-hide">List Trains</span>
-                    <select id="type">
+                    <select id="type" onchange="typeChange(this);">
                         <option value="listorigin-crs">Starting at</option>
                         <option value="liststation-crs">Calling at</option>
                         <option value="listdest-crs">Terminating at</option>
+                        <option value="between">Between</option>
                     </select>
-                    <i class="icon-search phone-hide"></i></span><br class="phone-show" />
-                <input type="text" id="station-lookup" autocomplete="off" placeholder="Type station name here" style="width: 350px;" /><br class="phone-show" />
+                    <i class="icon-search phone-hide"></i></span>
+                <br class="phone-show" />
+                <input type="text" class="station-lookup" id="from-crs" autocomplete="off" placeholder="Type station name here" style="width: 250px;" /><br class="phone-show" />
+                <input type="text" class="station-lookup" id="to-crs" autocomplete="off" placeholder="Type to station name here" style="display: none; width: 250px;" /><br class="phone-show" />
                 <button type="button" class="btn" onclick="showLocation();">Go</button>
             </div>
         </div>

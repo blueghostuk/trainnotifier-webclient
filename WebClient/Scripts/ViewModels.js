@@ -63,7 +63,7 @@ function ScheduleTrainViewModel(currentLocation) {
 
     self.clearStops = function () {
         self.Stops.removeAll();
-    }
+    };
 
     self.addAssociation = function (assoc, trainUid, date) {
         self.Associations.push(new TrainAssociation(assoc, trainUid, date));
@@ -71,7 +71,7 @@ function ScheduleTrainViewModel(currentLocation) {
 
     self.clearAssociations = function () {
         self.Associations.removeAll();
-    }
+    };
 
     self.updateFromJson = function (schedule, liveData) {
         self.clearStops();
@@ -125,7 +125,7 @@ function ScheduleTrainViewModel(currentLocation) {
                 self.addStop(schedule.Stops[stop]);
             }
         }
-    }
+    };
 
     self.updateActivated = function (activated) {
         if (activated) {
@@ -176,7 +176,7 @@ function ScheduleTrainViewModel(currentLocation) {
             case 4:
                 return "Permanent";
         }
-    }
+    };
 }
 
 function ScheduleStopViewModel(stop) {
@@ -246,12 +246,14 @@ function TiplocViewModel(tiploc) {
             self.Tiploc(null);
             self.TiplocId(null);
         }
-    }
+    };
 }
 
 var scheduleResultsMode = {
-    Origin : 1,
-    Terminate : 2
+    Origin: 1,
+    Terminate: 2,
+    CallingAt: 3,
+    Between: 4
 };
 
 function ScheduleSearchResults() {
@@ -271,7 +273,7 @@ function ScheduleSearchResults() {
 
     self.clearTrains = function () {
         self.Trains.removeAll();
-    }
+    };
 }
 
 function TrainAssociation(association, trainUid, date) {
@@ -390,7 +392,7 @@ function LiveTrainViewModel() {
 
     self.clearStops = function () {
         self.Stops.removeAll();
-    }
+    };
 
     self.updateFromJSON = function (data) {
         self.clearStops();
@@ -446,7 +448,7 @@ function LiveTrainViewModel() {
         } else {
             self.Reinstatement(null);
         }
-    }
+    };
 }
 
 function setArrival(stopEl, stopModel) {
@@ -490,18 +492,19 @@ function getTimes(stopEl) {
         PlannedTimeStamp: null,
         Delay: 0
     };
+    var actualTime = null;
     if (stopEl.ActualTimeStamp && stopEl.ActualTimeStamp.length > 0) {
-        var actualTime = new Date(stopEl.ActualTimeStamp);
+        actualTime = new Date(stopEl.ActualTimeStamp);
         result.ActualTimeStamp = moment(actualTime).format("HH:mm:ss");
     } else {
         result.ActualTimeStamp = "";
         setTimes = false;
     }
-
+    var plannedTime = null;
     if (stopEl.PlannedTime && stopEl.PlannedTime.length > 0) {
-        var plannedTime = new Date(stopEl.PlannedTime);
+        plannedTime = new Date(stopEl.PlannedTime);
     } else if (stopEl.ActualTimeStamp && stopEl.ActualTimeStamp.length > 0) {
-        var plannedTime = new Date(stopEl.ActualTimeStamp);
+        plannedTime = new Date(stopEl.ActualTimeStamp);
     } else {
         result.PlannedTimeStamp = "";
         setTimes = false;
@@ -580,10 +583,8 @@ function StopViewModel() {
         switch (self.State()) {
             case 1:
                 return "warning";
-                break;
             case 2:
                 return "error";
-                break;
             default:
                 //case "Normal":
                 return "";
@@ -594,10 +595,8 @@ function StopViewModel() {
         switch (self.State()) {
             case 1:
                 return "Terminated";
-                break;
             case 2:
                 return "Cancelled";
-                break;
             default:
                 //case "Normal":
                 return "";

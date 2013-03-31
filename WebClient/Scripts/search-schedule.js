@@ -49,6 +49,45 @@ function parseCommand() {
         case 'liststation-crs':
             getStation(args, true, date);
             break;
+        case 'list':
+            args = args.split(":");
+            if (args.length == 3) {
+                getCallingBetween(args[0], args[2], false, date);
+            }
+            break;
+        case 'list-crs':
+            args = args.split(":");
+            if (args.length == 3) {
+                getCallingBetween(args[0], args[2], true, date);
+            }
+            break;
+    }
+}
+
+function getCallingBetween(from, to, convertFromCrs, date) {
+    if (convertFromCrs) {
+        setHash("list-crs:" + from + ":list-crs:" + to, null, true);
+        $.when($.getJSON("http://" + server + ":" + apiPort + "/Stanox/?GetByCrs&crsCode=" + from),
+               $.getJSON("http://" + server + ":" + apiPort + "/Stanox/?GetByCrs&crsCode=" + to))
+            .done(function (from, to) {
+                getCallingBetweenByStanox(from[0].Name, to[0].Name, date);
+            });
+    } else {
+        setHash("list:" + from + ":list:" + to, null, true);
+        getCallingBetweenByStanox(from, to, date);
+    }
+}
+
+function getDestination(args, convertFromCrs, date) {
+    if (convertFromCrs) {
+        setHash("listdest-crs:" + args, null, true);
+        $.getJSON("http://" + server + ":" + apiPort + "/Stanox/?GetByCrs&crsCode=" + args)
+            .done(function (data) {
+                getDestinationByStanox(data.Name, date);
+            });
+    } else {
+        setHash("listdest:" + args, null, true);
+        getDestinationByStanox(args, date);
     }
 }
 
@@ -93,6 +132,7 @@ function getStation(args, convertFromCrs, date) {
 
 var currentDate = new moment();
 var currentStanox = "";
+var currentToStanox = "";
 var dateFormat = "ddd DD MMM YY";
 var dateFormatQuery = "YYYY-MM-DD";
 var dateHashFormat = "DDMMYYYY";
@@ -105,9 +145,9 @@ function clear() {
 
 function getDestinationByStanox(stanox, date) {
     currentOriginResults.Mode = scheduleResultsMode.Terminate;
-
+    var now = null;
     if (!date) {
-        var now = new moment();
+        now = new moment();
     } else {
         now = date;
         setHash(null, now.format(dateHashFormat), true);
@@ -145,9 +185,9 @@ function getDestinationByStanox(stanox, date) {
 
 function getOriginByStanox(stanox, date) {
     currentOriginResults.Mode = scheduleResultsMode.Origin;
-
+    var now = null;
     if (!date) {
-        var now = new moment();
+        now = new moment();
     } else {
         now = date;
         setHash(null, now.format(dateHashFormat), true);
@@ -205,9 +245,33 @@ function nextDate() {
     }
 }
 
+function previousCallingAtDate() {
+    switch (currentCallingAtResults.Mode) {
+        case scheduleResultsMode.CallingAt:
+            getCallingAtStanox(null, new moment(currentDate).add('days', -1));
+            break;
+        case scheduleResultsMode.Between:
+            getCallingBetweenByStanox(null, null, new moment(currentDate).add('days', -1));
+            break;
+    }
+}
+
+function nextCallingAtDate() {
+    switch (currentCallingAtResults.Mode) {
+        case scheduleResultsMode.CallingAt:
+            getCallingAtStanox(null, new moment(currentDate).add('days', 1));
+            break;
+        case scheduleResultsMode.Between:
+            getCallingBetweenByStanox(null, null, new moment(currentDate).add('days', 1));
+            break;
+    }
+}
+
 function getCallingAtStanox(stanox, date) {
+    currentCallingAtResults.Mode = scheduleResultsMode.CallingAt;
+    var now = null;
     if (!date) {
-        var now = new moment();
+        now = new moment();
     } else {
         now = date;
         setHash(null, now.format(dateHashFormat), true);
@@ -221,6 +285,49 @@ function getCallingAtStanox(stanox, date) {
 
     $(".progress").show();
     $.getJSON("http://" + server + ":" + apiPort + "/TrainMovement/CallingAtStation/" + currentStanox +
+        "?startDate=" + now.format(dateFormatQuery) +
+        "&endDate=" + new moment(now).add('days', 1).format(dateFormatQuery)
+    ).done(function (data) {
+        if (data && data.length) {
+            $("#no-results-row").hide();
+
+            currentCallingAtResults.PreviousDay(new moment(now).add('days', -1).format(dateFormat));
+            currentCallingAtResults.NextDay(new moment(now).add('days', 1).format(dateFormat));
+            currentCallingAtResults.Day(now.format(dateFormat));
+
+            for (i in data) {
+                currentCallingAtResults.addTrain(createTrainElement(data[i]));
+            }
+        } else {
+            $("#no-results-row").show();
+        }
+    }
+    ).complete(function () {
+        $(".progress").hide();
+    });
+}
+
+function getCallingBetweenByStanox(from, to, date) {
+    currentCallingAtResults.Mode = scheduleResultsMode.Between;
+    var now = null;
+    if (!date) {
+        now = new moment();
+    } else {
+        now = date;
+        setHash(null, now.format(dateHashFormat), true);
+    }
+    currentDate = new moment(now);
+    if (from) {
+        currentStanox = from;
+        listStation(currentStanox);
+    }
+    if (to) {
+        currentToStanox = to;
+    }
+    clear();
+
+    $(".progress").show();
+    $.getJSON("http://" + server + ":" + apiPort + "/TrainMovement/" + currentStanox + "/" + currentToStanox +
         "?startDate=" + now.format(dateFormatQuery) +
         "&endDate=" + new moment(now).add('days', 1).format(dateFormatQuery)
     ).done(function (data) {
@@ -295,39 +402,31 @@ function createTrainElement(data) {
     return train;
 }
 
-function previousCallingAtDate() {
-    getCallingAtStanox(null, new moment(currentDate).add('days', -1));
-}
-
-function nextCallingAtDate() {
-    getCallingAtStanox(null, new moment(currentDate).add('days', 1));
-}
-
 function preLoadStationsCallback(results) {
     var commands = [];
     commands.push('listorigin:');
     for (i in results) {
-        commands.push('listorigin:' + results[i].Name)
+        commands.push('listorigin:' + results[i].Name);
     }
     commands.push('listorigin-crs:');
     for (i in results) {
-        commands.push('listorigin-crs:' + results[i].CRS)
+        commands.push('listorigin-crs:' + results[i].CRS);
     }
     commands.push('liststation:');
     for (i in results) {
-        commands.push('liststation:' + results[i].Name)
+        commands.push('liststation:' + results[i].Name);
     }
     commands.push('liststation-crs:');
     for (i in results) {
-        commands.push('liststation-crs:' + results[i].CRS)
+        commands.push('liststation-crs:' + results[i].CRS);
     }
     commands.push('listdest:');
     for (i in results) {
-        commands.push('listdest:' + results[i].Name)
+        commands.push('listdest:' + results[i].Name);
     }
     commands.push('listdest-crs:');
     for (i in results) {
-        commands.push('listdest-crs:' + results[i].CRS)
+        commands.push('listdest-crs:' + results[i].CRS);
     }
     $("#filter-command").typeahead({
         source: commands
