@@ -154,7 +154,7 @@ var currentStanox = "";
 var currentToStanox = "";
 var dateFormat = "ddd DD MMM YY";
 var dateFormatQuery = "YYYY-MM-DD";
-var dateHashFormat = "DDMMYYYY";
+var dateHashFormat = "YYYY-MM-DD";
 var timeFormat = "HH:mm:ss";
 
 function clear() {
