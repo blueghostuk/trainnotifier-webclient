@@ -249,8 +249,15 @@ function TiplocViewModel(tiploc) {
     }
 }
 
+var scheduleResultsMode = {
+    Origin : 1,
+    Terminate : 2
+};
+
 function ScheduleSearchResults() {
     var self = this;
+
+    self.Mode = scheduleResultsMode.Origin;
 
     self.PreviousDay = ko.observable();
     self.NextDay = ko.observable();

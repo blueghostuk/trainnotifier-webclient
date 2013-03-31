@@ -33,15 +33,20 @@
     <div class="span2 phone-hide">
         <div class="well sidebar-nav" id="locationDetails">
             <ul class="nav nav-list">
-                <li class="nav-header">Commands</li>
-                <li><a href="#listorigin:" onclick="setCommand('listorigin:');"><strong>List Trains Originating From:</strong><br />
-                    &nbsp;&nbsp;listorigin:[stanox]</a></li>
+                <li class="nav-header">By CRS Code:</li>
                 <li><a href="#listorigin-crs:" onclick="setCommand('listorigin-crs:');"><strong>List Trains Originating From:</strong><br />
                     &nbsp;&nbsp;listorigin-crs:[CRS]</a></li>
-                <li><a href="#listorigin:" onclick="setCommand('liststation:');"><strong>List Trains Calling At:</strong><br />
-                    &nbsp;&nbsp;liststation:[stanox]</a></li>
                 <li><a href="#listorigin-crs:" onclick="setCommand('liststation-crs:');"><strong>List Trains Calling At:</strong><br />
                     &nbsp;&nbsp;liststation-crs:[CRS]</a></li>
+                <li><a href="#listdest-crs:" onclick="setCommand('listdest-crs:');"><strong>List Trains Terminating At:</strong><br />
+                    &nbsp;&nbsp;listdest-crs:[CRS]</a></li>
+                <li class="nav-header">By Stanox Code:</li>
+                <li><a href="#listorigin:" onclick="setCommand('listorigin:');"><strong>List Trains Originating From:</strong><br />
+                    &nbsp;&nbsp;listorigin:[stanox]</a></li>
+                <li><a href="#listorigin:" onclick="setCommand('liststation:');"><strong>List Trains Calling At:</strong><br />
+                    &nbsp;&nbsp;liststation:[stanox]</a></li>
+                <li><a href="#listdest:" onclick="setCommand('listdest:');"><strong>List Trains Terminating At:</strong><br />
+                    &nbsp;&nbsp;listdest:[stanox]</a></li>
             </ul>
         </div>
         <div class="well sidebar-nav" id="stationDetails">

@@ -37,6 +37,12 @@ function parseCommand() {
         case 'listorigin-crs':
             getOrigin(args, true, date);
             break;
+        case 'listdest':
+            getDestination(args, false, date);
+            break;
+        case 'listdest-crs':
+            getDestination(args, true, date);
+            break;
         case 'liststation':
             getStation(args, false, date);
             break;
@@ -45,6 +51,20 @@ function parseCommand() {
             break;
     }
 }
+
+function getDestination(args, convertFromCrs, date) {
+    if (convertFromCrs) {
+        setHash("listdest-crs:" + args, null, true);
+        $.getJSON("http://" + server + ":" + apiPort + "/Stanox/?GetByCrs&crsCode=" + args)
+            .done(function (data) {
+                getDestinationByStanox(data.Name, date);
+            });
+    } else {
+        setHash("listdest:" + args, null, true);
+        getDestinationByStanox(args, date);
+    }
+}
+
 function getOrigin(args, convertFromCrs, date) {
     if (convertFromCrs) {
         setHash("listorigin-crs:" + args, null, true);
@@ -83,7 +103,49 @@ function clear() {
     currentCallingAtResults.clearTrains();
 }
 
+function getDestinationByStanox(stanox, date) {
+    currentOriginResults.Mode = scheduleResultsMode.Terminate;
+
+    if (!date) {
+        var now = new moment();
+    } else {
+        now = date;
+        setHash(null, now.format(dateHashFormat), true);
+    }
+    currentDate = new moment(now);
+    if (stanox) {
+        currentStanox = stanox;
+        listStation(currentStanox);
+    }
+    clear();
+
+    $(".progress").show();
+    $.getJSON("http://" + server + ":" + apiPort + "/TrainMovement/TerminatingAtStation/" + currentStanox +
+        "?startDate=" + now.format(dateFormatQuery) +
+        "&endDate=" + new moment(now).add('days', 1).format(dateFormatQuery)
+    ).done(function (data) {
+        if (data && data.length) {
+            $("#no-results-row").hide();
+
+            currentOriginResults.PreviousDay(new moment(now).add('days', -1).format(dateFormat));
+            currentOriginResults.NextDay(new moment(now).add('days', 1).format(dateFormat));
+            currentOriginResults.Day(now.format(dateFormat));
+
+            for (i in data) {
+                currentOriginResults.addTrain(createTrainElement(data[i]));
+            }
+        } else {
+            $("#no-results-row").show();
+        }
+    }
+    ).complete(function () {
+        $(".progress").hide();
+    });
+}
+
 function getOriginByStanox(stanox, date) {
+    currentOriginResults.Mode = scheduleResultsMode.Origin;
+
     if (!date) {
         var now = new moment();
     } else {
@@ -122,11 +184,25 @@ function getOriginByStanox(stanox, date) {
 }
 
 function previousDate() {
-    getOriginByStanox(null, new moment(currentDate).add('days', -1));
+    switch (currentOriginResults.Mode) {
+        case scheduleResultsMode.Origin:
+            getOriginByStanox(null, new moment(currentDate).add('days', -1));
+            break;
+        case scheduleResultsMode.Terminate:
+            getDestinationByStanox(null, new moment(currentDate).add('days', -1));
+            break;
+    }
 }
 
 function nextDate() {
-    getOriginByStanox(null, new moment(currentDate).add('days', 1));
+    switch (currentOriginResults.Mode) {
+        case scheduleResultsMode.Origin:
+            getOriginByStanox(null, new moment(currentDate).add('days', 1));
+            break;
+        case scheduleResultsMode.Terminate:
+            getDestinationByStanox(null, new moment(currentDate).add('days', 1));
+            break;
+    }
 }
 
 function getCallingAtStanox(stanox, date) {
@@ -244,6 +320,14 @@ function preLoadStationsCallback(results) {
     commands.push('liststation-crs:');
     for (i in results) {
         commands.push('liststation-crs:' + results[i].CRS)
+    }
+    commands.push('listdest:');
+    for (i in results) {
+        commands.push('listdest:' + results[i].Name)
+    }
+    commands.push('listdest-crs:');
+    for (i in results) {
+        commands.push('listdest-crs:' + results[i].CRS)
     }
     $("#filter-command").typeahead({
         source: commands
