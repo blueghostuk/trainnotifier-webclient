@@ -10,6 +10,15 @@ var currentOriginResults = new ScheduleSearchResults();
 var currentCallingAtResults = new ScheduleSearchResults();
 var titleModel = new TitleViewModel();
 
+var currentDate = new moment();
+var currentStanox = "";
+var currentToStanox = "";
+var dateFormat = "ddd DD MMM YY";
+var dateFormatQuery = "YYYY-MM-DD";
+var dateHashFormat = "YYYY-MM-DD";
+var timeFormat = "HH:mm:ss";
+var titleFormat = "ddd Do MMM YYYY";
+
 $(function () {
     preLoadStations(preLoadStationsCallback);
 
@@ -81,7 +90,13 @@ function getCallingBetween(from, to, convertFromCrs, date) {
         $.when($.getJSON("http://" + server + ":" + apiPort + "/Stanox/?GetByCrs&crsCode=" + from),
                $.getJSON("http://" + server + ":" + apiPort + "/Stanox/?GetByCrs&crsCode=" + to))
             .done(function (from, to) {
-                titleModel.Text("Trains from " + from[0].Description.toLowerCase() + " to " + to[0].Description.toLowerCase());
+                var title = "Trains from " + from[0].Description.toLowerCase() + " to " + to[0].Description.toLowerCase();
+                if (!date) {
+                    title += " on " + new moment().format(titleFormat);
+                } else {
+                    title+= " on " + date.format(titleFormat);
+                }
+                titleModel.Text(title);
                 getCallingBetweenByStanox(from[0].Name, to[0].Name, date);
             });
     } else {
@@ -90,7 +105,13 @@ function getCallingBetween(from, to, convertFromCrs, date) {
         $.when($.getJSON("http://" + server + ":" + apiPort + "/Stanox/" + from),
                $.getJSON("http://" + server + ":" + apiPort + "/Stanox/" + to))
             .done(function (from, to) {
-                titleModel.Text("Trains from " + from[0].Description.toLowerCase() + " to " + to[0].Description.toLowerCase());
+                var title = "Trains from " + from[0].Description.toLowerCase() + " to " + to[0].Description.toLowerCase();
+                if (!date) {
+                    title += " on " + new moment().format(titleFormat);
+                } else {
+                    title += " on " + date.format(titleFormat);
+                }
+                titleModel.Text(title);
             });
     }
 }
@@ -100,7 +121,12 @@ function getDestination(args, convertFromCrs, date) {
         setHash("listdest-crs:" + args, null, true);
         $.getJSON("http://" + server + ":" + apiPort + "/Stanox/?GetByCrs&crsCode=" + args)
             .done(function (data) {
-                titleModel.Text("Trains terminating at " + data.Description.toLowerCase());
+                var title = "Trains terminating at " + data.Description.toLowerCase(); if (!date) {
+                    title += " on " + new moment().format(titleFormat);
+                } else {
+                    title += " on " + date.format(titleFormat);
+                }
+                titleModel.Text(title);
                 getDestinationByStanox(data.Name, date);
             });
     } else {
@@ -108,7 +134,12 @@ function getDestination(args, convertFromCrs, date) {
         getDestinationByStanox(args, date);
         $.when($.getJSON("http://" + server + ":" + apiPort + "/Stanox/" + args))
             .done(function (data) {
-                titleModel.Text("Trains terminating at " + data.Description.toLowerCase());
+                var title = "Trains terminating at " + data.Description.toLowerCase(); if (!date) {
+                    title += " on " + new moment().format(titleFormat);
+                } else {
+                    title += " on " + date.format(titleFormat);
+                }
+                titleModel.Text(title);
             });
     }
 }
@@ -118,7 +149,12 @@ function getOrigin(args, convertFromCrs, date) {
         setHash("listorigin-crs:" + args, null, true);
         $.getJSON("http://" + server + ":" + apiPort + "/Stanox/?GetByCrs&crsCode=" + args)
             .done(function (data) {
-                titleModel.Text("Trains starting at " + data.Description.toLowerCase());
+                var title = "Trains starting at " + data.Description.toLowerCase(); if (!date) {
+                    title += " on " + new moment().format(titleFormat);
+                } else {
+                    title += " on " + date.format(titleFormat);
+                }
+                titleModel.Text(title);
                 getOriginByStanox(data.Name, date);
             });
     } else {
@@ -126,7 +162,12 @@ function getOrigin(args, convertFromCrs, date) {
         getOriginByStanox(args, date);
         $.when($.getJSON("http://" + server + ":" + apiPort + "/Stanox/" + args))
             .done(function (data) {
-                titleModel.Text("Trains starting at " + data.Description.toLowerCase());
+                var title = "Trains starting at " + data.Description.toLowerCase(); if (!date) {
+                    title += " on " + new moment().format(titleFormat);
+                } else {
+                    title += " on " + date.format(titleFormat);
+                }
+                titleModel.Text(title);
             });
     }
 }
@@ -136,7 +177,12 @@ function getStation(args, convertFromCrs, date) {
         setHash("liststation-crs:" + args, null, true);
         $.getJSON("http://" + server + ":" + apiPort + "/Stanox/?GetByCrs&crsCode=" + args)
             .done(function (data) {
-                titleModel.Text("Trains calling at " + data.Description.toLowerCase());
+                var title = "Trains calling at " + data.Description.toLowerCase(); if (!date) {
+                    title += " on " + new moment().format(titleFormat);
+                } else {
+                    title += " on " + date.format(titleFormat);
+                }
+                titleModel.Text(title);
                 getCallingAtStanox(data.Name, date);
             });
     } else {
@@ -144,18 +190,15 @@ function getStation(args, convertFromCrs, date) {
         getCallingAtStanox(args, date);
         $.when($.getJSON("http://" + server + ":" + apiPort + "/Stanox/" + args))
             .done(function (data) {
-                titleModel.Text("Trains calling at " + data.Description.toLowerCase());
+                var title = "Trains calling at " + data.Description.toLowerCase(); if (!date) {
+                    title += " on " + new moment().format(titleFormat);
+                } else {
+                    title += " on " + date.format(titleFormat);
+                }
+                titleModel.Text(title);
             });
     }
 }
-
-var currentDate = new moment();
-var currentStanox = "";
-var currentToStanox = "";
-var dateFormat = "ddd DD MMM YY";
-var dateFormatQuery = "YYYY-MM-DD";
-var dateHashFormat = "YYYY-MM-DD";
-var timeFormat = "HH:mm:ss";
 
 function clear() {
     currentOriginResults.clearTrains();

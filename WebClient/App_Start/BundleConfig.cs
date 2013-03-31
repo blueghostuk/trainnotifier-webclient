@@ -20,7 +20,8 @@ namespace TrainNotifier.WebClient
                 "~/Scripts/bootstrap*"));
 
             bundles.Add(new ScriptBundle("~/bundles/moment").Include(
-                "~/Scripts/moment*"));
+                "~/Scripts/moment.js",
+                "~/Scripts/moment-datepicker.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/app").Include(
                 "~/Scripts/websockets.js",

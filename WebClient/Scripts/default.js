@@ -1,4 +1,6 @@
 ﻿/// <reference path="jquery-1.9.1.js" />
+/// <reference path="mapping.js" />
+/// <reference path="moment-datepicker.js" />
 
 function preLoadStationsCallback(results) {
     var locations = [];
@@ -32,17 +34,21 @@ function showLocation() {
     var station = $("#from-crs").val();
     var crs = station.substr(station.indexOf('(') + 1, 3);
     if (action && crs && crs.length == 3) {
+        var date = "";
+        var dateVal = $("#date-picker").val();
+        if (dateVal && dateVal.length == 10)
+            date = "#" + moment(dateVal, "DD-MM-YYYY").format("YYYY-MM-DD");
         switch (action) {
             case "listorigin-crs":
             case "liststation-crs":
             case "listdest-crs":
-                document.location.href = 'search-schedule#' + action + ':' + crs;
+                document.location.href = 'search-schedule#' + action + ':' + crs + date;
                 break;
             case "between":
                 var toStation = $("#to-crs").val();
                 var to = toStation.substr(toStation.indexOf('(') + 1, 3);
                 if (to && to.length == 3) {
-                    document.location.href = 'search-schedule#list-crs:' + crs + ':list-crs:' + to;
+                    document.location.href = 'search-schedule#list-crs:' + crs + ':list-crs:' + to + date;
                 }
                 break;
         }
@@ -50,6 +56,10 @@ function showLocation() {
 }
 
 $(function () {
+    $('.datepicker').datepicker({
+        format: 'DD-MM-YYYY',
+        autoHide: true
+    });
     $(".station-lookup").attr("placeholder", "Loading stations ...");
     preLoadStations(preLoadStationsCallback);
 });
