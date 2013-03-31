@@ -1,6 +1,12 @@
 ﻿/// <reference path="moment.js" />
 /// <reference path="knockout-2.2.0.js" />
 
+function TitleViewModel() {
+    var self = this;
+
+    self.Text = ko.observable();
+}
+
 function LocationViewModel() {
     var self = this;
 

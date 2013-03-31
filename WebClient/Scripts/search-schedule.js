@@ -8,6 +8,18 @@
 var currentLocation = new LocationViewModel();
 var currentOriginResults = new ScheduleSearchResults();
 var currentCallingAtResults = new ScheduleSearchResults();
+var titleModel = new TitleViewModel();
+
+$(function () {
+    preLoadStations(preLoadStationsCallback);
+
+    ko.applyBindings(currentLocation, $("#stationDetails").get(0));
+    ko.applyBindings(currentOriginResults, $("#origin-search-results").get(0));
+    ko.applyBindings(currentCallingAtResults, $("#callingAt-search-results").get(0));
+    ko.applyBindings(titleModel, $("#title").get(0));
+
+    loadHashCommand();
+});
 
 function setCommand(command) {
     $("#filter-command").val(command);
@@ -18,7 +30,6 @@ function parseCommand() {
     var idx = cmdString.indexOf(":");
     if (idx == -1)
         return;
-
 
     var cmd = cmdString.substring(0, idx);
     var args = cmdString.substring(idx + 1);
@@ -70,11 +81,17 @@ function getCallingBetween(from, to, convertFromCrs, date) {
         $.when($.getJSON("http://" + server + ":" + apiPort + "/Stanox/?GetByCrs&crsCode=" + from),
                $.getJSON("http://" + server + ":" + apiPort + "/Stanox/?GetByCrs&crsCode=" + to))
             .done(function (from, to) {
+                titleModel.Text("Trains from " + from[0].Description.toLowerCase() + " to " + to[0].Description.toLowerCase());
                 getCallingBetweenByStanox(from[0].Name, to[0].Name, date);
             });
     } else {
         setHash("list:" + from + ":list:" + to, null, true);
         getCallingBetweenByStanox(from, to, date);
+        $.when($.getJSON("http://" + server + ":" + apiPort + "/Stanox/" + from),
+               $.getJSON("http://" + server + ":" + apiPort + "/Stanox/" + to))
+            .done(function (from, to) {
+                titleModel.Text("Trains from " + from[0].Description.toLowerCase() + " to " + to[0].Description.toLowerCase());
+            });
     }
 }
 
@@ -83,24 +100,16 @@ function getDestination(args, convertFromCrs, date) {
         setHash("listdest-crs:" + args, null, true);
         $.getJSON("http://" + server + ":" + apiPort + "/Stanox/?GetByCrs&crsCode=" + args)
             .done(function (data) {
+                titleModel.Text("Trains terminating at " + data.Description.toLowerCase());
                 getDestinationByStanox(data.Name, date);
             });
     } else {
         setHash("listdest:" + args, null, true);
         getDestinationByStanox(args, date);
-    }
-}
-
-function getDestination(args, convertFromCrs, date) {
-    if (convertFromCrs) {
-        setHash("listdest-crs:" + args, null, true);
-        $.getJSON("http://" + server + ":" + apiPort + "/Stanox/?GetByCrs&crsCode=" + args)
+        $.when($.getJSON("http://" + server + ":" + apiPort + "/Stanox/" + args))
             .done(function (data) {
-                getDestinationByStanox(data.Name, date);
+                titleModel.Text("Trains terminating at " + data.Description.toLowerCase());
             });
-    } else {
-        setHash("listdest:" + args, null, true);
-        getDestinationByStanox(args, date);
     }
 }
 
@@ -109,11 +118,16 @@ function getOrigin(args, convertFromCrs, date) {
         setHash("listorigin-crs:" + args, null, true);
         $.getJSON("http://" + server + ":" + apiPort + "/Stanox/?GetByCrs&crsCode=" + args)
             .done(function (data) {
+                titleModel.Text("Trains starting at " + data.Description.toLowerCase());
                 getOriginByStanox(data.Name, date);
             });
     } else {
         setHash("listorigin:" + args, null, true);
         getOriginByStanox(args, date);
+        $.when($.getJSON("http://" + server + ":" + apiPort + "/Stanox/" + args))
+            .done(function (data) {
+                titleModel.Text("Trains starting at " + data.Description.toLowerCase());
+            });
     }
 }
 
@@ -122,11 +136,16 @@ function getStation(args, convertFromCrs, date) {
         setHash("liststation-crs:" + args, null, true);
         $.getJSON("http://" + server + ":" + apiPort + "/Stanox/?GetByCrs&crsCode=" + args)
             .done(function (data) {
+                titleModel.Text("Trains calling at " + data.Description.toLowerCase());
                 getCallingAtStanox(data.Name, date);
             });
     } else {
         setHash("liststation:" + args, null, true);
         getCallingAtStanox(args, date);
+        $.when($.getJSON("http://" + server + ":" + apiPort + "/Stanox/" + args))
+            .done(function (data) {
+                titleModel.Text("Trains calling at " + data.Description.toLowerCase());
+            });
     }
 }
 
@@ -442,16 +461,6 @@ function listStation(stanox) {
         currentLocation.stationName(data.StationName);
     });
 }
-
-$(function () {
-    preLoadStations(preLoadStationsCallback);
-
-    ko.applyBindings(currentLocation, $("#stationDetails").get(0));
-    ko.applyBindings(currentOriginResults, $("#origin-search-results").get(0));
-    ko.applyBindings(currentCallingAtResults, $("#callingAt-search-results").get(0));
-
-    loadHashCommand();
-});
 
 function loadHashCommand() {
     if (document.location.hash.length > 0) {
