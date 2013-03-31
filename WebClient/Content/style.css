@@ -45,7 +45,7 @@ table.table-header-colour thead th {
 
 @media (min-width: 979px) {
     .phone-show {
-        display: none;
+        display: none !important;
     }
 }
 
