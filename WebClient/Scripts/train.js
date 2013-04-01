@@ -90,9 +90,11 @@ function connectWs() {
                 break;
         }
     };
-    if (ws.readyState == 0) {
-        wsOpenCommand();
-    }
+    setTimeout(function () {
+        if (ws.readyState != WebSocket.OPEN) {
+            wsOpenCommand();
+        }
+    }, 2000);
 }
 
 function wsOpenCommand() {
@@ -147,7 +149,9 @@ function sendCommand(resetSub) {
 }
 
 function sendWsCommand(command) {
-    ws.send(command);
+    if (ws.readyState == WebSocket.OPEN) {
+        ws.send(command);
+    }
 }
 
 function setCommand(command) {
