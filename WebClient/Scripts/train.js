@@ -90,6 +90,9 @@ function connectWs() {
                 break;
         }
     };
+    if (ws.readyState == 0) {
+        wsOpenCommand();
+    }
 }
 
 function wsOpenCommand() {
