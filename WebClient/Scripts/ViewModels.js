@@ -501,7 +501,7 @@ function getTimes(stopEl) {
     var actualTime = null;
     if (stopEl.ActualTimeStamp && stopEl.ActualTimeStamp.length > 0) {
         actualTime = new Date(stopEl.ActualTimeStamp);
-        result.ActualTimeStamp = moment(actualTime).format("HH:mm:ss");
+        result.ActualTimeStamp = moment(stopEl.ActualTimeStamp).format("HH:mm:ss");
     } else {
         result.ActualTimeStamp = "";
         setTimes = false;
@@ -509,14 +509,14 @@ function getTimes(stopEl) {
     var plannedTime = null;
     if (stopEl.PlannedTime && stopEl.PlannedTime.length > 0) {
         plannedTime = new Date(stopEl.PlannedTime);
+        result.PlannedTimeStamp = moment(stopEl.PlannedTime).format("HH:mm:ss");
     } else if (stopEl.ActualTimeStamp && stopEl.ActualTimeStamp.length > 0) {
         plannedTime = new Date(stopEl.ActualTimeStamp);
+        result.PlannedTimeStamp = moment(stopEl.ActualTimeStamp).format("HH:mm:ss");
     } else {
         result.PlannedTimeStamp = "";
         setTimes = false;
     }
-    if (plannedTime)
-        result.PlannedTimeStamp = moment(plannedTime).format("HH:mm:ss");
 
     if (setTimes) {
         result.Delay = ((actualTime - plannedTime) / 60000);
