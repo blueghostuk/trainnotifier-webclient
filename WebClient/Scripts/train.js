@@ -214,8 +214,7 @@ function getTrainData(url) {
     $(".progress").show();
     $("#no-results-row").hide();
 
-    $.getJSON(url)
-    .done(function (data, textStatus, jqXHR) {
+    $.getJSON(url).done(function (data, textStatus, jqXHR) {
         if (!data) {
             $("#no-results-row").show();
             return;
@@ -247,8 +246,9 @@ function getTrainData(url) {
         return getSchedule(data, data.TrainId, data.TrainUid);
     }).then(function () {
         return getAssociations(_lastLiveData);
-    })
-    .always(function () {
+    }).fail(function () {
+        $("#error-row").show();
+    }).always(function () {
         $(".progress").hide();
     });
 }
