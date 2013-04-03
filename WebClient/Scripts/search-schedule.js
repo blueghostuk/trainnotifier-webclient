@@ -14,6 +14,7 @@ var currentDate = new moment();
 var currentStanox = "";
 var currentToStanox = "";
 var dateFormat = "ddd DD MMM YY";
+var shortDateFormat = "DD/MM/YY";
 var dateFormatQuery = "YYYY-MM-DD";
 var dateHashFormat = "YYYY-MM-DD";
 var timeFormat = "HH:mm:ss";
@@ -274,8 +275,8 @@ function getDestinationByStanox(stanox, date) {
         if (data && data.length) {
             $("#no-results-row").hide();
 
-            currentOriginResults.PreviousDay(new moment(now).add('days', -1).format(dateFormat));
-            currentOriginResults.NextDay(new moment(now).add('days', 1).format(dateFormat));
+            currentOriginResults.PreviousDay(new moment(now).add('days', -1).format(shortDateFormat));
+            currentOriginResults.NextDay(new moment(now).add('days', 1).format(shortDateFormat));
             currentOriginResults.Day(now.format(dateFormat));
 
             for (i in data) {
@@ -398,8 +399,8 @@ function getCallingAtStanox(stanox, date) {
         if (data && data.length) {
             $("#no-results-row").hide();
 
-            currentCallingAtResults.PreviousDay(new moment(now).add('days', -1).format(dateFormat));
-            currentCallingAtResults.NextDay(new moment(now).add('days', 1).format(dateFormat));
+            currentCallingAtResults.PreviousDay(new moment(now).add('days', -1).format(shortDateFormat));
+            currentCallingAtResults.NextDay(new moment(now).add('days', 1).format(shortDateFormat));
             currentCallingAtResults.Day(now.format(dateFormat));
 
             for (i in data) {
