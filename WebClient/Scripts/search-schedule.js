@@ -461,6 +461,8 @@ function createTrainElement(data) {
             train.Destination.Description(train.Destination.Tiploc().toLowerCase());
         }
     }
+    train.ExpectedDestinationArrival = data.DestExpectedArrival ? data.DestExpectedArrival : "";
+    train.ActualDestinationArrival = data.DestActualArrival ? moment(data.DestActualArrival).format(timeFormat) : "";
     return train;
 }
 
