@@ -43,8 +43,8 @@ namespace TrainNotifier.WebClient
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                 //"~/Content/bootstrap.css",
-                "~/Content/bootstrap-responsive.css",
                 "~/Content/spacelab.css",
+                "~/Content/bootstrap-responsive.css",
                 "~/Content/style.css"));
         }
     }

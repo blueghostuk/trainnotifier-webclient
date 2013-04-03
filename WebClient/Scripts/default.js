@@ -2,6 +2,19 @@
 /// <reference path="mapping.js" />
 /// <reference path="moment-datepicker.js" />
 
+
+$(function () {
+    $('.datepicker').datepicker({
+        format: 'DD-MM-YYYY',
+        autoHide: true
+    });
+    $("form").submit(function () {
+        return showLocation();
+    });
+    $(".station-lookup").attr("placeholder", "Loading stations ...");
+    preLoadStations(preLoadStationsCallback);
+});
+
 function preLoadStationsCallback(results) {
     var locations = [];
     for (i in results) {
@@ -19,11 +32,11 @@ function typeChange(element) {
         case "listorigin-crs":
         case "liststation-crs":
         case "listdest-crs":
-            $("#to-crs").hide();
+            $(".to-crs").hide();
             $("#from-crs").attr("placeholder", "Type station name here");
             break;
         case "between":
-            $("#to-crs").show();
+            $(".to-crs").show();
             $("#from-crs").attr("placeholder", "Type from station name here");
             break;
     }
@@ -53,13 +66,5 @@ function showLocation() {
                 break;
         }
     }
+    return false;
 }
-
-$(function () {
-    $('.datepicker').datepicker({
-        format: 'DD-MM-YYYY',
-        autoHide: true
-    });
-    $(".station-lookup").attr("placeholder", "Loading stations ...");
-    preLoadStations(preLoadStationsCallback);
-});
