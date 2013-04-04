@@ -4,12 +4,30 @@
 @using System.Web.Optimization;
 @section CustomCss{
     <style type="text/css">
+
+        span.add-on {
+            width: 4em !important;
+            text-align: left !important;
+        }
+
+            span.add-on > i {
+                float: right !important;
+            }
+
+        div.input-prepend > input {
+            width: 350px !important;
+        }
+
+        button {
+            width: 100px;
+        }
+
         @@media (max-width: 979px) {
             .hero-unit h1 {
                 font-size: 30px;
             }
 
-            span.add-on, input, select {
+            div.input-prepend > input {
                 width: 200px !important;
             }
 
@@ -17,21 +35,6 @@
                 padding-left: 20px !important;
             }
         }
-
-        span.add-on {
-            height: 32px !important;
-            line-height: 32px !important;
-        }
-
-        .input-prepend input {
-            height: 32px !important;
-            width: 265px !important;
-        }
-
-        button {
-            width: 100px;
-        }
-
     </style>
 }
 @section FooterJs{
@@ -51,45 +54,51 @@
 <div class="container">
     <div class="hero-unit">
         <h1>@System.Configuration.ConfigurationManager.AppSettings["brandingTitle"]</h1>
-
         <form>
             <div class="row btn-group" style="margin-top: 30px;">
                 <div class="input-prepend">
-                    <span class="add-on">
-                        <span class="phone-hide">List Trains</span>
-                        <select id="type" onchange="typeChange(this);">
-                            <option value="from">Starting at</option>
-                            <option value="at">Calling at</option>
-                            <option value="to">Terminating at</option>
-                            <option value="between">Direct Between</option>
-                        </select>
+                    <span class="add-on">From:<i class="icon-search"></i>
                     </span>
+                    <input type="text" class="station-lookup" id="from-crs" autocomplete="off" placeholder="Type from station name here" />
                 </div>
                 <br />
                 <div class="input-prepend">
-                    <span class="add-on phone-hide">
-                        <i class="icon-search phone-hide"></i>
-                    </span>
-                    <input type="text" class="station-lookup" id="from-crs" autocomplete="off" placeholder="Type station name here" />
-                </div>
-                <br />
-                <div class="input-prepend to-crs hide">
-                    <span class="add-on phone-hide">
-                        <i class="icon-search phone-hide"></i>
+                    <span class="add-on">To:<i class="icon-search"></i>
                     </span>
                     <input type="text" class="station-lookup" id="to-crs" autocomplete="off" placeholder="Type to station name here" />
                 </div>
+                <br />
                 <div class="input-prepend">
-                    <span class="add-on phone-hide">
-                        <i class="icon-calendar"></i>
+                    <span class="add-on">At:<i class="icon-search"></i>
                     </span>
-                    <input type="text" class="datepicker" placeholder="Choose a date (default to today)" id="date-picker" />
+                    <input type="text" class="station-lookup" id="at-crs" autocomplete="off" placeholder="Type calling at station name here" />
+                </div>
+                <br />
+                <div class="input-prepend">
+                    <span class="add-on">On:<i class="icon-calendar"></i>
+                    </span>
+                    <input type="text" class="datepicker" placeholder="Date as DD/MM/YYYY (default to today)" id="date-picker" />
+                </div>
+                @*<br />*@
+                <div class="input-prepend hide">
+                    <span class="add-on">At:<i class="icon-time"></i>
+                    </span>
+                    <input type="text" placeholder="Time as HH:mm (default to +/-2 hour period from now)" id="time-picker" disabled title="Not Yet Supported" />
                 </div>
                 <br />
                 <p>
-                    <button type="submit" class="btn btn-primary">Go</button>
+                    <button type="submit" class="btn btn-primary">Find</button>
                 </p>
             </div>
-        </form>
+        </form>        
+        <div class="row">
+            Search For Trains:
+            <ul>
+                <li>Starting From: a location</li>
+                <li>Starting From: a location, To: a location (Direct Services Only)</li>
+                <li>To: a location (terminate at location)</li>
+                <li>At: a location (call at location)</li>
+            </ul>
+        </div>
     </div>
 </div>

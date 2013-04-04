@@ -23,48 +23,55 @@ function preLoadStationsCallback(results) {
     $(".station-lookup").typeahead({
         source: locations
     });
-    $("#from-crs").attr("placeholder", "Type station name here");
+    $("#from-crs").attr("placeholder", "Type from station name here");
     $("#to-crs").attr("placeholder", "Type to station name here");
-}
-
-function typeChange(element) {
-    switch ($(element).val()) {
-        case "from":
-        case "at":
-        case "to":
-            $(".to-crs").hide();
-            $("#from-crs").attr("placeholder", "Type station name here");
-            break;
-        case "between":
-            $(".to-crs").show();
-            $("#from-crs").attr("placeholder", "Type from station name here");
-            break;
-    }
+    $("#at-crs").attr("placeholder", "Type calling at station name here");
 }
 
 function showLocation() {
-    var action = $("#type").val();
-    var station = $("#from-crs").val();
-    var crs = station.substr(station.indexOf('(') + 1, 3);
-    if (action && crs && crs.length == 3) {
-        var date = "";
-        var dateVal = $("#date-picker").val();
-        if (dateVal && dateVal.length == 10)
-            date = "#" + moment(dateVal, "DD-MM-YYYY").format("/YYYY/MM/DD");
-        switch (action) {
-            case "from":
-            case "at":
-            case "to":
-                document.location.href = 'search/' + action + '/' + crs + date;
-                break;
-            case "between":
-                var toStation = $("#to-crs").val();
-                var to = toStation.substr(toStation.indexOf('(') + 1, 3);
-                if (to && to.length == 3) {
-                    document.location.href = 'search/from/' + crs + '/to/' + to + date;
-                }
-                break;
+    var fromStation = $("#from-crs").val();
+    var fromCrs = null;
+    if (fromStation.length > 0)
+        fromCrs = fromStation.substr(fromStation.indexOf('(') + 1, 3);
+    var toStation = $("#to-crs").val();
+    var toCrs = null
+    if (toStation.length > 0)
+        toCrs = toStation.substr(toStation.indexOf('(') + 1, 3);
+    var atStation = $("#at-crs").val();
+    var atCrs = null
+    if (atStation.length > 0)
+        atCrs = atStation.substr(atStation.indexOf('(') + 1, 3);
+    var dateVal = $("#date-picker").val();
+    if (dateVal && dateVal.length > 0) {
+        dateVal = moment(dateVal, "DD-MM-YYYY");
+        if (dateVal.isValid()) {
+            date =  dateVal.format("/YYYY/MM/DD");
         }
+    } else {
+        date = moment().format("/YYYY/MM/DD");
     }
+    var time = "";
+    var timeVal = $("#time-picker").val();
+    if (timeVal && timeVal.length > 0) {
+        timeVal = moment(timeVal, timeFormat);
+        if (timeVal.isValid()) {
+            time = timeVal.format("/HH-mm")
+        }
+    } else {
+        time = moment().format("/HH-mm");
+    }
+
+    if (fromCrs) {
+        if (toCrs) {
+            document.location.href = "search/from/" + fromCrs + "/to/" + toCrs + date + time;
+        } else {
+            document.location.href = "search/from/" + fromCrs + date + time;
+        }
+    } else if (toCrs) {
+        document.location.href = "search/to/" + fromCrs + date + time;
+    } else if (atCrs) {
+        document.location.href = "search/at/" + atCrs + date + time;
+    }
+        
     return false;
 }

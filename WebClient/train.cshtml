@@ -46,14 +46,14 @@
 }
 <div class="row-fluid">
     <div class="span2 phone-hide">
-        <div class="well sidebar-nav" id="locationDetails">
-            <ul class="nav nav-list">
+        <div class="well sidebar-nav">
+            <ul class="nav nav-list" id="commandOptions">
                 <li class="nav-header">Commands</li>
-                <li><a href="#getuid:" onclick="setCommand('getuid:');"><strong>Get Train:</strong><br />
+                <li id="getuid"><a href="#getuid:" onclick="setCommand('getuid:');"><strong>Get Train:</strong><br />
                     &nbsp;&nbsp;getuid:[train uid]#[date:YYYY-MM-DD]</a></li>
-                <li><a href="#gettrain:" onclick="setCommand('gettrain:');"><strong>Get Train:</strong><br />
+                <li id="gettrain"><a href="#gettrain:" onclick="setCommand('gettrain:');"><strong>Get Train:</strong><br />
                     &nbsp;&nbsp;gettrain:[train id]:[train uid]</a></li>
-                <li><a href="#subtrain:" onclick="setCommand('subtrain:');"><strong>Subscribe to Train:</strong><br />
+                <li id="subtrain"><a href="#subtrain:" onclick="setCommand('subtrain:');"><strong>Subscribe to Train:</strong><br />
                     &nbsp;&nbsp;subtrain:[train id]</a></li>
             </ul>
         </div>

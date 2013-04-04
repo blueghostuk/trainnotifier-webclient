@@ -163,6 +163,8 @@ function setCommand(command) {
 function loadTrainSub(el) {
     setCommand('subtrain:' + $(el).html());
     _currentTrainSub = $(el).html();
+    $("#commandOptions > li.active").removeClass("active");
+    $("#commandOptions > li#subtrain").addClass("active");
     sendCommand(true);
 }
 
@@ -174,6 +176,9 @@ function parseCommand() {
 
     var cmd = cmdString.substring(0, idx);
     var args = cmdString.substring(idx + 1);
+
+    $("#commandOptions > li.active").removeClass("active");
+    $("#commandOptions > li#" + cmd).addClass("active");
 
     switch (cmd) {
         case 'gettrain':

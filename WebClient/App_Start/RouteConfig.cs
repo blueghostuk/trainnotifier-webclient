@@ -17,9 +17,22 @@ namespace TrainNotifier.WebClient.App_Start
                     {"uid", "[A-Z0-9 ]{6}"},
                     {"year", "[0-9]{4}"},
                     {"month", "[0-9]{2}"},
-                    {"day", "[0-9]{2}"},
+                    {"day", "[0-9]{2}"}
                 },
                 new TrainByUidRouteHandler()));
+
+            routes.Add(new Route("search/from/{crsA}/to/{crsB}/{year}/{month}/{day}/{time}",
+                null,
+                new RouteValueDictionary
+                {
+                    {"crsA", "[A-Z]{3}"},
+                    {"crsB", "[A-Z]{3}"},
+                    {"year", "[0-9]{4}"},
+                    {"month", "[0-9]{2}"},
+                    {"day", "[0-9]{2}"},
+                    {"time", "[0-9]{2}-[0-9]{2}"}
+                },
+                new SearchRouteHandler(SearchRouteHandler.SearchMethod.Between)));
 
             routes.Add(new Route("search/from/{crsA}/to/{crsB}/{year}/{month}/{day}",
                 null,
@@ -29,7 +42,7 @@ namespace TrainNotifier.WebClient.App_Start
                     {"crsB", "[A-Z]{3}"},
                     {"year", "[0-9]{4}"},
                     {"month", "[0-9]{2}"},
-                    {"day", "[0-9]{2}"},
+                    {"day", "[0-9]{2}"}
                 },
                 new SearchRouteHandler(SearchRouteHandler.SearchMethod.Between)));
 
@@ -42,7 +55,7 @@ namespace TrainNotifier.WebClient.App_Start
                 },
                 new SearchRouteHandler(SearchRouteHandler.SearchMethod.Between)));
 
-            routes.Add(new Route("search/from/{crsA}/{year}/{month}/{day}",
+            routes.Add(new Route("search/from/{crsA}/{year}/{month}/{day}/{time}",
                 null,
                 new RouteValueDictionary
                 {
@@ -50,6 +63,18 @@ namespace TrainNotifier.WebClient.App_Start
                     {"year", "[0-9]{4}"},
                     {"month", "[0-9]{2}"},
                     {"day", "[0-9]{2}"},
+                    {"time", "[0-9]{2}-[0-9]{2}"}
+                },
+                new SearchRouteHandler(SearchRouteHandler.SearchMethod.From)));
+
+            routes.Add(new Route("search/from/{crsA}/{year}/{month}/{day}",
+                null,
+                new RouteValueDictionary
+                {
+                    {"crsA", "[A-Z]{3}"},
+                    {"year", "[0-9]{4}"},
+                    {"month", "[0-9]{2}"},
+                    {"day", "[0-9]{2}"}
                 },
                 new SearchRouteHandler(SearchRouteHandler.SearchMethod.From)));
 
@@ -61,7 +86,7 @@ namespace TrainNotifier.WebClient.App_Start
                 },
                 new SearchRouteHandler(SearchRouteHandler.SearchMethod.From)));
 
-            routes.Add(new Route("search/to/{crsA}/{year}/{month}/{day}",
+            routes.Add(new Route("search/to/{crsA}/{year}/{month}/{day}/{time}",
                 null,
                 new RouteValueDictionary
                 {
@@ -69,6 +94,18 @@ namespace TrainNotifier.WebClient.App_Start
                     {"year", "[0-9]{4}"},
                     {"month", "[0-9]{2}"},
                     {"day", "[0-9]{2}"},
+                    {"time", "[0-9]{2}-[0-9]{2}"}
+                },
+                new SearchRouteHandler(SearchRouteHandler.SearchMethod.To)));
+
+            routes.Add(new Route("search/to/{crsA}/{year}/{month}/{day}",
+                null,
+                new RouteValueDictionary
+                {
+                    {"crsA", "[A-Z]{3}"},
+                    {"year", "[0-9]{4}"},
+                    {"month", "[0-9]{2}"},
+                    {"day", "[0-9]{2}"}
                 },
                 new SearchRouteHandler(SearchRouteHandler.SearchMethod.To)));
 
@@ -80,7 +117,7 @@ namespace TrainNotifier.WebClient.App_Start
                 },
                 new SearchRouteHandler(SearchRouteHandler.SearchMethod.To)));
 
-            routes.Add(new Route("search/at/{crsA}/{year}/{month}/{day}",
+            routes.Add(new Route("search/at/{crsA}/{year}/{month}/{day}/{time}",
                 null,
                 new RouteValueDictionary
                 {
@@ -88,6 +125,18 @@ namespace TrainNotifier.WebClient.App_Start
                     {"year", "[0-9]{4}"},
                     {"month", "[0-9]{2}"},
                     {"day", "[0-9]{2}"},
+                    {"time", "[0-9]{2}-[0-9]{2}"}
+                },
+                new SearchRouteHandler(SearchRouteHandler.SearchMethod.At)));
+
+            routes.Add(new Route("search/at/{crsA}/{year}/{month}/{day}",
+                null,
+                new RouteValueDictionary
+                {
+                    {"crsA", "[A-Z]{3}"},
+                    {"year", "[0-9]{4}"},
+                    {"month", "[0-9]{2}"},
+                    {"day", "[0-9]{2}"}
                 },
                 new SearchRouteHandler(SearchRouteHandler.SearchMethod.At)));
 
@@ -163,6 +212,7 @@ namespace TrainNotifier.WebClient.App_Start
             private readonly string _crsA,
                 _crsB;
             private readonly DateTime _date;
+            private readonly string _time;
 
             public SearchHttpHandler(SearchMethod method, IDictionary<string, object> values)
             {
@@ -183,6 +233,8 @@ namespace TrainNotifier.WebClient.App_Start
                 {
                     _date = DateTime.UtcNow.Date;
                 }
+                if (values.ContainsKey("time"))
+                    _time = ":" + values["time"].ToString();
             }
 
             public bool IsReusable
@@ -196,16 +248,16 @@ namespace TrainNotifier.WebClient.App_Start
                 switch (_method)
                 {
                     case SearchMethod.From:
-                        url = string.Format("~/search-schedule#listorigin-crs:{0}#{1:yyyy-MM-dd}", _crsA, _date);
+                        url = string.Format("~/search-schedule#listorigin-crs:{0}#{1:yyyy-MM-dd}{2}", _crsA, _date, _time);
                         break;
                     case SearchMethod.To:
-                        url = string.Format("~/search-schedule#listdest-crs:{0}#{1:yyyy-MM-dd}", _crsA, _date);
+                        url = string.Format("~/search-schedule#listdest-crs:{0}#{1:yyyy-MM-dd}{2}", _crsA, _date, _time);
                         break;
                     case SearchMethod.At:
-                        url = string.Format("~/search-schedule#liststation-crs:{0}#{1:yyyy-MM-dd}", _crsA, _date);
+                        url = string.Format("~/search-schedule#liststation-crs:{0}#{1:yyyy-MM-dd}{2}", _crsA, _date, _time);
                         break;
                     case SearchMethod.Between:
-                        url = string.Format("~/search-schedule#list-crs:{0}:list-crs:{1}#{2:yyyy-MM-dd}", _crsA, _crsB, _date);
+                        url = string.Format("~/search-schedule#list-crs:{0}:list-crs:{1}#{2:yyyy-MM-dd}{3}", _crsA, _crsB, _date, _time);
                         break;
                 }
                 context.Response.RedirectPermanent(url);

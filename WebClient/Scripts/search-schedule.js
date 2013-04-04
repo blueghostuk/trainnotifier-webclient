@@ -52,6 +52,9 @@ function parseCommand() {
         args = args.substring(0, dateIdx);
     }
 
+    $("#commandOptions > li.active").removeClass("active");
+    $("#commandOptions > li#" + cmd).addClass("active");
+
     switch (cmd) {
         case 'listorigin':
             getOrigin(args, false, date);
