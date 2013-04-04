@@ -50,18 +50,18 @@ function showLocation() {
         var date = "";
         var dateVal = $("#date-picker").val();
         if (dateVal && dateVal.length == 10)
-            date = "#" + moment(dateVal, "DD-MM-YYYY").format("YYYY-MM-DD");
+            date = "#" + moment(dateVal, "DD-MM-YYYY").format("/YYYY/MM/DD");
         switch (action) {
             case "listorigin-crs":
             case "liststation-crs":
             case "listdest-crs":
-                document.location.href = 'search-schedule#' + action + ':' + crs + date;
+                document.location.href = 'search/' + action + '/' + crs + date;
                 break;
             case "between":
                 var toStation = $("#to-crs").val();
                 var to = toStation.substr(toStation.indexOf('(') + 1, 3);
                 if (to && to.length == 3) {
-                    document.location.href = 'search-schedule#list-crs:' + crs + ':list-crs:' + to + date;
+                    document.location.href = 'search/from/' + crs + '/to/' + to + date;
                 }
                 break;
         }

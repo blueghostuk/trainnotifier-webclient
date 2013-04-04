@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Web.Optimization;
+using System.Web.Routing;
+using TrainNotifier.WebClient.App_Start;
 
 namespace TrainNotifier.WebClient
 {
@@ -8,6 +10,7 @@ namespace TrainNotifier.WebClient
         protected void Application_Start(object sender, EventArgs e)
         {
             BundleConfig.RegisterBundles(BundleTable.Bundles);
+            RouteConfig.RegisterRoutes(RouteTable.Routes);
         }
     }
 }

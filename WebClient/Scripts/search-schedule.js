@@ -19,6 +19,7 @@ var dateFormatQuery = "YYYY-MM-DD";
 var dateHashFormat = "YYYY-MM-DD";
 var timeFormat = "HH:mm:ss";
 var titleFormat = "ddd Do MMM YYYY";
+var dateUrlFormat = "YYYY/MM/DD";
 
 $(function () {
     preLoadStations(preLoadStationsCallback);
@@ -461,6 +462,9 @@ function getCallingBetweenByStanox(from, to, date) {
 
 function createTrainElement(data) {
     var train = ko.mapping.fromJS(data);
+    if (data.SchedOriginDeparture) {
+        train.SchedOriginDeparture(moment(data.SchedOriginDeparture).format(dateUrlFormat));
+    }
     train.Tooltip = "";
     if (data.Cancellation) {
         train.Tooltip = "Train Cancelled " + data.Cancellation.Type + " at ";

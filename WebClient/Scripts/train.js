@@ -12,6 +12,7 @@ var titleModel = new TrainTitleViewModel();
 var timeFormat = "HH:mm:ss";
 var dateFormat = "DD/MM/YY HH:mm:ss";
 var dateQueryFormat = "YYYY-MM-DD";
+var dateUrlFormat = "YYYY/MM/DD";
 var _lastLiveData;
 var _lastStopNumber = 0;
 
