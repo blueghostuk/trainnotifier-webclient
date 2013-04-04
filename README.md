@@ -20,3 +20,6 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+iOS Logo Contains Image from http://commons.wikimedia.org/wiki/File:Birmingham_New_Street_railway_station_MMB_22_323220.jpg.
+These images in WebClient/images/ios/... are licensed under the Creative Commons Attribution-Share Alike 3.0 Unported license.
