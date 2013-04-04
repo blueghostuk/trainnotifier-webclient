@@ -105,7 +105,7 @@ function getCallingBetween(from, to, convertFromCrs, date) {
                 } else {
                     title += " on " + date.format(titleFormat);
                 }
-                titleModel.Text(title);
+                titleModel.setTitle(title);
                 getCallingBetweenByStanox(from[0].Name, to[0].Name, date);
             })
             .fail(function () {
@@ -124,7 +124,7 @@ function getCallingBetween(from, to, convertFromCrs, date) {
                 } else {
                     title += " on " + date.format(titleFormat);
                 }
-                titleModel.Text(title);
+                titleModel.setTitle(title);
                 getCallingBetweenByStanox(from, to, date);
             })
             .fail(function () {
@@ -145,7 +145,7 @@ function getDestination(args, convertFromCrs, date) {
                 } else {
                     title += " on " + date.format(titleFormat);
                 }
-                titleModel.Text(title);
+                titleModel.setTitle(title);
                 getDestinationByStanox(data.Name, date);
             })
             .fail(function () {
@@ -162,7 +162,7 @@ function getDestination(args, convertFromCrs, date) {
                 } else {
                     title += " on " + date.format(titleFormat);
                 }
-                titleModel.Text(title);
+                titleModel.setTitle(title);
                 getDestinationByStanox(args, date);
             })
             .fail(function () {
@@ -183,7 +183,7 @@ function getOrigin(args, convertFromCrs, date) {
                 } else {
                     title += " on " + date.format(titleFormat);
                 }
-                titleModel.Text(title);
+                titleModel.setTitle(title);
                 getOriginByStanox(data.Name, date);
             })
             .fail(function () {
@@ -200,7 +200,7 @@ function getOrigin(args, convertFromCrs, date) {
                 } else {
                     title += " on " + date.format(titleFormat);
                 }
-                titleModel.Text(title);
+                titleModel.setTitle(title);
                 getOriginByStanox(args, date);
             })
             .fail(function () {
@@ -221,7 +221,7 @@ function getStation(args, convertFromCrs, date) {
                 } else {
                     title += " on " + date.format(titleFormat);
                 }
-                titleModel.Text(title);
+                titleModel.setTitle(title);
                 getCallingAtStanox(data.Name, date);
             })
             .fail(function () {
@@ -238,7 +238,7 @@ function getStation(args, convertFromCrs, date) {
                 } else {
                     title += " on " + date.format(titleFormat);
                 }
-                titleModel.Text(title);
+                titleModel.setTitle(title);
                 getCallingAtStanox(args, date);
             })
             .fail(function () {
@@ -334,6 +334,7 @@ function getOriginByStanox(stanox, date) {
 }
 
 function previousDate() {
+    preAjax();
     switch (currentOriginResults.Mode) {
         case scheduleResultsMode.Origin:
             getOriginByStanox(null, new moment(currentDate).add('days', -1));
@@ -345,6 +346,7 @@ function previousDate() {
 }
 
 function nextDate() {
+    preAjax();
     switch (currentOriginResults.Mode) {
         case scheduleResultsMode.Origin:
             getOriginByStanox(null, new moment(currentDate).add('days', 1));
@@ -356,6 +358,7 @@ function nextDate() {
 }
 
 function previousCallingAtDate() {
+    preAjax();
     switch (currentCallingAtResults.Mode) {
         case scheduleResultsMode.CallingAt:
             getCallingAtStanox(null, new moment(currentDate).add('days', -1));
@@ -367,6 +370,7 @@ function previousCallingAtDate() {
 }
 
 function nextCallingAtDate() {
+    preAjax();
     switch (currentCallingAtResults.Mode) {
         case scheduleResultsMode.CallingAt:
             getCallingAtStanox(null, new moment(currentDate).add('days', 1));

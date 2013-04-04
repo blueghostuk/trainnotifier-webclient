@@ -5,6 +5,13 @@ function TitleViewModel() {
     var self = this;
 
     self.Text = ko.observable();
+
+    self.setTitle = function (title) {
+        self.Text(title);
+        if (pageTitle) {
+            document.title = title + " - " + pageTitle;
+        }
+    }
 }
 
 function LocationViewModel() {
@@ -32,6 +39,13 @@ function TrainTitleViewModel() {
     self.To = ko.observable();
     self.Start = ko.observable();
     self.End = ko.observable();
+
+    self.FullTitle = ko.computed(function () {
+        if (pageTitle && self.Id() && self.From() && self.To() && self.Start() && self.End())
+            document.title = self.Id() + " " + self.From() + " to " + self.To() + " " + self.Start() + " - " + self.End() + " - " + pageTitle;
+
+        return "";
+    });
 }
 
 function ScheduleTrainViewModel(currentLocation) {

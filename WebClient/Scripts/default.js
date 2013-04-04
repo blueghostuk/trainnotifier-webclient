@@ -29,9 +29,9 @@ function preLoadStationsCallback(results) {
 
 function typeChange(element) {
     switch ($(element).val()) {
-        case "listorigin-crs":
-        case "liststation-crs":
-        case "listdest-crs":
+        case "from":
+        case "at":
+        case "to":
             $(".to-crs").hide();
             $("#from-crs").attr("placeholder", "Type station name here");
             break;
@@ -52,9 +52,9 @@ function showLocation() {
         if (dateVal && dateVal.length == 10)
             date = "#" + moment(dateVal, "DD-MM-YYYY").format("/YYYY/MM/DD");
         switch (action) {
-            case "listorigin-crs":
-            case "liststation-crs":
-            case "listdest-crs":
+            case "from":
+            case "at":
+            case "to":
                 document.location.href = 'search/' + action + '/' + crs + date;
                 break;
             case "between":

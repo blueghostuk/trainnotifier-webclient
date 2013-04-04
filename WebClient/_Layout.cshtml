@@ -8,6 +8,9 @@
     <style type="text/css">
         @@import url('//fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,400,700');
     </style>
+    <script type="text/javascript">
+        var pageTitle = "@System.Configuration.ConfigurationManager.AppSettings["brandingTitle"]";
+    </script>
     @Styles.Render("~/Content/css")
     @RenderSection("CustomCss", false)
     @RenderSection("HeaderJs", false)
