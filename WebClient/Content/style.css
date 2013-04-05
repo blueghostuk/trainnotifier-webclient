@@ -61,7 +61,7 @@ table.table-header-colour thead th {
         display: none !important;
     }
 
-    div.tab-pane.active > table{
+    div.tab-pane.active > table {
         margin-top: 10px;
     }
 
@@ -83,6 +83,16 @@ table.table-header-colour thead th {
 /* override bootstrap */
 ul.nav.nav-tabs {
     margin-bottom: 0px;
+}
+
+/* override spacelab bootstrap */
+.table tbody tr.warning > td {
+    background-color: #FFD456;
+}
+
+/* override spacelab bootstrap */
+.table-hover tbody tr.warning:hover > td {
+    background-color: #FFB600;
 }
 
 /* override bootstrap responsive*/
