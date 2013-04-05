@@ -179,7 +179,7 @@ namespace TrainNotifier.WebClient.App_Start
 
             public void ProcessRequest(HttpContext context)
             {
-                context.Response.RedirectPermanent(string.Format("~/train#getuid:{0}#{1:yyyy-MM-dd}", _trainUid, _date));
+                context.Response.RedirectPermanent(string.Format("~/train#getuid/{0}/{1:yyyy-MM-dd}", _trainUid, _date));
             }
         }
     }
@@ -234,7 +234,7 @@ namespace TrainNotifier.WebClient.App_Start
                     _date = DateTime.UtcNow.Date;
                 }
                 if (values.ContainsKey("time"))
-                    _time = ":" + values["time"].ToString();
+                    _time = "/" + values["time"].ToString();
             }
 
             public bool IsReusable
@@ -248,16 +248,16 @@ namespace TrainNotifier.WebClient.App_Start
                 switch (_method)
                 {
                     case SearchMethod.From:
-                        url = string.Format("~/search-schedule#listorigin-crs:{0}#{1:yyyy-MM-dd}{2}", _crsA, _date, _time);
+                        url = string.Format("~/search-schedule#listorigin-crs/{0}/{1:yyyy-MM-dd}{2}", _crsA, _date, _time);
                         break;
                     case SearchMethod.To:
-                        url = string.Format("~/search-schedule#listdest-crs:{0}#{1:yyyy-MM-dd}{2}", _crsA, _date, _time);
+                        url = string.Format("~/search-schedule#listdest-crs/{0}/{1:yyyy-MM-dd}{2}", _crsA, _date, _time);
                         break;
                     case SearchMethod.At:
-                        url = string.Format("~/search-schedule#liststation-crs:{0}#{1:yyyy-MM-dd}{2}", _crsA, _date, _time);
+                        url = string.Format("~/search-schedule#liststation-crs/{0}/{1:yyyy-MM-dd}{2}", _crsA, _date, _time);
                         break;
                     case SearchMethod.Between:
-                        url = string.Format("~/search-schedule#list-crs:{0}:list-crs:{1}#{2:yyyy-MM-dd}{3}", _crsA, _crsB, _date, _time);
+                        url = string.Format("~/search-schedule#list-crs/{0}/list-crs/{1}/{2:yyyy-MM-dd}{3}", _crsA, _crsB, _date, _time);
                         break;
                 }
                 context.Response.RedirectPermanent(url);

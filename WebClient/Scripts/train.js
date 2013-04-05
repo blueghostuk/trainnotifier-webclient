@@ -19,9 +19,9 @@ var _lastStopNumber = 0;
 $(function () {
 
     var commands = [];
-    commands.push('getuid:');
-    commands.push('gettrain:');
-    commands.push('subtrain:');
+    commands.push('getuid/');
+    commands.push('gettrain/');
+    commands.push('subtrain/');
     $("#filter-command").typeahead({
         source: commands
     });
@@ -170,7 +170,7 @@ function loadTrainSub(el) {
 
 function parseCommand() {
     var cmdString = $("#filter-command").val();
-    var idx = cmdString.indexOf(":");
+    var idx = cmdString.indexOf("/");
     if (idx == -1)
         return;
 
@@ -190,7 +190,7 @@ function parseCommand() {
             // still send command
             break;
         case 'getuid':
-            var hashIdx = args.indexOf('#');
+            var hashIdx = args.indexOf('/');
             if (hashIdx != -1) {
                 getByUid(args.substring(0, hashIdx), args.substring(hashIdx + 1));
             }

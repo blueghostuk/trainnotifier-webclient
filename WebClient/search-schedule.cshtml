@@ -50,32 +50,32 @@
         <div class="well sidebar-nav">
             <ul class="nav nav-list" id="commandOptions">
                 <li class="nav-header">By CRS Code:</li>
-                <li id="listorigin-crs"><a href="#listorigin-crs:" onclick="setCommand('listorigin-crs:');"><strong>Trains Stating From:</strong><br />
+                <li id="listorigin-crs"><a href="#listorigin-crs/" onclick="setCommand('listorigin-crs/');"><strong>Trains Stating From:</strong><br />
                     &nbsp;&nbsp;listorigin-crs:[CRS]</a></li>
-                <li id="liststation-crs"><a href="#listorigin-crs:" onclick="setCommand('liststation-crs:');"><strong>Trains Calling At:</strong><br />
-                    &nbsp;&nbsp;liststation-crs:[CRS]</a></li>
-                <li id="listdest-crs"><a href="#listdest-crs:" onclick="setCommand('listdest-crs:');"><strong>Trains Terminating At:</strong><br />
-                    &nbsp;&nbsp;listdest-crs:[CRS]</a></li>
-                <li id="list-crs:list-crs"><a href="#list-crs::list-crs:" onclick="setCommand('list-crs::list-crs:');"><strong>Trains going from [A] to [B]:</strong><br />
-                    &nbsp;&nbsp;list-crs:[CRS-A]:list-crs:[CRS-B]</a></li>
+                <li id="liststation-crs"><a href="#listorigin-crs/" onclick="setCommand('liststation-crs/');"><strong>Trains Calling At:</strong><br />
+                    &nbsp;&nbsp;liststation-crs/[CRS]</a></li>
+                <li id="listdest-crs"><a href="#listdest-crs/" onclick="setCommand('listdest-crs/');"><strong>Trains Terminating At:</strong><br />
+                    &nbsp;&nbsp;listdest-crs/[CRS]</a></li>
+                <li id="list-crs:list-crs"><a href="#list-crs//list-crs/" onclick="setCommand('list-crs//list-crs/');"><strong>Trains going from [A] to [B]:</strong><br />
+                    &nbsp;&nbsp;list-crs/[CRS-A]/list-crs/[CRS-B]</a></li>
                 <li class="nav-header">By Stanox Code:</li>
-                <li id="listorigin"><a href="#listorigin:" onclick="setCommand('listorigin:');"><strong>Trains Stating From:</strong><br />
-                    &nbsp;&nbsp;listorigin:[stanox]</a></li>
-                <li id="liststation"><a href="#listorigin:" onclick="setCommand('liststation:');"><strong>Trains Calling At:</strong><br />
-                    &nbsp;&nbsp;liststation:[stanox]</a></li>
-                <li id="listdest"><a href="#listdest:" onclick="setCommand('listdest:');"><strong>Trains Terminating At:</strong><br />
-                    &nbsp;&nbsp;listdest:[stanox]</a></li>
-                <li id="list"><a href="#list::list:" onclick="setCommand('list::list:');"><strong>Trains going from [A] to [B]:</strong><br />
-                    &nbsp;&nbsp;list:[stanox-A]:list:[stanox-B]</a></li>
+                <li id="listorigin"><a href="#listorigin/" onclick="setCommand('listorigin/');"><strong>Trains Stating From:</strong><br />
+                    &nbsp;&nbsp;listorigin/[stanox]</a></li>
+                <li id="liststation"><a href="#listorigin/" onclick="setCommand('liststation/');"><strong>Trains Calling At:</strong><br />
+                    &nbsp;&nbsp;liststation/[stanox]</a></li>
+                <li id="listdest"><a href="#listdest:" onclick="setCommand('listdest/');"><strong>Trains Terminating At:</strong><br />
+                    &nbsp;&nbsp;listdest/[stanox]</a></li>
+                <li id="list"><a href="#list//list/" onclick="setCommand('list//list/');"><strong>Trains going from [A] to [B]:</strong><br />
+                    &nbsp;&nbsp;list/[stanox-A]/list/[stanox-B]</a></li>
             </ul>
         </div>
         <div class="well sidebar-nav" id="stationDetails">
             <ul class="nav nav-list">
                 <li class="nav-header" data-bind="text: toDisplay()">Station Details</li>
                 <li><strong>CRS:</strong><span data-bind="text: locationCRS"></span></li>
-                <li><a data-bind="attr: { href :'search-schedule#listorigin:' + locationStanox(), onclick: 'setHash(\'listorigin:' + locationStanox() + '\');' }" title="View Trains Starting from this station">Trains Starting From</a></li>
-                <li><a data-bind="attr: { href :'search-schedule#liststation:' + locationStanox(), onclick: 'setHash(\'liststation:' + locationStanox() + '\');' }" title="View Trains Calling at this station">Trains Calling At</a></li>
-                <li><a data-bind="attr: { href :'search-schedule#listdest:' + locationStanox(), onclick: 'setHash(\'listdest:' + locationStanox() + '\');' }" title="View Trains Terminating at this station">Trains Terminating At</a></li>
+                <li><a data-bind="attr: { href :'search-schedule#listorigin/' + locationStanox(), onclick: 'setHash(\'listorigin/' + locationStanox() + '\');' }" title="View Trains Starting from this station">Trains Starting From</a></li>
+                <li><a data-bind="attr: { href :'search-schedule#liststation/' + locationStanox(), onclick: 'setHash(\'liststation/' + locationStanox() + '\');' }" title="View Trains Calling at this station">Trains Calling At</a></li>
+                <li><a data-bind="attr: { href :'search-schedule#listdest/' + locationStanox(), onclick: 'setHash(\'listdest/' + locationStanox() + '\');' }" title="View Trains Terminating at this station">Trains Terminating At</a></li>
             </ul>
         </div>
         <div class="well sidebar-nav">
@@ -84,7 +84,7 @@
                 <br />
                 Empty rows are activations not matched to a schedule.<br />
                 <br />
-                Use #YYYY-MM-DD at the end of a command to specify a date manually
+                Use /YYYY-MM-DD at the end of a command to specify a date manually
             </p>
         </div>
     </div>
