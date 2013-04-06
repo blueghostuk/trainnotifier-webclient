@@ -35,7 +35,7 @@
         </tr>
     </thead>
     <tbody data-bind="foreach: Stops">
-        <tr data-bind="css: StateClass, attr: { title: StateTitle }">
+        <tr data-bind="css: StateClass, attr: { title: StateTitle }, css: { info: OffRoute }">
             <td class="stationName"><a class="pointer" data-bind="text: Stanox, css: Stanox, click: function(d,e) { listStation(d.Stanox()); }"></a></td>
             <td><span data-bind="text: ArrivalActualTimeStamp, attr: { title: ArrivalPlannedTime }" class="tooltip-dynamic"></span>&nbsp;<span class="badge" data-bind="text: ArrivalDelay, css: ArrivalDelayResult, attr: { title: ArrivalDelayTitle }"></span></td>
             <td><span data-bind="text: DepartActualTimeStamp, attr: { title: DepartPlannedTime }" class="tooltip-dynamic"></span>&nbsp;<span class="badge" data-bind="text: DepartDelay, css: DepartDelayResult, attr: { title: DepartDelayTitle }"></span></td>
