@@ -48,36 +48,21 @@ function parseCommand() {
     var args = cmdString.substring(idx + 1).split('/');    
 
     $("#commandOptions > li.active").removeClass("active");
-    $("#commandOptions > li#" + cmd).addClass("active");
+    var convertFromCrs = args[0].length == 3;
 
     switch (cmd) {
-        case 'listorigin':
-            getOrigin(args.join('/'), args[0], false, getDateTime(args.slice(1)));
-            break;
-        case 'listorigin-crs':
-            getOrigin(args.join('/'), args[0], true, getDateTime(args.slice(1)));
-            break;
-        case 'listdest':
-            getDestination(args.join('/'), args[0], false, getDateTime(args.slice(1)));
-            break;
-        case 'listdest-crs':
-            getDestination(args.join('/'), args[0], true, getDateTime(args.slice(1)));
-            break;
-        case 'liststation':
-            getStation(args.join('/'), args[0], false, getDateTime(args.slice(1)));
-            break;
-        case 'liststation-crs':
-            getStation(args.join('/'), args[0], true, getDateTime(args.slice(1)));
-            break;
-        case 'list':
+        case 'from':
             if (args.length >= 3) {
-                getCallingBetween(args[0], args[2], false, getDateTime(args.slice(3)));
+                getCallingBetween(args[0], args[2], convertFromCrs, getDateTime(args.slice(3)));
+            } else {
+                getOrigin(args[0], convertFromCrs, getDateTime(args.slice(1)));
             }
             break;
-        case 'list-crs':
-            if (args.length >= 3) {
-                getCallingBetween(args[0], args[2], true, getDateTime(args.slice(3)));
-            }
+        case 'to':
+            getDestination(args[0], convertFromCrs, getDateTime(args.slice(1)));
+            break;
+        case 'at':
+            getStation(args[0], convertFromCrs, getDateTime(args.slice(1)));
             break;
     }
 }
@@ -101,15 +86,14 @@ function preAjax() {
 }
 
 function getCallingBetween(from, to, convertFromCrs, dateTime) {
+    $("#commandOptions > li#from-to" + (convertFromCrs ? "-crs" : "")).addClass("active");
     var startDate = moment(dateTime).subtract(2, "hours");
     var endDate = moment(dateTime).add(2, "hours");
-    var hash = "";
+    var hash = "from/" + from + "/to/" + to;
     var url = "";
     if (convertFromCrs) {
-        hash = "list-crs/" + from + "/list-crs/" + to;
         url = "http://" + server + ":" + apiPort + "/Stanox/?GetByCrs&crsCode=";
     } else {
-        hash = "list/" + from + "/list/" + to;
         url = "http://" + server + ":" + apiPort + "/Stanox/";
     }
 
@@ -126,16 +110,15 @@ function getCallingBetween(from, to, convertFromCrs, dateTime) {
         });
 }
 
-function getDestination(args, crs, convertFromCrs, dateTime) {
+function getDestination(crs, convertFromCrs, dateTime) {
+    $("#commandOptions > li#to" + (convertFromCrs ? "-crs" : "")).addClass("active");
     var startDate = moment(dateTime).subtract(2, "hours");
     var endDate = moment(dateTime).add(2, "hours");
-    var hash = "";
+    var hash = "to/" + crs;
     var url = "";
     if (convertFromCrs) {
-        hash = "listdest-crs/" + args;
         url = "http://" + server + ":" + apiPort + "/Stanox/?GetByCrs&crsCode=";
     } else {
-        hash = "listdest/" + args;
         url = "http://" + server + ":" + apiPort + "/Stanox/";
     }
 
@@ -151,16 +134,15 @@ function getDestination(args, crs, convertFromCrs, dateTime) {
         });
 }
 
-function getOrigin(args, crs, convertFromCrs, dateTime) {
+function getOrigin(crs, convertFromCrs, dateTime) {
+    $("#commandOptions > li#from" + (convertFromCrs ? "-crs" : "")).addClass("active");
     var startDate = moment(dateTime).subtract(2, "hours");
     var endDate = moment(dateTime).add(2, "hours");
-    var hash = "";
+    var hash = "from/" + crs;
     var url = "";
     if (convertFromCrs) {
-        hash = "listorigin-crs/" + args;
         url = "http://" + server + ":" + apiPort + "/Stanox/?GetByCrs&crsCode=";
     } else {
-        hash = "listorigin/" + args;
         url = "http://" + server + ":" + apiPort + "/Stanox/";
     }
 
@@ -176,16 +158,15 @@ function getOrigin(args, crs, convertFromCrs, dateTime) {
         });
 }
 
-function getStation(args, crs, convertFromCrs, dateTime) {
+function getStation(crs, convertFromCrs, dateTime) {
+    $("#commandOptions > li#at" + (convertFromCrs ? "-crs" : "")).addClass("active");
     var startDate = moment(dateTime).subtract(2, "hours");
     var endDate = moment(dateTime).add(2, "hours");
-    var hash = "";
+    var hash = "at/" + crs;
     var url = "";
     if (convertFromCrs) {
-        hash = "liststation-crs/" + args;
         url = "http://" + server + ":" + apiPort + "/Stanox/?GetByCrs&crsCode=";
     } else {
-        hash = "liststation/" + args;
         url = "http://" + server + ":" + apiPort + "/Stanox/";
     }
 
@@ -456,79 +437,60 @@ function setTitle(start) {
 function setTimeLinks() {
     var minusDate = moment(currentStartDate).subtract('hours', 2);
     var plusDate = moment(currentEndDate).add('hours', 2);
-    var hash = "";
-    var url = null;
+    var url = "";
     switch (currentMode) {
         case scheduleResultsMode.Origin:
             if (currentStanox.CRS) {
-                hash = "listorigin-crs/" + currentStanox.CRS;
                 url = "from/" + currentStanox.CRS;
             } else {
-                hash = "listorigin/" + currentStanox.Stanox;
+                url = "from/" + currentStanox.Stanox;
             }
             break;
         case scheduleResultsMode.Terminate:
             if (currentToStanox.CRS) {
-                hash = "listdest-crs/" + currentToStanox.CRS;
                 url = "to/" + currentToStanox.CRS;
             } else {
-                hash = "listdest/" + currentToStanox.Stanox;
+                url = "to/" + currentToStanox.Stanox;
             }
             break;
         case scheduleResultsMode.CallingAt:
             if (currentStanox.CRS) {
-                hash = "liststation-crs/" + currentStanox.CRS;
                 url = "at/" + currentStanox.CRS;
             } else {
-                hash = "liststation/" + currentStanox.Stanox;
+                url = "at/" + currentStanox.Stanox;
             }
             break;
         case scheduleResultsMode.Between:
             if (currentStanox.CRS && currentToStanox.CRS) {
-                hash = "list-crs/" + currentStanox.CRS + "/list-crs/" + currentToStanox.CRS;
                 url = "from/" + currentStanox.CRS + "/to/" + currentToStanox.CRS;
             } else {
-                hash = "list/" + currentStanox.Stanox + "/list/" + currentToStanox.Stanox;
+                url = "from/" + currentStanox.Stanox + "/to/" + currentToStanox.Stanox;
             }
             break;
     }
 
-    if (url) {
-        $("#neg-2hrs").attr("href", "search/" + url + minusDate.format("/YYYY/MM/DD/HH-mm"));
-        $("#plus-2hrs").attr("href", "search/" + url + plusDate.format("/YYYY/MM/DD/HH-mm"));
-    } else {
-        $("#neg-2hrs").attr("href", "#");
-        $("#plus-2hrs").attr("href", "#");
-    }
+    $("#neg-2hrs").attr("href", "search/" + url + minusDate.format("/YYYY/MM/DD/HH-mm"));
+    $("#plus-2hrs").attr("href", "search/" + url + plusDate.format("/YYYY/MM/DD/HH-mm"));
 
-    setHash(hash, moment(currentStartDate).add('hours', 2).format("YYYY-MM-DD/HH-mm"), true);
+    setHash(url, moment(currentStartDate).add('hours', 2).format("YYYY-MM-DD/HH-mm"), true);
 }
 
 function preLoadStationsCallback(results) {
     var commands = [];
-    commands.push('listorigin/');
+    commands.push('from/');
     for (i in results) {
-        commands.push('listorigin/' + results[i].Name);
+        commands.push('from/' + results[i].Name);
+        commands.push('from/' + results[i].CRS);
     }
-    commands.push('listorigin-crs/');
+    commands.push('at/');
     for (i in results) {
-        commands.push('listorigin-crs/' + results[i].CRS);
+        commands.push('at/' + results[i].Name);
+        commands.push('at/' + results[i].CRS);
     }
-    commands.push('liststation/');
+    commands.push('to/');
     for (i in results) {
-        commands.push('liststation/' + results[i].Name);
-    }
-    commands.push('liststation-crs/');
-    for (i in results) {
-        commands.push('liststation-crs/' + results[i].CRS);
-    }
-    commands.push('listdest/');
-    for (i in results) {
-        commands.push('listdest/' + results[i].Name);
-    }
-    commands.push('listdest-crs/');
-    for (i in results) {
-        commands.push('listdest-crs/' + results[i].CRS);
+        commands.push('to/' + results[i].Name);
+        commands.push('to/' + results[i].CRS);
     }
     $("#filter-command").typeahead({
         source: commands

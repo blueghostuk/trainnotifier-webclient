@@ -68,7 +68,7 @@ function showLocation() {
             document.location.href = "search/from/" + fromCrs + date + time;
         }
     } else if (toCrs) {
-        document.location.href = "search/to/" + fromCrs + date + time;
+        document.location.href = "search/to/" + toCrs + date + time;
     } else if (atCrs) {
         document.location.href = "search/at/" + atCrs + date + time;
     }
