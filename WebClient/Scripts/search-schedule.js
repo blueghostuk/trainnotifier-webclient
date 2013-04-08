@@ -52,7 +52,7 @@ function parseCommand() {
 
     switch (cmd) {
         case 'from':
-            if (args.length >= 3) {
+            if (args.length >= 3 && args[1] == "to") {
                 getCallingBetween(args[0], args[2], convertFromCrs, getDateTime(args.slice(3)));
             } else {
                 getOrigin(args[0], convertFromCrs, getDateTime(args.slice(1)));
