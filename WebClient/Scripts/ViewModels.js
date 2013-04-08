@@ -279,12 +279,6 @@ var scheduleResultsMode = {
 function ScheduleSearchResults() {
     var self = this;
 
-    self.Mode = scheduleResultsMode.Origin;
-
-    self.PreviousDay = ko.observable();
-    self.NextDay = ko.observable();
-    self.Day = ko.observable();
-
     self.Trains = ko.observableArray();
 
     self.addTrain = function (stop) {
