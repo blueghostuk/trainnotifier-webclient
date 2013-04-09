@@ -9,6 +9,14 @@ namespace TrainNotifier.WebClient.App_Start
     {
         public static void RegisterRoutes(RouteCollection routes)
         {
+            routes.Add(new Route("trains/{id}",
+                null,
+                new RouteValueDictionary
+                {
+                    {"id", "[A-Z0-9 ]{10}"},
+                },
+                new TrainByIdRouteHandler()));
+
             routes.Add(new Route("trains/{uid}/{year}/{month}/{day}", 
                 null,
                 new RouteValueDictionary
@@ -24,8 +32,8 @@ namespace TrainNotifier.WebClient.App_Start
                 null,
                 new RouteValueDictionary
                 {
-                    {"crsA", "[A-Z]{3,5}"},
-                    {"crsB", "[A-Z]{3,5}"},
+                    {"crsA", "[A-Z0-9]{3,5}"},
+                    {"crsB", "[A-Z0-9]{3,5}"},
                     {"year", "[0-9]{4}"},
                     {"month", "[0-9]{2}"},
                     {"day", "[0-9]{2}"},
@@ -37,8 +45,8 @@ namespace TrainNotifier.WebClient.App_Start
                 null,
                 new RouteValueDictionary
                 {
-                    {"crsA", "[A-Z]{3,5}"},
-                    {"crsB", "[A-Z]{3,5}"},
+                    {"crsA", "[A-Z0-9]{3,5}"},
+                    {"crsB", "[A-Z0-9]{3,5}"},
                     {"year", "[0-9]{4}"},
                     {"month", "[0-9]{2}"},
                     {"day", "[0-9]{2}"}
@@ -49,8 +57,8 @@ namespace TrainNotifier.WebClient.App_Start
                 null,
                 new RouteValueDictionary
                 {
-                    {"crsA", "[A-Z]{3,5}"},
-                    {"crsB", "[A-Z]{3,5}"},
+                    {"crsA", "[A-Z0-9]{3,5}"},
+                    {"crsB", "[A-Z0-9]{3,5}"},
                 },
                 new SearchRouteHandler(SearchRouteHandler.SearchMethod.Between)));
 
@@ -58,7 +66,7 @@ namespace TrainNotifier.WebClient.App_Start
                 null,
                 new RouteValueDictionary
                 {
-                    {"crsA", "[A-Z]{3,5}"},
+                    {"crsA", "[A-Z0-9]{3,5}"},
                     {"year", "[0-9]{4}"},
                     {"month", "[0-9]{2}"},
                     {"day", "[0-9]{2}"},
@@ -70,7 +78,7 @@ namespace TrainNotifier.WebClient.App_Start
                 null,
                 new RouteValueDictionary
                 {
-                    {"crsA", "[A-Z]{3,5}"},
+                    {"crsA", "[A-Z0-9]{3,5}"},
                     {"year", "[0-9]{4}"},
                     {"month", "[0-9]{2}"},
                     {"day", "[0-9]{2}"}
@@ -81,7 +89,7 @@ namespace TrainNotifier.WebClient.App_Start
                 null,
                 new RouteValueDictionary
                 {
-                    {"crsA", "[A-Z]{3}"}
+                    {"crsA", "[A-Z0-9]{3,5}"},
                 },
                 new SearchRouteHandler(SearchRouteHandler.SearchMethod.From)));
 
@@ -89,7 +97,7 @@ namespace TrainNotifier.WebClient.App_Start
                 null,
                 new RouteValueDictionary
                 {
-                    {"crsA", "[A-Z]{3,5}"},
+                    {"crsA", "[A-Z0-9]{3,5}"},
                     {"year", "[0-9]{4}"},
                     {"month", "[0-9]{2}"},
                     {"day", "[0-9]{2}"},
@@ -101,7 +109,7 @@ namespace TrainNotifier.WebClient.App_Start
                 null,
                 new RouteValueDictionary
                 {
-                    {"crsA", "[A-Z]{3,5}"},
+                    {"crsA", "[A-Z0-9]{3,5}"},
                     {"year", "[0-9]{4}"},
                     {"month", "[0-9]{2}"},
                     {"day", "[0-9]{2}"}
@@ -112,7 +120,7 @@ namespace TrainNotifier.WebClient.App_Start
                 null,
                 new RouteValueDictionary
                 {
-                    {"crsA", "[A-Z]{3,5}"},
+                    {"crsA", "[A-Z0-9]{3,5}"},
                 },
                 new SearchRouteHandler(SearchRouteHandler.SearchMethod.To)));
 
@@ -120,7 +128,7 @@ namespace TrainNotifier.WebClient.App_Start
                 null,
                 new RouteValueDictionary
                 {
-                    {"crsA", "[A-Z]{3,5}"},
+                    {"crsA", "[A-Z0-9]{3,5}"},
                     {"year", "[0-9]{4}"},
                     {"month", "[0-9]{2}"},
                     {"day", "[0-9]{2}"},
@@ -132,7 +140,7 @@ namespace TrainNotifier.WebClient.App_Start
                 null,
                 new RouteValueDictionary
                 {
-                    {"crsA", "[A-Z]{3,5}"},
+                    {"crsA", "[A-Z0-9]{3,5}"},
                     {"year", "[0-9]{4}"},
                     {"month", "[0-9]{2}"},
                     {"day", "[0-9]{2}"}
@@ -143,7 +151,7 @@ namespace TrainNotifier.WebClient.App_Start
                 null,
                 new RouteValueDictionary
                 {
-                    {"crsA", "[A-Z]{3,5}"},
+                    {"crsA", "[A-Z0-9]{3,5}"},
                 },
                 new SearchRouteHandler(SearchRouteHandler.SearchMethod.At)));
         }
@@ -186,7 +194,36 @@ namespace TrainNotifier.WebClient.App_Start
 
             public void ProcessRequest(HttpContext context)
             {
-                RedirectToUrl(context, string.Format("~/train#getuid/{0}/{1:yyyy-MM-dd}", _trainUid, _date));
+                RedirectToUrl(context, string.Format("~/train#get/{0}/{1:yyyy-MM-dd}", _trainUid, _date));
+            }
+        }
+    }
+
+    class TrainByIdRouteHandler : IRouteHandler
+    {
+        public System.Web.IHttpHandler GetHttpHandler(RequestContext requestContext)
+        {
+            return new TrainByIdHttpHandler(
+                requestContext.RouteData.Values["id"].ToString());
+        }
+
+        class TrainByIdHttpHandler : RedirectRouteHander, IHttpHandler
+        {
+            private readonly string _trainId;
+
+            public TrainByIdHttpHandler(string trainId)
+            {
+                _trainId = trainId;
+            }
+
+            public bool IsReusable
+            {
+                get { return false; }
+            }
+
+            public void ProcessRequest(HttpContext context)
+            {
+                RedirectToUrl(context, string.Format("~/train#id/{0}", _trainId));
             }
         }
     }
