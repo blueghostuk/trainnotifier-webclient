@@ -12,6 +12,10 @@
         .sidebar-nav {
             padding: 9px 0;
         }
+
+        tr.info > td > a {
+            color: white !important;
+        }
     </style>
 }
 @section FooterJs{
@@ -20,7 +24,7 @@
         var apiPort = "@System.Configuration.ConfigurationManager.AppSettings["apiPort"]";
         var wsPort = "@System.Configuration.ConfigurationManager.AppSettings["wsPort"]";
     </script>
-    
+
     @Scripts.Render("~/bundles/live")
 }
 @section TopMenu{

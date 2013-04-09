@@ -1,4 +1,7 @@
-﻿function sortTrainId(trainId) {
+﻿/// <reference path="moment.js" />
+/// <reference path="jquery-1.9.1.js" />
+/// 
+function sortTrainId(trainId) {
     if (!trainId || trainId.length == 0)
         return;
 
@@ -118,7 +121,7 @@ function connectWs() {
 
             if (!existing) {
                 html += "<tr class=\"" + cls + " info\" style=\"" + style + "\" id=\"" + message.train_id + "\">";
-                html += "<td><a href=\"train#gettrain:" + message.train_id + "\" title=\"View this train\">" + message.train_id + "</a></td>";
+                html += "<td><a href=\"trains/" + message.train_id + "\" title=\"View this train\">" + message.train_id + "</a></td>";
                 html += "<td colspan=\"6\">" + message.train_service_code + "</td>";
                 html += "</tr>";
             }
@@ -129,7 +132,7 @@ function connectWs() {
             html += "<td>" + padTime(date.getUTCHours()) + ":" + padTime(date.getUTCMinutes()) + ":" + padTime(date.getUTCSeconds()) + "</td>";
             html += "<td>" + message.direction_ind + "</td>";
             html += "<td>" + message.platform + "</td>";
-            html += "<td><a href=\"search#listorigin:" + message.loc_stanox + "\" class=\"stanox-" + message.loc_stanox + "\" title=\"View this location\">" + message.loc_stanox + "</a></td>";
+            html += "<td><a href=\"search/from/" + message.loc_stanox + "\" class=\"stanox-" + message.loc_stanox + "\" title=\"View this location\">" + message.loc_stanox + "</a></td>";
 
             html += "</tr>";
 
