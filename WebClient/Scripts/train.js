@@ -185,6 +185,8 @@ function getById(id) {
     $.getJSON("http://" + server + ":" + apiPort + "/TrainMovement/" + id)
         .then(function (data) {
             if (data) {
+                $("#commandOptions > li.active").removeClass("active");
+                $("#commandOptions > li#get").addClass("active");
                 setCommand("get/" + data.TrainUid + "/" + moment(data.SchedOriginDeparture).format(dateUrlFormat));
                 getByUid(data.TrainUid, moment(data.SchedOriginDeparture).format(dateQueryFormat), false);
             } else {
