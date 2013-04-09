@@ -1,7 +1,7 @@
 ﻿/// <reference path="jquery-1.9.1.js" />
 /// <reference path="mapping.js" />
+/// <reference path="moment.js" />
 /// <reference path="moment-datepicker.js" />
-
 
 $(function () {
     $('.datepicker').datepicker({
@@ -43,8 +43,8 @@ function showLocation() {
         atCrs = atStation.substr(atStation.indexOf('(') + 1, 3);
     var dateVal = $("#date-picker").val();
     if (dateVal && dateVal.length > 0) {
-        dateVal = moment(dateVal, "DD-MM-YYYY");
-        if (dateVal.isValid()) {
+        dateVal = getDate(dateVal);
+        if (dateVal && dateVal.isValid()) {
             date =  dateVal.format("/YYYY/MM/DD");
         }
     } else {
@@ -53,8 +53,8 @@ function showLocation() {
     var time = "";
     var timeVal = $("#time-picker").val();
     if (timeVal && timeVal.length > 0) {
-        timeVal = moment(timeVal, timeFormat);
-        if (timeVal.isValid()) {
+        timeVal = getTime(timeVal);
+        if (timeVal && timeVal.isValid()) {
             time = timeVal.format("/HH-mm")
         }
     } else {
@@ -74,4 +74,27 @@ function showLocation() {
     }
         
     return false;
+}
+
+function getDate(dateVal) {
+    var d = moment(dateVal, "DD-MM-YYYY");
+    if (d.isValid())
+        return d;
+    d = moment(timeVal, "DD/MM/YYYY");
+    if (d.isValid())
+        return d;
+    d = moment(timeVal, "DDMMYYYY");
+    if (d.isValid())
+        return d;
+    return null;
+}
+
+function getTime(timeVal) {
+    var t = moment(timeVal, "HH:mm");
+    if (t.isValid())
+        return t;
+    t = moment(timeVal, "HHmm");
+    if (t.isValid())
+        return t;
+    return null;
 }
