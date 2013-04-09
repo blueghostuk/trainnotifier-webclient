@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Web;
 using System.Web.Routing;
 
@@ -150,6 +149,14 @@ namespace TrainNotifier.WebClient.App_Start
         }
     }
 
+    abstract class RedirectRouteHander
+    {
+        protected void RedirectToUrl(HttpContext context, string url)
+        {
+            context.Response.Redirect(url);
+        }
+    }
+
     class TrainByUidRouteHandler : IRouteHandler
     {
         public System.Web.IHttpHandler GetHttpHandler(RequestContext requestContext)
@@ -161,7 +168,7 @@ namespace TrainNotifier.WebClient.App_Start
                 int.Parse(requestContext.RouteData.Values["day"].ToString()));
         }
 
-        class TrainByUidHttpHandler : IHttpHandler
+        class TrainByUidHttpHandler : RedirectRouteHander, IHttpHandler
         {
             private readonly string _trainUid;
             private readonly DateTime _date;
@@ -179,7 +186,7 @@ namespace TrainNotifier.WebClient.App_Start
 
             public void ProcessRequest(HttpContext context)
             {
-                context.Response.RedirectPermanent(string.Format("~/train#getuid/{0}/{1:yyyy-MM-dd}", _trainUid, _date));
+                RedirectToUrl(context, string.Format("~/train#getuid/{0}/{1:yyyy-MM-dd}", _trainUid, _date));
             }
         }
     }
@@ -206,7 +213,7 @@ namespace TrainNotifier.WebClient.App_Start
             Between
         }
 
-        class SearchHttpHandler : IHttpHandler
+        class SearchHttpHandler : RedirectRouteHander, IHttpHandler
         {
             private readonly SearchMethod _method;
             private readonly string _crsA,
@@ -266,7 +273,7 @@ namespace TrainNotifier.WebClient.App_Start
                         url = string.Format("~/search-schedule#from/{0}/to/{1}/{2:yyyy-MM-dd}{3}", _crsA, _crsB, _date, _time);
                         break;
                 }
-                context.Response.RedirectPermanent(url);
+                RedirectToUrl(context, url);
             }
         }
     }
