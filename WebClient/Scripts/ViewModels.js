@@ -77,6 +77,8 @@ function ScheduleTrainViewModel(currentLocation) {
     self.TrainUid = ko.observable();
     self.Associations = ko.observableArray();
 
+    self.Date = ko.observable();
+
     self.addStop = function (stop) {
         self.Stops.push(new ScheduleStopViewModel(stop));
     };
@@ -144,6 +146,12 @@ function ScheduleTrainViewModel(currentLocation) {
             for (var stop in schedule.Stops) {
                 self.addStop(schedule.Stops[stop]);
             }
+        }
+
+        if (liveData) {
+            self.Date(moment(liveData.SchedOriginDeparture).format("YYYY-MM-DD"));
+        } else {
+            self.Date();
         }
     };
 
@@ -348,6 +356,7 @@ function LiveTrainViewModel() {
     var self = this;
 
     self.Id = ko.observable();
+    self.Uid = ko.observable();
     self.Headcode = ko.observable();
     self.ServiceCode = ko.observable();
     self.Activated = ko.observable();
@@ -355,10 +364,16 @@ function LiveTrainViewModel() {
     self.SchedDepart = ko.observable();
     self.Stops = ko.observableArray();
     self.LastUpdate = ko.observable();
-    self.WttId = ko.observable();
     self.Cancellation = ko.observable();
     self.ChangeOfOrigin = ko.observable();
     self.Reinstatement = ko.observable();
+
+    self.Date = ko.computed(function () {
+        if (self.SchedDepart()) {
+            return moment(self.SchedDepart()).format("YYYY-MM-DD");
+        }
+        return "";
+    });
 
     self.addStop = function (stopEl) {
         if (self.Stops().length == 0) {
@@ -411,6 +426,7 @@ function LiveTrainViewModel() {
     self.updateFromJSON = function (data) {
         self.clearStops();
         self.Id(data.Id);
+        self.Uid(data.TrainUid);
         self.Headcode(data.HeadCode);
         self.ServiceCode(data.ServiceCode);
         var activated = "";
@@ -418,12 +434,7 @@ function LiveTrainViewModel() {
             activated = moment(data.Activated).format(dateFormat);
         }
         self.Activated(activated);
-        if (data.WorkingTTId && data.WorkingTTId.length > 0) {
-            self.WttId(data.WorkingTTId.substring(0, data.WorkingTTId.length - 1));
-        } else {
-            self.WttId('');
-        }
-
+        
         self.SchedOrigin(data.SchedOriginStanox);
         var schedDepart = "";
         if (data.SchedOriginDeparture) {

@@ -19,9 +19,8 @@ var _lastStopNumber = 0;
 $(function () {
 
     var commands = [];
-    commands.push('getuid/');
-    commands.push('gettrain/');
-    commands.push('subtrain/');
+    commands.push('get/');
+    commands.push('sub/');
     $("#filter-command").typeahead({
         source: commands
     });
@@ -139,18 +138,8 @@ function fetchLocation(stanox) {
     });
 }
 
-
-function sendCommand(resetSub) {
-    if (resetSub) {
-        sendWsCommand("unsubtrain:");
-    }
-    var cmd = $("#filter-command").val();
-    sendWsCommand(cmd);
-    document.location.hash = cmd;
-}
-
 function sendWsCommand(command) {
-    if (ws.readyState == WebSocket.OPEN) {
+    if (ws && ws.readyState == WebSocket.OPEN) {
         ws.send(command);
     }
 }
@@ -160,12 +149,11 @@ function setCommand(command) {
     document.location.hash = command;
 }
 
-function loadTrainSub(el) {
-    setCommand('subtrain:' + $(el).html());
-    _currentTrainSub = $(el).html();
+function subTrain() {
     $("#commandOptions > li.active").removeClass("active");
-    $("#commandOptions > li#subtrain").addClass("active");
-    sendCommand(true);
+    $("#commandOptions > li#sub").addClass("active");
+    setCommand("sub/" + _lastLiveData.TrainUid + "/" + moment(_lastLiveData.SchedOriginDeparture).format(dateQueryFormat));
+    doSubTrain();
 }
 
 function parseCommand() {
@@ -180,45 +168,43 @@ function parseCommand() {
     $("#commandOptions > li.active").removeClass("active");
     $("#commandOptions > li#" + cmd).addClass("active");
 
-    switch (cmd) {
-        case 'gettrain':
-            getTrain(args);
-            return;
-            break;
-        case 'subtrain':
-            getTrain(args, true);
-            // still send command
-            break;
-        case 'getuid':
-            var hashIdx = args.indexOf('/');
-            if (hashIdx != -1) {
-                getByUid(args.substring(0, hashIdx), args.substring(hashIdx + 1));
-            }
-            break;
+    if (cmd == "id") {
+        getById(args);
+    } else {
+        var subscribe = cmd == "sub";
+        var hashIdx = args.indexOf('/');
+        if (hashIdx != -1) {
+            getByUid(args.substring(0, hashIdx), args.substring(hashIdx + 1), subscribe);
+        }
     }
-    sendCommand(true);
 }
 
-function getByUid(trainUid, date) {
-    sendWsCommand("unsubtrain:");
-    getTrainData("http://" + server + ":" + apiPort + "/TrainMovement/Uid/" + trainUid + "/" + date);
-}
-
-function getTrain(trainId, dontUnSub) {
-    if (!dontUnSub) {
-        sendWsCommand("unsubtrain:");
-        setCommand('gettrain:' + trainId);
-    }
-    var split = trainId.split(':');
-    if (split && split.length == 2) {
-        trainId = split[0] + '/' + split[1];
-    }
-    getTrainData("http://" + server + ":" + apiPort + "/TrainMovement/" + trainId);
-}
-
-function getTrainData(url) {
+function getById(id) {
     $(".progress").show();
     $("#no-results-row").hide();
+    $.getJSON("http://" + server + ":" + apiPort + "/TrainMovement/" + id)
+        .then(function (data) {
+            if (data) {
+                setCommand("get/" + data.TrainUid + "/" + moment(data.SchedOriginDeparture).format(dateUrlFormat));
+                getByUid(data.TrainUid, moment(data.SchedOriginDeparture).format(dateQueryFormat), false);
+            } else {
+                $("#no-results-row").show();
+                $(".progress").hide();
+            }
+        }).fail(function () {
+            $(".progress").hide();
+            $("#error-row").show();
+        });
+}
+
+function getByUid(trainUid, date, subscribe) {
+    getTrainData("http://" + server + ":" + apiPort + "/TrainMovement/Uid/" + trainUid + "/" + date, subscribe);
+}
+
+function getTrainData(url, subscribe) {
+    $(".progress").show();
+    $("#no-results-row").hide();
+    sendWsCommand("unsubtrain:");
 
     $.getJSON(url).done(function (data, textStatus, jqXHR) {
         if (!data) {
@@ -252,11 +238,19 @@ function getTrainData(url) {
         return getSchedule(data, data.TrainId, data.TrainUid);
     }).then(function () {
         return getAssociations(_lastLiveData);
+    }).then(function () {
+        if (subscribe) {
+            doSubTrain();
+        }
     }).fail(function () {
         $("#error-row").show();
     }).always(function () {
         $(".progress").hide();
     });
+}
+
+function doSubTrain() {
+    sendWsCommand("subtrain:" + _lastLiveData.TrainId);
 }
 
 function getAssociations(data) {
@@ -388,10 +382,6 @@ function mapStop(stop) {
 }
 
 function listStation(stanox) {
-    $('html, body').animate({
-        scrollTop: $("#locationDetails").offset().top
-    }, 1000);
-
     $.getJSON("http://" + server + ":" + apiPort + "/Stanox/" + stanox)
         .done(function (data) {
             currentLocation.locationStanox(data.Name);
