@@ -17,7 +17,7 @@
     <ul>
         <li><span class="label label-info">Runs:</span> <span data-bind="text: Runs"></span></li>
         <!-- ko foreach: Associations -->
-        <li><span class="label label-info" data-bind="text: Title"></span> <a data-bind="text: Train, attr: { href: 'train#getuid:' + ViewCommand(), onclick: 'setCommand(\'getuid:' + ViewCommand() + '\');parseCommand();' }"></a> @@ <span data-bind="text: Location.Description()"></span></li>
+        <li><span class="label label-info" data-bind="text: Title"></span> <a data-bind="text: Train, attr: { href: 'trains/' + Link(), onclick: 'setCommand(\'get/' + View() + '\');parseCommand(); return false;' }"></a> @@ <span data-bind="text: Location.Description()"></span></li>
         <!-- /ko -->
     </ul>
 </div>

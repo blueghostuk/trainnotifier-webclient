@@ -338,7 +338,7 @@ function TrainAssociation(association, trainUid, date) {
         return self.getTrain();
     });
 
-    self.ViewCommand = ko.computed(function () {
+    self.View = ko.computed(function () {
         var date = _date;
         switch (self.DateType()) {
             case 1:
@@ -348,7 +348,20 @@ function TrainAssociation(association, trainUid, date) {
                 data.add('days', 1);
                 break;
         }
-        return self.getTrain() + "#" + date.format("YYYY-MM-DD");
+        return self.getTrain() + "/" + date.format("YYYY-MM-DD");
+    });
+
+    self.Link = ko.computed(function () {
+        var date = _date;
+        switch (self.DateType()) {
+            case 1:
+                date.subtract('days', 1);
+                break;
+            case 2:
+                data.add('days', 1);
+                break;
+        }
+        return self.getTrain() + "/" + date.format("YYYY/MM/DD");
     });
 }
 
