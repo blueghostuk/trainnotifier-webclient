@@ -121,6 +121,7 @@
     <Content Include="live.cshtml" />
     <Content Include="packages.config" />
     <Content Include="index.cshtml" />
+    <Content Include="ppm.cshtml" />
     <None Include="Scripts\jquery-1.9.1.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
@@ -144,6 +145,7 @@
     <Content Include="Scripts\moment-datepicker.min.js" />
     <Content Include="Scripts\moment.js" />
     <Content Include="Scripts\moment.min.js" />
+    <Content Include="Scripts\ppm.js" />
     <Content Include="Scripts\search-schedule.js" />
     <Content Include="Scripts\train.js" />
     <Content Include="Scripts\ViewModels.js" />

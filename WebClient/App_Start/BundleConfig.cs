@@ -35,6 +35,9 @@ namespace TrainNotifier.WebClient
             bundles.Add(new ScriptBundle("~/bundles/live").Include(
                 "~/Scripts/live.js"));
 
+            bundles.Add(new ScriptBundle("~/bundles/ppm").Include(
+                "~/Scripts/ppm.js"));
+
             bundles.Add(new ScriptBundle("~/bundles/train").Include(
                 "~/Scripts/train.js"));
 
