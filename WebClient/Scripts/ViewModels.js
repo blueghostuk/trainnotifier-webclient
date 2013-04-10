@@ -1,52 +1,6 @@
 ﻿/// <reference path="moment.js" />
 /// <reference path="knockout-2.2.0.js" />
 
-function PPMViewModel(ppmModel, index, sub) {
-    var self = this;
-
-    self.Index = ko.observable(index);
-    self.LoadedSub = false;
-    self.SubElement = sub ? true : false;
-
-    self.Operator = ko.observable(ppmModel.Description);
-    self.Sector = ko.observable(ppmModel.SectorCode);
-    self.Code = ko.observable(ppmModel.OperatorCode);
-    self.OnTime = ko.observable();
-    self.Late = ko.observable();
-    self.CancelVeryLate = ko.observable();
-    self.Total = ko.observable();
-
-    self.PreviousOnTime = ko.observable();
-    self.PreviousLate = ko.observable();
-    self.PreviousCancelVeryLate = ko.observable();
-    self.PreviousTotal = ko.observable();
-
-    self.PreviousPPM = ko.observable();
-    self.PPM = ko.computed(function () {
-        if (self.OnTime() && self.Total()) {
-            return Math.round((self.OnTime() / self.Total()) * 100, 0);
-        } else {
-            return null;
-        }
-    });
-
-    self.updateStats = function (stats) {
-        self.PreviousPPM(self.PPM());
-
-        self.PreviousOnTime(self.OnTime());
-        self.OnTime(stats.OnTime);
-
-        self.PreviousLate(self.Late());
-        self.Late(stats.Late);
-
-        self.PreviousCancelVeryLate(self.CancelVeryLate());
-        self.CancelVeryLate(stats.CancelVeryLate);
-
-        self.PreviousTotal(self.Total());
-        self.Total(stats.Total);
-    }
-}
-
 function TitleViewModel() {
     var self = this;
 
@@ -384,7 +338,7 @@ function TrainAssociation(association, trainUid, date) {
         return self.getTrain();
     });
 
-    self.ViewCommand = ko.computed(function () {
+    self.View = ko.computed(function () {
         var date = _date;
         switch (self.DateType()) {
             case 1:
@@ -394,7 +348,20 @@ function TrainAssociation(association, trainUid, date) {
                 data.add('days', 1);
                 break;
         }
-        return self.getTrain() + "#" + date.format("YYYY-MM-DD");
+        return self.getTrain() + "/" + date.format("YYYY-MM-DD");
+    });
+
+    self.Link = ko.computed(function () {
+        var date = _date;
+        switch (self.DateType()) {
+            case 1:
+                date.subtract('days', 1);
+                break;
+            case 2:
+                data.add('days', 1);
+                break;
+        }
+        return self.getTrain() + "/" + date.format("YYYY/MM/DD");
     });
 }
 
