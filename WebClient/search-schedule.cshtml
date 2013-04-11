@@ -57,7 +57,7 @@
             <ul class="nav nav-list" id="commandOptions">
                 <li class="nav-header">By CRS Code:</li>
                 <li id="from-crs"><a href="#from/" onclick="setCommand('from/');"><strong>Trains Stating From:</strong><br />
-                    &nbsp;&nbsp;from:[CRS]</a></li>
+                    &nbsp;&nbsp;from/[CRS]</a></li>
                 <li id="at-crs"><a href="#at/" onclick="setCommand('at/');"><strong>Trains Calling At:</strong><br />
                     &nbsp;&nbsp;at/[CRS]</a></li>
                 <li id="to-crs"><a href="#to/" onclick="setCommand('to/');"><strong>Trains Terminating At:</strong><br />
@@ -85,12 +85,14 @@
             </ul>
         </div>
         <div class="well sidebar-nav">
-            <p class="centerText" style="padding: 4px;">
+            <p class="centerText" style="padding: 2px;">
                 At the moment this only shows trains that have been Activated.<br />
                 <br />
                 Empty rows are activations not matched to a schedule.<br />
                 <br />
-                Use /YYYY-MM-DD/HH-mm at the end of a command to specify a date and time manually
+                Use
+                <br /><i>/YYYY-MM-DD/HH-mm/HH-mm</i>
+                <br />at the end of a command to specify a start date/time and end time manually
             </p>
         </div>
     </div>

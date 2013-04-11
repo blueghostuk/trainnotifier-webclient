@@ -53,16 +53,16 @@ function parseCommand() {
     switch (cmd) {
         case 'from':
             if (args.length >= 3 && args[1] == "to") {
-                getCallingBetween(args[0], args[2], convertFromCrs, getDateTime(args.slice(3)));
+                getCallingBetween(args[0], args[2], convertFromCrs, getDateTime(args.slice(3, 5)), (args.length <= 5 ? null : getDateTime(args.slice(3, 4).concat(args.slice(5, 7)))));
             } else {
-                getOrigin(args[0], convertFromCrs, getDateTime(args.slice(1)));
+                getOrigin(args[0], convertFromCrs, getDateTime(args.slice(1, 3)), (args.length <= 3 ? null : getDateTime(args.slice(1, 2).concat(args.slice(3, 5)))));
             }
             break;
         case 'to':
-            getDestination(args[0], convertFromCrs, getDateTime(args.slice(1)));
+            getDestination(args[0], convertFromCrs, getDateTime(args.slice(1, 3)), (args.length <= 3 ? null : getDateTime(args.slice(1, 2).concat(args.slice(3, 5)))));
             break;
         case 'at':
-            getStation(args[0], convertFromCrs, getDateTime(args.slice(1)));
+            getStation(args[0], convertFromCrs, getDateTime(args.slice(1, 3)), (args.length <= 3 ? null : getDateTime(args.slice(1, 2).concat(args.slice(3, 5)))));
             break;
     }
 }
@@ -85,10 +85,15 @@ function preAjax() {
     $("#no-results-row").hide();
 }
 
-function getCallingBetween(from, to, convertFromCrs, dateTime) {
+function getCallingBetween(from, to, convertFromCrs, fromDate, toDate) {
     $("#commandOptions > li#from-to" + (convertFromCrs ? "-crs" : "")).addClass("active");
-    var startDate = moment(dateTime).subtract(2, "hours");
-    var endDate = moment(dateTime).add(2, "hours");
+    if (toDate) {
+        var startDate = fromDate;
+        var endDate = toDate;
+    } else {
+        var startDate = moment(fromDate).subtract(2, "hours");
+        var endDate = moment(fromDate).add(2, "hours");
+    }
     var hash = "from/" + from + "/to/" + to;
     var url = "";
     if (convertFromCrs) {
@@ -110,10 +115,15 @@ function getCallingBetween(from, to, convertFromCrs, dateTime) {
         });
 }
 
-function getDestination(crs, convertFromCrs, dateTime) {
+function getDestination(crs, convertFromCrs, fromDate, toDate) {
     $("#commandOptions > li#to" + (convertFromCrs ? "-crs" : "")).addClass("active");
-    var startDate = moment(dateTime).subtract(2, "hours");
-    var endDate = moment(dateTime).add(2, "hours");
+    if (toDate) {
+        var startDate = fromDate;
+        var endDate = toDate;
+    } else {
+        var startDate = moment(fromDate).subtract(2, "hours");
+        var endDate = moment(fromDate).add(2, "hours");
+    }
     var hash = "to/" + crs;
     var url = "";
     if (convertFromCrs) {
@@ -134,10 +144,15 @@ function getDestination(crs, convertFromCrs, dateTime) {
         });
 }
 
-function getOrigin(crs, convertFromCrs, dateTime) {
+function getOrigin(crs, convertFromCrs, fromDate, toDate) {
     $("#commandOptions > li#from" + (convertFromCrs ? "-crs" : "")).addClass("active");
-    var startDate = moment(dateTime).subtract(2, "hours");
-    var endDate = moment(dateTime).add(2, "hours");
+    if (toDate) {
+        var startDate = fromDate;
+        var endDate = toDate;
+    } else {
+        var startDate = moment(fromDate).subtract(2, "hours");
+        var endDate = moment(fromDate).add(2, "hours");
+    }
     var hash = "from/" + crs;
     var url = "";
     if (convertFromCrs) {
@@ -158,10 +173,15 @@ function getOrigin(crs, convertFromCrs, dateTime) {
         });
 }
 
-function getStation(crs, convertFromCrs, dateTime) {
+function getStation(crs, convertFromCrs, fromDate, toDate) {
     $("#commandOptions > li#at" + (convertFromCrs ? "-crs" : "")).addClass("active");
-    var startDate = moment(dateTime).subtract(2, "hours");
-    var endDate = moment(dateTime).add(2, "hours");
+    if (toDate) {
+        var startDate = fromDate;
+        var endDate = toDate;
+    } else {
+        var startDate = moment(fromDate).subtract(2, "hours");
+        var endDate = moment(fromDate).add(2, "hours");
+    }
     var hash = "at/" + crs;
     var url = "";
     if (convertFromCrs) {
@@ -435,8 +455,10 @@ function setTitle(start) {
 }
 
 function setTimeLinks() {
-    var minusDate = moment(currentStartDate).subtract('hours', 2);
-    var plusDate = moment(currentEndDate).add('hours', 2);
+    var minusStartDate = moment(currentStartDate).subtract('hours', 2);
+    var minusEndDate = moment(currentEndDate).subtract('hours', 2);
+    var plusStartDate = moment(currentStartDate).add('hours', 2);
+    var plusEndDate = moment(currentEndDate).add('hours', 2);
     var url = "";
     switch (currentMode) {
         case scheduleResultsMode.Origin:
@@ -469,10 +491,10 @@ function setTimeLinks() {
             break;
     }
 
-    $("#neg-2hrs").attr("href", "search/" + url + minusDate.format("/YYYY/MM/DD/HH-mm"));
-    $("#plus-2hrs").attr("href", "search/" + url + plusDate.format("/YYYY/MM/DD/HH-mm"));
+    $("#neg-2hrs").attr("href", "search/" + url + minusStartDate.format("/YYYY/MM/DD/HH-mm") + minusEndDate.format("/HH-mm"));
+    $("#plus-2hrs").attr("href", "search/" + url + plusStartDate.format("/YYYY/MM/DD/HH-mm") + plusEndDate.format("/HH-mm"));
 
-    setHash(url, moment(currentStartDate).add('hours', 2).format("YYYY-MM-DD/HH-mm"), true);
+    setHash(url, moment(currentStartDate).format("YYYY-MM-DD/HH-mm") + moment(currentEndDate).format("/HH-mm"), true);
 }
 
 function preLoadStationsCallback(results) {
