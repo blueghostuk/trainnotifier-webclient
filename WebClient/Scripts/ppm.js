@@ -62,6 +62,13 @@ function getPPMSectors() {
 }
 
 function updateModel(sectorData) {
+    // if array
+    if ($.isArray(sectorData))
+        sectorData = sectorData[0];
+
+    if (!sectorData || ($.isArray(sectorData) && sectorData.length == 0))
+        return;
+
     title.ts(moment(sectorData.Timestamp).format("ddd DD/MM/YYYY HH:mm:ss"));
     for (var i = 0; i < data().length; i++) {
         if (data()[i].Operator() == sectorData.Name && data()[i].Code() == sectorData.Code) {
