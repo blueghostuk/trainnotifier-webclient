@@ -35,7 +35,7 @@ function PPMViewModel(ppmModel, parent) {
             } else {
                 id += "all-";
             }
-            id += self.Operator().toLowerCase().replace(/\s+/g, '');
+            id += self.Operator().toLowerCase().replace(/[^\w\s]|_/g, "").replace(/\s+/g, "");
         }
 
         return id;

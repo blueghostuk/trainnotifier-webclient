@@ -56,16 +56,20 @@ function updatePPMData() {
             operatorCode: model.Code(),
             name: model.Operator()
         }).done(function (sectorData) {
-            updateModel(sectorData);
+            return updateModel(sectorData);
+        }).then(function (sectorData) {
+            var model = getModel(sectorData);
+            if (model) {
+                for (var j = 0; j < model.Regions().length; j++) {
+                    $.getJSON("http://" + server + ":" + apiPort + "/PPM/", {
+                        operatorCode: model.Regions()[j].Code(),
+                        name: model.Regions()[j].Operator()
+                    }).done(function (sectorData) {
+                        updateRegionModel(sectorData);
+                    });
+                }
+            }
         });
-        for (var j = 0; j < model.Regions().length; j++) {
-            $.getJSON("http://" + server + ":" + apiPort + "/PPM/", {
-                operatorCode: model.Regions()[j].Code(),
-                name: model.Regions()[j].Operator()
-            }).done(function (sectorData) {
-                updateRegionModel(sectorData);
-            });
-        }
     }
 }
 
@@ -104,20 +108,31 @@ function updateRegions(regions) {
 }
 
 function updateModel(sectorData) {
-    // if array
+    var model = getModel(sectorData);
+    if (model) {
+        if ($.isArray(sectorData))
+            sectorData = sectorData[0];
+
+        if (!sectorData || ($.isArray(sectorData) && sectorData.length == 0))
+            return;
+        model.updateStats(sectorData);
+    }
+}
+
+function getModel(sectorData) {
     if ($.isArray(sectorData))
         sectorData = sectorData[0];
 
     if (!sectorData || ($.isArray(sectorData) && sectorData.length == 0))
-        return;
+        return null;
 
     title.ts(moment(sectorData.Timestamp).format("ddd DD/MM/YYYY HH:mm:ss"));
     for (var i = 0; i < data().length; i++) {
         if (data()[i].Operator() == sectorData.Name && data()[i].Code() == sectorData.Code) {
-            data()[i].updateStats(sectorData);
-            break;
+            return data()[i];
         }
     }
+    return null;
 }
 
 function updateRegionModel(sectorData) {
@@ -182,7 +197,7 @@ var _currentOperator;
 function updateOperatorPage() {
     var opId = _currentOperator().Id();
     var hash = _currentOperator().Id();
-    if (_currentOperator().Parent.IsRegion) {
+    if (_currentOperator().IsRegion) {
         opId = _currentOperator().Parent.Id();
         hash = _currentOperator().Parent.Id() + "/" + hash;
     }
