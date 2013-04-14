@@ -1,27 +1,57 @@
 ﻿/// <reference path="moment.js" />
 /// <reference path="knockout-2.2.0.js" />
 /// 
-function PPMViewModel(ppmModel, index, sub) {
+function PPMViewModel(ppmModel) {
     var self = this;
-
-    self.Index = ko.observable(index);
-    self.LoadedSub = false;
-    self.SubElement = sub ? true : false;
 
     self.Operator = ko.observable(ppmModel.Description);
     self.Sector = ko.observable(ppmModel.SectorCode);
     self.Code = ko.observable(ppmModel.OperatorCode);
-    self.OnTime = ko.observable();
-    self.Late = ko.observable();
-    self.CancelVeryLate = ko.observable();
-    self.Total = ko.observable();
+    self.PPMData = ko.observableArray();
 
-    self.PreviousOnTime = ko.observable();
-    self.PreviousLate = ko.observable();
-    self.PreviousCancelVeryLate = ko.observable();
-    self.PreviousTotal = ko.observable();
+    self.LatestPPM = ko.computed(function () {
+        if (self.PPMData().length > 0)
+            return self.PPMData()[self.PPMData().length - 1];
 
-    self.PreviousPPM = ko.observable();
+        return {};
+    });
+
+    self.Id = ko.computed(function () {
+        var id = "";
+        if (!self.Code()) {
+            id += "national-";
+            if (self.Sector()) {
+                id += self.Sector();
+            } else {
+                id += "all";
+            }
+        } else {
+            id += self.Code() + "-";
+            if (self.Sector()) {
+                id += self.Sector() + "-";
+            } else {
+                id += "all-";
+            }
+            id += self.Operator().toLowerCase().replace(/\s+/g, '');
+        }
+
+        return id;
+    });
+
+    self.updateStats = function (stats) {
+        self.PPMData.push(new PPMRecord(stats));
+    }
+}
+
+function PPMRecord(stats) {
+    var self = this;
+
+    self.OnTime = ko.observable(stats.OnTime);
+    self.Late = ko.observable(stats.Late);
+    self.CancelVeryLate = ko.observable(stats.CancelVeryLate);
+    self.Total = ko.observable(stats.Total);
+    self.Timestamp = ko.observable(moment(stats.Timestamp).format("HH:mm:ss"));
+
     self.PPM = ko.computed(function () {
         if (self.OnTime() && self.Total()) {
             return Math.round((self.OnTime() / self.Total()) * 100, 0);
@@ -29,22 +59,6 @@ function PPMViewModel(ppmModel, index, sub) {
             return null;
         }
     });
-
-    self.updateStats = function (stats) {
-        self.PreviousPPM(self.PPM());
-
-        self.PreviousOnTime(self.OnTime());
-        self.OnTime(stats.OnTime);
-
-        self.PreviousLate(self.Late());
-        self.Late(stats.Late);
-
-        self.PreviousCancelVeryLate(self.CancelVeryLate());
-        self.CancelVeryLate(stats.CancelVeryLate);
-
-        self.PreviousTotal(self.Total());
-        self.Total(stats.Total);
-    }
 }
 
 function TitleViewModel() {
@@ -493,7 +507,7 @@ function LiveTrainViewModel() {
             activated = moment(data.Activated).format(dateFormat);
         }
         self.Activated(activated);
-        
+
         self.SchedOrigin(data.SchedOriginStanox);
         var schedDepart = "";
         if (data.SchedOriginDeparture) {

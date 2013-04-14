@@ -41,40 +41,23 @@
     <li><a href="~/live">Live Feed</a></li>
 }
 <div class="row-fluid">
-    <div class="span12">
-        <div class="alert alert alert-info">
-            <button type="button" class="close" data-dismiss="alert">&times;</button>
-            Click an operator to show sectors for that operator if applicable.
-            Data will be refreshed every 65 seconds.
+    <div class="span2  phone-hide">
+        <div class="well sidebar-nav">
+            <ul class="nav nav-list" id="commandOptions">
+                <li class="nav-header">Operator:</li>
+                <li class="active"><a href="#all" onclick="showAll(); return false;">All</a></li>
+                <!-- ko foreach: $data -->
+                <li data-bind="attr: { id: 'op-' + Id() }"><a data-bind="text: Operator, attr: { href: '#' + Id(), onclick: 'viewOperator(\'' + Id() + '\'); return false;' }"></a></li>
+                <!-- /ko -->
+            </ul>
         </div>
+    </div>
+    <div class="span10">
         <div class="alert alert-info" id="title">
             Last Updated: <span data-bind="text: ts"></span> <span style="font-size:small;" title="Approx. update time">(Update in &asymp; <span data-bind="text: next"></span>s)</span>
         </div>
-        <table class="table table-hover table-bordered" id="ppm">
-            <thead>
-                <tr>
-                    <th>Operator</th>
-                    <th>Sector</th>
-                    <th>On Time</th>
-                    <th>Late</th>
-                    <th>Cancel Very Late</th>
-                    <th>Total</th>
-                    <th>PPM (%)</th>
-                </tr>
-            </thead>
-            <tbody data-bind="foreach: $data">
-                <tr data-bind="css: { info: !SubElement }">
-                    <td data-bind="visible: !SubElement"><a href="#" data-bind="text: Operator, attr: { onclick: 'fetchOperator(this, ' + Index() + '); return false;' }"></a></td>
-                    <td data-bind="visible: SubElement, text: Operator, css: { subElement: SubElement }"></td>
-                    <td data-bind="text: Sector"></td>
-                    <td><span data-bind="text: OnTime"></span><span title="Previous value" data-bind="visible: PreviousOnTime(), text: ' (' + PreviousOnTime() + ')'"></span></td>
-                    <td><span data-bind="text: Late"></span><span title="Previous value" data-bind="visible: PreviousLate(), text: ' (' + PreviousLate() + ')'"></span></td>
-                    <td><span data-bind="text: CancelVeryLate"></span><span title="Previous value" data-bind="visible: PreviousCancelVeryLate(), text: ' (' + PreviousCancelVeryLate() + ')'"></span></td>
-                    <td><span data-bind="text: Total"></span><span title="Previous value" data-bind="visible: PreviousTotal(), text: ' (' + PreviousTotal() + ')'"></span></td>
-                    <td><span data-bind="text: PPM"></span><span title="Previous value" data-bind="visible: PreviousPPM(), text: ' (' + PreviousPPM() + ')'"></span></td>
-                </tr>
-            </tbody>
-        </table>
+        @RenderPage("_ppmTable.cshtml")
+        @RenderPage("_ppmOperator.cshtml")
     </div>
     <!--/span12-->
 </div>

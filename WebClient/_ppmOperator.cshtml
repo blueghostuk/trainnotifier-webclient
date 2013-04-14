@@ -1,0 +1,29 @@
+﻿<div class="hide" id="ppmOperator">
+    <ul class="breadcrumb">
+        <li><a href="#all" onclick="showAll(); return false;">All</a> <span class="divider">/</span></li>
+        <li class="active" data-bind="text: $data.Operator">Data</li>
+    </ul>
+    <hr style="margin: 5px 0px;" />
+    <table class="table table-hover table-bordered">
+    <thead>
+        <tr>
+            <th>Time</th>
+            <th>On Time</th>
+            <th>Late</th>
+            <th>Cancel Very Late</th>
+            <th>Total</th>
+            <th>PPM (%)</th>
+        </tr>
+    </thead>
+    <tbody data-bind="foreach: $data.PPMData()">
+        <tr>
+            <td data-bind="text: Timestamp"></td>
+            <td data-bind="text: OnTime"></td>
+            <td data-bind="text: Late"></td>
+            <td data-bind="text: CancelVeryLate"></td>
+            <td data-bind="text: Total"></td>
+            <td data-bind="text: PPM"></td>
+        </tr>
+    </tbody>
+</table>
+</div>
