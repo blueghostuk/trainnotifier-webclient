@@ -27,10 +27,19 @@ $(function () {
 
 function parseHashCommand() {
     if (document.location.hash.length > 1) {
-        viewOperator(document.location.hash.substr(1));
-    } else {
-        showAll();
-    }
+        var cmd = document.location.hash.substr(1);
+        if (cmd != "all") {
+            var split = cmd.split('/');
+            if (split.length == 1) {
+                viewOperator(split[0]);
+                return;
+            } else if (split.length == 2) {
+                viewSubRegion(split[0], split[1]);
+                return;
+            }
+        }
+    } 
+    showAll();
 }
 
 function startCountdown() {
@@ -49,6 +58,14 @@ function updatePPMData() {
         }).done(function (sectorData) {
             updateModel(sectorData);
         });
+        for (var j = 0; j < model.Regions().length; j++) {
+            $.getJSON("http://" + server + ":" + apiPort + "/PPM/", {
+                operatorCode: model.Regions()[j].Code(),
+                name: model.Regions()[j].Operator()
+            }).done(function (sectorData) {
+                updateRegionModel(sectorData);
+            });
+        }
     }
 }
 
@@ -59,16 +76,31 @@ function getPPMSectors() {
                 for (i in ppmSectors) {
                     var model = new PPMViewModel(ppmSectors[i]);
                     data.push(model);
-                    $.getJSON("http://" + server + ":" + apiPort + "/PPM/", {
-                        operatorCode: ppmSectors[i].OperatorCode,
-                        name: ppmSectors[i].Description
-                    }).done(function (sectorData) {
-                        updateModel(sectorData);
+                    $.getJSON("http://" + server + ":" + apiPort + "/PPM/" + model.Code()
+                    ).then(function (regions) {
+                        updateRegions(regions);
+                    }).done(function () {
+                        parseHashCommand();
                     });
                 }
             }
-            parseHashCommand();
+        }).done(function () {
+            updatePPMData();
         });
+}
+
+function updateRegions(regions) {
+    if (!regions || regions.length == 0)
+        return;
+    for (var i = 0; i < data().length; i++) {
+        var el = data()[i];
+        if (el.Code() == regions[0].OperatorCode) {
+            for (var j = 0; j < regions.length; j++) {
+                el.Regions.push(new PPMViewModel(regions[j], el));
+            }
+            break;
+        }
+    }
 }
 
 function updateModel(sectorData) {
@@ -83,6 +115,29 @@ function updateModel(sectorData) {
     for (var i = 0; i < data().length; i++) {
         if (data()[i].Operator() == sectorData.Name && data()[i].Code() == sectorData.Code) {
             data()[i].updateStats(sectorData);
+            break;
+        }
+    }
+}
+
+function updateRegionModel(sectorData) {
+    // if array
+    if ($.isArray(sectorData))
+        sectorData = sectorData[0];
+
+    if (!sectorData || ($.isArray(sectorData) && sectorData.length == 0))
+        return;
+
+    for (var i = 0; i < data().length; i++) {
+        var el = data()[i];
+        if (el.Code() == sectorData.Code) {
+            var reg = el.Regions();
+            for (var j = 0; j < reg.length; j++) {
+                if (reg[j].Operator() == sectorData.Name) {
+                    reg[j].updateStats(sectorData);
+                    break;
+                }
+            }
             break;
         }
     }
@@ -125,12 +180,50 @@ function viewOperator(id) {
 var _currentOperator;
 
 function updateOperatorPage() {
-
+    var opId = _currentOperator().Id();
+    var hash = _currentOperator().Id();
+    if (_currentOperator().Parent.IsRegion) {
+        opId = _currentOperator().Parent.Id();
+        hash = _currentOperator().Parent.Id() + "/" + hash;
+    }
     $("#commandOptions > li.active").removeClass("active");
-    $("#commandOptions > li#op-" + _currentOperator().Id()).addClass("active");
+    $("#commandOptions > li#op-" + opId).addClass("active");
 
     $("#ppmOperator").show();
     $("#ppmTable").hide();
 
-    document.location.hash = _currentOperator().Id();
+    document.location.hash = hash;
+}
+
+function viewSubRegion(parentId, regionId) {
+    var model = null;
+    for (var i = 0; i < data().length; i++) {
+        if (data()[i].Id() == parentId) {
+            model = data()[i];
+            break;
+        }
+    }
+    if (!model || !model.Regions() || model.Regions().length == 0)
+        return;
+
+    var region = null;
+    for (var i = 0; i < model.Regions().length; i++) {
+        if (model.Regions()[i].Id() == regionId) {
+            region = model.Regions()[i];
+            break;
+        }
+    }
+
+    if (region != null) {
+        if (!_currentOperator) {
+            _currentOperator = ko.observable(region);
+            ko.applyBindings(_currentOperator, $("#ppmOperator").get(0));
+        } else {
+            _currentOperator(region);
+        }
+
+        updateOperatorPage();
+
+        return false;
+    }
 }

@@ -1,13 +1,16 @@
 ﻿/// <reference path="moment.js" />
 /// <reference path="knockout-2.2.0.js" />
 /// 
-function PPMViewModel(ppmModel) {
+function PPMViewModel(ppmModel, parent) {
     var self = this;
 
-    self.Operator = ko.observable(ppmModel.Description);
-    self.Sector = ko.observable(ppmModel.SectorCode);
-    self.Code = ko.observable(ppmModel.OperatorCode);
+    self.Operator = ko.observable(ppmModel ? ppmModel.Description : null);
+    self.Sector = ko.observable(ppmModel ? ppmModel.SectorCode : null);
+    self.Code = ko.observable(ppmModel ? ppmModel.OperatorCode : null);
     self.PPMData = ko.observableArray();
+    self.Regions = ko.observableArray();
+    self.Parent = (parent ? parent : ppmModel ? new PPMViewModel() : null);
+    self.IsRegion = (parent ? true : false);
 
     self.LatestPPM = ko.computed(function () {
         if (self.PPMData().length > 0)
