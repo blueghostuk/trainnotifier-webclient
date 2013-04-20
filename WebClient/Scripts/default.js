@@ -32,15 +32,15 @@ function showLocation() {
     var fromStation = $("#from-crs").val();
     var fromCrs = null;
     if (fromStation.length > 0)
-        fromCrs = fromStation.substr(fromStation.indexOf('(') + 1, 3);
+        fromCrs = fromStation.substr(fromStation.lastIndexOf('(') + 1, 3);
     var toStation = $("#to-crs").val();
     var toCrs = null
     if (toStation.length > 0)
-        toCrs = toStation.substr(toStation.indexOf('(') + 1, 3);
+        toCrs = toStation.substr(toStation.lastIndexOf('(') + 1, 3);
     var atStation = $("#at-crs").val();
     var atCrs = null
     if (atStation.length > 0)
-        atCrs = atStation.substr(atStation.indexOf('(') + 1, 3);
+        atCrs = atStation.substr(atStation.lastIndexOf('(') + 1, 3);
     var dateVal = $("#date-picker").val();
     if (dateVal && dateVal.length > 0) {
         dateVal = getDate(dateVal);
