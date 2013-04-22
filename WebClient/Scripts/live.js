@@ -40,8 +40,6 @@ function addMessage(message, parent) {
     }
 }
 
-var currentFilter = '';
-
 function clearTable() {
     $("#table-trains tbody tr").detach();
 }
@@ -53,32 +51,50 @@ var currentLocation = new LocationViewModel();
 function preLoadStationsCallback(results) {
     var locations = [];
     for (i in results) {
-        locations.push(results[i].StaionName + ' (' + results[i].CRS + ')');
+        locations.push(results[i].StationName + ' (' + results[i].CRS + ' - ' + results[i].Tiploc + ')');
     }
     $("#filter-location").typeahead({
-        source: results,
-        updater: function (item) {
-            filter(item.substring(0, (item.indexOf('(') - 1)));
-            return item;
+        source: locations,
+        sorter: function (items) {
+            var self = this;
+            return items.sort(function (a, b) {
+                var aCrs = a.substr(a.lastIndexOf('(') + 1, 3);
+                var bCrs = b.substr(b.lastIndexOf('(') + 1, 3);
+
+                if (self.query.toLowerCase() == aCrs.toLowerCase())
+                    return -1;
+                else if (self.query.toLowerCase() == bCrs.toLowerCase())
+                    return 1;
+                else
+                    return aCrs > bCrs;
+            });
         }
     });
+    $("#filter-location").attr("placeholder", "Filter By Location");
 }
 
 $(function () {
     ko.applyBindings(currentLocation, $("#locationDetails").get(0));
 
+    $("#filter-location").attr("placeholder", "Loading stations ...");
     preLoadStations(preLoadStationsCallback);
 
     preLoadMap();
-
-    $('#filter-location').on('change', function (evt) {
-        if ($(evt.target).val() == '') {
-            filter(null);
-        }
-    });
 });
 
 function wsOpenCommand() {
+    var station = $("#filter-location").val();
+    var atCrs = null;
+    if (station.length > 0) {
+        fromCrs = station.substr(station.lastIndexOf('(') + 1, 3);
+        if (fromCrs.length == 3) {
+            $.getJSON("http://" + server + ":" + apiPort + "/Stanox/?GetByCrs&crsCode=" + fromCrs)
+                .done(function (tiplocCode) {
+                    ws.send("substanox:" + tiplocCode.Stanox)
+                });
+            return;
+        }
+    }
     ws.send("subscribe");
 }
 
@@ -87,7 +103,8 @@ function connectWs() {
 
     ws.onmessage = function (msg) {
         var data = jQuery.parseJSON(msg.data);
-        console.debug(data);
+        if (data.Response)
+            data = data.Response;
         setStatus("Received " + data.length + " messages at " + new Date(Date.now()).toLocaleString());
 
         $("#status").removeClass("btn-warning");
@@ -110,11 +127,6 @@ function connectWs() {
             }
 
             var style = "";
-            if (currentFilter &&
-                currentFilter.length > 0 &&
-                cls.indexOf(currentFilter) == -1) {
-                style = "display:none;";
-            }
 
             var date = new Date(new Number(message.actual_timestamp));
             var html = "";
