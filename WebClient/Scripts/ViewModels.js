@@ -446,7 +446,7 @@ function LiveTrainViewModel() {
 
     self.Date = ko.computed(function () {
         if (self.SchedDepart()) {
-            return moment(self.SchedDepart()).format("YYYY-MM-DD");
+            return moment(self.SchedDepart(), "DD/MM/YY HH:mm:ss").format("YYYY-MM-DD");
         }
         return "";
     });
