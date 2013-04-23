@@ -18,6 +18,10 @@
             width: 350px !important;
         }
 
+        div.input-prepend.input-append > input {
+            width: 280px !important;
+        }
+
         button {
             width: 100px;
         }
@@ -57,22 +61,43 @@
         <h1>@System.Configuration.ConfigurationManager.AppSettings["brandingTitle"]</h1>
         <form>
             <div class="row btn-group" style="margin-top: 30px;">
-                <div class="input-prepend">
+                <div class="input-prepend input-append">
                     <span class="add-on">From:<i class="icon-search"></i>
                     </span>
                     <input type="text" class="station-lookup" id="from-crs" autocomplete="off" placeholder="Type from station name here" />
+                    <span class="add-on dropdown">
+                        <a class="dropdown-toggle" id="from-local-link" data-toggle="dropdown" onclick="lookupLocalFrom(); return false;" href="#">Local</a>
+                        <ul class="dropdown-menu" role="menu" id="from-local" aria-labelledby="from-local-link" data-bind="foreach: $data">
+                            <li><a data-bind="text: $data, attr: { onclick: '$(\'#from-crs\').val(\'' + $data + '\'); return false;' }" href="#"></a></li>
+                        </ul>
+                        <i class="icon-map-marker"></i>
+                    </span>
                 </div>
                 <br />
-                <div class="input-prepend">
+                <div class="input-prepend input-append">
                     <span class="add-on">To:<i class="icon-search"></i>
                     </span>
                     <input type="text" class="station-lookup" id="to-crs" autocomplete="off" placeholder="Type to station name here" />
+                    <span class="add-on dropdown">
+                        <a class="dropdown-toggle" id="to-local-link" data-toggle="dropdown" onclick="lookupLocalTo(); return false;" href="#">Local</a>
+                        <ul class="dropdown-menu" role="menu" id="to-local" aria-labelledby="to-local-link" data-bind="foreach: $data">
+                            <li><a data-bind="text: $data, attr: { onclick: '$(\'#to-crs\').val(\'' + $data + '\'); return false;' }" href="#"></a></li>
+                        </ul>
+                        <i class="icon-map-marker"></i>
+                    </span>
                 </div>
                 <br />
-                <div class="input-prepend">
+                <div class="input-prepend input-append">
                     <span class="add-on">At:<i class="icon-search"></i>
                     </span>
                     <input type="text" class="station-lookup" id="at-crs" autocomplete="off" placeholder="Type calling at station name here" />
+                    <span class="add-on dropdown">
+                        <a class="dropdown-toggle" id="at-local-link" data-toggle="dropdown" onclick="lookupLocalAt(); return false;" href="#">Local</a>
+                        <ul class="dropdown-menu" role="menu" id="at-local" aria-labelledby="at-local-link" data-bind="foreach: $data">
+                            <li><a data-bind="text: $data, attr: { onclick: '$(\'#at-crs\').val(\'' + $data + '\'); return false;' }" href="#"></a></li>
+                        </ul>
+                        <i class="icon-map-marker"></i>
+                    </span>
                 </div>
                 <br />
                 <div class="input-prepend">
