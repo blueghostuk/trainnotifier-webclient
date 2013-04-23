@@ -94,6 +94,10 @@ function getCallingBetween(from, to, convertFromCrs, fromDate, toDate) {
         var startDate = moment(fromDate).subtract(2, "hours");
         var endDate = moment(fromDate).add(2, "hours");
     }
+    if (endDate.isBefore(startDate)) {
+        endDate.add('days', 1);
+    }
+
     var hash = "from/" + from + "/to/" + to;
     var url = "";
     if (convertFromCrs) {
@@ -123,6 +127,9 @@ function getDestination(crs, convertFromCrs, fromDate, toDate) {
     } else {
         var startDate = moment(fromDate).subtract(2, "hours");
         var endDate = moment(fromDate).add(2, "hours");
+    }
+    if (endDate.isBefore(startDate)) {
+        endDate.add('days', 1);
     }
     var hash = "to/" + crs;
     var url = "";
@@ -181,6 +188,9 @@ function getStation(crs, convertFromCrs, fromDate, toDate) {
     } else {
         var startDate = moment(fromDate).subtract(2, "hours");
         var endDate = moment(fromDate).add(2, "hours");
+    }
+    if (endDate.isBefore(startDate)) {
+        endDate.add('days', 1);
     }
     var hash = "at/" + crs;
     var url = "";
