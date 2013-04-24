@@ -78,8 +78,6 @@ $(function () {
 
     $("#filter-location").attr("placeholder", "Loading stations ...");
     preLoadStations(preLoadStationsCallback);
-
-    preLoadMap();
 });
 
 function wsOpenCommand() {
@@ -112,7 +110,9 @@ function connectWs() {
         $("#status").addClass("btn-info");
 
         for (var i = 0; i < data.length; i++) {
-            var message = data[i]; //.body;
+            var message = data[i];
+            if (message.body)
+                message = message.body;
 
             var existing = $("#" + message.train_id).length == 1;
             var cls = "";
