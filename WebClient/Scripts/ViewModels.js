@@ -43,7 +43,7 @@ function PPMViewModel(ppmModel, parent) {
 
     self.updateStats = function (stats) {
         self.PPMData.push(new PPMRecord(stats));
-    }
+    };
 }
 
 function PPMRecord(stats) {
@@ -74,7 +74,7 @@ function TitleViewModel() {
         if (pageTitle) {
             document.title = title + " - " + pageTitle;
         }
-    }
+    };
 }
 
 function LocationViewModel() {
@@ -111,44 +111,24 @@ function TrainTitleViewModel() {
     });
 }
 
-function ScheduleTrainViewModel(currentLocation) {
+function TrainDetailsViewModel() {
     var self = this;
-
-    var timeFormat = "HH:mm:ss";
-    var dateFormat = "DD/MM/YY HH:mm:ss";
-
-    self.CurrentLocation = currentLocation;
 
     self.Activated = ko.observable();
     self.AtocCode = new AtocCodeViewModel();
     self.Cancellation = ko.observable();
     self.ChangeOfOrigin = ko.observable();
     self.Reinstatement = ko.observable();
-    self.Destination = new TiplocViewModel();
-    self.EndDateValue = ko.observable();
     self.Headcode = ko.observable();
     self.Id = ko.observable();
-    self.Origin = new TiplocViewModel();
     self.Runs = ko.observable();
     self.STPValue = ko.observable();
     self.ServiceCode = ko.observable();
     self.StartDateValue = ko.observable();
-    self.Status = ko.observable();
-    self.ServiceCode = ko.observable();
-    self.LastUpdate = ko.observable();
-    self.Stops = ko.observableArray();
+    self.EndDateValue = ko.observable();
     self.TrainUid = ko.observable();
     self.Associations = ko.observableArray();
-
     self.Date = ko.observable();
-
-    self.addStop = function (stop) {
-        self.Stops.push(new ScheduleStopViewModel(stop));
-    };
-
-    self.clearStops = function () {
-        self.Stops.removeAll();
-    };
 
     self.addAssociation = function (assoc, trainUid, date) {
         self.Associations.push(new TrainAssociation(assoc, trainUid, date));
@@ -159,8 +139,6 @@ function ScheduleTrainViewModel(currentLocation) {
     };
 
     self.updateFromJson = function (schedule, liveData) {
-        self.clearStops();
-
         self.updateActivated(liveData.Activated);
         self.AtocCode.updateFromJson(schedule ? schedule.AtocCode : null);
         if (liveData.Cancellation) {
@@ -193,24 +171,15 @@ function ScheduleTrainViewModel(currentLocation) {
         } else {
             self.Reinstatement(null);
         }
-        self.Destination.updateFromJson(schedule ? schedule.Destination : null);
         self.EndDateValue(schedule ? moment(schedule.EndDate).format(dateFormat) : null);
         self.Headcode(liveData.HeadCode);
         self.Id(liveData.Id);
-        self.Origin.updateFromJson(schedule ? schedule.Origin : null);
         self.updateRuns(schedule ? schedule.Schedule : null);
         self.STPValue(schedule ? self.getSTPValue(schedule.STPIndicator) : null);
         self.ServiceCode(liveData.ServiceCode);
         self.StartDateValue(schedule ? moment(schedule.StartDate).format(dateFormat) : null);
-        self.LastUpdate(moment().format(dateFormat));
         self.TrainUid(schedule ? schedule.TrainUid : liveData.TrainUid);
-
-        if (schedule && schedule.Stops) {
-            for (var stop in schedule.Stops) {
-                self.addStop(schedule.Stops[stop]);
-            }
-        }
-
+        
         if (liveData) {
             self.Date(moment(liveData.SchedOriginDeparture).format("YYYY-MM-DD"));
         } else {
@@ -266,6 +235,33 @@ function ScheduleTrainViewModel(currentLocation) {
                 return "Overlay";
             case 4:
                 return "Permanent";
+        }
+    };
+}
+
+function ScheduleTrainViewModel(currentLocation) {
+    var self = this;
+
+    var timeFormat = "HH:mm:ss";
+    var dateFormat = "DD/MM/YY HH:mm:ss";
+
+    self.Stops = ko.observableArray();
+
+    self.addStop = function (stop) {
+        self.Stops.push(new ScheduleStopViewModel(stop));
+    };
+
+    self.clearStops = function () {
+        self.Stops.removeAll();
+    };
+
+    self.updateFromJson = function (schedule) {
+        self.clearStops();        
+
+        if (schedule && schedule.Stops) {
+            for (var stop in schedule.Stops) {
+                self.addStop(schedule.Stops[stop]);
+            }
         }
     };
 }

@@ -1,27 +1,4 @@
-﻿<div class="span4">
-    <h5>Service Details</h5>
-    <ul>
-        <li><span class="label label-info">Operator:</span> <span data-bind="text: AtocCode.Name" style="display: inline;"></span></li>
-    </ul>
-</div>
-<div class="span4">
-    <h5>Schedule Details</h5>
-    <ul>
-        <li><span class="label label-info">Type:</span> <span data-bind="text: STPValue"></span></li>
-        <li><span class="label label-info">From:</span> <span data-bind="text: StartDateValue"></span></li>
-        <li><span class="label label-info">To:</span> <span data-bind="text: EndDateValue"></span></li>
-    </ul>
-</div>
-<div class="span4">
-    <h5>Schedule Details</h5>
-    <ul>
-        <li><span class="label label-info">Runs:</span> <span data-bind="text: Runs"></span></li>
-        <!-- ko foreach: Associations -->
-        <li><span class="label label-info" data-bind="text: Title"></span> <a data-bind="text: Train, attr: { href: 'trains/' + Link(), onclick: 'setCommand(\'get/' + View() + '\');parseCommand(); return false;' }"></a> @@ <span data-bind="text: Location.Description()"></span></li>
-        <!-- /ko -->
-    </ul>
-</div>
-<table class="table table-hover table-bordered table-header-colour" id="scheduleView">
+﻿<table class="table table-hover table-bordered table-header-colour" id="scheduleView">
     <thead>
         <tr>
             <th>&nbsp;</th>

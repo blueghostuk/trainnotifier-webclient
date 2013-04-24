@@ -8,6 +8,7 @@ var currentLocation = new LocationViewModel();
 var currentTrain = new LiveTrainViewModel();
 var mixModel = new ScheduleTrainViewModel(currentLocation);
 var titleModel = new TrainTitleViewModel();
+var detailsModel = new TrainDetailsViewModel();
 
 var timeFormat = "HH:mm:ss";
 var dateFormat = "DD/MM/YY HH:mm:ss";
@@ -30,6 +31,7 @@ $(function () {
     ko.applyBindings(mixModel, $("#schedule").get(0));
     ko.applyBindings(mixModel, $("#mix").get(0));
     ko.applyBindings(titleModel, $("#title").get(0));
+    ko.applyBindings(detailsModel, $("#details").get(0));
 
     if (document.location.hash.length > 0) {
         setCommand(document.location.hash.substr(1));
@@ -38,10 +40,8 @@ $(function () {
     try {
         connectWs();
     } catch (err) {
-        console.error("Failed to connect to web socket server: {0}", err)
+        console.error("Failed to connect to web socket server: {0}", err);
     }
-
-    preLoadMap();
 });
 
 function setStatus(status) {
@@ -53,41 +53,34 @@ function connectWs() {
 
     ws.onmessage = function (msg) {
         var data = jQuery.parseJSON(msg.data);
-        switch (data.Command) {
-            case "subtrainupdate":
-                data = data.Response;
-                var lu = moment().format(dateFormat);
-                currentTrain.LastUpdate(lu);
-                if (mixModel) {
-                    mixModel.LastUpdate(lu);
-                }
-                for (i in data) {
-                    addStop(data[i], true, true);
-                    $.when(mapStop(data[i])).then(function () {
-                        centreMap();
+        if (data.Command == "subtrainupdate") {
+            data = data.Response;
+            var lu = moment().format(dateFormat);
+            currentTrain.LastUpdate(lu);
+
+            for (var i in data) {
+                addStop(data[i], true, true);
+            }
+            $(".tooltip-dynamic").tooltip();
+            // scroll to last table element
+            $('html, body').animate({
+                scrollTop: $("#tableView tr:last").offset().top
+            }, 1000);
+            // highlight last element and last update
+            $("#tableView tr:last, #lastUpdate").animate(
+            {
+                // essentially bootstrap success class
+                backgroundColor: '#dff0d8'
+            },
+            {
+                duration: 30000,
+                complete: function () {
+                    $(this).animate({
+                        // white
+                        backgroundColor: '#FFF'
                     });
                 }
-                $(".tooltip-dynamic").tooltip();
-                // scroll to last table element
-                $('html, body').animate({
-                    scrollTop: $("#tableView tr:last").offset().top
-                }, 1000);
-                // highlight last element and last update
-                $("#tableView tr:last, #lastUpdate").animate(
-                {
-                    // essentially bootstrap success class
-                    backgroundColor: '#dff0d8'
-                },
-                {
-                    duration: 30000,
-                    complete: function () {
-                        $(this).animate({
-                            // white
-                            backgroundColor: '#FFF'
-                        });
-                    }
-                });
-                break;
+            });
         }
     };
     setTimeout(function () {
@@ -150,10 +143,12 @@ function setCommand(command) {
 }
 
 function subTrain() {
-    $("#commandOptions > li.active").removeClass("active");
-    $("#commandOptions > li#sub").addClass("active");
-    setCommand("sub/" + _lastLiveData.TrainUid + "/" + moment(_lastLiveData.SchedOriginDeparture).format(dateQueryFormat));
-    doSubTrain();
+    if (_lastLiveData) {
+        $("#commandOptions > li.active").removeClass("active");
+        $("#commandOptions > li#sub").addClass("active");
+        setCommand("sub/" + _lastLiveData.TrainUid + "/" + moment(_lastLiveData.SchedOriginDeparture).format(dateQueryFormat));
+        doSubTrain();
+    }
 }
 
 function parseCommand() {
@@ -224,8 +219,7 @@ function getTrainData(url, subscribe) {
         if (data.SchedOriginStanox && data.SchedOriginStanox.length > 0)
             fetchLocation(data.SchedOriginStanox);
 
-        showCurrentTrainMap();
-        for (i in data.Steps) {
+        for (var i in data.Steps) {
             addStop(data.Steps[i]);
         }
         $(".tooltip-dynamic").tooltip();
@@ -256,7 +250,7 @@ function doSubTrain() {
 }
 
 function getAssociations(data) {
-    mixModel.clearAssociations();
+    detailsModel.clearAssociations();
     if (!data) {
         return;
     }
@@ -266,7 +260,7 @@ function getAssociations(data) {
                 return;
 
             for (var i in associations) {
-                mixModel.addAssociation(associations[i], data.TrainUid, moment(data.SchedOriginDeparture));
+                detailsModel.addAssociation(associations[i], data.TrainUid, moment(data.SchedOriginDeparture));
             }
         });
 }
@@ -275,7 +269,8 @@ function getSchedule(data) {
     _lastLiveData = data;
     return $.getJSON("http://" + server + ":" + apiPort + "/Schedule/" + data.TrainUid + "/" + moment(data.SchedOriginDeparture).format(dateQueryFormat))
         .done(function (schedule) {
-            mixModel.updateFromJson(schedule, _lastLiveData);
+            mixModel.updateFromJson(schedule);
+            detailsModel.updateFromJson(schedule, _lastLiveData);
 
             if (schedule && schedule.Stops && schedule.Stops.length > 0) {
                 if (_lastLiveData && _lastLiveData.ChangeOfOrigin && _lastLiveData.ChangeOfOrigin.NewOrigin) {
@@ -337,50 +332,6 @@ function mixInLiveStop(stop, stopNumber) {
             mixInLiveStop(stop, ++stopLook);
         }
     } catch (err) { }
-}
-
-var markersArray = new Array();
-
-function showCurrentTrainMap() {
-    clearMarkers();
-    if (!currentTrain || currentTrain.Stops().length == 0) {
-        return;
-    }
-
-    var stops = currentTrain.Stops();
-    var deffered = new Array();
-    for (i in stops) {
-        deffered.push(mapStop(stops[i]));
-    }
-    $.when.apply(null, deffered).then(function () {
-        centreMap();
-    });
-}
-
-function mapStop(stop) {
-    try {
-        var stanox = stop.Stanox();
-        var ts = stop.DepartActualTimeStamp();
-    } catch (err) {
-        var stanox = stop.Stanox;
-        var ts = stop.DepartActualTimeStamp;
-    }
-    return $.getJSON("http://" + server + ":" + apiPort + "/Stanox/" + stanox)
-        .done(function (data) {
-            if (data.Lat && data.Lon) {
-                marker = new google.maps.Marker({
-                    position: new google.maps.LatLng(data.Lat, data.Lon),
-                    icon: {
-                        path: google.maps.SymbolPath.CIRCLE,
-                        scale: 3
-                    },
-                    draggable: false,
-                    map: map,
-                    title: $("." + stanox).data("title") + " - " + ts
-                });
-                markersArray.push(marker);
-            }
-        });
 }
 
 function listStation(stanox) {

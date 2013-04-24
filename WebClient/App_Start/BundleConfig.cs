@@ -26,7 +26,6 @@ namespace TrainNotifier.WebClient
             bundles.Add(new ScriptBundle("~/bundles/app").Include(
                 "~/Scripts/websockets.js",
                 "~/Scripts/ajax-lookups.js",
-                "~/Scripts/mapping.js",
                 "~/Scripts/ViewModels.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/default").Include(
@@ -45,7 +44,6 @@ namespace TrainNotifier.WebClient
                 "~/Scripts/search-schedule.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
-                //"~/Content/bootstrap.css",
                 "~/Content/spacelab.css",
                 "~/Content/bootstrap-responsive.css",
                 "~/Content/style.css"));

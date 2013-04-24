@@ -1,29 +1,4 @@
-﻿<div class="span4 phone-hide">
-    <h5>Service Details</h5>
-    <ul>
-        <li><span class="label label-info">Live Id:</span> <a onclick="subTrain();" data-bind="text: Id, attr: { href: '#sub/' + Uid() + '/' + Date() }" title="View Live Updates for this train" style="display: inline;"></a></li>
-        <li><span class="label label-info">Id:</span> <span data-bind="text: Headcode"></span></li>
-        <li><span class="label label-info">Service Code:</span> <span data-bind="text: ServiceCode"></span></li>
-    </ul>
-</div>
-<div class="span4 phone-hide">
-    <h5>Locations</h5>
-    <ul>
-        <li><span class="label label-info">Scheduled Origin:</span> <a class="pointer" data-bind="text: SchedOrigin, css: SchedOrigin, click: function(d,e) { listStation(d.SchedOrigin()); }" style="display: inline;"></a></li>
-        <li><span class="label label-info">Scheduled Departure Time:</span> <span data-bind="text: SchedDepart"></span></li>
-        <li data-bind="visible: Cancellation" style="display:none;"><span class="label label-important">Cancelled:</span> <span data-bind="text: Cancellation"></span></li>
-        <li data-bind="visible: ChangeOfOrigin" style="display:none;"><span class="label label-important">Will start from:</span> <span data-bind="text: ChangeOfOrigin"></span></li>
-        <li data-bind="visible: Reinstatement" style="display:none;"><span class="label label-important">Reinstated:</span> <span data-bind="text: Reinstatement"></span></li>
-    </ul>
-</div>
-<div class="span4 phone-hide">
-    <h5>Updates</h5>
-    <ul>
-        <li><span class="label label-info">Activated:</span> <span data-bind="text: Activated"></span></li>
-        <li><span class="label label-info">Last Update:</span> <span data-bind="text: LastUpdate" id="lastUpdate"></span></li>
-    </ul>
-</div>
-<table class="table table-hover table-bordered table-header-colour" id="tableView">
+﻿<table class="table table-hover table-bordered table-header-colour" id="tableView">
     <thead>
         <tr>
             <th>Location</th>

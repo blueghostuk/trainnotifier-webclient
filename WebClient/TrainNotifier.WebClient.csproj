@@ -124,6 +124,7 @@
     <Content Include="ppm.cshtml" />
     <Content Include="_ppmTable.cshtml" />
     <Content Include="_ppmOperator.cshtml" />
+    <None Include="Properties\PublishProfiles\azure.pubxml" />
     <None Include="Scripts\jquery-1.9.1.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
@@ -156,16 +157,15 @@
     <None Include="Properties\PublishProfiles\Azure - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\TNWEBSRV01.pubxml" />
     <Content Include="Scripts\ajax-lookups.js" />
-    <Content Include="Scripts\mapping.js" />
     <Content Include="Scripts\websockets.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="_Layout.cshtml" />
     <Content Include="_trainLive.cshtml" />
-    <Content Include="_trainMap.cshtml" />
     <Content Include="_trainMix.cshtml" />
     <Content Include="_trainSchedule.cshtml" />
+    <Content Include="_trainDetails.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\BundleConfig.cs" />
@@ -180,6 +180,7 @@
     <Content Include="search-schedule.cshtml" />
     <None Include="Web.Azure.config">
       <DependentUpon>Web.config</DependentUpon>
+      <SubType>Designer</SubType>
     </None>
     <None Include="Web.Debug-Local.config">
       <DependentUpon>Web.config</DependentUpon>
