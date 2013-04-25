@@ -43,6 +43,11 @@ table.table-header-colour thead th {
     background-color: white !important;
 }
 
+#map {
+    margin-top: 5px;
+    height: 780px;
+}
+
 @media (min-width: 979px) {
     .phone-show {
         display: none !important;

@@ -166,6 +166,7 @@
     <Content Include="_trainMix.cshtml" />
     <Content Include="_trainSchedule.cshtml" />
     <Content Include="_trainDetails.cshtml" />
+    <None Include="_trainMap.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\BundleConfig.cs" />

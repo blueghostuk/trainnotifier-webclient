@@ -15,7 +15,9 @@ var dateFormat = "DD/MM/YY HH:mm:ss";
 var dateQueryFormat = "YYYY-MM-DD";
 var dateUrlFormat = "YYYY/MM/DD";
 var _lastLiveData;
+var _lastScheduleData;
 var _lastStopNumber = 0;
+var map;
 
 $(function () {
 
@@ -36,6 +38,18 @@ $(function () {
     if (document.location.hash.length > 0) {
         setCommand(document.location.hash.substr(1));
     }
+    $('a[data-toggle="tab"]').on('shown', function (e) {
+        if ($(e.target).attr("href") == "#map" && !map) {
+            map = L.map('map').setView([51.505, -0.09], 13);
+            L.tileLayer('http://{s}.osm.virtualearth.net/{z}/{x}/{y}.png', {
+                attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
+                maxZoom: 18
+            }).addTo(map);
+
+            loadScheduleMap();
+            loadLiveMap();
+        }
+    });
 
     try {
         connectWs();
@@ -43,6 +57,14 @@ $(function () {
         console.error("Failed to connect to web socket server: {0}", err);
     }
 });
+
+function loadScheduleMap() {
+    // need co-ords of stops from schedule
+}
+
+function loadLiveMap() {
+    // need co-ords of stops from schedule
+}
 
 function setStatus(status) {
     $("#status").html(status);
@@ -269,6 +291,7 @@ function getSchedule(data) {
     _lastLiveData = data;
     return $.getJSON("http://" + server + ":" + apiPort + "/Schedule/" + data.TrainUid + "/" + moment(data.SchedOriginDeparture).format(dateQueryFormat))
         .done(function (schedule) {
+            _lastScheduleData = schedule;
             mixModel.updateFromJson(schedule);
             detailsModel.updateFromJson(schedule, _lastLiveData);
 

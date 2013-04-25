@@ -34,9 +34,6 @@
     </style>
 }
 @section FooterJs{
-    <script type="text/javascript" 
-        src="http://maps.googleapis.com/maps/api/js?key=@System.Configuration.ConfigurationManager.AppSettings["googleApiKey"]&sensor=false">
-    </script>
     <script type="text/javascript">
         var server = "@System.Configuration.ConfigurationManager.AppSettings["server"]";
         var apiPort = "@System.Configuration.ConfigurationManager.AppSettings["apiPort"]";
@@ -110,6 +107,7 @@
                 <li><a href="#schedule" data-toggle="tab">Schedule</a></li>
                 <li><a href="#trains" data-toggle="tab">Live</a></li>
                 <li><a href="#details" data-toggle="tab">Details</a></li>
+                <li><a href="#map" data-toggle="tab">Map</a></li>
             </ul>
             <div class="tab-content">
                 <div class="tab-pane active" id="mix">
@@ -123,6 +121,9 @@
                 </div>
                 <div class="tab-pane" id="details">
                     @RenderPage("_trainDetails.cshtml")
+                </div>
+                <div class="tab-pane" id="map">
+                    @RenderPage("_trainMap.cshtml")
                 </div>
             </div>
         </div>
