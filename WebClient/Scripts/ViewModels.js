@@ -447,6 +447,20 @@ function LiveTrainViewModel() {
         return "";
     });
 
+    self.addBerthStop = function (stopEl) {
+        var stopModel = new StopViewModel(true);
+        switch (stopEl.Type) {
+            // TODO: more
+            //case "CA":
+            default:
+                stopModel.Stanox(stopEl.From + " - " + stopEl.To);
+                stopModel.ArrivalActualTimeStamp(moment(stopEl.Time).format("HH:mm:ss"));
+                stopModel.Notes("From Area: " + stopEl.AreaId);
+                break;
+        }
+        self.Stops.push(stopModel);
+    };    
+
     self.addStop = function (stopEl) {
         if (self.Stops().length == 0) {
             var stopModel = new StopViewModel();
@@ -461,8 +475,17 @@ function LiveTrainViewModel() {
 
             self.Stops.push(stopModel);
         } else {
-            var stopModel = self.Stops()[self.Stops().length - 1];
-            if (stopModel.Stanox() != stopEl.Stanox) {
+            var stopModel = null;
+            for (var i = (self.Stops().length-1); i >= 0; i--) {
+                var stop = self.Stops()[i];
+                if (!stop.BerthUpdate) {
+                    if (stop.Stanox() == stopEl.Stanox) {
+                        stopModel = stop;
+                        break;
+                    }
+                }
+            }
+            if (!stopModel) {
                 stopModel = new StopViewModel();
 
                 self.Stops.push(stopModel);
@@ -616,7 +639,7 @@ function getTimes(stopEl) {
     return result;
 }
 
-function StopViewModel() {
+function StopViewModel(berthUpdate) {
     var self = this;
 
     self.Stanox = ko.observable();
@@ -631,6 +654,8 @@ function StopViewModel() {
     self.NextStanox = ko.observable();
     self.ExpectedAtNextStanox = ko.observable();
     self.OffRoute = ko.observable();
+    self.BerthUpdate = berthUpdate || false;
+    self.Notes = ko.observable();
 
     self.ArrivalDelayResult = ko.computed(function () {
         if (self.ArrivalDelay() == 0)

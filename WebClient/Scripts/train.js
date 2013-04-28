@@ -103,6 +103,11 @@ function connectWs() {
                     });
                 }
             });
+        } else if (data.Command == "subtrainupdate-berth") {
+            data = data.Response;
+            for (var i in data) {
+                currentTrain.addBerthStop(data[i]);
+            }            
         }
     };
     setTimeout(function () {
