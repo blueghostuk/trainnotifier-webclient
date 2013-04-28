@@ -289,7 +289,7 @@ function getAssociations(data) {
 
 function getSchedule(data) {
     _lastLiveData = data;
-    return $.getJSON("http://" + server + ":" + apiPort + "/Schedule/" + data.TrainUid + "/" + moment(data.SchedOriginDeparture).format(dateQueryFormat))
+    return $.getJSON("http://" + server + ":" + apiPort + "/Schedule/uid/" + data.TrainUid + "/" + moment(data.SchedOriginDeparture).format(dateQueryFormat))
         .done(function (schedule) {
             _lastScheduleData = schedule;
             mixModel.updateFromJson(schedule);
