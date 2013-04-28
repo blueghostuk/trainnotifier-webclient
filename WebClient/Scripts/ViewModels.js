@@ -454,7 +454,8 @@ function LiveTrainViewModel() {
             //case "CA":
             default:
                 stopModel.Stanox(stopEl.From + " - " + stopEl.To);
-                stopModel.ArrivalActualTimeStamp(moment(stopEl.Time).format("HH:mm:ss"));
+                // supplied time is in UTC, want to format to local (in theory this is UK)
+                stopModel.ArrivalActualTimeStamp(moment.utc(stopEl.Time).local().format("HH:mm:ss"));
                 stopModel.Notes("From Area: " + stopEl.AreaId);
                 break;
         }
