@@ -18,7 +18,7 @@ $(function () {
     $(".station-lookup").attr("placeholder", "Loading stations ...");
     ko.applyBindings(fromLocal, $("#from-local").get(0));
     ko.applyBindings(toLocal, $("#to-local").get(0));
-    ko.applyBindings(toLocal, $("#at-local").get(0));
+    ko.applyBindings(atLocal, $("#at-local").get(0));
     preLoadStations(preLoadStationsCallback);
 });
 
