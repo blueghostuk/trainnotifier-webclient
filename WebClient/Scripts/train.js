@@ -41,8 +41,9 @@ $(function () {
     $('a[data-toggle="tab"]').on('shown', function (e) {
         if ($(e.target).attr("href") == "#map" && !map) {
             map = L.map('map').setView([51.505, -0.09], 13);
-            L.tileLayer('http://{s}.osm.virtualearth.net/{z}/{x}/{y}.png', {
-                attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>',
+            L.tileLayer('http://otile{s}.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.png', {
+                subdomains: ['1', '2', '3', '4'],
+                attribution: 'Tiles Courtesy of <a href="http://www.mapquest.com/" target="_blank">MapQuest</a><img src="http://developer.mapquest.com/content/osm/mq_logo.png">. Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>.',
                 maxZoom: 18
             }).addTo(map);
 
@@ -59,7 +60,17 @@ $(function () {
 });
 
 function loadScheduleMap() {
-    // need co-ords of stops from schedule
+    var points = [];
+    for (var i in _lastScheduleData.Stops) {
+        var tiploc = _lastScheduleData.Stops[i].Tiploc;
+        if (tiploc && tiploc.Lat && tiploc.Lon) {
+            points.push([tiploc.Lat, tiploc.Lon]);
+            L.marker([tiploc.Lat, tiploc.Lon], {
+                title: tiploc.Description
+            }).addTo(map);
+        }
+    }
+    map.fitBounds(points);
 }
 
 function loadLiveMap() {
@@ -107,7 +118,7 @@ function connectWs() {
             data = data.Response;
             for (var i in data) {
                 currentTrain.addBerthStop(data[i]);
-            }            
+            }
         }
     };
     setTimeout(function () {
