@@ -195,9 +195,17 @@ function parseCommand() {
     } else {
         var subscribe = cmd == "sub";
         var hashIdx = args.indexOf('/');
-        if (hashIdx != -1) {
-            getByUid(args.substring(0, hashIdx), args.substring(hashIdx + 1), subscribe);
+        var date = "";
+        var trainUid = "";
+        if (hashIdx === -1) {
+            trainUid = args;
+            date = moment().format(dateQueryFormat);
+            setCommand(cmdString + "/" + moment().format(dateQueryFormat));
+        } else {
+            trainUid = args.substring(0, hashIdx);
+            date = args.substring(hashIdx + 1)
         }
+        getByUid(trainUid, date, subscribe);
     }
 }
 
