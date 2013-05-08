@@ -115,3 +115,11 @@ ul.nav.nav-tabs {
         padding-left: 20px;
     }
 }
+
+/* override bootstrap responsive*/
+/* seems to be issue in chrome dev around this screen size*/
+@media (min-width: 1900px) {
+    .row-fluid .span10 {
+        width: 82.9%;
+    }
+}
