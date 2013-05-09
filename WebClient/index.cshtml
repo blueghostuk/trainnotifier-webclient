@@ -4,7 +4,6 @@
 @using System.Web.Optimization;
 @section CustomCss{
     <style type="text/css">
-
         span.add-on {
             width: 4em !important;
             text-align: left !important;
@@ -37,6 +36,22 @@
 
             .hero-unit {
                 padding-left: 20px !important;
+            }
+        }
+
+        @@media (max-width: 320px) {
+            .hero-unit {
+                padding-left: 0px !important;
+                padding-right: 0px !important;
+                border-radius: 0px;
+            }
+
+            div.input-prepend > input {
+                width: 230px !important;
+            }
+
+            div.input-prepend.input-append > input {
+                width: 160px !important;
             }
         }
     </style>
@@ -116,7 +131,7 @@
                     <button type="submit" class="btn btn-primary">Find</button>
                 </p>
             </div>
-        </form>        
+        </form>
         <div class="row">
             Search For Trains:
             <ul>
