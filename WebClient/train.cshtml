@@ -35,6 +35,48 @@
         tr.info a {
             color: white;
         }
+
+        div#title {
+            margin-top: 5px;
+            font-size: large;
+        }
+
+            div#title span.xxl {
+                font-weight: bold;
+                font-size: xx-large;
+                margin-left: 5px;
+            }
+
+            div#title span.xl {
+                font-weight: bold;
+                font-size: x-large;
+            }
+
+        @@media (max-width: 480px) {
+            body {
+                font-size: 14px;
+            }
+
+            .navbar .brand {
+                font-size: 16px;
+            }
+
+            div#title {
+                margin-top: 5px;
+                font-size: 14px;
+            }
+
+                div#title span.xxl {
+                    font-weight: bold;
+                    font-size: 14px;
+                    margin-left: 5px;
+                }
+
+                div#title span.xl {
+                    font-weight: bold;
+                    font-size: 14px;
+                }
+        }
     </style>
 }
 @section FooterJs{
@@ -68,9 +110,9 @@
             <ul class="nav nav-list">
                 <li class="nav-header" data-bind="text: toDisplay()">Station Details</li>
                 <li><strong>CRS:</strong><span data-bind="text: locationCRS"></span></li>
-                <li><a data-bind="attr: { href :'search/from/' + locationStanox() }" title="View Trains Starting from this station">Trains Starting From</a></li>
-                <li><a data-bind="attr: { href :'search/at/' + locationStanox() }" title="View Trains Calling at this station">Trains Calling At</a></li>
-                <li><a data-bind="attr: { href :'search/to/' + locationStanox() }" title="View Trains Terminating at this station">Trains Terminating At</a></li>
+                <li><a data-bind="attr: { href: 'search/from/' + locationStanox() }" title="View Trains Starting from this station">Trains Starting From</a></li>
+                <li><a data-bind="attr: { href: 'search/at/' + locationStanox() }" title="View Trains Calling at this station">Trains Calling At</a></li>
+                <li><a data-bind="attr: { href: 'search/to/' + locationStanox() }" title="View Trains Terminating at this station">Trains Terminating At</a></li>
             </ul>
         </div>
     </div>
@@ -96,13 +138,13 @@
         <div class="progress progress-striped active hide">
             <div class="bar" style="width: 100%"></div>
         </div>
-        <div class="row" id="title" style="margin-top: 5px; font-size: large;" data-bind="visible: Id">
-            <span data-bind="text: Id" style="font-weight: bold; font-size: xx-large; margin-left: 5px;"></span>
-            <span data-bind="text: From" class="stationName" style="font-weight: bold; font-size: x-large;"></span><span data-bind="visible: To"> to </span>
-            <span data-bind="text: To" class="stationName" style="font-weight: bold; font-size: x-large;"></span>
+        <div class="row" id="title" data-bind="visible: Id">
+            <span data-bind="text: Id" class="xxl"></span>
+            <span data-bind="text: From" class="stationName xl"></span><span data-bind="visible: To"> to </span>
+            <span data-bind="text: To" class="stationName xl"></span>
             <span data-bind="text: Start"></span><span data-bind="visible: End"> - </span>
             <span data-bind="text: End"></span>
-            <span data-bind="text: FullTitle"class="hide"></span>
+            <span data-bind="text: FullTitle" class="hide"></span>
             <hr style="margin: 5px 0px;" />
         </div>
         <div class="row">

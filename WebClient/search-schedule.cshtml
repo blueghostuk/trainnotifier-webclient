@@ -33,6 +33,26 @@
             margin-top: 0px;
             margin-bottom: 0px;
         }
+        
+        div#title {
+            font-size: large; 
+            text-align: center;
+        }
+
+        @@media (max-width: 480px) {
+            body {
+                font-size: 14px;
+            }
+
+            .navbar .brand {
+                font-size: 16px;
+            }
+
+            div#title {
+                font-size: medium; 
+                text-align: center;
+            }
+        }
     </style>
 }
 @section FooterJs{
@@ -115,7 +135,7 @@
         <div class="progress progress-striped active hide">
             <div class="bar" style="width: 100%"></div>
         </div>
-        <div class="row pagination" id="title" style="font-size: large; text-align: center;" data-bind="visible: Text">
+        <div class="row pagination" id="title" data-bind="visible: Text">
             <ul>
                 <li style="width: 5em;"><a href="#" onclick="previousDate(); return false;" id="neg-2hrs">&lt; 2 hrs</a></li>
                 <li class="stationName" style="font-weight: bold; text-align: center;"><span data-bind="text: Text"></span></li>
