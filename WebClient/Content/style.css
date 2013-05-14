@@ -48,6 +48,10 @@ table.table-header-colour thead th {
     height: 780px;
 }
 
+.top-search{
+    margin-right: 5px;
+}
+
 @media (min-width: 979px) {
     .phone-show {
         display: none !important;

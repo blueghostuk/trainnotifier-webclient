@@ -23,6 +23,17 @@ var titleFormat = "ddd Do MMM YYYY";
 var dateUrlFormat = "YYYY/MM/DD";
 var dateApiQuery = "YYYY-MM-DDTHH:mm";
 
+var self = this;
+
+thisPage = {
+    setCommand: function (command) {
+        self.setCommand(command);
+    },
+    parseCommand: function () {
+        return self.parseCommand();
+    }
+};
+
 $(function () {
     preLoadStations(preLoadStationsCallback);
 
@@ -36,13 +47,14 @@ $(function () {
 
 function setCommand(command) {
     $("#filter-command").val(command);
+    $("input.search-query").val(command);
 }
 
 function parseCommand() {
     var cmdString = $("#filter-command").val();
     var idx = cmdString.indexOf("/");
     if (idx == -1)
-        return;
+        return false;
 
     var cmd = cmdString.substring(0, idx);
     var args = cmdString.substring(idx + 1).split('/');    
@@ -54,17 +66,23 @@ function parseCommand() {
         case 'from':
             if (args.length >= 3 && args[1] == "to") {
                 getCallingBetween(args[0], args[2], convertFromCrs, getDateTime(args.slice(3, 5)), (args.length <= 5 ? null : getDateTime(args.slice(3, 4).concat(args.slice(5, 7)))));
+                return true;
             } else {
                 getOrigin(args[0], convertFromCrs, getDateTime(args.slice(1, 3)), (args.length <= 3 ? null : getDateTime(args.slice(1, 2).concat(args.slice(3, 5)))));
+                return true;
             }
             break;
         case 'to':
             getDestination(args[0], convertFromCrs, getDateTime(args.slice(1, 3)), (args.length <= 3 ? null : getDateTime(args.slice(1, 2).concat(args.slice(3, 5)))));
+            return true;
             break;
         case 'at':
             getStation(args[0], convertFromCrs, getDateTime(args.slice(1, 3)), (args.length <= 3 ? null : getDateTime(args.slice(1, 2).concat(args.slice(3, 5)))));
+            return true;
             break;
     }
+
+    return false;
 }
 
 function getDateTime(args) {

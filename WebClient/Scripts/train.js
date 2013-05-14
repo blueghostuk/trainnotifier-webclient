@@ -19,6 +19,17 @@ var _lastScheduleData;
 var _lastStopNumber = 0;
 var map;
 
+var self = this;
+
+thisPage = {
+    setCommand: function (command) {
+        self.setCommand(command);
+    },
+    parseCommand: function () {
+        return self.parseCommand();
+    }
+};
+
 $(function () {
 
     var commands = [];
@@ -177,6 +188,7 @@ function sendWsCommand(command) {
 
 function setCommand(command) {
     $("#filter-command").val(command);
+    $("input.search-query").val(command);
     document.location.hash = command;
 }
 
@@ -193,7 +205,7 @@ function parseCommand() {
     var cmdString = $("#filter-command").val();
     var idx = cmdString.indexOf("/");
     if (idx == -1)
-        return;
+        return false;
 
     var cmd = cmdString.substring(0, idx);
     var args = cmdString.substring(idx + 1);
@@ -203,6 +215,7 @@ function parseCommand() {
 
     if (cmd == "id") {
         getById(args);
+        return true;
     } else {
         var subscribe = cmd == "sub";
         var hashIdx = args.indexOf('/');
@@ -217,7 +230,10 @@ function parseCommand() {
             date = args.substring(hashIdx + 1)
         }
         getByUid(trainUid, date, subscribe);
+        return true;
     }
+
+    return false;
 }
 
 function getById(id) {

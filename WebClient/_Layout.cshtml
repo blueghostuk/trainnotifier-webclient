@@ -57,6 +57,9 @@
                 </a>
                 <a class="brand" href="#">@System.Configuration.ConfigurationManager.AppSettings["brandingTitle"]</a>
                 <div class="nav-collapse collapse">
+                    <form class="navbar-search pull-left top-search">
+                        <input type="search" class="search-query" placeholder="Enter Command">
+                    </form>
                     <ul class="nav">
                         @RenderSection("TopMenu", true)
                     </ul>
