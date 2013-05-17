@@ -60,6 +60,7 @@
                     <form class="navbar-search pull-left top-search">
                         <input type="search" id="global-search-box" class="search-query" placeholder="Enter Command">
                     </form>
+                    @RenderSection("TopMenuAdditional", false)
                     <ul class="nav">
                         @RenderSection("TopMenu", true)
                     </ul>

@@ -10,6 +10,8 @@ $(function () {
     });
     webApi.getStations().then(function (stations) {
         var commands = [];
+        commands.push('get/');
+        commands.push('sub/');
         commands.push('from/');
         for(var i in stations) {
             commands.push('from/' + stations[i].Name);

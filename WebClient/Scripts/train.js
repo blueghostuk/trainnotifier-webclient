@@ -27,18 +27,13 @@ thisPage = {
     },
     parseCommand: function () {
         return self.parseCommand();
+    },
+    getCommand: function () {
+        return $("#global-search-box").val();
     }
 };
 
 $(function () {
-
-    var commands = [];
-    commands.push('get/');
-    commands.push('sub/');
-    $("#filter-command").typeahead({
-        source: commands
-    });
-
     ko.applyBindings(currentTrain, $("#trains").get(0));
     ko.applyBindings(currentLocation, $(".station-details").get(0));
     ko.applyBindings(mixModel, $("#schedule").get(0));
@@ -187,7 +182,6 @@ function sendWsCommand(command) {
 }
 
 function setCommand(command) {
-    $("#filter-command").val(command);
     $("input.search-query").val(command);
     document.location.hash = command;
 }
@@ -202,7 +196,7 @@ function subTrain() {
 }
 
 function parseCommand() {
-    var cmdString = $("#filter-command").val();
+    var cmdString = thisPage.getCommand();
     var idx = cmdString.indexOf("/");
     if (idx == -1)
         return false;
