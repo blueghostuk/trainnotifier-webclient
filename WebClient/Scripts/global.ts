@@ -1,18 +1,49 @@
+/// <reference path="webApi.ts" />
+/// <reference path="typings/bootstrap/bootstrap.d.ts" />
 /// <reference path="typings/jquery/jquery.d.ts" />
 
 interface Page{
     setCommand(command: string);
     parseCommand(): bool;
+    getCommand(): string;
 }
 
 var thisPage: Page;
+var serverSettings: IServerSettings;
+var webApi: IWebApi;
 
 $(function () {
-    $("input.search-query").keyup(function (e) {
+
+    webApi = new TrainNotifier.WebApi(serverSettings);
+
+    $("#global-search-box").keyup(function (e) {
         if (e.keyCode == 13) {
             parseGlobalSearchCommand($(this).val());
         }
     });
+
+    webApi.getStations().then(function (stations) {
+        var commands = [];
+        commands.push('from/');
+        for (var i in stations) {
+            commands.push('from/' + stations[i].Name);
+            commands.push('from/' + stations[i].CRS);
+        }
+        commands.push('at/');
+        for (var i in stations) {
+            commands.push('at/' + stations[i].Name);
+            commands.push('at/' + stations[i].CRS);
+        }
+        commands.push('to/');
+        for (var i in stations) {
+            commands.push('to/' + stations[i].Name);
+            commands.push('to/' + stations[i].CRS);
+        }
+        $("#global-search-box").typeahead({
+            source: commands
+        });
+    });
+
 });
 
 function parseGlobalSearchCommand(command: string) {

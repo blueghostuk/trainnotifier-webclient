@@ -31,12 +31,13 @@ thisPage = {
     },
     parseCommand: function () {
         return self.parseCommand();
+    },
+    getCommand: function () {
+        return $("#global-search-box").val();
     }
 };
 
 $(function () {
-    preLoadStations(preLoadStationsCallback);
-
     ko.applyBindings(currentLocation, $("#stationDetails").get(0));
     ko.applyBindings(currentOriginResults, $("#origin-search-results").get(0));
     ko.applyBindings(currentCallingAtResults, $("#callingAt-search-results").get(0));
@@ -46,12 +47,11 @@ $(function () {
 });
 
 function setCommand(command) {
-    $("#filter-command").val(command);
     $("input.search-query").val(command);
 }
 
 function parseCommand() {
-    var cmdString = $("#filter-command").val();
+    var cmdString = thisPage.getCommand();
     var idx = cmdString.indexOf("/");
     if (idx == -1)
         return false;
@@ -526,28 +526,6 @@ function setTimeLinks() {
     $("#plus-2hrs").attr("href", "search/" + url + plusStartDate.format("/YYYY/MM/DD/HH-mm") + plusEndDate.format("/HH-mm"));
 
     setHash(url, moment(currentStartDate).format("YYYY-MM-DD/HH-mm") + moment(currentEndDate).format("/HH-mm"), true);
-}
-
-function preLoadStationsCallback(results) {
-    var commands = [];
-    commands.push('from/');
-    for (i in results) {
-        commands.push('from/' + results[i].Name);
-        commands.push('from/' + results[i].CRS);
-    }
-    commands.push('at/');
-    for (i in results) {
-        commands.push('at/' + results[i].Name);
-        commands.push('at/' + results[i].CRS);
-    }
-    commands.push('to/');
-    for (i in results) {
-        commands.push('to/' + results[i].Name);
-        commands.push('to/' + results[i].CRS);
-    }
-    $("#filter-command").typeahead({
-        source: commands
-    });
 }
 
 function listStation(stanox) {

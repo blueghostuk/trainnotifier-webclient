@@ -57,11 +57,6 @@
     </style>
 }
 @section FooterJs{
-    <script type="text/javascript">
-        var server = "@System.Configuration.ConfigurationManager.AppSettings["server"]";
-        var apiPort = "@System.Configuration.ConfigurationManager.AppSettings["apiPort"]";
-    </script>
-
     @Scripts.Render("~/bundles/default")
 }
 @section TopMenu{

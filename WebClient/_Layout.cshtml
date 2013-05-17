@@ -58,7 +58,7 @@
                 <a class="brand" href="#">@System.Configuration.ConfigurationManager.AppSettings["brandingTitle"]</a>
                 <div class="nav-collapse collapse">
                     <form class="navbar-search pull-left top-search">
-                        <input type="search" class="search-query" placeholder="Enter Command">
+                        <input type="search" id="global-search-box" class="search-query" placeholder="Enter Command">
                     </form>
                     <ul class="nav">
                         @RenderSection("TopMenu", true)
@@ -106,7 +106,20 @@
     @Scripts.Render("~/bundles/knockout")
     @Scripts.Render("~/bundles/bootstrap")
     @Scripts.Render("~/bundles/moment")
-    @Scripts.Render("~/bundles/app")
+    @Scripts.Render("~/bundles/app")    
+    <script type="text/javascript">
+        serverSettings = {
+            server: "@System.Configuration.ConfigurationManager.AppSettings["server"]",
+            apiPort: "@System.Configuration.ConfigurationManager.AppSettings["apiPort"]",
+            wsPort: "@System.Configuration.ConfigurationManager.AppSettings["wsPort"]"
+        };
+
+        // old config
+        
+        var server = "@System.Configuration.ConfigurationManager.AppSettings["server"]";
+        var apiPort = "@System.Configuration.ConfigurationManager.AppSettings["apiPort"]";
+        var wsPort = "@System.Configuration.ConfigurationManager.AppSettings["wsPort"]";
+    </script>
     @RenderSection("FooterJs", required: false)
     @{
         var adSenseCode = System.Configuration.ConfigurationManager.AppSettings["ad_sense_code"];

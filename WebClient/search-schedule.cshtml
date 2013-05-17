@@ -56,12 +56,6 @@
     </style>
 }
 @section FooterJs{
-    <script type="text/javascript">
-        var server = "@System.Configuration.ConfigurationManager.AppSettings["server"]";
-        var apiPort = "@System.Configuration.ConfigurationManager.AppSettings["apiPort"]";
-        var wsPort = "@System.Configuration.ConfigurationManager.AppSettings["wsPort"]";
-    </script>
-
     @Scripts.Render("~/bundles/search-schedule")
 }
 @section TopMenu{
@@ -123,14 +117,6 @@
         </div>
         <div class="row alert alert-error hide" id="error-row">
             <strong>Error fetching data. Please Refresh to try again</strong>
-        </div>
-        <div class="row btn-group">
-            <div class="input-prepend">
-                <span class="add-on"><i class="icon-search"></i></span>
-                <input type="text" id="filter-command" class="span9" placeholder="Enter Command" />&nbsp;&nbsp;&nbsp;
-                <a class="btn btn_disconnect" id="btn_Command" onclick="parseCommand();" title="Send Command"><i class="icon-arrow-right"></i></a>
-                <a class="btn" href="#" title="Clear data" onclick="clearData();"><i class="icon-remove"></i></a>
-            </div>
         </div>
         <div class="progress progress-striped active hide">
             <div class="bar" style="width: 100%"></div>
