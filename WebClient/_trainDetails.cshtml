@@ -22,3 +22,7 @@
 <ul data-bind="foreach: Associations">
     <li><span class="label label-info" data-bind="text: Title"></span><a data-bind="    text: Train, attr: { href: 'trains/' + Link(), onclick: 'setCommand(\'get/' + View() + '\');parseCommand(); return false;' }"></a>@@ <span data-bind="    text: Location.Description()"></span></li>
 </ul>
+<h4>Other Sites</h4>
+<ul data-bind="foreach: OtherSites">
+    <li><a data-bind="text: Name, attr:{ href: Url }" target="_blank"></a></li>
+</ul>

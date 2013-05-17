@@ -111,6 +111,13 @@ function TrainTitleViewModel() {
     });
 }
 
+function ExternalSiteViewModel(name) {
+    var self = this;
+    
+    self.Name = ko.observable(name);
+    self.Url = ko.observable();
+}
+
 function TrainDetailsViewModel() {
     var self = this;
 
@@ -129,6 +136,12 @@ function TrainDetailsViewModel() {
     self.TrainUid = ko.observable();
     self.Associations = ko.observableArray();
     self.Date = ko.observable();
+    self.OtherSites = ko.observableArray([
+        new ExternalSiteViewModel("Realtime Trains"),
+        new ExternalSiteViewModel("Open Train Times"),
+        new ExternalSiteViewModel("trains.im"),
+        new ExternalSiteViewModel("Raildar")
+    ]);
 
     self.addAssociation = function (assoc, trainUid, date) {
         self.Associations.push(new TrainAssociation(assoc, trainUid, date));
@@ -185,6 +198,11 @@ function TrainDetailsViewModel() {
         } else {
             self.Date();
         }
+
+        self.OtherSites()[0].Url("http://www.realtimetrains.co.uk/train/" + liveData.TrainUid + "/" + moment(liveData.SchedOriginDeparture).format("YYYY/MM/DD"));
+        self.OtherSites()[1].Url("http://www.opentraintimes.com/schedule/" + liveData.TrainUid + "/" + moment(liveData.SchedOriginDeparture).format("YYYY-MM-DD"));
+        self.OtherSites()[2].Url("http://www.trains.im/schedule/" + liveData.TrainUid + "/" + moment(liveData.SchedOriginDeparture).format("YYYY/MM/DD"));
+        self.OtherSites()[3].Url("http://raildar.co.uk/timetable/train/trainid/" + liveData.TrainUid);
     };
 
     self.updateActivated = function (activated) {
