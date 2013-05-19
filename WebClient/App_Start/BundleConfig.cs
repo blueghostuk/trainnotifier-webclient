@@ -30,8 +30,8 @@ namespace TrainNotifier.WebClient
                 "~/Scripts/websockets.js",
                 "~/Scripts/ViewModels.js"));
 
-            bundles.Add(new ScriptBundle("~/bundles/default").Include(
-                "~/Scripts/default.js"));
+            bundles.Add(new ScriptBundle("~/bundles/index").Include(
+                "~/Scripts/index.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/live").Include(
                 "~/Scripts/live.js"));

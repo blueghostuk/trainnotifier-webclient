@@ -1,16 +1,19 @@
-﻿/// <reference path="jquery-1.9.1.js" />
-/// <reference path="mapping.js" />
-/// <reference path="moment.js" />
-/// <reference path="moment-datepicker.js" />
-/// <reference path="webApi.js" />
+/// <reference path="typings/moment/moment.d.ts" />
+/// <reference path="typings/bootstrap/bootstrap.d.ts" />
+/// <reference path="moment-datepicker.d.ts" />
+/// <reference path="webApi.ts" />
+/// <reference path="typings/knockout/knockout.d.ts" />
+/// <reference path="typings/jquery/jquery.d.ts" />
 
 var fromLocal = ko.observableArray();
 var toLocal = ko.observableArray();
 var atLocal = ko.observableArray();
 
-var webApi = new TrainNotifier.WebApi(serverSettings);
+var serverSettings: IServerSettings;
+var webApi: IWebApi;
 
 $(function () {
+    var webApi = new TrainNotifier.WebApi(serverSettings);
     $('.datepicker').datepicker({
         format: 'DD-MM-YYYY',
         autoHide: true
@@ -25,14 +28,14 @@ $(function () {
 
     webApi.getStations().done(function (results) {
         var locations = [];
-        for (i in results) {
+        for (var i in results) {
             locations.push(results[i].StationName + ' (' + results[i].CRS + ' - ' + results[i].Tiploc + ')');
         }
         $(".station-lookup").typeahead({
             source: locations,
-            sorter: function (items) {
+            sorter: function (items : Array) {
                 var self = this;
-                return items.sort(function (a, b) {
+                return items.sort(function (a : string, b: string) {
                     var aCrs = a.substr(a.lastIndexOf('(') + 1, 3);
                     var bCrs = b.substr(b.lastIndexOf('(') + 1, 3);
 
@@ -41,7 +44,7 @@ $(function () {
                     else if (self.query.toLowerCase() == bCrs.toLowerCase())
                         return 1;
                     else
-                        return aCrs > bCrs;
+                        return aCrs > bCrs ? 1 : -1;
                 });
             }
         });
@@ -65,6 +68,7 @@ function showLocation() {
     if (atStation.length > 0)
         atCrs = atStation.substr(atStation.lastIndexOf('(') + 1, 3);
     var dateVal = $("#date-picker").val();
+    var date;
     if (dateVal && dateVal.length > 0) {
         dateVal = getDate(dateVal);
         if (dateVal && dateVal.isValid()) {
@@ -103,10 +107,10 @@ function getDate(dateVal) {
     var d = moment(dateVal, "DD-MM-YYYY");
     if (d.isValid())
         return d;
-    d = moment(timeVal, "DD/MM/YYYY");
+    d = moment(dateVal, "DD/MM/YYYY");
     if (d.isValid())
         return d;
-    d = moment(timeVal, "DDMMYYYY");
+    d = moment(dateVal, "DDMMYYYY");
     if (d.isValid())
         return d;
     return null;
@@ -124,10 +128,7 @@ function getTime(timeVal) {
 
 function lookupLocalFrom() {
     navigator.geolocation.getCurrentPosition(function (position) {
-        $.getJSON("http://" + server + ":" + apiPort + "/Station/GeoLookup", {
-            lat: position.coords.latitude,
-            lon: position.coords.longitude
-        }).done(function (stations) {
+        webApi.getStationByLocation(position.coords.latitude, position.coords.longitude).done(function (stations) {
             fromLocal.removeAll();
             if (stations && stations.length > 0) {
                 for (var i in stations) {
@@ -140,10 +141,7 @@ function lookupLocalFrom() {
 
 function lookupLocalTo() {
     navigator.geolocation.getCurrentPosition(function (position) {
-        $.getJSON("http://" + server + ":" + apiPort + "/Station/GeoLookup", {
-            lat: position.coords.latitude,
-            lon: position.coords.longitude
-        }).done(function (stations) {
+        webApi.getStationByLocation(position.coords.latitude, position.coords.longitude).done(function (stations) {
             toLocal.removeAll();
             if (stations && stations.length > 0) {
                 for (var i in stations) {
@@ -155,10 +153,7 @@ function lookupLocalTo() {
 }
 function lookupLocalAt() {
     navigator.geolocation.getCurrentPosition(function (position) {
-        $.getJSON("http://" + server + ":" + apiPort + "/Station/GeoLookup", {
-            lat: position.coords.latitude,
-            lon: position.coords.longitude
-        }).done(function (stations) {
+        webApi.getStationByLocation(position.coords.latitude, position.coords.longitude).done(function (stations) {
             atLocal.removeAll();
             if (stations && stations.length > 0) {
                 for (var i in stations) {
@@ -168,4 +163,3 @@ function lookupLocalAt() {
         });
     });
 }
-

@@ -13,6 +13,12 @@ var TrainNotifier;
         WebApi.prototype.getStanox = function (stanox) {
             return $.getJSON(this.getBaseUrl() + "/Stanox/" + stanox);
         };
+        WebApi.prototype.getStationByLocation = function (lat, lon) {
+            return $.getJSON(this.getBaseUrl() + "/Station/GeoLookup", {
+                lat: lat,
+                lon: lon
+            });
+        };
         return WebApi;
     })();
     TrainNotifier.WebApi = WebApi;    

@@ -60,7 +60,7 @@ interface TypeaheadOptions {
     items?: number;
     minLength?: number;
     matcher?: () => any;
-    sorter?: () => any;
+    sorter?: (items) => any;
     highlighter?: () => any;
 }
 

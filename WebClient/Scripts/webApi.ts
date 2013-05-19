@@ -3,6 +3,7 @@
 interface IWebApi {
     getStations(): JQueryPromise;
     getStanox(stanox: string): JQueryPromise;
+    getStationByLocation(lat: number, lon: number): JQueryPromise;
 }
 
 interface IServerSettings {
@@ -43,6 +44,12 @@ module TrainNotifier {
             return $.getJSON(this.getBaseUrl() + "/Stanox/" + stanox);
         };
 
+        getStationByLocation(lat: number, lon: number) {
+            return $.getJSON(this.getBaseUrl() + "/Station/GeoLookup", {
+                lat: lat,
+                lon: lon
+            });
+        };
     }
 
 }

@@ -114,9 +114,16 @@
     <Content Include="Scripts\globalSearch.js">
       <DependentUpon>globalSearch.ts</DependentUpon>
     </Content>
+    <TypeScriptCompile Include="Scripts\index.ts" />
+    <Content Include="Scripts\index.js">
+      <DependentUpon>index.ts</DependentUpon>
+    </Content>
     <Content Include="Scripts\typings\bootstrap\bootstrap.d.ts" />
     <Content Include="Scripts\typings\jquery\jquery.d.ts" />
     <TypeScriptCompile Include="Scripts\webApi.ts" />
+    <Content Include="Scripts\typings\knockout.mapping\knockout.mapping.d.ts" />
+    <Content Include="Scripts\typings\knockout\knockout.d.ts" />
+    <Content Include="Scripts\typings\moment\moment.d.ts" />
     <Content Include="Scripts\webApi.js">
       <DependentUpon>webApi.ts</DependentUpon>
     </Content>
@@ -126,7 +133,6 @@
     <None Include="Scripts\jquery-1.9.1.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
-    <Content Include="Scripts\default.js" />
     <Content Include="Scripts\live.js" />
     <Content Include="Scripts\jquery-1.9.1.js" />
     <Content Include="Scripts\jquery-1.9.1.min.js" />
