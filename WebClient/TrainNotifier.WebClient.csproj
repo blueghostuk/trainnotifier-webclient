@@ -87,6 +87,11 @@
     <Content Include="bin\System.Web.WebPages.Deployment.dll" />
     <Content Include="bin\System.Web.WebPages.dll" />
     <Content Include="bin\System.Web.WebPages.Razor.dll" />
+    <Content Include="Content\app\index.css" />
+    <Content Include="Content\app\live.css" />
+    <Content Include="Content\app\ppm.css" />
+    <Content Include="Content\app\search-schedule.css" />
+    <Content Include="Content\app\train.css" />
     <Content Include="Content\bootstrap-responsive.css" />
     <Content Include="Content\bootstrap-responsive.min.css" />
     <Content Include="Content\bootstrap.css" />
@@ -100,7 +105,7 @@
     <Content Include="Content\images\ios\apple-touch-startup-image-640x1096.png" />
     <Content Include="Content\moment-datepicker\datepicker.css" />
     <Content Include="Content\spacelab.css" />
-    <Content Include="Content\style.css" />
+    <Content Include="Content\app\style.css" />
     <Content Include="Global.asax" />
     <Content Include="live.cshtml" />
     <Content Include="packages.config" />

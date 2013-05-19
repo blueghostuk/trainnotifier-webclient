@@ -2,94 +2,11 @@
     Layout = "~/_Layout.cshtml";
 }
 @using System.Web.Optimization;
-
 @section CustomCss{
-    <style type="text/css">
-        body {
-            padding-top: 60px;
-            padding-bottom: 40px;
-        }
-
-        .sidebar-nav {
-            padding: 9px 0;
-        }
-
-        span.add-on {
-            height: 22px !important;
-            line-height: 22px !important;
-        }
-
-        .input-prepend input {
-            height: 32px !important;
-            width: 265px !important;
-        }
-
-        h5 {
-            font-weight: bold !important;
-        }
-        button.btn-top {
-            margin-top: -10px !important;
-        }
-
-        table {
-            margin-top: 5px;
-        }
-        /* off route link */
-        tr.info a {
-            color: white;
-        }
-
-        div#title {
-            margin-top: 5px;
-            font-size: large;
-        }
-
-            div#title span.xxl {
-                font-weight: bold;
-                font-size: xx-large;
-                margin-left: 5px;
-            }
-
-            div#title span.xl {
-                font-weight: bold;
-                font-size: x-large;
-            }
-
-        @@media (max-width: 480px) {
-            body {
-                font-size: 14px;
-            }
-
-            .navbar .brand {
-                font-size: 16px;
-            }
-
-            div#title {
-                margin-top: 5px;
-                font-size: 14px;
-            }
-
-                div#title span.xxl {
-                    font-weight: bold;
-                    font-size: 14px;
-                    margin-left: 5px;
-                }
-
-                div#title span.xl {
-                    font-weight: bold;
-                    font-size: 14px;
-                }
-        }
-    </style>
+    @Styles.Render("~/bundles/css/train")
 }
 @section FooterJs{
-    <script type="text/javascript">
-        var server = "@System.Configuration.ConfigurationManager.AppSettings["server"]";
-        var apiPort = "@System.Configuration.ConfigurationManager.AppSettings["apiPort"]";
-        var wsPort = "@System.Configuration.ConfigurationManager.AppSettings["wsPort"]";
-    </script>
-
-    @Scripts.Render("~/bundles/train")
+    @Scripts.Render("~/bundles/js/train")
 }
 @section TopMenu{
     <li><a href="~/">Home</a></li>
@@ -107,9 +24,9 @@
         <div class="well sidebar-nav">
             <ul class="nav nav-list" id="commandOptions">
                 <li class="nav-header">Commands</li>
-                <li id="get"><a href="#get/" onclick="setCommand('get/');"><strong>Get Train:</strong><br />
+                <li id="get"><a href="#get/" onclick="thisPage.setCommand('get/');"><strong>Get Train:</strong><br />
                     &nbsp;&nbsp;get/[train uid]/[date:YYYY-MM-DD]</a></li>
-                <li id="sub"><a href="#sub/" onclick="setCommand('sub/');"><strong>Subscribe to Train:</strong><br />
+                <li id="sub"><a href="#sub/" onclick="thisPage.setCommand('sub/');"><strong>Subscribe to Train:</strong><br />
                     &nbsp;&nbsp;sub/[train uid]/[date:YYYY-MM-DD]</a></li>
             </ul>
         </div>
@@ -136,7 +53,7 @@
         </div>
         <div class="row" id="title" data-bind="visible: Id">
             <span data-bind="text: Id" class="xxl"></span>
-            <span data-bind="text: From" class="stationName xl"></span><span data-bind="visible: To"> to </span>
+            <span data-bind="text: From" class="stationName xl"></span><span data-bind="visible: To">&nbsp;to&nbsp;</span>
             <span data-bind="text: To" class="stationName xl"></span>
             <span data-bind="text: Start"></span><span data-bind="visible: End"> - </span>
             <span data-bind="text: End"></span>

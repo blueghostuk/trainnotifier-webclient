@@ -3,60 +3,10 @@
 }
 @using System.Web.Optimization;
 @section CustomCss{
-    <style type="text/css">
-        body {
-            padding-top: 60px;
-            padding-bottom: 40px;
-        }
-
-        .sidebar-nav {
-            padding: 9px 0;
-        }
-
-        span.add-on {
-            height: 22px !important;
-            line-height: 22px !important;
-        }
-
-        .input-prepend input {
-            height: 32px !important;
-            width: 265px !important;
-        }
-        tr.info > td > a {
-            color: white !important;
-        }
-        tr.error > td > a {
-            color: white !important;
-        }
-
-        div.pagination {
-            margin-top: 0px;
-            margin-bottom: 0px;
-        }
-        
-        div#title {
-            font-size: large; 
-            text-align: center;
-        }
-
-        @@media (max-width: 480px) {
-            body {
-                font-size: 14px;
-            }
-
-            .navbar .brand {
-                font-size: 16px;
-            }
-
-            div#title {
-                font-size: medium; 
-                text-align: center;
-            }
-        }
-    </style>
+    @Styles.Render("~/bundles/css/search-schedule")
 }
 @section FooterJs{
-    @Scripts.Render("~/bundles/search-schedule")
+    @Scripts.Render("~/bundles/js/search-schedule")
 }
 @section TopMenu{
     <li><a href="~/">Home</a></li>
@@ -70,22 +20,22 @@
         <div class="well sidebar-nav">
             <ul class="nav nav-list" id="commandOptions">
                 <li class="nav-header">By CRS Code:</li>
-                <li id="from-crs"><a href="#from/" onclick="setCommand('from/');"><strong>Trains Stating From:</strong><br />
+                <li id="from-crs"><a href="#from/" onclick="thisPage.setCommand('from/');"><strong>Trains Stating From:</strong><br />
                     &nbsp;&nbsp;from/[CRS]</a></li>
-                <li id="at-crs"><a href="#at/" onclick="setCommand('at/');"><strong>Trains Calling At:</strong><br />
+                <li id="at-crs"><a href="#at/" onclick="thisPage.setCommand('at/');"><strong>Trains Calling At:</strong><br />
                     &nbsp;&nbsp;at/[CRS]</a></li>
-                <li id="to-crs"><a href="#to/" onclick="setCommand('to/');"><strong>Trains Terminating At:</strong><br />
+                <li id="to-crs"><a href="#to/" onclick="thisPage.setCommand('to/');"><strong>Trains Terminating At:</strong><br />
                     &nbsp;&nbsp;to/[CRS]</a></li>
-                <li id="from-to-crs"><a href="#from/" onclick="setCommand('from/');"><strong>Trains going from [A] to [B]:</strong><br />
+                <li id="from-to-crs"><a href="#from/" onclick="thisPage.setCommand('from/');"><strong>Trains going from [A] to [B]:</strong><br />
                     &nbsp;&nbsp;from/[CRS-A]/to/[CRS-B]</a></li>
                 <li class="nav-header">By Stanox Code:</li>
-                <li id="from"><a href="#from/" onclick="setCommand('from/');"><strong>Trains Stating From:</strong><br />
+                <li id="from"><a href="#from/" onclick="thisPage.setCommand('from/');"><strong>Trains Stating From:</strong><br />
                     &nbsp;&nbsp;from/[stanox]</a></li>
-                <li id="at"><a href="#at/" onclick="setCommand('at/');"><strong>Trains Calling At:</strong><br />
+                <li id="at"><a href="#at/" onclick="thisPage.setCommand('at/');"><strong>Trains Calling At:</strong><br />
                     &nbsp;&nbsp;at/[stanox]</a></li>
-                <li id="to"><a href="#to:" onclick="setCommand('to/');"><strong>Trains Terminating At:</strong><br />
+                <li id="to"><a href="#to:" onclick="thisPage.setCommand('to/');"><strong>Trains Terminating At:</strong><br />
                     &nbsp;&nbsp;to/[stanox]</a></li>
-                <li id="from-to"><a href="#from/" onclick="setCommand('from');"><strong>Trains going from [A] to [B]:</strong><br />
+                <li id="from-to"><a href="#from/" onclick="thisPage.setCommand('from');"><strong>Trains going from [A] to [B]:</strong><br />
                     &nbsp;&nbsp;from/[stanox-A]/to/[stanox-B]</a></li>
             </ul>
         </div>
@@ -93,9 +43,9 @@
             <ul class="nav nav-list">
                 <li class="nav-header" data-bind="text: toDisplay()">Station Details</li>
                 <li><strong>CRS:</strong><span data-bind="text: locationCRS"></span></li>
-                <li><a data-bind="attr: { href :'search/from/' + locationStanox(), onclick: 'setHash(\'from/' + locationStanox() + '\');' }" title="View Trains Starting from this station">Trains Starting From</a></li>
-                <li><a data-bind="attr: { href :'search/at/' + locationStanox(), onclick: 'setHash(\'at/' + locationStanox() + '\');' }" title="View Trains Calling at this station">Trains Calling At</a></li>
-                <li><a data-bind="attr: { href :'search/to/' + locationStanox(), onclick: 'setHash(\'to/' + locationStanox() + '\');' }" title="View Trains Terminating at this station">Trains Terminating At</a></li>
+                <li><a data-bind="attr: { href: 'search/from/' + locationStanox(), onclick: 'setHash(\'from/' + locationStanox() + '\');' }" title="View Trains Starting from this station">Trains Starting From</a></li>
+                <li><a data-bind="attr: { href: 'search/at/' + locationStanox(), onclick: 'setHash(\'at/' + locationStanox() + '\');' }" title="View Trains Calling at this station">Trains Calling At</a></li>
+                <li><a data-bind="attr: { href: 'search/to/' + locationStanox(), onclick: 'setHash(\'to/' + locationStanox() + '\');' }" title="View Trains Terminating at this station">Trains Terminating At</a></li>
             </ul>
         </div>
         <div class="well sidebar-nav">
@@ -105,8 +55,10 @@
                 Empty rows are activations not matched to a schedule.<br />
                 <br />
                 Use
-                <br /><i>/YYYY-MM-DD/HH-mm/HH-mm</i>
-                <br />at the end of a command to specify a start date/time and end time manually
+                <br />
+                <i>/YYYY-MM-DD/HH-mm/HH-mm</i>
+                <br />
+                at the end of a command to specify a start date/time and end time manually
             </p>
         </div>
     </div>
@@ -121,15 +73,18 @@
         <div class="progress progress-striped active hide">
             <div class="bar" style="width: 100%"></div>
         </div>
-        <div class="row pagination" id="title" data-bind="visible: Text">
-            <ul>
-                <li style="width: 5em;"><a href="#" onclick="previousDate(); return false;" id="neg-2hrs">&lt; 2 hrs</a></li>
-                <li class="stationName" style="font-weight: bold; text-align: center;"><span data-bind="text: Text"></span></li>
-                <li style="width: 5em;"><a href="#" onclick="nextDate(); return false;"id="plus-2hrs">2 hrs &gt;</a></li>
-            </ul>
+        <div class="row pagination" id="title" data-bind="visible: From">
+            <span data-bind="text: From" class="stationName xl"></span><span data-bind="visible: To">&nbsp;to&nbsp;</span>
+            <span data-bind="text: To" class="stationName xl"></span>
+            <br />
+            <span data-bind="text: DateRange"></span>
             <hr style="margin: 5px 0px;" />
         </div>
         <div class="row">
+            <ul class="pager">
+                <li><a href="#" onclick="previousDate(); return false;" class="neg-2hrs">&lt; 2 hrs</a></li>
+                <li><a href="#" onclick="nextDate(); return false;" class="plus-2hrs">2 hrs &gt;</a></li>
+            </ul>
             <table class="table table-hover table-bordered table-header-colour" id="origin-search-results" data-bind="visible: Trains().length > 0">
                 <thead class="header">
                     <tr>
@@ -233,7 +188,7 @@
                     </tr>
                 </thead>
                 <tbody data-bind="foreach: Trains">
-                    <tr data-bind="css: { pass: Pass, cancel: Cancellation, info: ChangeOfOrigin, reinstatement: Reinstatement  }, attr: { title: Tooltip }">
+                    <tr data-bind="css: { pass: Pass, cancel: Cancellation, info: ChangeOfOrigin, reinstatement: Reinstatement }, attr: { title: Tooltip }">
                         <td><a data-bind="text: HeadCode, attr: { href: 'trains/' + TrainUid() + '/' + SchedOriginDeparture() }"></a></td>
                         <td data-bind="text: AtocCode.Code, attr: { title: AtocCode.Name }"></td>
                         <td class="stationName">
@@ -265,6 +220,10 @@
                     </tr>
                 </tbody>
             </table>
+            <ul class="pager">
+                <li><a href="#" onclick="previousDate(); return false;" class="neg-2hrs">&lt; 2 hrs</a></li>
+                <li><a href="#" onclick="nextDate(); return false;" class="plus-2hrs">2 hrs &gt;</a></li>
+            </ul>
         </div>
     </div>
     <!--/span10-->

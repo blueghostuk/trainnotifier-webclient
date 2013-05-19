@@ -67,6 +67,10 @@ function PPMRecord(stats) {
 function TitleViewModel() {
     var self = this;
 
+    self.From = ko.observable();
+    self.To = ko.observable();
+    self.DateRange = ko.observable();
+
     self.Text = ko.observable();
 
     self.setTitle = function (title) {

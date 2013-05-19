@@ -3,61 +3,10 @@
 }
 @using System.Web.Optimization;
 @section CustomCss{
-    <style type="text/css">
-        span.add-on {
-            width: 4em !important;
-            text-align: left !important;
-        }
-
-            span.add-on > i {
-                float: right !important;
-            }
-
-        div.input-prepend > input {
-            width: 350px !important;
-        }
-
-        div.input-prepend.input-append > input {
-            width: 280px !important;
-        }
-
-        button {
-            width: 100px;
-        }
-
-        @@media (max-width: 979px) {
-            .hero-unit h1 {
-                font-size: 30px;
-            }
-
-            div.input-prepend > input {
-                width: 175px !important;
-            }
-
-            .hero-unit {
-                padding-left: 20px !important;
-            }
-        }
-
-        @@media (max-width: 320px) {
-            .hero-unit {
-                padding-left: 0px !important;
-                padding-right: 0px !important;
-                border-radius: 0px;
-            }
-
-            div.input-prepend > input {
-                width: 230px !important;
-            }
-
-            div.input-prepend.input-append > input {
-                width: 160px !important;
-            }
-        }
-    </style>
+    @Styles.Render("~/bundles/css/index")
 }
 @section FooterJs{
-    @Scripts.Render("~/bundles/index")
+    @Scripts.Render("~/bundles/js/index")
 }
 @section TopMenu{
     <li class="active"><a>Home</a></li>

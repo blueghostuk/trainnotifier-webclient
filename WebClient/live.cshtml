@@ -3,29 +3,10 @@
 }
 @using System.Web.Optimization;
 @section CustomCss{
-    <style type="text/css">
-        body {
-            padding-top: 60px;
-            padding-bottom: 40px;
-        }
-
-        .sidebar-nav {
-            padding: 9px 0;
-        }
-
-        tr.info > td > a {
-            color: white !important;
-        }
-    </style>
+    @Styles.Render("~/bundles/css/live")
 }
 @section FooterJs{
-    <script type="text/javascript">
-        var server = "@System.Configuration.ConfigurationManager.AppSettings["server"]";
-        var apiPort = "@System.Configuration.ConfigurationManager.AppSettings["apiPort"]";
-        var wsPort = "@System.Configuration.ConfigurationManager.AppSettings["wsPort"]";
-    </script>
-
-    @Scripts.Render("~/bundles/live")
+    @Scripts.Render("~/bundles/js/live")
 }
 @section TopMenu{
     <li><a href="~/">Home</a></li>
@@ -62,6 +43,6 @@
             </tbody>
         </table>
     </div>
-<!--/span9-->
+    <!--/span12-->
 </div>
 <!--/row-fluid-->

@@ -3,35 +3,10 @@
 }
 @using System.Web.Optimization;
 @section CustomCss{
-    <style type="text/css">
-        body {
-            padding-top: 60px;
-            padding-bottom: 40px;
-        }
-
-        .sidebar-nav {
-            padding: 9px 0;
-        }
-
-        tr.info > td {
-            color: black !important;
-        }
-
-        .table tbody tr.info > td {
-            background-color: #efefef;
-        }
-        .table tbody tr.info:hover > td {
-            background-color: #efefef;
-        }
-    </style>
+    @Styles.Render("~/bundles/css/ppm")
 }
 @section FooterJs{
-    <script type="text/javascript">
-        var server = "@System.Configuration.ConfigurationManager.AppSettings["server"]";
-        var apiPort = "@System.Configuration.ConfigurationManager.AppSettings["apiPort"]";
-    </script>
-
-    @Scripts.Render("~/bundles/ppm")
+    @Scripts.Render("~/bundles/js/ppm")
 }
 @section TopMenu{
     <li><a href="~/">Home</a></li>

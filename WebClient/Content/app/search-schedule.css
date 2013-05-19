@@ -1,0 +1,69 @@
+﻿body {
+    padding-top: 60px;
+    padding-bottom: 40px;
+}
+
+.sidebar-nav {
+    padding: 9px 0;
+}
+
+span.add-on {
+    height: 22px !important;
+    line-height: 22px !important;
+}
+
+.input-prepend input {
+    height: 32px !important;
+    width: 265px !important;
+}
+
+tr.info > td > a {
+    color: white !important;
+}
+
+tr.error > td > a {
+    color: white !important;
+}
+
+div.pagination {
+    margin-top: 0px;
+    margin-bottom: 0px;
+}
+
+ul.pager {
+    margin: 0px 0px 5px !important;
+}
+
+    ul.pager li:first-child {
+        float: left;
+    }
+
+    ul.pager li:last-child {
+        float: right;
+    }
+
+div#title {
+    margin-top: 5px;
+    font-size: large;
+}
+
+    div#title span.xl {
+        font-weight: bold;
+        font-size: x-large;
+    }
+
+@media (max-width: 480px) {
+    .navbar .brand {
+        font-size: 16px;
+    }
+
+    div#title {
+        margin-top: 5px;
+        font-size: 14px;
+    }
+
+        div#title span.xl {
+            font-weight: bold;
+            font-size: 14px;
+        }
+}

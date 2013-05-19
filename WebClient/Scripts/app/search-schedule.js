@@ -465,15 +465,27 @@ function clear() {
 function setTitle(start) {
     var title = start;
     if (currentStanox) {
-        title += currentStanox.Description.toLowerCase();
+        var from = currentStanox.Description.toLowerCase();
+        title += from;
+        titleModel.From(from);
+    } else {
+        titleModel.From(null);
     }
     if (currentToStanox) {
+        var to = currentToStanox.Description.toLowerCase();
         if (currentStanox) {
             title += " to ";
+            titleModel.To(to);
+        } else {
+            titleModel.From(to);
+            titleModel.To(null);
         }
         title += currentToStanox.Description.toLowerCase();
     }
-    title += " on " + currentStartDate.format(titleFormat) + " " + currentStartDate.format(timeTitleFormat) + " - " + currentEndDate.format(timeTitleFormat);
+    title += " on ";
+    var date = currentStartDate.format(titleFormat) + " " + currentStartDate.format(timeTitleFormat) + " - " + currentEndDate.format(timeTitleFormat);
+    title += date;
+    titleModel.DateRange(date);
     titleModel.setTitle(title);
 }
 
@@ -514,8 +526,8 @@ function setTimeLinks() {
             break;
     }
 
-    $("#neg-2hrs").attr("href", "search/" + url + minusStartDate.format("/YYYY/MM/DD/HH-mm") + minusEndDate.format("/HH-mm"));
-    $("#plus-2hrs").attr("href", "search/" + url + plusStartDate.format("/YYYY/MM/DD/HH-mm") + plusEndDate.format("/HH-mm"));
+    $(".neg-2hrs").attr("href", "search/" + url + minusStartDate.format("/YYYY/MM/DD/HH-mm") + minusEndDate.format("/HH-mm"));
+    $(".plus-2hrs").attr("href", "search/" + url + plusStartDate.format("/YYYY/MM/DD/HH-mm") + plusEndDate.format("/HH-mm"));
 
     setHash(url, moment(currentStartDate).format("YYYY-MM-DD/HH-mm") + moment(currentEndDate).format("/HH-mm"), true);
 }

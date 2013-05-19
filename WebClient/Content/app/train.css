@@ -1,0 +1,83 @@
+﻿body {
+    padding-top: 60px;
+    padding-bottom: 40px;
+}
+
+.sidebar-nav {
+    padding: 9px 0;
+}
+
+span.add-on {
+    height: 22px !important;
+    line-height: 22px !important;
+}
+
+.input-prepend input {
+    height: 32px !important;
+    width: 265px !important;
+}
+
+h5 {
+    font-weight: bold !important;
+}
+
+button.btn-top {
+    margin-top: -10px !important;
+}
+
+table {
+    margin-top: 5px;
+}
+/* off route link */
+tr.info a {
+    color: white;
+}
+
+div#title {
+    margin-top: 5px;
+    font-size: large;
+}
+
+    div#title span.xxl {
+        font-weight: bold;
+        font-size: xx-large;
+        margin-left: 5px;
+    }
+
+    div#title span.xl {
+        font-weight: bold;
+        font-size: x-large;
+    }
+
+@media (max-width: 480px) {
+    body {
+        font-size: 14px;
+    }
+
+    .navbar .brand {
+        font-size: 16px;
+    }
+
+    div#title {
+        margin-top: 5px;
+        font-size: 14px;
+    }
+
+        div#title span.xxl {
+            font-weight: bold;
+            font-size: 14px;
+            margin-left: 5px;
+        }
+
+        div#title span.xl {
+            font-weight: bold;
+            font-size: 14px;
+        }
+}
+
+@media (max-width: 979px) {
+    div#title span:first-child {
+        margin-left: 0px !important;
+        display: block !important;
+    }
+}

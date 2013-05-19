@@ -30,26 +30,36 @@ namespace TrainNotifier.WebClient
                 "~/Scripts/app/websockets.js",
                 "~/Scripts/app/ViewModels.js"));
 
-            bundles.Add(new ScriptBundle("~/bundles/index").Include(
+            bundles.Add(new ScriptBundle("~/bundles/js/index").Include(
                 "~/Scripts/app/index.js"));
+            bundles.Add(new StyleBundle("~/bundles/css/index").Include(
+                "~/Content/app/index.css"));
 
-            bundles.Add(new ScriptBundle("~/bundles/live").Include(
+            bundles.Add(new ScriptBundle("~/bundles/js/live").Include(
                 "~/Scripts/app/live.js"));
+            bundles.Add(new StyleBundle("~/bundles/css/live").Include(
+                "~/Content/app/live.css"));
 
-            bundles.Add(new ScriptBundle("~/bundles/ppm").Include(
+            bundles.Add(new ScriptBundle("~/bundles/js/ppm").Include(
                 "~/Scripts/app/ppm.js"));
+            bundles.Add(new StyleBundle("~/bundles/css/ppm").Include(
+                "~/Content/app/ppm.css"));
 
-            bundles.Add(new ScriptBundle("~/bundles/train").Include(
+            bundles.Add(new ScriptBundle("~/bundles/js/train").Include(
                 "~/Scripts/app/train.js"));
+            bundles.Add(new StyleBundle("~/bundles/css/train").Include(
+                "~/Content/app/train.css"));
 
-            bundles.Add(new ScriptBundle("~/bundles/search-schedule").Include(
+            bundles.Add(new ScriptBundle("~/bundles/js/search-schedule").Include(
                 "~/Scripts/app/search-schedule.js"));
+            bundles.Add(new StyleBundle("~/bundles/css/search-schedule").Include(
+                "~/Content/app/search-schedule.css"));
 
-            bundles.Add(new StyleBundle("~/Content/css").Include(
+            bundles.Add(new StyleBundle("~/bundles/css/global").Include(
                 "~/Content/spacelab.css",
                 "~/Content/bootstrap-responsive.css",
                 "~/Content/moment-datepicker/datepicker.css",
-                "~/Content/style.css"));
+                "~/Content/app/style.css"));
         }
     }
 }
