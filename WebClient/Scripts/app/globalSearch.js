@@ -1,29 +1,26 @@
-var thisPage;
-var serverSettings;
-var webApi;
 $(function () {
-    webApi = new TrainNotifier.WebApi(serverSettings);
+    TrainNotifier.Common.webApi = new TrainNotifier.WebApi();
     $("#global-search-box").keyup(function (e) {
         if(e.keyCode == 13) {
             parseGlobalSearchCommand($(this).val());
         }
     });
-    webApi.getStations().done(function (stations) {
+    TrainNotifier.Common.webApi.getStations().done(function (stations) {
         var commands = [];
         commands.push('get/');
         commands.push('sub/');
         commands.push('from/');
-        for (var i in stations) {
+        for(var i in stations) {
             commands.push('from/' + stations[i].Name);
             commands.push('from/' + stations[i].CRS);
         }
         commands.push('at/');
-        for (var i in stations) {
+        for(var i in stations) {
             commands.push('at/' + stations[i].Name);
             commands.push('at/' + stations[i].CRS);
         }
         commands.push('to/');
-        for (var i in stations) {
+        for(var i in stations) {
             commands.push('to/' + stations[i].Name);
             commands.push('to/' + stations[i].CRS);
         }
@@ -33,9 +30,9 @@ $(function () {
     });
 });
 function parseGlobalSearchCommand(command) {
-    if(thisPage) {
-        thisPage.setCommand(command);
-        if(thisPage.parseCommand()) {
+    if(TrainNotifier.Common.page) {
+        TrainNotifier.Common.page.setCommand(command);
+        if(TrainNotifier.Common.page.parseCommand()) {
             return;
         }
     }

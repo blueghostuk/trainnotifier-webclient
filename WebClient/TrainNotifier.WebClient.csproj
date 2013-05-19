@@ -123,11 +123,36 @@
     <Content Include="Scripts\app\index.js">
       <DependentUpon>index.ts</DependentUpon>
     </Content>
+    <TypeScriptCompile Include="Scripts\app\live.ts" />
+    <Content Include="Scripts\app\live.js">
+      <DependentUpon>live.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="Scripts\app\websockets.ts" />
+    <TypeScriptCompile Include="Scripts\app\ViewModels.ts" />
+    <TypeScriptCompile Include="Scripts\app\train.ts" />
+    <TypeScriptCompile Include="Scripts\app\ppm.ts" />
+    <Content Include="Scripts\app\ppm.js">
+      <DependentUpon>ppm.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="Scripts\app\search-schedule.ts" />
+    <Content Include="Scripts\app\search-schedule.js">
+      <DependentUpon>search-schedule.ts</DependentUpon>
+    </Content>
+    <Content Include="Scripts\app\train.js">
+      <DependentUpon>train.ts</DependentUpon>
+    </Content>
+    <Content Include="Scripts\app\ViewModels.js">
+      <DependentUpon>ViewModels.ts</DependentUpon>
+    </Content>
+    <Content Include="Scripts\app\websockets.js">
+      <DependentUpon>websockets.ts</DependentUpon>
+    </Content>
     <Content Include="Scripts\typings\bootstrap\bootstrap.d.ts" />
     <Content Include="Scripts\typings\jquery\jquery.d.ts" />
     <TypeScriptCompile Include="Scripts\app\webApi.ts" />
     <Content Include="Scripts\typings\knockout.mapping\knockout.mapping.d.ts" />
     <Content Include="Scripts\typings\knockout\knockout.d.ts" />
+    <Content Include="Scripts\typings\leaflet\leaflet.d.ts" />
     <Content Include="Scripts\typings\moment\moment.d.ts" />
     <Content Include="Scripts\app\webApi.js">
       <DependentUpon>webApi.ts</DependentUpon>
@@ -138,7 +163,6 @@
     <None Include="Scripts\jquery-1.9.1.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
-    <Content Include="Scripts\app\live.js" />
     <Content Include="Scripts\jquery-1.9.1.js" />
     <Content Include="Scripts\jquery-1.9.1.min.js" />
     <Content Include="Scripts\jquery.ba-hashchange.js" />
@@ -157,15 +181,10 @@
     <Content Include="Scripts\moment-datepicker.min.js" />
     <Content Include="Scripts\moment.js" />
     <Content Include="Scripts\moment.min.js" />
-    <Content Include="Scripts\app\ppm.js" />
-    <Content Include="Scripts\app\search-schedule.js" />
-    <Content Include="Scripts\app\train.js" />
-    <Content Include="Scripts\app\ViewModels.js" />
     <Content Include="train.cshtml" />
     <None Include="Properties\PublishProfiles\Azure - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\Azure - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\TNWEBSRV01.pubxml" />
-    <Content Include="Scripts\app\websockets.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>

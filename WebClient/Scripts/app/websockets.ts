@@ -1,28 +1,33 @@
-var TrainNotifier;
-(function (TrainNotifier) {
-    var WebSockets = (function () {
-        function WebSockets() { }
-        WebSockets.prototype.connect = function () {
+/// <reference path="global.ts" />
+/// <reference path="webApi.ts" />
+
+module TrainNotifier{
+    export class WebSockets{
+        ws: WebSocket;
+
+        connect() {
             $(".btn-connect").attr("disabled", true);
             $(".btn-disconnect").attr("disabled", false);
+
             this.ws = new WebSocket("ws://" + TrainNotifier.Common.serverSettings.server + ":" + TrainNotifier.Common.serverSettings.wsPort);
             this.ws.onopen = function () {
-                if(TrainNotifier.Common.page.setStatus) {
+                if (TrainNotifier.Common.page.setStatus) {
                     TrainNotifier.Common.page.setStatus("Connected");
                 }
+
                 $("#status").removeClass("btn-warning");
                 $("#status").removeClass("btn-info");
                 $("#status").addClass("btn-success");
                 $(".btn-connect").attr("disabled", true);
-                try  {
-                    if(TrainNotifier.Common.page.wsOpenCommand) {
+
+                try {
+                    if (TrainNotifier.Common.page.wsOpenCommand) {
                         TrainNotifier.Common.page.wsOpenCommand();
                     }
-                } catch (err) {
-                }
+                } catch (err) { }
             };
             this.ws.onclose = function () {
-                if(TrainNotifier.Common.page.setStatus) {
+                if (TrainNotifier.Common.page.setStatus) {
                     TrainNotifier.Common.page.setStatus("Disconnected");
                 }
                 $("#status").removeClass("btn-success");
@@ -32,18 +37,18 @@ var TrainNotifier;
                 $(".btn-disconnect").attr("disabled", true);
             };
         };
-        WebSockets.prototype.disconnect = function () {
+
+        disconnect() {
             $(".btn-connect").attr("disabled", false);
             $(".btn-disconnect").attr("disabled", true);
+
             this.ws.close();
-            if(TrainNotifier.Common.page.setStatus) {
+            if (TrainNotifier.Common.page.setStatus) {
                 TrainNotifier.Common.page.setStatus("Closed");
             }
             $("#status").removeClass("btn-success");
             $("#status").removeClass("btn-info");
             $("#status").addClass("btn-warning");
         };
-        return WebSockets;
-    })();
-    TrainNotifier.WebSockets = WebSockets;    
-})(TrainNotifier || (TrainNotifier = {}));
+    }
+}

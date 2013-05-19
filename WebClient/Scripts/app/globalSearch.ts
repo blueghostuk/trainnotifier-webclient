@@ -1,20 +1,11 @@
+/// <reference path="global.ts" />
+/// <reference path="../typings/bootstrap/bootstrap.d.ts" />
+/// <reference path="../typings/jquery/jquery.d.ts" />
 /// <reference path="webApi.ts" />
-/// <reference path="typings/bootstrap/bootstrap.d.ts" />
-/// <reference path="typings/jquery/jquery.d.ts" />
-
-interface Page{
-    setCommand(command: string);
-    parseCommand(): bool;
-    getCommand(): string;
-}
-
-var thisPage: Page;
-var serverSettings: IServerSettings;
-var webApi: IWebApi;
 
 $(function () {
 
-    webApi = new TrainNotifier.WebApi(serverSettings);
+    TrainNotifier.Common.webApi = new TrainNotifier.WebApi();
 
     $("#global-search-box").keyup(function (e) {
         if (e.keyCode == 13) {
@@ -22,7 +13,7 @@ $(function () {
         }
     });
 
-    webApi.getStations()
+    TrainNotifier.Common.webApi.getStations()
         .done(function (stations) {
             var commands = [];
             commands.push('get/');
@@ -51,9 +42,9 @@ $(function () {
 
 function parseGlobalSearchCommand(command: string) {
     // see if have a page object that can handle commands already
-    if (thisPage) {
-        thisPage.setCommand(command);
-        if (thisPage.parseCommand()) {
+    if (TrainNotifier.Common.page) {
+        TrainNotifier.Common.page.setCommand(command);
+        if (TrainNotifier.Common.page.parseCommand()) {
             return;
         }
     }

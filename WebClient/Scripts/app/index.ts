@@ -1,19 +1,21 @@
-/// <reference path="typings/moment/moment.d.ts" />
-/// <reference path="typings/bootstrap/bootstrap.d.ts" />
-/// <reference path="moment-datepicker.d.ts" />
+/// <reference path="global.ts" />
+/// <reference path="../moment-datepicker.d.ts" />
+/// <reference path="../typings/moment/moment.d.ts" />
+/// <reference path="../typings/bootstrap/bootstrap.d.ts" />
+/// <reference path="../typings/knockout/knockout.d.ts" />
+/// <reference path="../typings/jquery/jquery.d.ts" />
 /// <reference path="webApi.ts" />
-/// <reference path="typings/knockout/knockout.d.ts" />
-/// <reference path="typings/jquery/jquery.d.ts" />
 
 var fromLocal = ko.observableArray();
 var toLocal = ko.observableArray();
 var atLocal = ko.observableArray();
 
-var serverSettings: IServerSettings;
 var webApi: IWebApi;
 
 $(function () {
-    var webApi = new TrainNotifier.WebApi(serverSettings);
+    webApi = new TrainNotifier.WebApi();
+    TrainNotifier.Common.webApi = webApi;
+
     $('.datepicker').datepicker({
         format: 'DD-MM-YYYY',
         autoHide: true
@@ -72,20 +74,20 @@ function showLocation() {
     if (dateVal && dateVal.length > 0) {
         dateVal = getDate(dateVal);
         if (dateVal && dateVal.isValid()) {
-            date = dateVal.format("/YYYY/MM/DD");
+            date = "/" + dateVal.format(TrainNotifier.DateTimeFormats.dateUrlFormat);
         }
     } else {
-        date = moment().format("/YYYY/MM/DD");
+        date = "/" + moment().format(TrainNotifier.DateTimeFormats.dateUrlFormat);
     }
     var time = "";
     var timeVal = $("#time-picker").val();
     if (timeVal && timeVal.length > 0) {
         timeVal = getTime(timeVal);
         if (timeVal && timeVal.isValid()) {
-            time = timeVal.format("/HH-mm")
+            time = "/" + timeVal.format(TrainNotifier.DateTimeFormats.timeUrlFormat)
         }
     } else {
-        time = moment().format("/HH-mm");
+        time = "/" + moment().format(TrainNotifier.DateTimeFormats.timeUrlFormat);
     }
 
     if (fromCrs) {

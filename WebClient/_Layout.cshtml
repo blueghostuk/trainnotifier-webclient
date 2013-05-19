@@ -41,7 +41,7 @@
         <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.5.1/leaflet.ie.css" />
     <![endif]-->
     <script src="http://cdn.leafletjs.com/leaflet-0.5.1/leaflet.js"></script>
-    @Styles.Render("~/bundles/css/global")
+    @Styles.Render("~/Content/css")
     @RenderSection("CustomCss", false)
     @RenderSection("HeaderJs", false)
 </head>
@@ -58,7 +58,7 @@
                 <a class="brand" href="#">@System.Configuration.ConfigurationManager.AppSettings["brandingTitle"]</a>
                 <div class="nav-collapse collapse">
                     <form class="navbar-search pull-left top-search">
-                        <input type="search" id="global-search-box" class="span3" placeholder="Enter Command">
+                        <input type="search" id="global-search-box" autocomplete="off" class="span3" placeholder="Enter Command">
                         @RenderSection("TopMenuAdditional", false)
                     </form>
                     <ul class="nav">
@@ -109,17 +109,15 @@
     @Scripts.Render("~/bundles/moment")
     @Scripts.Render("~/bundles/app")    
     <script type="text/javascript">
-        serverSettings = {
+        TrainNotifier.Common.serverSettings = {
             server: "@System.Configuration.ConfigurationManager.AppSettings["server"]",
             apiPort: "@System.Configuration.ConfigurationManager.AppSettings["apiPort"]",
             wsPort: "@System.Configuration.ConfigurationManager.AppSettings["wsPort"]"
         };
 
-        // old config
-        
+        // old config        
         var server = "@System.Configuration.ConfigurationManager.AppSettings["server"]";
         var apiPort = "@System.Configuration.ConfigurationManager.AppSettings["apiPort"]";
-        var wsPort = "@System.Configuration.ConfigurationManager.AppSettings["wsPort"]";
     </script>
     @RenderSection("FooterJs", required: false)
     @{
