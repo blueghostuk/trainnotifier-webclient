@@ -3,7 +3,7 @@
 
 module TrainNotifier{
     export class WebSockets{
-        ws: WebSocket;
+        private ws: WebSocket;
 
         connect() {
             $(".btn-connect").attr("disabled", true);
@@ -49,6 +49,18 @@ module TrainNotifier{
             $("#status").removeClass("btn-success");
             $("#status").removeClass("btn-info");
             $("#status").addClass("btn-warning");
+        };
+
+        onMessageHandler(handler : any) {
+            this.ws.onmessage = handler;
+        };
+
+        send(message: any) {
+            this.ws.send(message);
+        };
+
+        get state() {
+            return this.ws !== null ? this.ws.readyState : WebSocket.CLOSED;
         };
     }
 }

@@ -43,6 +43,19 @@ var TrainNotifier;
             $("#status").removeClass("btn-info");
             $("#status").addClass("btn-warning");
         };
+        WebSockets.prototype.onMessageHandler = function (handler) {
+            this.ws.onmessage = handler;
+        };
+        WebSockets.prototype.send = function (message) {
+            this.ws.send(message);
+        };
+        Object.defineProperty(WebSockets.prototype, "state", {
+            get: function () {
+                return this.ws !== null ? this.ws.readyState : WebSocket.CLOSED;
+            },
+            enumerable: true,
+            configurable: true
+        });
         return WebSockets;
     })();
     TrainNotifier.WebSockets = WebSockets;    

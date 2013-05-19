@@ -131,8 +131,8 @@ function loadLiveMap() {
 function connectWs() {
     webSockets.connect();
 
-    webSockets.ws.onmessage = function (msg) {
-        var data : any = jQuery.parseJSON(msg.data);
+    webSockets.onMessageHandler(function (msg) {
+        var data: any = jQuery.parseJSON(msg.data);
         if (data.Command == "subtrainupdate") {
             data = data.Response;
             var lu = moment().format(TrainNotifier.DateTimeFormats.dateTimeFormat);
@@ -167,9 +167,9 @@ function connectWs() {
                 currentTrain.addBerthStop(data[i]);
             }
         }
-    };
+    });
     setTimeout(function () {
-        if (webSockets.ws.readyState != WebSocket.OPEN) {
+        if (webSockets.state !== WebSocket.OPEN) {
             thisPage.wsOpenCommand();
         }
     }, 2000);
@@ -213,8 +213,8 @@ function fetchLocation(stanox) {
 }
 
 function sendWsCommand(command) {
-    if (webSockets && webSockets.ws && webSockets.ws.readyState == WebSocket.OPEN) {
-        webSockets.ws.send(command);
+    if (webSockets && webSockets && webSockets.state == WebSocket.OPEN) {
+        webSockets.send(command);
     }
 }
 
@@ -399,4 +399,10 @@ function listStation(stanox) {
         currentLocation.locationCRS(data.CRS);
         currentLocation.stationName(data.StationName);
     });
+}
+
+function tryConnect() {
+    if (webSockets && webSockets.state === WebSocket.CLOSED) {
+        webSockets.connect();
+    }
 }

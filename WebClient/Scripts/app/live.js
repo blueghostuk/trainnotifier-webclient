@@ -12,12 +12,12 @@ var thisPage = {
             var fromCrs = station.substr(station.lastIndexOf('(') + 1, 3);
             if(fromCrs.length == 3) {
                 TrainNotifier.Common.webApi.getStanoxByCrsCode(fromCrs).done(function (tiplocCode) {
-                    webSockets.ws.send("substanox:" + tiplocCode.Stanox);
+                    webSockets.send("substanox:" + tiplocCode.Stanox);
                 });
                 return;
             }
         }
-        webSockets.ws.send("subscribe");
+        webSockets.send("subscribe");
     }
 };
 TrainNotifier.Common.page = thisPage;
@@ -87,7 +87,7 @@ function clearTable() {
 }
 function connectWs() {
     webSockets.connect();
-    webSockets.ws.onmessage = function (msg) {
+    webSockets.onMessageHandler(function (msg) {
         var data = jQuery.parseJSON(msg.data);
         if(data.Response) {
             data = data.Response;
@@ -139,7 +139,7 @@ function connectWs() {
                 TrainNotifier.Common.displayStanox(stanox);
             });
         }
-    };
+    });
 }
 function disconnect() {
     webSockets.disconnect();
