@@ -3,6 +3,7 @@
 /// <reference path="ViewModels.js" />
 /// <reference path="knockout.mapping-latest.js" />
 /// <reference path="knockout-2.2.1.js" />
+/// <reference path="webApi.js" />
 
 var currentLocation = new LocationViewModel();
 var currentTrain = new LiveTrainViewModel();
@@ -19,14 +20,46 @@ var _lastScheduleData;
 var _lastStopNumber = 0;
 var map;
 
-var self = this;
+var webApi = new TrainNotifier.WebApi(serverSettings);
 
 thisPage = {
     setCommand: function (command) {
-        self.setCommand(command);
+        $("#global-search-box").val(command);
+        document.location.hash = command;
     },
     parseCommand: function () {
-        return self.parseCommand();
+        var cmdString = this.getCommand();
+        var idx = cmdString.indexOf("/");
+        if (idx == -1)
+            return false;
+
+        var cmd = cmdString.substring(0, idx);
+        var args = cmdString.substring(idx + 1);
+
+        $("#commandOptions > li.active").removeClass("active");
+        $("#commandOptions > li#" + cmd).addClass("active");
+
+        if (cmd == "id") {
+            getById(args);
+            return true;
+        } else {
+            var subscribe = cmd == "sub";
+            var hashIdx = args.indexOf('/');
+            var date = "";
+            var trainUid = "";
+            if (hashIdx === -1) {
+                trainUid = args;
+                date = moment().format(dateQueryFormat);
+                this.setCommand(cmdString + "/" + moment().format(dateQueryFormat));
+            } else {
+                trainUid = args.substring(0, hashIdx);
+                date = args.substring(hashIdx + 1)
+            }
+            getByUid(trainUid, date, subscribe);
+            return true;
+        }
+
+        return false;
     },
     getCommand: function () {
         return $("#global-search-box").val();
@@ -42,7 +75,7 @@ $(function () {
     ko.applyBindings(detailsModel, $("#details").get(0));
 
     if (document.location.hash.length > 0) {
-        setCommand(document.location.hash.substr(1));
+        thisPage.setCommand(document.location.hash.substr(1));
     }
     $('a[data-toggle="tab"]').on('shown', function (e) {
         if ($(e.target).attr("href") == "#map" && !map) {
@@ -135,7 +168,7 @@ function connectWs() {
 }
 
 function wsOpenCommand() {
-    parseCommand();
+    thisPage.parseCommand();
 }
 
 function addStop(stopEl, terminateStop, mixIn) {
@@ -155,7 +188,7 @@ function addStop(stopEl, terminateStop, mixIn) {
 }
 
 function fetchLocation(stanox) {
-    loadLocation(stanox, function (data) {
+    webApi.getStanox(stanox).done(function (data) {
         if (!data)
             return;
 
@@ -181,64 +214,24 @@ function sendWsCommand(command) {
     }
 }
 
-function setCommand(command) {
-    $("input.search-query").val(command);
-    document.location.hash = command;
-}
-
 function subTrain() {
     if (_lastLiveData) {
         $("#commandOptions > li.active").removeClass("active");
         $("#commandOptions > li#sub").addClass("active");
-        setCommand("sub/" + _lastLiveData.TrainUid + "/" + moment(_lastLiveData.SchedOriginDeparture).format(dateQueryFormat));
+        thisPage.setCommand("sub/" + _lastLiveData.TrainUid + "/" + moment(_lastLiveData.SchedOriginDeparture).format(dateQueryFormat));
         doSubTrain();
     }
-}
-
-function parseCommand() {
-    var cmdString = thisPage.getCommand();
-    var idx = cmdString.indexOf("/");
-    if (idx == -1)
-        return false;
-
-    var cmd = cmdString.substring(0, idx);
-    var args = cmdString.substring(idx + 1);
-
-    $("#commandOptions > li.active").removeClass("active");
-    $("#commandOptions > li#" + cmd).addClass("active");
-
-    if (cmd == "id") {
-        getById(args);
-        return true;
-    } else {
-        var subscribe = cmd == "sub";
-        var hashIdx = args.indexOf('/');
-        var date = "";
-        var trainUid = "";
-        if (hashIdx === -1) {
-            trainUid = args;
-            date = moment().format(dateQueryFormat);
-            setCommand(cmdString + "/" + moment().format(dateQueryFormat));
-        } else {
-            trainUid = args.substring(0, hashIdx);
-            date = args.substring(hashIdx + 1)
-        }
-        getByUid(trainUid, date, subscribe);
-        return true;
-    }
-
-    return false;
 }
 
 function getById(id) {
     $(".progress").show();
     $("#no-results-row").hide();
     $.getJSON("http://" + server + ":" + apiPort + "/TrainMovement/" + id)
-        .then(function (data) {
+        .done(function (data) {
             if (data) {
                 $("#commandOptions > li.active").removeClass("active");
                 $("#commandOptions > li#get").addClass("active");
-                setCommand("get/" + data.TrainUid + "/" + moment(data.SchedOriginDeparture).format(dateUrlFormat));
+                thisPage.setCommand("get/" + data.TrainUid + "/" + moment(data.SchedOriginDeparture).format(dateUrlFormat));
                 getByUid(data.TrainUid, moment(data.SchedOriginDeparture).format(dateQueryFormat), false);
             } else {
                 $("#no-results-row").show();

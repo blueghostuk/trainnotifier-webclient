@@ -23,14 +23,43 @@ var titleFormat = "ddd Do MMM YYYY";
 var dateUrlFormat = "YYYY/MM/DD";
 var dateApiQuery = "YYYY-MM-DDTHH:mm";
 
-var self = this;
-
 thisPage = {
     setCommand: function (command) {
-        self.setCommand(command);
+        $("#global-search-box").val(command);
     },
     parseCommand: function () {
-        return self.parseCommand();
+        var cmdString = this.getCommand();
+        var idx = cmdString.indexOf("/");
+        if (idx == -1)
+            return false;
+
+        var cmd = cmdString.substring(0, idx);
+        var args = cmdString.substring(idx + 1).split('/');
+
+        $("#commandOptions > li.active").removeClass("active");
+        var convertFromCrs = args[0].length == 3;
+
+        switch (cmd) {
+            case 'from':
+                if (args.length >= 3 && args[1] == "to") {
+                    getCallingBetween(args[0], args[2], convertFromCrs, getDateTime(args.slice(3, 5)), (args.length <= 5 ? null : getDateTime(args.slice(3, 4).concat(args.slice(5, 7)))));
+                    return true;
+                } else {
+                    getOrigin(args[0], convertFromCrs, getDateTime(args.slice(1, 3)), (args.length <= 3 ? null : getDateTime(args.slice(1, 2).concat(args.slice(3, 5)))));
+                    return true;
+                }
+                break;
+            case 'to':
+                getDestination(args[0], convertFromCrs, getDateTime(args.slice(1, 3)), (args.length <= 3 ? null : getDateTime(args.slice(1, 2).concat(args.slice(3, 5)))));
+                return true;
+                break;
+            case 'at':
+                getStation(args[0], convertFromCrs, getDateTime(args.slice(1, 3)), (args.length <= 3 ? null : getDateTime(args.slice(1, 2).concat(args.slice(3, 5)))));
+                return true;
+                break;
+        }
+
+        return false;
     },
     getCommand: function () {
         return $("#global-search-box").val();
@@ -46,44 +75,7 @@ $(function () {
     loadHashCommand();
 });
 
-function setCommand(command) {
-    $("input.search-query").val(command);
-}
 
-function parseCommand() {
-    var cmdString = thisPage.getCommand();
-    var idx = cmdString.indexOf("/");
-    if (idx == -1)
-        return false;
-
-    var cmd = cmdString.substring(0, idx);
-    var args = cmdString.substring(idx + 1).split('/');    
-
-    $("#commandOptions > li.active").removeClass("active");
-    var convertFromCrs = args[0].length == 3;
-
-    switch (cmd) {
-        case 'from':
-            if (args.length >= 3 && args[1] == "to") {
-                getCallingBetween(args[0], args[2], convertFromCrs, getDateTime(args.slice(3, 5)), (args.length <= 5 ? null : getDateTime(args.slice(3, 4).concat(args.slice(5, 7)))));
-                return true;
-            } else {
-                getOrigin(args[0], convertFromCrs, getDateTime(args.slice(1, 3)), (args.length <= 3 ? null : getDateTime(args.slice(1, 2).concat(args.slice(3, 5)))));
-                return true;
-            }
-            break;
-        case 'to':
-            getDestination(args[0], convertFromCrs, getDateTime(args.slice(1, 3)), (args.length <= 3 ? null : getDateTime(args.slice(1, 2).concat(args.slice(3, 5)))));
-            return true;
-            break;
-        case 'at':
-            getStation(args[0], convertFromCrs, getDateTime(args.slice(1, 3)), (args.length <= 3 ? null : getDateTime(args.slice(1, 2).concat(args.slice(3, 5)))));
-            return true;
-            break;
-    }
-
-    return false;
-}
 
 function getDateTime(args) {
     if (args.length > 0) {
@@ -161,7 +153,7 @@ function getDestination(crs, convertFromCrs, fromDate, toDate) {
     preAjax();
     $.when($.getJSON(url + crs))
         .done(function (from) {
-            getDestinationByStanox(from,  startDate, endDate);
+            getDestinationByStanox(from, startDate, endDate);
         })
         .fail(function () {
             $(".progress").hide();
@@ -193,7 +185,7 @@ function getOrigin(crs, convertFromCrs, fromDate, toDate) {
     preAjax();
     $.when($.getJSON(url + crs))
         .done(function (to) {
-            getOriginByStanox(to,  startDate, endDate);
+            getOriginByStanox(to, startDate, endDate);
         })
         .fail(function () {
             $(".progress").hide();
@@ -273,7 +265,7 @@ function getOriginByStanox(from, startDate, endDate) {
         currentStanox = from;
         listStation(currentStanox.Stanox);
     }
-    currentToStanox = null;    
+    currentToStanox = null;
     currentStartDate = startDate;
     currentEndDate = endDate;
     clear();
@@ -306,7 +298,7 @@ function getCallingAtStanox(at, startDate, endDate) {
         currentStanox = at;
         listStation(currentStanox.Stanox);
     }
-    currentToStanox = null;    
+    currentToStanox = null;
     currentStartDate = startDate;
     currentEndDate = endDate;
     clear();
@@ -341,7 +333,7 @@ function getCallingBetweenByStanox(from, to, startDate, endDate) {
     }
     if (to) {
         currentToStanox = to;
-    }    
+    }
     currentStartDate = startDate;
     currentEndDate = endDate;
     clear();
@@ -540,8 +532,8 @@ function listStation(stanox) {
 
 function loadHashCommand() {
     if (document.location.hash.length > 0) {
-        setCommand(document.location.hash.substr(1));
-        parseCommand();
+        thisPage.setCommand(document.location.hash.substr(1));
+        thisPage.parseCommand();
     }
     return false;
 }
@@ -561,5 +553,5 @@ function setHash(hash, dateHash, dontLoad) {
     if (!dontLoad) {
         loadHashCommand();
     }
-    setCommand(hash);
+    thisPage.setCommand(hash);
 }

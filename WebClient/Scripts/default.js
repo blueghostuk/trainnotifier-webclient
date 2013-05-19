@@ -2,10 +2,13 @@
 /// <reference path="mapping.js" />
 /// <reference path="moment.js" />
 /// <reference path="moment-datepicker.js" />
+/// <reference path="webApi.js" />
 
 var fromLocal = ko.observableArray();
 var toLocal = ko.observableArray();
 var atLocal = ko.observableArray();
+
+var webApi = new TrainNotifier.WebApi(serverSettings);
 
 $(function () {
     $('.datepicker').datepicker({
@@ -19,35 +22,34 @@ $(function () {
     ko.applyBindings(fromLocal, $("#from-local").get(0));
     ko.applyBindings(toLocal, $("#to-local").get(0));
     ko.applyBindings(atLocal, $("#at-local").get(0));
-    preLoadStations(preLoadStationsCallback);
-});
 
-function preLoadStationsCallback(results) {
-    var locations = [];
-    for (i in results) {
-        locations.push(results[i].StationName + ' (' + results[i].CRS + ' - ' + results[i].Tiploc + ')');
-    }
-    $(".station-lookup").typeahead({
-        source: locations,
-        sorter: function (items) {
-            var self = this;
-            return items.sort(function (a, b) {
-                var aCrs = a.substr(a.lastIndexOf('(') + 1, 3);
-                var bCrs = b.substr(b.lastIndexOf('(') + 1, 3);
-
-                if (self.query.toLowerCase() == aCrs.toLowerCase())
-                    return -1;
-                else if (self.query.toLowerCase() == bCrs.toLowerCase())
-                    return 1;
-                else
-                    return aCrs > bCrs;
-            });
+    webApi.getStations().done(function (results) {
+        var locations = [];
+        for (i in results) {
+            locations.push(results[i].StationName + ' (' + results[i].CRS + ' - ' + results[i].Tiploc + ')');
         }
+        $(".station-lookup").typeahead({
+            source: locations,
+            sorter: function (items) {
+                var self = this;
+                return items.sort(function (a, b) {
+                    var aCrs = a.substr(a.lastIndexOf('(') + 1, 3);
+                    var bCrs = b.substr(b.lastIndexOf('(') + 1, 3);
+
+                    if (self.query.toLowerCase() == aCrs.toLowerCase())
+                        return -1;
+                    else if (self.query.toLowerCase() == bCrs.toLowerCase())
+                        return 1;
+                    else
+                        return aCrs > bCrs;
+                });
+            }
+        });
+        $("#from-crs").attr("placeholder", "Type from station name here");
+        $("#to-crs").attr("placeholder", "Type to station name here");
+        $("#at-crs").attr("placeholder", "Type calling at station name here");
     });
-    $("#from-crs").attr("placeholder", "Type from station name here");
-    $("#to-crs").attr("placeholder", "Type to station name here");
-    $("#at-crs").attr("placeholder", "Type calling at station name here");
-}
+});
 
 function showLocation() {
     var fromStation = $("#from-crs").val();

@@ -1,6 +1,10 @@
 ﻿/// <reference path="moment.js" />
 /// <reference path="jquery-1.9.1.js" />
-/// 
+/// <reference path="webApi.js" />
+/// <reference path="global.js" />
+
+var webApi = new TrainNotifier.WebApi(serverSettings);
+
 function sortTrainId(trainId) {
     if (!trainId || trainId.length == 0)
         return;
@@ -48,36 +52,35 @@ var _locations;
 
 var currentLocation = new LocationViewModel();
 
-function preLoadStationsCallback(results) {
-    var locations = [];
-    for (i in results) {
-        locations.push(results[i].StationName + ' (' + results[i].CRS + ' - ' + results[i].Tiploc + ')');
-    }
-    $("#filter-location").typeahead({
-        source: locations,
-        sorter: function (items) {
-            var self = this;
-            return items.sort(function (a, b) {
-                var aCrs = a.substr(a.lastIndexOf('(') + 1, 3);
-                var bCrs = b.substr(b.lastIndexOf('(') + 1, 3);
-
-                if (self.query.toLowerCase() == aCrs.toLowerCase())
-                    return -1;
-                else if (self.query.toLowerCase() == bCrs.toLowerCase())
-                    return 1;
-                else
-                    return aCrs > bCrs;
-            });
-        }
-    });
-    $("#filter-location").attr("placeholder", "Filter By Location");
-}
-
 $(function () {
     ko.applyBindings(currentLocation, $("#locationDetails").get(0));
 
     $("#filter-location").attr("placeholder", "Loading stations ...");
-    preLoadStations(preLoadStationsCallback);
+
+    webApi.getStations().done(function (results) {
+        var locations = [];
+        for (i in results) {
+            locations.push(results[i].StationName + ' (' + results[i].CRS + ' - ' + results[i].Tiploc + ')');
+        }
+        $("#filter-location").typeahead({
+            source: locations,
+            sorter: function (items) {
+                var self = this;
+                return items.sort(function (a, b) {
+                    var aCrs = a.substr(a.lastIndexOf('(') + 1, 3);
+                    var bCrs = b.substr(b.lastIndexOf('(') + 1, 3);
+
+                    if (self.query.toLowerCase() == aCrs.toLowerCase())
+                        return -1;
+                    else if (self.query.toLowerCase() == bCrs.toLowerCase())
+                        return 1;
+                    else
+                        return aCrs > bCrs;
+                });
+            }
+        });
+        $("#filter-location").attr("placeholder", "Filter By Location");
+    });
 });
 
 function wsOpenCommand() {
@@ -156,7 +159,9 @@ function connectWs() {
 
             sortTrainId(message.train_id);
 
-            fetchStanox(message.loc_stanox);
+            webApi.getStanox(message.loc_stanox).done(function (stanox) {
+                TrainNotifier.Common.displayStanox(stanox);
+            });
         }
     };
 }

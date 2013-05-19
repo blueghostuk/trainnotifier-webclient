@@ -106,9 +106,13 @@
     <Content Include="packages.config" />
     <Content Include="index.cshtml" />
     <Content Include="ppm.cshtml" />
+    <TypeScriptCompile Include="Scripts\globalSearch.ts" />
     <TypeScriptCompile Include="Scripts\global.ts" />
     <Content Include="Scripts\global.js">
       <DependentUpon>global.ts</DependentUpon>
+    </Content>
+    <Content Include="Scripts\globalSearch.js">
+      <DependentUpon>globalSearch.ts</DependentUpon>
     </Content>
     <Content Include="Scripts\typings\bootstrap\bootstrap.d.ts" />
     <Content Include="Scripts\typings\jquery\jquery.d.ts" />
@@ -150,7 +154,6 @@
     <None Include="Properties\PublishProfiles\Azure - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\Azure - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\TNWEBSRV01.pubxml" />
-    <Content Include="Scripts\ajax-lookups.js" />
     <Content Include="Scripts\websockets.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>

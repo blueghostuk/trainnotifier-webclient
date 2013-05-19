@@ -2,12 +2,25 @@
 
 interface IWebApi {
     getStations(): JQueryPromise;
+    getStanox(stanox: string): JQueryPromise;
 }
 
 interface IServerSettings {
     server: string;
     apiPort: string;
     wsPort: string;
+}
+
+interface IStanox{
+    Name: string;
+    StationName: string;
+    Lat: number;
+    Lon: number;
+    Tiploc: string;
+    Nalco: string;
+    Description: string;
+    Stanox: string;
+    CRS: string;
 }
 
 // Module
@@ -24,6 +37,10 @@ module TrainNotifier {
 
         getStations() {
             return $.getJSON(this.getBaseUrl() + "/Station/");
+        };
+
+        getStanox(stanox: string) {
+            return $.getJSON(this.getBaseUrl() + "/Stanox/" + stanox);
         };
 
     }
