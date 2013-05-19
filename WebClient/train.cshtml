@@ -27,6 +27,9 @@
         h5 {
             font-weight: bold !important;
         }
+        button.btn-top {
+            margin-top: -10px !important;
+        }
 
         table {
             margin-top: 5px;
@@ -96,8 +99,8 @@
     <li><a href="~/live">Live Feed</a></li>
 }
 @section TopMenuAdditional{
-    <a class="btn btn-disconnect pull-left" id="btn_Subscribe" onclick="subTrain();" disabled="disabled" title="Get Live Updates for this train"><i class="icon-refresh"></i></a>
-    <a class="btn pull-left" href="#" id="status">Connection Status</a>
+    <button class="btn btn-top btn-disconnect" id="btn_Subscribe" onclick="subTrain();" disabled="disabled" title="Get Live Updates for this train"><i class="icon-refresh"></i></button>
+    <button class="btn btn-top" id="status">Connection Status</button>
 }
 <div class="row-fluid">
     <div class="span2 phone-hide">
