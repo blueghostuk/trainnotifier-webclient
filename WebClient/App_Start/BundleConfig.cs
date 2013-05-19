@@ -24,26 +24,26 @@ namespace TrainNotifier.WebClient
                 "~/Scripts/moment-datepicker.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/app").Include(
-                "~/Scripts/global.js",
-                "~/Scripts/webApi.js",
-                "~/Scripts/globalSearch.js",
-                "~/Scripts/websockets.js",
-                "~/Scripts/ViewModels.js"));
+                "~/Scripts/app/global.js",
+                "~/Scripts/app/webApi.js",
+                "~/Scripts/app/globalSearch.js",
+                "~/Scripts/app/websockets.js",
+                "~/Scripts/app/ViewModels.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/index").Include(
-                "~/Scripts/index.js"));
+                "~/Scripts/app/index.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/live").Include(
-                "~/Scripts/live.js"));
+                "~/Scripts/app/live.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/ppm").Include(
-                "~/Scripts/ppm.js"));
+                "~/Scripts/app/ppm.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/train").Include(
-                "~/Scripts/train.js"));
+                "~/Scripts/app/train.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/search-schedule").Include(
-                "~/Scripts/search-schedule.js"));
+                "~/Scripts/app/search-schedule.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                 "~/Content/spacelab.css",

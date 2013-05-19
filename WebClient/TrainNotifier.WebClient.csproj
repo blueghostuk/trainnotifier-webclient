@@ -106,25 +106,25 @@
     <Content Include="packages.config" />
     <Content Include="index.cshtml" />
     <Content Include="ppm.cshtml" />
-    <TypeScriptCompile Include="Scripts\globalSearch.ts" />
-    <TypeScriptCompile Include="Scripts\global.ts" />
-    <Content Include="Scripts\global.js">
+    <TypeScriptCompile Include="Scripts\app\globalSearch.ts" />
+    <TypeScriptCompile Include="Scripts\app\global.ts" />
+    <Content Include="Scripts\app\global.js">
       <DependentUpon>global.ts</DependentUpon>
     </Content>
-    <Content Include="Scripts\globalSearch.js">
+    <Content Include="Scripts\app\globalSearch.js">
       <DependentUpon>globalSearch.ts</DependentUpon>
     </Content>
-    <TypeScriptCompile Include="Scripts\index.ts" />
-    <Content Include="Scripts\index.js">
+    <TypeScriptCompile Include="Scripts\app\index.ts" />
+    <Content Include="Scripts\app\index.js">
       <DependentUpon>index.ts</DependentUpon>
     </Content>
     <Content Include="Scripts\typings\bootstrap\bootstrap.d.ts" />
     <Content Include="Scripts\typings\jquery\jquery.d.ts" />
-    <TypeScriptCompile Include="Scripts\webApi.ts" />
+    <TypeScriptCompile Include="Scripts\app\webApi.ts" />
     <Content Include="Scripts\typings\knockout.mapping\knockout.mapping.d.ts" />
     <Content Include="Scripts\typings\knockout\knockout.d.ts" />
     <Content Include="Scripts\typings\moment\moment.d.ts" />
-    <Content Include="Scripts\webApi.js">
+    <Content Include="Scripts\app\webApi.js">
       <DependentUpon>webApi.ts</DependentUpon>
     </Content>
     <Content Include="_ppmTable.cshtml" />
@@ -133,7 +133,7 @@
     <None Include="Scripts\jquery-1.9.1.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
-    <Content Include="Scripts\live.js" />
+    <Content Include="Scripts\app\live.js" />
     <Content Include="Scripts\jquery-1.9.1.js" />
     <Content Include="Scripts\jquery-1.9.1.min.js" />
     <Content Include="Scripts\jquery.ba-hashchange.js" />
@@ -152,15 +152,15 @@
     <Content Include="Scripts\moment-datepicker.min.js" />
     <Content Include="Scripts\moment.js" />
     <Content Include="Scripts\moment.min.js" />
-    <Content Include="Scripts\ppm.js" />
-    <Content Include="Scripts\search-schedule.js" />
-    <Content Include="Scripts\train.js" />
-    <Content Include="Scripts\ViewModels.js" />
+    <Content Include="Scripts\app\ppm.js" />
+    <Content Include="Scripts\app\search-schedule.js" />
+    <Content Include="Scripts\app\train.js" />
+    <Content Include="Scripts\app\ViewModels.js" />
     <Content Include="train.cshtml" />
     <None Include="Properties\PublishProfiles\Azure - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\Azure - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\TNWEBSRV01.pubxml" />
-    <Content Include="Scripts\websockets.js" />
+    <Content Include="Scripts\app\websockets.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
