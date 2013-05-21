@@ -45,15 +45,32 @@ module TrainNotifier {
             });
             $(".stanox-" + stanox.Stanox).addClass("stationName");
         };
-    }
+    };
 
     export class DateTimeFormats {
         public static timeUrlFormat = "HH-mm";
         public static timeFormat = "HH:mm:ss";
+        public static shortTimeFormat = "HH:mm";
         public static dateTimeFormat = "DD/MM/YY HH:mm:ss";
         public static dateTimeHashFormat = "YYYY-MM-DD/HH-mm";
         public static dateQueryFormat = "YYYY-MM-DD";
         public static dateUrlFormat = "YYYY/MM/DD";
-    }
+
+        public static formatTimeString(time: string) : string {
+            if (time){
+                var timeMoment = moment(time, TrainNotifier.DateTimeFormats.timeFormat);
+                var ts = timeMoment.format(TrainNotifier.DateTimeFormats.shortTimeFormat);
+                if (timeMoment.seconds() === 30) {
+                    ts += TrainNotifier.CommonStrings.halfMinute;
+                }
+                return ts;
+            }
+            return null;
+        };
+    };
+
+    export class CommonStrings{
+        public static halfMinute = "½";
+    };
 
 }

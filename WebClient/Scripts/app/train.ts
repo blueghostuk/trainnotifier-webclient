@@ -9,9 +9,9 @@
 /// <reference path="../typings/moment/moment.d.ts" />
 
 var currentLocation = new LocationViewModel();
-var currentTrain = new LiveTrainViewModel();
-var mixModel = new ScheduleTrainViewModel(currentLocation);
-var titleModel = new TrainTitleViewModel();
+var currentTrain = new TrainNotifier.ViewModels.LiveTrainViewModel();
+var mixModel = new TrainNotifier.ViewModels.ScheduleTrainViewModel();
+var titleModel = new TrainNotifier.ViewModels.TrainTitleViewModel();
 var detailsModel = new TrainDetailsViewModel();
 
 var _lastLiveData;
@@ -332,21 +332,21 @@ function getSchedule(data) {
             if (schedule && schedule.Stops && schedule.Stops.length > 0) {
                 if (_lastLiveData && _lastLiveData.ChangeOfOrigin && _lastLiveData.ChangeOfOrigin.NewOrigin) {
                     titleModel.From(_lastLiveData.ChangeOfOrigin.NewOrigin.Description.toLowerCase());
-                    titleModel.Start(moment(_lastLiveData.ChangeOfOrigin.NewDepartureTime).format(TrainNotifier.DateTimeFormats.timeFormat));
+                    titleModel.Start(moment(_lastLiveData.ChangeOfOrigin.NewDepartureTime).format(TrainNotifier.DateTimeFormats.shortTimeFormat));
                 } else {
                     titleModel.From(schedule.Stops[0].Tiploc.Description.toLowerCase());
                     var departure = schedule.Stops[0].PublicDeparture ?
                         schedule.Stops[0].PublicDeparture : schedule.Stops[0].Departure;
-                    titleModel.Start(moment(departure, TrainNotifier.DateTimeFormats.timeFormat).format(TrainNotifier.DateTimeFormats.timeFormat));
+                    titleModel.Start(moment(departure, TrainNotifier.DateTimeFormats.timeFormat).format(TrainNotifier.DateTimeFormats.shortTimeFormat));
                 }
                 if (_lastLiveData && _lastLiveData.Cancellation && _lastLiveData.Cancellation.CancelledAt) {
                     titleModel.To(_lastLiveData.Cancellation.CancelledAt.Description.toLowerCase());
-                    titleModel.End(moment(_lastLiveData.Cancellation.CancelledTimestamp).format(TrainNotifier.DateTimeFormats.timeFormat));
+                    titleModel.End(moment(_lastLiveData.Cancellation.CancelledTimestamp).format(TrainNotifier.DateTimeFormats.shortTimeFormat));
                 } else if (schedule.Stops.length > 1) {
                     titleModel.To(schedule.Stops[schedule.Stops.length - 1].Tiploc.Description.toLowerCase());
                     var arrival = schedule.Stops[schedule.Stops.length - 1].PublicArrival ?
                         schedule.Stops[schedule.Stops.length - 1].PublicArrival : schedule.Stops[schedule.Stops.length - 1].Arrival;
-                    titleModel.End(moment(arrival, TrainNotifier.DateTimeFormats.timeFormat).format(TrainNotifier.DateTimeFormats.timeFormat));
+                    titleModel.End(moment(arrival, TrainNotifier.DateTimeFormats.timeFormat).format(TrainNotifier.DateTimeFormats.shortTimeFormat));
                 } else {
                     titleModel.To(null);
                 }
@@ -369,10 +369,10 @@ function mixInStop(step, stopNumber?) {
         var time = moment(step.ActualTimeStamp).format(TrainNotifier.DateTimeFormats.timeFormat);
         switch (step.EventType) {
             case "DEPARTURE":
-                mixModel.Stops()[stopNumber].ActualDeparture(time);
+                mixModel.Stops()[stopNumber].setActualDepartureTime(time);
                 break;
             case "ARRIVAL":
-                mixModel.Stops()[stopNumber].ActualArrival(time);
+                mixModel.Stops()[stopNumber].setActualArrivalTime(time);
                 break;
         }
         _lastStopNumber = stopNumber;

@@ -80,20 +80,6 @@ function LocationViewModel() {
         return self.stationName() ? self.stationName() : self.locationDescription();
     });
 }
-function TrainTitleViewModel() {
-    var self = this;
-    self.Id = ko.observable();
-    self.From = ko.observable();
-    self.To = ko.observable();
-    self.Start = ko.observable();
-    self.End = ko.observable();
-    self.FullTitle = ko.computed(function () {
-        if(TrainNotifier.Common.page && TrainNotifier.Common.page.pageTitle && self.Id() && self.From() && self.To() && self.Start() && self.End()) {
-            document.title = self.Id() + " " + self.From() + " to " + self.To() + " " + self.Start() + " - " + self.End() + " - " + TrainNotifier.Common.page.pageTitle;
-        }
-        return "";
-    });
-}
 function ExternalSiteViewModel(name) {
     var self = this;
     self.Name = ko.observable(name);
@@ -226,48 +212,370 @@ function TrainDetailsViewModel() {
         }
     };
 }
-function ScheduleTrainViewModel(currentLocation) {
-    var self = this;
-    var timeFormat = "HH:mm:ss";
-    var dateFormat = "DD/MM/YY HH:mm:ss";
-    self.Stops = ko.observableArray();
-    self.addStop = function (stop) {
-        self.Stops.push(new ScheduleStopViewModel(stop));
-    };
-    self.clearStops = function () {
-        self.Stops.removeAll();
-    };
-    self.updateFromJson = function (schedule) {
-        self.clearStops();
-        if(schedule && schedule.Stops) {
-            for(var stop in schedule.Stops) {
-                self.addStop(schedule.Stops[stop]);
+var TrainNotifier;
+(function (TrainNotifier) {
+    (function (ViewModels) {
+        var ScheduleTrainViewModel = (function () {
+            function ScheduleTrainViewModel() {
+                this.Stops = ko.observableArray();
             }
-        }
-    };
-}
-function ScheduleStopViewModel(stop) {
-    var self = this;
-    self.ActualArrival = ko.observable();
-    self.ActualDeparture = ko.observable();
-    self.Arrival = stop.Arrival;
-    self.Departure = stop.Departure;
-    self.EngineeringAllowance = stop.EngineeringAllowance;
-    self.Intermediate = stop.Intermediate;
-    self.Line = stop.Line;
-    self.Origin = stop.Origin;
-    self.Pass = stop.Pass;
-    self.Path = stop.Path;
-    self.PathingAllowance = stop.PathingAllowance;
-    self.PerformanceAllowance = stop.PerformanceAllowance;
-    self.Platform = stop.Platform;
-    self.PublicArrival = stop.PublicArrival;
-    self.PublicDeparture = stop.PublicDeparture;
-    self.StopNumber = stop.StopNumber;
-    self.Terminate = stop.Terminate;
-    self.Origin = stop.Origin;
-    self.Tiploc = new TiplocViewModel(stop.Tiploc);
-}
+            ScheduleTrainViewModel.prototype.addStop = function (stop) {
+                this.Stops.push(new ScheduleStopViewModel(stop));
+            };
+            ScheduleTrainViewModel.prototype.clearStops = function () {
+                this.Stops.removeAll();
+            };
+            ScheduleTrainViewModel.prototype.updateFromJson = function (schedule) {
+                this.clearStops();
+                if(schedule && schedule.Stops) {
+                    for(var i in schedule.Stops) {
+                        this.addStop(schedule.Stops[i]);
+                    }
+                }
+            };
+            return ScheduleTrainViewModel;
+        })();
+        ViewModels.ScheduleTrainViewModel = ScheduleTrainViewModel;        
+        ;
+        var ScheduleStopViewModel = (function () {
+            function ScheduleStopViewModel(stop) {
+                this.ActualArrival = ko.observable();
+                this.ActualDeparture = ko.observable();
+                this.Arrival = null;
+                this.Departure = null;
+                this.PublicArrival = null;
+                this.PublicDeparture = null;
+                this.Arrival = TrainNotifier.DateTimeFormats.formatTimeString(stop.Arrival);
+                this.PublicArrival = TrainNotifier.DateTimeFormats.formatTimeString(stop.PublicArrival);
+                this.Departure = TrainNotifier.DateTimeFormats.formatTimeString(stop.Departure);
+                this.PublicDeparture = TrainNotifier.DateTimeFormats.formatTimeString(stop.PublicDeparture);
+                this.EngineeringAllowance = stop.EngineeringAllowance;
+                this.Intermediate = stop.Intermediate;
+                this.Line = stop.Line;
+                this.Origin = stop.Origin;
+                this.Pass = stop.Pass;
+                this.Path = stop.Path;
+                this.PathingAllowance = stop.PathingAllowance;
+                this.PerformanceAllowance = stop.PerformanceAllowance;
+                this.Platform = stop.Platform;
+                this.StopNumber = stop.StopNumber;
+                this.Terminate = stop.Terminate;
+                this.Tiploc = new TiplocViewModel(stop.Tiploc);
+            }
+            ScheduleStopViewModel.prototype.setActualArrivalTime = function (arrival) {
+                this.ActualArrival(TrainNotifier.DateTimeFormats.formatTimeString(arrival));
+            };
+            ScheduleStopViewModel.prototype.setActualDepartureTime = function (departure) {
+                this.ActualDeparture(TrainNotifier.DateTimeFormats.formatTimeString(departure));
+            };
+            return ScheduleStopViewModel;
+        })();
+        ViewModels.ScheduleStopViewModel = ScheduleStopViewModel;        
+        ;
+        var StopViewModel = (function () {
+            function StopViewModel(berthUpdate) {
+                this.Stanox = ko.observable();
+                this.ArrivalPlannedTime = ko.observable();
+                this.ArrivalActualTimeStamp = ko.observable();
+                this.DepartPlannedTime = ko.observable();
+                this.DepartActualTimeStamp = ko.observable();
+                this.Line = ko.observable();
+                this.Platform = ko.observable();
+                this.ArrivalDelay = ko.observable();
+                this.DepartDelay = ko.observable();
+                this.NextStanox = ko.observable();
+                this.ExpectedAtNextStanox = ko.observable();
+                this.OffRoute = ko.observable();
+                this.Notes = ko.observable();
+                this.State = ko.observable();
+                this.BerthUpdate = berthUpdate || false;
+                var self = this;
+                this.ArrivalDelayResult = ko.computed(function () {
+                    if(self.ArrivalDelay() == 0) {
+                        return "badge-success";
+                    }
+                    if(self.ArrivalDelay() < 0) {
+                        return "badge-info";
+                    }
+                    if(self.ArrivalDelay() > 10) {
+                        return "badge-important";
+                    }
+                    if(self.ArrivalDelay() > 0) {
+                        return "badge-warning";
+                    }
+                    return "hidden";
+                });
+                this.ArrivalDelayTitle = ko.computed(function () {
+                    if(self.ArrivalDelay() == 0) {
+                        return "on time";
+                    }
+                    if(self.ArrivalDelay() < 0) {
+                        return "early";
+                    }
+                    return "late";
+                });
+                this.DepartDelayResult = ko.computed(function () {
+                    if(self.DepartDelay() == 0) {
+                        return "badge-success";
+                    }
+                    if(self.DepartDelay() < 0) {
+                        return "badge-info";
+                    }
+                    if(self.DepartDelay() > 10) {
+                        return "badge-important";
+                    }
+                    if(self.DepartDelay() > 0) {
+                        return "badge-warning";
+                    }
+                    return "hidden";
+                });
+                this.DepartDelayTitle = ko.computed(function () {
+                    if(self.DepartDelay() == 0) {
+                        return "on time";
+                    }
+                    if(self.DepartDelay() < 0) {
+                        return "early";
+                    }
+                    return "late";
+                });
+                this.StateClass = ko.computed(function () {
+                    switch(self.State()) {
+                        case 1:
+                            return "warning";
+                        case 2:
+                            return "error";
+                        default:
+                            return "";
+                    }
+                });
+                this.StateTitle = ko.computed(function () {
+                    switch(self.State()) {
+                        case 1:
+                            return "Terminated";
+                        case 2:
+                            return "Cancelled";
+                        default:
+                            return "";
+                    }
+                });
+            }
+            return StopViewModel;
+        })();
+        ViewModels.StopViewModel = StopViewModel;        
+        ;
+        var LiveTrainViewModel = (function () {
+            function LiveTrainViewModel() {
+                this.Id = ko.observable();
+                this.Uid = ko.observable();
+                this.Headcode = ko.observable();
+                this.ServiceCode = ko.observable();
+                this.Activated = ko.observable();
+                this.SchedOrigin = ko.observable();
+                this.SchedDepart = ko.observable();
+                this.Stops = ko.observableArray();
+                this.LastUpdate = ko.observable();
+                this.Cancellation = ko.observable();
+                this.ChangeOfOrigin = ko.observable();
+                this.Reinstatement = ko.observable();
+                var self = this;
+                this.Date = ko.computed(function () {
+                    if(self.SchedDepart()) {
+                        return moment(self.SchedDepart(), TrainNotifier.DateTimeFormats.dateTimeFormat).format(TrainNotifier.DateTimeFormats.dateQueryFormat);
+                    }
+                    return "";
+                });
+            }
+            LiveTrainViewModel.prototype.addBerthStop = function (stopEl) {
+                var stopModel = new StopViewModel(true);
+                switch(stopEl.Type) {
+                    default:
+                        stopModel.Stanox(stopEl.From + " - " + stopEl.To);
+                        stopModel.ArrivalActualTimeStamp(moment.utc(stopEl.Time).local().format(TrainNotifier.DateTimeFormats.timeFormat));
+                        stopModel.Notes("From Area: " + stopEl.AreaId);
+                        break;
+                }
+                this.Stops.push(stopModel);
+            };
+            LiveTrainViewModel.prototype.addStop = function (stopEl) {
+                if(this.Stops().length == 0) {
+                    var stopModel = new StopViewModel();
+                    switch(stopEl.EventType.toLowerCase()) {
+                        case "arrival":
+                            LiveTrainViewModel.setArrival(stopEl, stopModel);
+                            break;
+                        case "departure":
+                            LiveTrainViewModel.setDeparture(stopEl, stopModel);
+                            break;
+                    }
+                    this.Stops.push(stopModel);
+                } else {
+                    var stopModel = null;
+                    for(var i = (this.Stops().length - 1); i >= 0; i--) {
+                        var stop = this.Stops()[i];
+                        if(!stop.BerthUpdate) {
+                            if(stop.Stanox() == stopEl.Stanox) {
+                                stopModel = stop;
+                                break;
+                            }
+                        }
+                    }
+                    if(!stopModel) {
+                        stopModel = new StopViewModel();
+                        this.Stops.push(stopModel);
+                    }
+                    switch(stopEl.EventType.toLowerCase()) {
+                        case "arrival":
+                            LiveTrainViewModel.setArrival(stopEl, stopModel);
+                            if(stopEl.OffRoute) {
+                                stopModel.OffRoute("Off Route.");
+                            }
+                            break;
+                        case "departure":
+                            LiveTrainViewModel.setDeparture(stopEl, stopModel);
+                            if(stopEl.OffRoute) {
+                                stopModel.OffRoute("Off Route.");
+                            }
+                            if(stopEl.NextStanox && stopEl.NextStanox.length > 0) {
+                                stopModel.NextStanox(stopEl.NextStanox);
+                            }
+                            if(stopEl.ExpectedAtNextStanox && stopEl.ExpectedAtNextStanox.length > 0) {
+                                stopModel.ExpectedAtNextStanox(TrainNotifier.DateTimeFormats.formatTimeString(stopEl.ExpectedAtNextStanox));
+                            }
+                            break;
+                    }
+                }
+            };
+            LiveTrainViewModel.prototype.clearStops = function () {
+                this.Stops.removeAll();
+            };
+            LiveTrainViewModel.prototype.updateFromJSON = function (data) {
+                this.clearStops();
+                this.Id(data.Id);
+                this.Uid(data.TrainUid);
+                this.Headcode(data.HeadCode);
+                this.ServiceCode(data.ServiceCode);
+                var activated = "";
+                if(data.Activated) {
+                    activated = moment(data.Activated).format(TrainNotifier.DateTimeFormats.dateTimeFormat);
+                }
+                this.Activated(activated);
+                this.SchedOrigin(data.SchedOriginStanox);
+                var schedDepart = "";
+                if(data.SchedOriginDeparture) {
+                    schedDepart = moment(data.SchedOriginDeparture).format(TrainNotifier.DateTimeFormats.dateTimeFormat);
+                }
+                this.SchedDepart(schedDepart);
+                this.LastUpdate(moment().format(TrainNotifier.DateTimeFormats.dateTimeFormat));
+                if(data.Cancellation) {
+                    var canxTxt = data.Cancellation.Type;
+                    if(data.Cancellation.CancelledAt) {
+                        canxTxt += " @ " + data.Cancellation.CancelledAt.Description;
+                    }
+                    canxTxt += " @ " + moment(data.Cancellation.CancelledTimestamp).format(TrainNotifier.DateTimeFormats.timeFormat) + " - Reason: ";
+                    if(data.Cancellation.Description) {
+                        canxTxt += data.Cancellation.Description;
+                    }
+                    canxTxt += " (" + data.Cancellation.ReasonCode + ")";
+                    this.Cancellation(canxTxt);
+                } else {
+                    this.Cancellation(null);
+                }
+                if(data.ChangeOfOrigin) {
+                    var originText = data.ChangeOfOrigin.NewOrigin.Description + " @ " + moment(data.ChangeOfOrigin.NewDepartureTime).format(TrainNotifier.DateTimeFormats.timeFormat);
+                    if(data.ChangeOfOrigin.ReasonCode) {
+                        originText += " (" + data.ChangeOfOrigin.ReasonCode + ": " + data.ChangeOfOrigin.Description + ")";
+                    }
+                    this.ChangeOfOrigin(originText);
+                } else {
+                    this.ChangeOfOrigin(null);
+                }
+                if(data.Reinstatement) {
+                    this.Reinstatement(data.Reinstatement.NewOrigin.Description + " @ " + moment(data.Reinstatement.PlannedDepartureTime).format(TrainNotifier.DateTimeFormats.timeFormat));
+                } else {
+                    this.Reinstatement(null);
+                }
+            };
+            LiveTrainViewModel.setArrival = function setArrival(stopEl, stopModel) {
+                var times = LiveTrainViewModel.getTimes(stopEl);
+                stopModel.ArrivalActualTimeStamp(TrainNotifier.DateTimeFormats.formatTimeString(times.ActualTimeStamp));
+                stopModel.ArrivalPlannedTime(TrainNotifier.DateTimeFormats.formatTimeString(times.PlannedTimeStamp));
+                stopModel.ArrivalDelay(times.Delay);
+                LiveTrainViewModel.setCommon(stopEl, stopModel);
+            };
+            LiveTrainViewModel.setDeparture = function setDeparture(stopEl, stopModel) {
+                var times = LiveTrainViewModel.getTimes(stopEl);
+                stopModel.DepartActualTimeStamp(TrainNotifier.DateTimeFormats.formatTimeString(times.ActualTimeStamp));
+                stopModel.DepartPlannedTime(TrainNotifier.DateTimeFormats.formatTimeString(times.PlannedTimeStamp));
+                stopModel.DepartDelay(times.Delay);
+                LiveTrainViewModel.setCommon(stopEl, stopModel);
+            };
+            LiveTrainViewModel.setCommon = function setCommon(stopEl, stopModel) {
+                var existingLine = stopModel.Line();
+                if(!existingLine || existingLine == "") {
+                    stopModel.Line(stopEl.Line);
+                }
+                var existingPlatform = stopModel.Platform();
+                if(!existingPlatform || existingPlatform == "") {
+                    stopModel.Platform(stopEl.Platform);
+                }
+                stopModel.State(stopEl.State);
+                stopModel.Stanox(stopEl.Stanox);
+            };
+            LiveTrainViewModel.getTimes = function getTimes(stopEl) {
+                var setTimes = true;
+                var result = {
+                    ActualTimeStamp: null,
+                    PlannedTimeStamp: null,
+                    Delay: 0
+                };
+                var actualTime = null;
+                if(stopEl.ActualTimeStamp && stopEl.ActualTimeStamp.length > 0) {
+                    actualTime = new Date(stopEl.ActualTimeStamp);
+                    result.ActualTimeStamp = moment(stopEl.ActualTimeStamp).format(TrainNotifier.DateTimeFormats.timeFormat);
+                } else {
+                    setTimes = false;
+                }
+                var plannedTime = null;
+                if(stopEl.PlannedTime && stopEl.PlannedTime.length > 0) {
+                    plannedTime = new Date(stopEl.PlannedTime);
+                    result.PlannedTimeStamp = moment(stopEl.PlannedTime).format(TrainNotifier.DateTimeFormats.timeFormat);
+                } else if(stopEl.ActualTimeStamp && stopEl.ActualTimeStamp.length > 0) {
+                    plannedTime = new Date(stopEl.ActualTimeStamp);
+                    result.PlannedTimeStamp = moment(stopEl.ActualTimeStamp).format(TrainNotifier.DateTimeFormats.timeFormat);
+                } else {
+                    setTimes = false;
+                }
+                if(setTimes) {
+                    result.Delay = ((actualTime - plannedTime) / 60000);
+                }
+                return result;
+            };
+            return LiveTrainViewModel;
+        })();
+        ViewModels.LiveTrainViewModel = LiveTrainViewModel;        
+        ;
+        ;
+        var TrainTitleViewModel = (function () {
+            function TrainTitleViewModel() {
+                this.Id = ko.observable();
+                this.From = ko.observable();
+                this.To = ko.observable();
+                this.Start = ko.observable();
+                this.End = ko.observable();
+                var self = this;
+                this.FullTitle = ko.computed(function () {
+                    if(TrainNotifier.Common.page && TrainNotifier.Common.page.pageTitle && self.Id() && self.From() && self.To() && self.Start() && self.End()) {
+                        document.title = self.Id() + " " + self.From() + " to " + self.To() + " " + self.Start() + " - " + self.End() + " - " + TrainNotifier.Common.page.pageTitle;
+                    }
+                    return "";
+                });
+            }
+            return TrainTitleViewModel;
+        })();
+        ViewModels.TrainTitleViewModel = TrainTitleViewModel;        
+    })(TrainNotifier.ViewModels || (TrainNotifier.ViewModels = {}));
+    var ViewModels = TrainNotifier.ViewModels;
+})(TrainNotifier || (TrainNotifier = {}));
 function AtocCodeViewModel() {
     var self = this;
     self.Code = ko.observable();
@@ -384,277 +692,5 @@ function TrainAssociation(association, trainUid, date) {
                 break;
         }
         return self.getTrain() + "/" + date.format("YYYY/MM/DD");
-    });
-}
-function LiveTrainViewModel() {
-    var self = this;
-    self.Id = ko.observable();
-    self.Uid = ko.observable();
-    self.Headcode = ko.observable();
-    self.ServiceCode = ko.observable();
-    self.Activated = ko.observable();
-    self.SchedOrigin = ko.observable();
-    self.SchedDepart = ko.observable();
-    self.Stops = ko.observableArray();
-    self.LastUpdate = ko.observable();
-    self.Cancellation = ko.observable();
-    self.ChangeOfOrigin = ko.observable();
-    self.Reinstatement = ko.observable();
-    self.Date = ko.computed(function () {
-        if(self.SchedDepart()) {
-            return moment(self.SchedDepart(), "DD/MM/YY HH:mm:ss").format("YYYY-MM-DD");
-        }
-        return "";
-    });
-    self.addBerthStop = function (stopEl) {
-        var stopModel = new StopViewModel(true);
-        switch(stopEl.Type) {
-            default:
-                stopModel.Stanox(stopEl.From + " - " + stopEl.To);
-                stopModel.ArrivalActualTimeStamp(moment.utc(stopEl.Time).local().format("HH:mm:ss"));
-                stopModel.Notes("From Area: " + stopEl.AreaId);
-                break;
-        }
-        self.Stops.push(stopModel);
-    };
-    self.addStop = function (stopEl) {
-        if(self.Stops().length == 0) {
-            var stopModel = new StopViewModel();
-            switch(stopEl.EventType.toLowerCase()) {
-                case "arrival":
-                    setArrival(stopEl, stopModel);
-                    break;
-                case "departure":
-                    setDeparture(stopEl, stopModel);
-                    break;
-            }
-            self.Stops.push(stopModel);
-        } else {
-            var stopModel = null;
-            for(var i = (self.Stops().length - 1); i >= 0; i--) {
-                var stop = self.Stops()[i];
-                if(!stop.BerthUpdate) {
-                    if(stop.Stanox() == stopEl.Stanox) {
-                        stopModel = stop;
-                        break;
-                    }
-                }
-            }
-            if(!stopModel) {
-                stopModel = new StopViewModel();
-                self.Stops.push(stopModel);
-            }
-            switch(stopEl.EventType.toLowerCase()) {
-                case "arrival":
-                    setArrival(stopEl, stopModel);
-                    if(stopEl.OffRoute) {
-                        stopModel.OffRoute("Off Route.");
-                    }
-                    break;
-                case "departure":
-                    setDeparture(stopEl, stopModel);
-                    if(stopEl.OffRoute) {
-                        stopModel.OffRoute("Off Route.");
-                    }
-                    if(stopEl.NextStanox && stopEl.NextStanox.length > 0) {
-                        stopModel.NextStanox(stopEl.NextStanox);
-                    }
-                    if(stopEl.ExpectedAtNextStanox && stopEl.ExpectedAtNextStanox.length > 0) {
-                        stopModel.ExpectedAtNextStanox(moment(stopEl.ExpectedAtNextStanox, "HH:mm:ss").format("mm:ss"));
-                    }
-                    break;
-            }
-        }
-    };
-    self.clearStops = function () {
-        self.Stops.removeAll();
-    };
-    self.updateFromJSON = function (data) {
-        self.clearStops();
-        self.Id(data.Id);
-        self.Uid(data.TrainUid);
-        self.Headcode(data.HeadCode);
-        self.ServiceCode(data.ServiceCode);
-        var activated = "";
-        if(data.Activated) {
-            activated = moment(data.Activated).format(TrainNotifier.DateTimeFormats.dateTimeFormat);
-        }
-        self.Activated(activated);
-        self.SchedOrigin(data.SchedOriginStanox);
-        var schedDepart = "";
-        if(data.SchedOriginDeparture) {
-            schedDepart = moment(data.SchedOriginDeparture).format(TrainNotifier.DateTimeFormats.dateTimeFormat);
-        }
-        self.SchedDepart(schedDepart);
-        self.LastUpdate(moment().format(TrainNotifier.DateTimeFormats.dateTimeFormat));
-        if(data.Cancellation) {
-            var canxTxt = data.Cancellation.Type;
-            if(data.Cancellation.CancelledAt) {
-                canxTxt += " @ " + data.Cancellation.CancelledAt.Description;
-            }
-            canxTxt += " @ " + moment(data.Cancellation.CancelledTimestamp).format(TrainNotifier.DateTimeFormats.timeFormat) + " - Reason: ";
-            if(data.Cancellation.Description) {
-                canxTxt += data.Cancellation.Description;
-            }
-            canxTxt += " (" + data.Cancellation.ReasonCode + ")";
-            self.Cancellation(canxTxt);
-        } else {
-            self.Cancellation(null);
-        }
-        if(data.ChangeOfOrigin) {
-            var originText = data.ChangeOfOrigin.NewOrigin.Description + " @ " + moment(data.ChangeOfOrigin.NewDepartureTime).format(TrainNotifier.DateTimeFormats.timeFormat);
-            if(data.ChangeOfOrigin.ReasonCode) {
-                originText += " (" + data.ChangeOfOrigin.ReasonCode + ": " + data.ChangeOfOrigin.Description + ")";
-            }
-            self.ChangeOfOrigin(originText);
-        } else {
-            self.ChangeOfOrigin(null);
-        }
-        if(data.Reinstatement) {
-            self.Reinstatement(data.Reinstatement.NewOrigin.Description + " @ " + moment(data.Reinstatement.PlannedDepartureTime).format(TrainNotifier.DateTimeFormats.timeFormat));
-        } else {
-            self.Reinstatement(null);
-        }
-    };
-}
-function setArrival(stopEl, stopModel) {
-    var times = getTimes(stopEl);
-    stopModel.ArrivalActualTimeStamp(times.ActualTimeStamp);
-    stopModel.ArrivalPlannedTime(times.PlannedTimeStamp);
-    stopModel.ArrivalDelay(times.Delay);
-    setCommon(stopEl, stopModel);
-}
-function setDeparture(stopEl, stopModel) {
-    var times = getTimes(stopEl);
-    stopModel.DepartActualTimeStamp(times.ActualTimeStamp);
-    stopModel.DepartPlannedTime(times.PlannedTimeStamp);
-    stopModel.DepartDelay(times.Delay);
-    setCommon(stopEl, stopModel);
-}
-function setCommon(stopEl, stopModel) {
-    var existingLine = stopModel.Line();
-    if(!existingLine || existingLine == "") {
-        stopModel.Line(stopEl.Line);
-    }
-    var existingPlatform = stopModel.Platform();
-    if(!existingPlatform || existingPlatform == "") {
-        stopModel.Platform(stopEl.Platform);
-    }
-    stopModel.State(stopEl.State);
-    stopModel.Stanox(stopEl.Stanox);
-}
-function getTimes(stopEl) {
-    var setTimes = true;
-    var result = {
-        ActualTimeStamp: "",
-        PlannedTimeStamp: "",
-        Delay: 0
-    };
-    var actualTime = null;
-    if(stopEl.ActualTimeStamp && stopEl.ActualTimeStamp.length > 0) {
-        actualTime = new Date(stopEl.ActualTimeStamp);
-        result.ActualTimeStamp = moment(stopEl.ActualTimeStamp).format(TrainNotifier.DateTimeFormats.timeFormat);
-    } else {
-        setTimes = false;
-    }
-    var plannedTime = null;
-    if(stopEl.PlannedTime && stopEl.PlannedTime.length > 0) {
-        plannedTime = new Date(stopEl.PlannedTime);
-        result.PlannedTimeStamp = moment(stopEl.PlannedTime).format(TrainNotifier.DateTimeFormats.timeFormat);
-    } else if(stopEl.ActualTimeStamp && stopEl.ActualTimeStamp.length > 0) {
-        plannedTime = new Date(stopEl.ActualTimeStamp);
-        result.PlannedTimeStamp = moment(stopEl.ActualTimeStamp).format(TrainNotifier.DateTimeFormats.timeFormat);
-    } else {
-        setTimes = false;
-    }
-    if(setTimes) {
-        result.Delay = ((actualTime - plannedTime) / 60000);
-    }
-    return result;
-}
-function StopViewModel(berthUpdate) {
-    var self = this;
-    self.Stanox = ko.observable();
-    self.ArrivalPlannedTime = ko.observable();
-    self.ArrivalActualTimeStamp = ko.observable();
-    self.DepartPlannedTime = ko.observable();
-    self.DepartActualTimeStamp = ko.observable();
-    self.Line = ko.observable();
-    self.Platform = ko.observable();
-    self.ArrivalDelay = ko.observable();
-    self.DepartDelay = ko.observable();
-    self.NextStanox = ko.observable();
-    self.ExpectedAtNextStanox = ko.observable();
-    self.OffRoute = ko.observable();
-    self.BerthUpdate = berthUpdate || false;
-    self.Notes = ko.observable();
-    self.ArrivalDelayResult = ko.computed(function () {
-        if(self.ArrivalDelay() == 0) {
-            return "badge-success";
-        }
-        if(self.ArrivalDelay() < 0) {
-            return "badge-info";
-        }
-        if(self.ArrivalDelay() > 10) {
-            return "badge-important";
-        }
-        if(self.ArrivalDelay() > 0) {
-            return "badge-warning";
-        }
-        return "hidden";
-    });
-    self.ArrivalDelayTitle = ko.computed(function () {
-        if(self.ArrivalDelay() == 0) {
-            return "on time";
-        }
-        if(self.ArrivalDelay() < 0) {
-            return "early";
-        }
-        return "late";
-    });
-    self.DepartDelayResult = ko.computed(function () {
-        if(self.DepartDelay() == 0) {
-            return "badge-success";
-        }
-        if(self.DepartDelay() < 0) {
-            return "badge-info";
-        }
-        if(self.DepartDelay() > 10) {
-            return "badge-important";
-        }
-        if(self.DepartDelay() > 0) {
-            return "badge-warning";
-        }
-        return "hidden";
-    });
-    self.DepartDelayTitle = ko.computed(function () {
-        if(self.DepartDelay() == 0) {
-            return "on time";
-        }
-        if(self.DepartDelay() < 0) {
-            return "early";
-        }
-        return "late";
-    });
-    self.State = ko.observable();
-    self.StateClass = ko.computed(function () {
-        switch(self.State()) {
-            case 1:
-                return "warning";
-            case 2:
-                return "error";
-            default:
-                return "";
-        }
-    });
-    self.StateTitle = ko.computed(function () {
-        switch(self.State()) {
-            case 1:
-                return "Terminated";
-            case 2:
-                return "Cancelled";
-            default:
-                return "";
-        }
     });
 }

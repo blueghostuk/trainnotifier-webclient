@@ -2,7 +2,7 @@
 /// <reference path="../typings/knockout/knockout.d.ts" />
 /// <reference path="../typings/moment/moment.d.ts" />
 
-function PPMViewModel(ppmModel? : any, parent? : any) {
+function PPMViewModel(ppmModel?: any, parent?: any) {
     var self = this;
 
     self.Operator = ko.observable(ppmModel ? ppmModel.Description : null);
@@ -96,28 +96,6 @@ function LocationViewModel() {
 
     self.toDisplay = ko.computed(function () {
         return self.stationName() ? self.stationName() : self.locationDescription();
-    });
-}
-
-function TrainTitleViewModel() {
-    var self = this;
-
-    self.Id = ko.observable();
-    self.From = ko.observable();
-    self.To = ko.observable();
-    self.Start = ko.observable();
-    self.End = ko.observable();
-
-    self.FullTitle = ko.computed(function () {
-        if (TrainNotifier.Common.page && TrainNotifier.Common.page.pageTitle &&
-            self.Id() && self.From() && self.To() && self.Start() && self.End()) {
-            document.title = self.Id() + " "
-                + self.From()
-                + " to " + self.To() + " "
-                + self.Start() + " - " + self.End()
-                + " - " + TrainNotifier.Common.page.pageTitle;
-        }
-        return "";
     });
 }
 
@@ -267,55 +245,419 @@ function TrainDetailsViewModel() {
     };
 }
 
-function ScheduleTrainViewModel(currentLocation) {
-    var self = this;
+module TrainNotifier.ViewModels {
 
-    var timeFormat = "HH:mm:ss";
-    var dateFormat = "DD/MM/YY HH:mm:ss";
+    export class ScheduleTrainViewModel {
+        public Stops = ko.observableArray();
 
-    self.Stops = ko.observableArray();
+        addStop(stop: any) {
+            this.Stops.push(new ScheduleStopViewModel(stop));
+        };
 
-    self.addStop = function (stop) {
-        self.Stops.push(new ScheduleStopViewModel(stop));
-    };
+        clearStops() {
+            this.Stops.removeAll();
+        };
 
-    self.clearStops = function () {
-        self.Stops.removeAll();
-    };
+        updateFromJson(schedule: any) {
+            this.clearStops();
 
-    self.updateFromJson = function (schedule) {
-        self.clearStops();
-
-        if (schedule && schedule.Stops) {
-            for (var stop in schedule.Stops) {
-                self.addStop(schedule.Stops[stop]);
+            if (schedule && schedule.Stops) {
+                for (var i in schedule.Stops) {
+                    this.addStop(schedule.Stops[i]);
+                }
             }
+        };
+    };
+
+    export class ScheduleStopViewModel {
+
+        public ActualArrival = ko.observable();
+        public ActualDeparture = ko.observable();
+        public Arrival: string = null;
+        public Departure: string = null;
+        public PublicArrival: string = null;
+        public PublicDeparture: string = null;
+        public Intermediate: string;
+        public Line: string;
+        public Origin: bool;
+        public Pass: string;
+        public Path: string;
+        public EngineeringAllowance: number;
+        public PathingAllowance: number;
+        public PerformanceAllowance: number;
+        public Platform: string;
+        public StopNumber: number;
+        public Terminate: bool;
+        public Tiploc: any;
+
+        constructor(stop: any) {
+            this.Arrival = DateTimeFormats.formatTimeString(stop.Arrival);
+            this.PublicArrival = DateTimeFormats.formatTimeString(stop.PublicArrival);
+            this.Departure = DateTimeFormats.formatTimeString(stop.Departure);
+            this.PublicDeparture = DateTimeFormats.formatTimeString(stop.PublicDeparture);
+
+            this.EngineeringAllowance = stop.EngineeringAllowance;
+            this.Intermediate = stop.Intermediate;
+            this.Line = stop.Line;
+            this.Origin = stop.Origin;
+            this.Pass = stop.Pass;
+            this.Path = stop.Path;
+            this.PathingAllowance = stop.PathingAllowance;
+            this.PerformanceAllowance = stop.PerformanceAllowance;
+            this.Platform = stop.Platform;
+            this.StopNumber = stop.StopNumber;
+            this.Terminate = stop.Terminate;
+            this.Tiploc = new TiplocViewModel(stop.Tiploc);
+        };
+
+        setActualArrivalTime(arrival: string) {
+            this.ActualArrival(DateTimeFormats.formatTimeString(arrival));
+        };
+
+        setActualDepartureTime(departure: string) {
+            this.ActualDeparture(DateTimeFormats.formatTimeString(departure));
+        };
+    };
+
+    export class StopViewModel {
+        public Stanox = ko.observable();
+        public ArrivalPlannedTime = ko.observable();
+        public ArrivalActualTimeStamp = ko.observable();
+        public DepartPlannedTime = ko.observable();
+        public DepartActualTimeStamp = ko.observable();
+        public Line = ko.observable();
+        public Platform = ko.observable();
+        public ArrivalDelay = ko.observable();
+        public DepartDelay = ko.observable();
+        public NextStanox = ko.observable();
+        public ExpectedAtNextStanox = ko.observable();
+        public OffRoute = ko.observable();
+        public BerthUpdate: bool;
+        public Notes = ko.observable();
+        public State = ko.observable();
+
+        public ArrivalDelayResult: KnockoutComputed;
+        public ArrivalDelayTitle: KnockoutComputed;
+        public DepartDelayResult: KnockoutComputed;
+        public DepartDelayTitle: KnockoutComputed;
+        public StateClass: KnockoutComputed;
+        public StateTitle: KnockoutComputed;
+
+        constructor(berthUpdate?: bool) {
+            this.BerthUpdate = berthUpdate || false;
+
+            var self = this;
+            this.ArrivalDelayResult = ko.computed(function () {
+                if (self.ArrivalDelay() == 0)
+                    return "badge-success";
+                if (self.ArrivalDelay() < 0)
+                    return "badge-info";
+                if (self.ArrivalDelay() > 10)
+                    return "badge-important";
+                if (self.ArrivalDelay() > 0)
+                    return "badge-warning";
+
+                return "hidden";
+            });
+            this.ArrivalDelayTitle = ko.computed(function () {
+                if (self.ArrivalDelay() == 0)
+                    return "on time";
+                if (self.ArrivalDelay() < 0)
+                    return "early";
+                return "late";
+            });
+            this.DepartDelayResult = ko.computed(function () {
+                if (self.DepartDelay() == 0)
+                    return "badge-success";
+                if (self.DepartDelay() < 0)
+                    return "badge-info";
+                if (self.DepartDelay() > 10)
+                    return "badge-important";
+                if (self.DepartDelay() > 0)
+                    return "badge-warning";
+
+                return "hidden";
+            });
+            this.DepartDelayTitle = ko.computed(function () {
+                if (self.DepartDelay() == 0)
+                    return "on time";
+                if (self.DepartDelay() < 0)
+                    return "early";
+                return "late";
+            });
+            this.StateClass = ko.computed(function () {
+                switch (self.State()) {
+                    case 1:
+                        return "warning";
+                    case 2:
+                        return "error";
+                    default:
+                        //case "Normal":
+                        return "";
+                }
+            });
+            this.StateTitle = ko.computed(function () {
+                switch (self.State()) {
+                    case 1:
+                        return "Terminated";
+                    case 2:
+                        return "Cancelled";
+                    default:
+                        //case "Normal":
+                        return "";
+                }
+            });
         }
     };
-}
 
-function ScheduleStopViewModel(stop) {
-    var self = this;
+    export class LiveTrainViewModel {
 
-    self.ActualArrival = ko.observable();
-    self.ActualDeparture = ko.observable();
-    self.Arrival = stop.Arrival;
-    self.Departure = stop.Departure;
-    self.EngineeringAllowance = stop.EngineeringAllowance;
-    self.Intermediate = stop.Intermediate;
-    self.Line = stop.Line;
-    self.Origin = stop.Origin;
-    self.Pass = stop.Pass;
-    self.Path = stop.Path;
-    self.PathingAllowance = stop.PathingAllowance;
-    self.PerformanceAllowance = stop.PerformanceAllowance;
-    self.Platform = stop.Platform;
-    self.PublicArrival = stop.PublicArrival;
-    self.PublicDeparture = stop.PublicDeparture;
-    self.StopNumber = stop.StopNumber;
-    self.Terminate = stop.Terminate;
-    self.Origin = stop.Origin;
-    self.Tiploc = new TiplocViewModel(stop.Tiploc);
+        public Id = ko.observable();
+        public Uid = ko.observable();
+        public Headcode = ko.observable();
+        public ServiceCode = ko.observable();
+        public Activated = ko.observable();
+        public SchedOrigin = ko.observable();
+        public SchedDepart = ko.observable();
+        public Stops = ko.observableArray();
+        public LastUpdate = ko.observable();
+        public Cancellation = ko.observable();
+        public ChangeOfOrigin = ko.observable();
+        public Reinstatement = ko.observable();
+        public Date: KnockoutComputed;
+
+        constructor() {
+            var self = this;
+            this.Date = ko.computed(function () {
+                if (self.SchedDepart()) {
+                    return moment(self.SchedDepart(), DateTimeFormats.dateTimeFormat).format(DateTimeFormats.dateQueryFormat);
+                }
+                return "";
+            });
+        }
+
+        addBerthStop(stopEl) {
+            var stopModel = new StopViewModel(true);
+            switch (stopEl.Type) {
+                // TODO: more
+                //case "CA":
+                default:
+                    stopModel.Stanox(stopEl.From + " - " + stopEl.To);
+                    // supplied time is in UTC, want to format to local (in theory this is UK)
+                    // note these times are shown with seconds as they may not be on the 00/30 mark
+                    stopModel.ArrivalActualTimeStamp(moment.utc(stopEl.Time).local().format(DateTimeFormats.timeFormat));
+                    stopModel.Notes("From Area: " + stopEl.AreaId);
+                    break;
+            }
+            this.Stops.push(stopModel);
+        };
+
+        addStop(stopEl) {
+            if (this.Stops().length == 0) {
+                var stopModel = new StopViewModel();
+                switch (stopEl.EventType.toLowerCase()) {
+                    case "arrival":
+                        LiveTrainViewModel.setArrival(stopEl, stopModel);
+                        break;
+                    case "departure":
+                        LiveTrainViewModel.setDeparture(stopEl, stopModel);
+                        break;
+                }
+
+                this.Stops.push(stopModel);
+            } else {
+                var stopModel = null;
+                for (var i = (this.Stops().length - 1); i >= 0; i--) {
+                    var stop = this.Stops()[i];
+                    if (!stop.BerthUpdate) {
+                        if (stop.Stanox() == stopEl.Stanox) {
+                            stopModel = stop;
+                            break;
+                        }
+                    }
+                }
+                if (!stopModel) {
+                    stopModel = new StopViewModel();
+
+                    this.Stops.push(stopModel);
+                }
+                switch (stopEl.EventType.toLowerCase()) {
+                    case "arrival":
+                        LiveTrainViewModel.setArrival(stopEl, stopModel);
+                        if (stopEl.OffRoute) {
+                            stopModel.OffRoute("Off Route.");
+                        }
+                        break;
+                    case "departure":
+                        LiveTrainViewModel.setDeparture(stopEl, stopModel);
+
+                        if (stopEl.OffRoute) {
+                            stopModel.OffRoute("Off Route.");
+                        }
+                        if (stopEl.NextStanox && stopEl.NextStanox.length > 0) {
+                            stopModel.NextStanox(stopEl.NextStanox);
+                        }
+                        if (stopEl.ExpectedAtNextStanox && stopEl.ExpectedAtNextStanox.length > 0) {
+                            stopModel.ExpectedAtNextStanox(DateTimeFormats.formatTimeString(stopEl.ExpectedAtNextStanox));
+                        }
+                        break;
+                }
+            }
+        };
+
+        clearStops() {
+            this.Stops.removeAll();
+        };
+
+        updateFromJSON(data) {
+            this.clearStops();
+            this.Id(data.Id);
+            this.Uid(data.TrainUid);
+            this.Headcode(data.HeadCode);
+            this.ServiceCode(data.ServiceCode);
+            var activated = "";
+            if (data.Activated) {
+                activated = moment(data.Activated).format(TrainNotifier.DateTimeFormats.dateTimeFormat);
+            }
+            this.Activated(activated);
+
+            this.SchedOrigin(data.SchedOriginStanox);
+            var schedDepart = "";
+            if (data.SchedOriginDeparture) {
+                schedDepart = moment(data.SchedOriginDeparture).format(TrainNotifier.DateTimeFormats.dateTimeFormat);
+            }
+            this.SchedDepart(schedDepart);
+            this.LastUpdate(moment().format(TrainNotifier.DateTimeFormats.dateTimeFormat));
+
+            if (data.Cancellation) {
+                var canxTxt = data.Cancellation.Type;
+                if (data.Cancellation.CancelledAt)
+                    canxTxt += " @ " + data.Cancellation.CancelledAt.Description;
+                canxTxt += " @ " + moment(data.Cancellation.CancelledTimestamp).format(TrainNotifier.DateTimeFormats.timeFormat)
+                    + " - Reason: ";
+                if (data.Cancellation.Description) {
+                    canxTxt += data.Cancellation.Description;
+                }
+                canxTxt += " (" + data.Cancellation.ReasonCode + ")";
+                this.Cancellation(canxTxt);
+            } else {
+                this.Cancellation(null);
+            }
+            if (data.ChangeOfOrigin) {
+                var originText = data.ChangeOfOrigin.NewOrigin.Description
+                            + " @ " + moment(data.ChangeOfOrigin.NewDepartureTime).format(TrainNotifier.DateTimeFormats.timeFormat);
+                if (data.ChangeOfOrigin.ReasonCode) {
+                    originText += " (" + data.ChangeOfOrigin.ReasonCode + ": " + data.ChangeOfOrigin.Description + ")";
+                }
+                this.ChangeOfOrigin(originText);
+            } else {
+                this.ChangeOfOrigin(null);
+            }
+            if (data.Reinstatement) {
+                this.Reinstatement(data.Reinstatement.NewOrigin.Description + " @ "
+                    + moment(data.Reinstatement.PlannedDepartureTime).format(TrainNotifier.DateTimeFormats.timeFormat));
+            } else {
+                this.Reinstatement(null);
+            }
+        };
+
+        private static setArrival(stopEl: any, stopModel: StopViewModel) {
+            var times = LiveTrainViewModel.getTimes(stopEl);
+
+            stopModel.ArrivalActualTimeStamp(DateTimeFormats.formatTimeString(times.ActualTimeStamp));
+            stopModel.ArrivalPlannedTime(DateTimeFormats.formatTimeString(times.PlannedTimeStamp));
+            stopModel.ArrivalDelay(times.Delay);
+
+            LiveTrainViewModel.setCommon(stopEl, stopModel);
+        };
+
+        private static setDeparture(stopEl: any, stopModel: StopViewModel) {
+            var times = LiveTrainViewModel.getTimes(stopEl);
+
+            stopModel.DepartActualTimeStamp(DateTimeFormats.formatTimeString(times.ActualTimeStamp));
+            stopModel.DepartPlannedTime(DateTimeFormats.formatTimeString(times.PlannedTimeStamp));
+            stopModel.DepartDelay(times.Delay);
+
+            LiveTrainViewModel.setCommon(stopEl, stopModel);
+        };
+
+        private static setCommon(stopEl: any, stopModel: StopViewModel) {
+            var existingLine = stopModel.Line();
+            if (!existingLine || existingLine == "") {
+                stopModel.Line(stopEl.Line);
+            }
+            var existingPlatform = stopModel.Platform();
+            if (!existingPlatform || existingPlatform == "") {
+                stopModel.Platform(stopEl.Platform);
+            }
+
+            stopModel.State(stopEl.State);
+            stopModel.Stanox(stopEl.Stanox);
+        };
+
+        private static getTimes(stopEl: any) : ITimeResult {
+            var setTimes = true;
+            var result: ITimeResult = {
+                ActualTimeStamp: null,
+                PlannedTimeStamp: null,
+                Delay: 0
+            };
+            var actualTime = null;
+            if (stopEl.ActualTimeStamp && stopEl.ActualTimeStamp.length > 0) {
+                actualTime = new Date(stopEl.ActualTimeStamp);
+                result.ActualTimeStamp = moment(stopEl.ActualTimeStamp).format(TrainNotifier.DateTimeFormats.timeFormat);
+            } else {
+                setTimes = false;
+            }
+            var plannedTime = null;
+            if (stopEl.PlannedTime && stopEl.PlannedTime.length > 0) {
+                plannedTime = new Date(stopEl.PlannedTime);
+                result.PlannedTimeStamp = moment(stopEl.PlannedTime).format(TrainNotifier.DateTimeFormats.timeFormat);
+            } else if (stopEl.ActualTimeStamp && stopEl.ActualTimeStamp.length > 0) {
+                plannedTime = new Date(stopEl.ActualTimeStamp);
+                result.PlannedTimeStamp = moment(stopEl.ActualTimeStamp).format(TrainNotifier.DateTimeFormats.timeFormat);
+            } else {
+                setTimes = false;
+            }
+
+            if (setTimes) {
+                result.Delay = ((actualTime - plannedTime) / 60000);
+            }
+
+            return result;
+        };
+    };
+
+    private interface ITimeResult{
+        ActualTimeStamp: string;
+        PlannedTimeStamp: string;
+        Delay: number;
+    };
+
+    export class TrainTitleViewModel {
+
+        public Id = ko.observable();
+        public From = ko.observable();
+        public To = ko.observable();
+        public Start = ko.observable();
+        public End = ko.observable();
+        public FullTitle: KnockoutComputed;
+
+        constructor() {
+            var self = this;
+            this.FullTitle = ko.computed(function () {
+                if (TrainNotifier.Common.page && TrainNotifier.Common.page.pageTitle &&
+                    self.Id() && self.From() && self.To() && self.Start() && self.End()) {
+                    document.title = self.Id() + " "
+                        + self.From()
+                        + " to " + self.To() + " "
+                        + self.Start() + " - " + self.End()
+                        + " - " + TrainNotifier.Common.page.pageTitle;
+                }
+                return "";
+            });
+        };
+    }
 }
 
 function AtocCodeViewModel() {
@@ -449,306 +791,5 @@ function TrainAssociation(association, trainUid, date) {
                 break;
         }
         return self.getTrain() + "/" + date.format("YYYY/MM/DD");
-    });
-}
-
-function LiveTrainViewModel() {
-    var self = this;
-
-    self.Id = ko.observable();
-    self.Uid = ko.observable();
-    self.Headcode = ko.observable();
-    self.ServiceCode = ko.observable();
-    self.Activated = ko.observable();
-    self.SchedOrigin = ko.observable();
-    self.SchedDepart = ko.observable();
-    self.Stops = ko.observableArray();
-    self.LastUpdate = ko.observable();
-    self.Cancellation = ko.observable();
-    self.ChangeOfOrigin = ko.observable();
-    self.Reinstatement = ko.observable();
-
-    self.Date = ko.computed(function () {
-        if (self.SchedDepart()) {
-            return moment(self.SchedDepart(), "DD/MM/YY HH:mm:ss").format("YYYY-MM-DD");
-        }
-        return "";
-    });
-
-    self.addBerthStop = function (stopEl) {
-        var stopModel = new StopViewModel(true);
-        switch (stopEl.Type) {
-            // TODO: more
-            //case "CA":
-            default:
-                stopModel.Stanox(stopEl.From + " - " + stopEl.To);
-                // supplied time is in UTC, want to format to local (in theory this is UK)
-                stopModel.ArrivalActualTimeStamp(moment.utc(stopEl.Time).local().format("HH:mm:ss"));
-                stopModel.Notes("From Area: " + stopEl.AreaId);
-                break;
-        }
-        self.Stops.push(stopModel);
-    };
-
-    self.addStop = function (stopEl) {
-        if (self.Stops().length == 0) {
-            var stopModel = new StopViewModel();
-            switch (stopEl.EventType.toLowerCase()) {
-                case "arrival":
-                    setArrival(stopEl, stopModel);
-                    break;
-                case "departure":
-                    setDeparture(stopEl, stopModel);
-                    break;
-            }
-
-            self.Stops.push(stopModel);
-        } else {
-            var stopModel = null;
-            for (var i = (self.Stops().length - 1); i >= 0; i--) {
-                var stop = self.Stops()[i];
-                if (!stop.BerthUpdate) {
-                    if (stop.Stanox() == stopEl.Stanox) {
-                        stopModel = stop;
-                        break;
-                    }
-                }
-            }
-            if (!stopModel) {
-                stopModel = new StopViewModel();
-
-                self.Stops.push(stopModel);
-            }
-            switch (stopEl.EventType.toLowerCase()) {
-                case "arrival":
-                    setArrival(stopEl, stopModel);
-                    if (stopEl.OffRoute) {
-                        stopModel.OffRoute("Off Route.");
-                    }
-                    break;
-                case "departure":
-                    setDeparture(stopEl, stopModel);
-
-                    if (stopEl.OffRoute) {
-                        stopModel.OffRoute("Off Route.");
-                    }
-                    if (stopEl.NextStanox && stopEl.NextStanox.length > 0) {
-                        stopModel.NextStanox(stopEl.NextStanox);
-                    }
-                    if (stopEl.ExpectedAtNextStanox && stopEl.ExpectedAtNextStanox.length > 0) {
-                        stopModel.ExpectedAtNextStanox(moment(stopEl.ExpectedAtNextStanox, "HH:mm:ss").format("mm:ss"));
-                    }
-                    break;
-            }
-        }
-    };
-
-    self.clearStops = function () {
-        self.Stops.removeAll();
-    };
-
-    self.updateFromJSON = function (data) {
-        self.clearStops();
-        self.Id(data.Id);
-        self.Uid(data.TrainUid);
-        self.Headcode(data.HeadCode);
-        self.ServiceCode(data.ServiceCode);
-        var activated = "";
-        if (data.Activated) {
-            activated = moment(data.Activated).format(TrainNotifier.DateTimeFormats.dateTimeFormat);
-        }
-        self.Activated(activated);
-
-        self.SchedOrigin(data.SchedOriginStanox);
-        var schedDepart = "";
-        if (data.SchedOriginDeparture) {
-            schedDepart = moment(data.SchedOriginDeparture).format(TrainNotifier.DateTimeFormats.dateTimeFormat);
-        }
-        self.SchedDepart(schedDepart);
-        self.LastUpdate(moment().format(TrainNotifier.DateTimeFormats.dateTimeFormat));
-
-        if (data.Cancellation) {
-            var canxTxt = data.Cancellation.Type;
-            if (data.Cancellation.CancelledAt)
-                canxTxt += " @ " + data.Cancellation.CancelledAt.Description;
-            canxTxt += " @ " + moment(data.Cancellation.CancelledTimestamp).format(TrainNotifier.DateTimeFormats.timeFormat)
-                + " - Reason: ";
-            if (data.Cancellation.Description) {
-                canxTxt += data.Cancellation.Description;
-            }
-            canxTxt += " (" + data.Cancellation.ReasonCode + ")";
-            self.Cancellation(canxTxt);
-        } else {
-            self.Cancellation(null);
-        }
-        if (data.ChangeOfOrigin) {
-            var originText = data.ChangeOfOrigin.NewOrigin.Description
-                        + " @ " + moment(data.ChangeOfOrigin.NewDepartureTime).format(TrainNotifier.DateTimeFormats.timeFormat);
-            if (data.ChangeOfOrigin.ReasonCode) {
-                originText += " (" + data.ChangeOfOrigin.ReasonCode + ": " + data.ChangeOfOrigin.Description + ")";
-            }
-            self.ChangeOfOrigin(originText);
-        } else {
-            self.ChangeOfOrigin(null);
-        }
-        if (data.Reinstatement) {
-            self.Reinstatement(data.Reinstatement.NewOrigin.Description + " @ "
-                + moment(data.Reinstatement.PlannedDepartureTime).format(TrainNotifier.DateTimeFormats.timeFormat));
-        } else {
-            self.Reinstatement(null);
-        }
-    };
-}
-
-function setArrival(stopEl, stopModel) {
-    var times = getTimes(stopEl);
-
-    stopModel.ArrivalActualTimeStamp(times.ActualTimeStamp);
-    stopModel.ArrivalPlannedTime(times.PlannedTimeStamp);
-    stopModel.ArrivalDelay(times.Delay);
-
-    setCommon(stopEl, stopModel);
-}
-
-function setDeparture(stopEl, stopModel) {
-    var times = getTimes(stopEl);
-
-    stopModel.DepartActualTimeStamp(times.ActualTimeStamp);
-    stopModel.DepartPlannedTime(times.PlannedTimeStamp);
-    stopModel.DepartDelay(times.Delay);
-
-    setCommon(stopEl, stopModel);
-}
-
-function setCommon(stopEl, stopModel) {
-    var existingLine = stopModel.Line();
-    if (!existingLine || existingLine == "") {
-        stopModel.Line(stopEl.Line);
-    }
-    var existingPlatform = stopModel.Platform();
-    if (!existingPlatform || existingPlatform == "") {
-        stopModel.Platform(stopEl.Platform);
-    }
-
-    stopModel.State(stopEl.State);
-    stopModel.Stanox(stopEl.Stanox);
-}
-
-function getTimes(stopEl : any) {
-    var setTimes = true;
-    var result = {
-        ActualTimeStamp: "",
-        PlannedTimeStamp: "",
-        Delay: 0
-    };
-    var actualTime = null;
-    if (stopEl.ActualTimeStamp && stopEl.ActualTimeStamp.length > 0) {
-        actualTime = new Date(stopEl.ActualTimeStamp);
-        result.ActualTimeStamp = moment(stopEl.ActualTimeStamp).format(TrainNotifier.DateTimeFormats.timeFormat);
-    } else {
-        setTimes = false;
-    }
-    var plannedTime = null;
-    if (stopEl.PlannedTime && stopEl.PlannedTime.length > 0) {
-        plannedTime = new Date(stopEl.PlannedTime);
-        result.PlannedTimeStamp = moment(stopEl.PlannedTime).format(TrainNotifier.DateTimeFormats.timeFormat);
-    } else if (stopEl.ActualTimeStamp && stopEl.ActualTimeStamp.length > 0) {
-        plannedTime = new Date(stopEl.ActualTimeStamp);
-        result.PlannedTimeStamp = moment(stopEl.ActualTimeStamp).format(TrainNotifier.DateTimeFormats.timeFormat);
-    } else {
-        setTimes = false;
-    }
-
-    if (setTimes) {
-        result.Delay = ((actualTime - plannedTime) / 60000);
-    }
-
-    return result;
-}
-
-function StopViewModel(berthUpdate? : any) {
-    var self = this;
-
-    self.Stanox = ko.observable();
-    self.ArrivalPlannedTime = ko.observable();
-    self.ArrivalActualTimeStamp = ko.observable();
-    self.DepartPlannedTime = ko.observable();
-    self.DepartActualTimeStamp = ko.observable();
-    self.Line = ko.observable();
-    self.Platform = ko.observable();
-    self.ArrivalDelay = ko.observable();
-    self.DepartDelay = ko.observable();
-    self.NextStanox = ko.observable();
-    self.ExpectedAtNextStanox = ko.observable();
-    self.OffRoute = ko.observable();
-    self.BerthUpdate = berthUpdate || false;
-    self.Notes = ko.observable();
-
-    self.ArrivalDelayResult = ko.computed(function () {
-        if (self.ArrivalDelay() == 0)
-            return "badge-success";
-        if (self.ArrivalDelay() < 0)
-            return "badge-info";
-        if (self.ArrivalDelay() > 10)
-            return "badge-important";
-        if (self.ArrivalDelay() > 0)
-            return "badge-warning";
-
-        return "hidden";
-    });
-
-    self.ArrivalDelayTitle = ko.computed(function () {
-        if (self.ArrivalDelay() == 0)
-            return "on time";
-        if (self.ArrivalDelay() < 0)
-            return "early";
-        return "late";
-    });
-
-    self.DepartDelayResult = ko.computed(function () {
-        if (self.DepartDelay() == 0)
-            return "badge-success";
-        if (self.DepartDelay() < 0)
-            return "badge-info";
-        if (self.DepartDelay() > 10)
-            return "badge-important";
-        if (self.DepartDelay() > 0)
-            return "badge-warning";
-
-        return "hidden";
-    });
-
-    self.DepartDelayTitle = ko.computed(function () {
-        if (self.DepartDelay() == 0)
-            return "on time";
-        if (self.DepartDelay() < 0)
-            return "early";
-        return "late";
-    });
-
-    self.State = ko.observable();
-
-    self.StateClass = ko.computed(function () {
-        switch (self.State()) {
-            case 1:
-                return "warning";
-            case 2:
-                return "error";
-            default:
-                //case "Normal":
-                return "";
-        }
-    });
-
-    self.StateTitle = ko.computed(function () {
-        switch (self.State()) {
-            case 1:
-                return "Terminated";
-            case 2:
-                return "Cancelled";
-            default:
-                //case "Normal":
-                return "";
-        }
     });
 }
