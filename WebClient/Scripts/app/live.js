@@ -69,12 +69,6 @@ function sortTrainId(trainId) {
     });
     $(header).after(ordered);
 }
-function padTime(time) {
-    if(time < 10) {
-        return "0" + time;
-    }
-    return time;
-}
 function addMessage(message, parent) {
     if(parent) {
         $("#" + parent).after(message);

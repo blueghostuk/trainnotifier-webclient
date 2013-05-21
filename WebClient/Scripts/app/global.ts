@@ -48,12 +48,12 @@ module TrainNotifier {
     }
 
     export class DateTimeFormats {
-        static timeUrlFormat = "HH-mm";
-        static timeFormat = "HH:mm:ss";
-        static dateTimeFormat = "DD/MM/YY HH:mm:ss";
-        static dateTimeHashFormat = "YYYY-MM-DD/HH-mm";
-        static dateQueryFormat = "YYYY-MM-DD";
-        static dateUrlFormat = "YYYY/MM/DD";
+        public static timeUrlFormat = "HH-mm";
+        public static timeFormat = "HH:mm:ss";
+        public static dateTimeFormat = "DD/MM/YY HH:mm:ss";
+        public static dateTimeHashFormat = "YYYY-MM-DD/HH-mm";
+        public static dateQueryFormat = "YYYY-MM-DD";
+        public static dateUrlFormat = "YYYY/MM/DD";
     }
 
 }

@@ -91,12 +91,6 @@ function sortTrainId(trainId: string) {
     $(header).after(ordered);
 }
 
-function padTime(time: number): any {
-    if (time < 10)
-        return "0" + time;
-    return time;
-}
-
 function addMessage(message: string, parent?: string) {
     if (parent) {
         $("#" + parent).after(message);
