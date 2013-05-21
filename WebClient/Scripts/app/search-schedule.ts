@@ -84,12 +84,11 @@ function getDateTime(args) {
     if (args.length > 0) {
         if (args.length == 2) {
             return moment(args.join('/'), TrainNotifier.DateTimeFormats.dateTimeHashFormat);
-        } else {
+        } else if (args[0] && args[0].length > 0) {
             return moment(args[0], TrainNotifier.DateTimeFormats.dateQueryFormat);
         }
-    } else {
-        return moment();
     }
+return moment();
 }
 
 function preAjax() {
@@ -354,6 +353,27 @@ function getCallingBetweenByStanox(from, to, startDate, endDate) {
 }
 
 function createTrainElement(data) {
+    if (data.Origin) {
+        data.Origin.PublicArrival = TrainNotifier.DateTimeFormats.formatTimeString(
+            data.Origin.PublicArrival);
+        data.Origin.Arrival = TrainNotifier.DateTimeFormats.formatTimeString(
+            data.Origin.Arrival);
+        data.Origin.PublicDeparture = TrainNotifier.DateTimeFormats.formatTimeString(
+            data.Origin.PublicDeparture);
+        data.Origin.Departure = TrainNotifier.DateTimeFormats.formatTimeString(
+            data.Origin.Departure);
+    }
+    if (data.Destination) {
+        data.Destination.PublicArrival = TrainNotifier.DateTimeFormats.formatTimeString(
+            data.Destination.PublicArrival);
+        data.Destination.Arrival = TrainNotifier.DateTimeFormats.formatTimeString(
+            data.Destination.Arrival);
+        data.Destination.PublicDeparture = TrainNotifier.DateTimeFormats.formatTimeString(
+                data.Origin.PublicDeparture);
+        data.Destination.Departure = TrainNotifier.DateTimeFormats.formatTimeString(
+                data.Origin.Departure);
+    }
+
     var train = ko.mapping.fromJS(data);
     if (data.SchedOriginDeparture) {
         train.SchedOriginDeparture(moment(data.SchedOriginDeparture).format(TrainNotifier.DateTimeFormats.dateUrlFormat));
@@ -385,11 +405,13 @@ function createTrainElement(data) {
     }
     train.ActualArrival = "";
     if (data.ActualArrival) {
-        train.ActualArrival = moment(data.ActualArrival).format(TrainNotifier.DateTimeFormats.timeFormat);
+        train.ActualArrival = TrainNotifier.DateTimeFormats.formatTimeString(
+            moment(data.ActualArrival).format(TrainNotifier.DateTimeFormats.timeFormat));
     }
     train.ActualDeparture = "";
     if (data.ActualDeparture) {
-        train.ActualDeparture = moment(data.ActualDeparture).format(TrainNotifier.DateTimeFormats.timeFormat);
+        train.ActualDeparture = TrainNotifier.DateTimeFormats.formatTimeString(
+            moment(data.ActualDeparture).format(TrainNotifier.DateTimeFormats.timeFormat));
     }
     if (train.Origin) {
         if (train.Origin.Description()) {
@@ -405,6 +427,7 @@ function createTrainElement(data) {
             train.Destination.Description(train.Destination.Tiploc().toLowerCase());
         }
     }
+
     train.ExpectedDestinationArrival = data.DestExpectedArrival ? data.DestExpectedArrival : "";
     train.ActualDestinationArrival = data.DestActualArrival ? moment(data.DestActualArrival).format(TrainNotifier.DateTimeFormats.timeFormat) : "";
     return train;
