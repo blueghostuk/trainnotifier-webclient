@@ -30,6 +30,7 @@
         DateTimeFormats.timeUrlFormat = "HH-mm";
         DateTimeFormats.timeFormat = "HH:mm:ss";
         DateTimeFormats.shortTimeFormat = "HH:mm";
+        DateTimeFormats.dateFormat = "DD/MM/YY";
         DateTimeFormats.dateTimeFormat = "DD/MM/YY HH:mm:ss";
         DateTimeFormats.dateTimeHashFormat = "YYYY-MM-DD/HH-mm";
         DateTimeFormats.dateQueryFormat = "YYYY-MM-DD";

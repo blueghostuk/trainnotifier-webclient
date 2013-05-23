@@ -172,13 +172,13 @@ function TrainDetailsViewModel() {
         } else {
             self.Reinstatement(null);
         }
-        self.EndDateValue(schedule ? moment(schedule.EndDate).format(TrainNotifier.DateTimeFormats.timeFormat) : null);
         self.Headcode(liveData.HeadCode);
         self.Id(liveData.Id);
         self.updateRuns(schedule ? schedule.Schedule : null);
         self.STPValue(schedule ? self.getSTPValue(schedule.STPIndicator) : null);
         self.ServiceCode(liveData.ServiceCode);
-        self.StartDateValue(schedule ? moment(schedule.StartDate).format(TrainNotifier.DateTimeFormats.dateTimeFormat) : null);
+        self.StartDateValue(schedule ? moment(schedule.StartDate).format(TrainNotifier.DateTimeFormats.dateFormat) : null);
+        self.EndDateValue(schedule ? moment(schedule.EndDate).format(TrainNotifier.DateTimeFormats.dateFormat) : null);
         self.TrainUid(schedule ? schedule.TrainUid : liveData.TrainUid);
 
         if (liveData) {

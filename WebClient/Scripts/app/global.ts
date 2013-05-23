@@ -51,6 +51,7 @@ module TrainNotifier {
         public static timeUrlFormat = "HH-mm";
         public static timeFormat = "HH:mm:ss";
         public static shortTimeFormat = "HH:mm";
+        public static dateFormat = "DD/MM/YY";
         public static dateTimeFormat = "DD/MM/YY HH:mm:ss";
         public static dateTimeHashFormat = "YYYY-MM-DD/HH-mm";
         public static dateQueryFormat = "YYYY-MM-DD";
