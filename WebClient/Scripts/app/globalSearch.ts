@@ -1,3 +1,4 @@
+/// <reference path="../typings/moment/moment.d.ts" />
 /// <reference path="global.ts" />
 /// <reference path="../typings/bootstrap/bootstrap.d.ts" />
 /// <reference path="../typings/jquery/jquery.d.ts" />
@@ -7,9 +8,11 @@ $(function () {
 
     TrainNotifier.Common.webApi = new TrainNotifier.WebApi();
 
-    $("#global-search-box").keyup(function (e) {
+    $("#global-search-box").keypress(function (e) {
+        console.log(e.keyCode);
         if (e.keyCode == 13) {
             parseGlobalSearchCommand($(this).val());
+            return false;
         }
     });
 

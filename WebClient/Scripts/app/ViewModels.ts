@@ -295,12 +295,12 @@ module TrainNotifier.ViewModels {
             this.PublicArrival = DateTimeFormats.formatTimeString(stop.PublicArrival);
             this.Departure = DateTimeFormats.formatTimeString(stop.Departure);
             this.PublicDeparture = DateTimeFormats.formatTimeString(stop.PublicDeparture);
+            this.Pass = DateTimeFormats.formatTimeString(stop.Pass);
 
             this.EngineeringAllowance = stop.EngineeringAllowance;
             this.Intermediate = stop.Intermediate;
             this.Line = stop.Line;
             this.Origin = stop.Origin;
-            this.Pass = stop.Pass;
             this.Path = stop.Path;
             this.PathingAllowance = stop.PathingAllowance;
             this.PerformanceAllowance = stop.PerformanceAllowance;

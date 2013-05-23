@@ -26,6 +26,7 @@ var thisPage = {
     },
     parseCommand: function () {
         var cmdString = this.getCommand();
+        console.log('parsing command:' + cmdString);
         var idx = cmdString.indexOf("/");
         if (idx == -1)
             return false;
