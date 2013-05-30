@@ -40,7 +40,7 @@ var thisPage : IPage = {
         if (cmd == "id") {
             getById(args);
             return true;
-        } else {
+        } else if (cmd == "get" || cmd == "sub") {
             var subscribe = cmd == "sub";
             var hashIdx = args.indexOf('/');
             var date = "";
