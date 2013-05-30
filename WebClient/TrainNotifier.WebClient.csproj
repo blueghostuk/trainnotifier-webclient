@@ -147,10 +147,13 @@
     <Content Include="Scripts\app\websockets.js">
       <DependentUpon>websockets.ts</DependentUpon>
     </Content>
+    <Content Include="Scripts\bootstrap.js" />
+    <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\typings\bootstrap\bootstrap.d.ts" />
-    <Content Include="Scripts\typings\jquery\jquery.d.ts" />
     <TypeScriptCompile Include="Scripts\app\webApi.ts" />
+    <Content Include="Scripts\typings\jquery\jquery.d.ts" />
     <Content Include="Scripts\typings\knockout.mapping\knockout.mapping.d.ts" />
+    <Content Include="Scripts\typings\knockout\knockout.amd.d.ts" />
     <Content Include="Scripts\typings\knockout\knockout.d.ts" />
     <Content Include="Scripts\typings\leaflet\leaflet.d.ts" />
     <Content Include="Scripts\typings\moment\moment.d.ts" />
@@ -161,8 +164,6 @@
     <Content Include="_ppmOperator.cshtml" />
     <None Include="Properties\PublishProfiles\azure.pubxml" />
     <None Include="Scripts\jquery-1.9.1.intellisense.js" />
-    <Content Include="Scripts\bootstrap.js" />
-    <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\jquery-1.9.1.js" />
     <Content Include="Scripts\jquery-1.9.1.min.js" />
     <Content Include="Scripts\jquery.ba-hashchange.js" />

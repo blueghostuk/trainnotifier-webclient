@@ -11,10 +11,15 @@ interface IWebApi {
     getTrainMovementByUid(uid: string, date: string): JQueryPromise;
     getTrainMovementById(id: string): JQueryPromise;
     getTrainMovementAssociations(uid: string, date: string): JQueryPromise;
-    getTrainMovementsTerminatingAt(stanox: string, startDate: string, endDate: string): JQueryPromise;
-    getTrainMovementsStartingAt(stanox: string, startDate: string, endDate: string): JQueryPromise;
-    getTrainMovementsCallingAt(stanox: string, startDate: string, endDate: string): JQueryPromise;
-    getTrainMovementsBetween(fromStanox: string, toStanox: string, startDate: string, endDate: string): JQueryPromise;
+
+    getTrainMovementsTerminatingAtLocation(stanox: string, startDate: string, endDate: string): JQueryPromise;
+    getTrainMovementsTerminatingAtStation(crsCode: string, startDate: string, endDate: string): JQueryPromise;
+    getTrainMovementsStartingAtLocation(stanox: string, startDate: string, endDate: string): JQueryPromise;
+    getTrainMovementsStartingAtStation(crsCode: string, startDate: string, endDate: string): JQueryPromise;
+    getTrainMovementsCallingAtLocation(stanox: string, startDate: string, endDate: string): JQueryPromise;
+    getTrainMovementsCallingAtStation(crsCode: string, startDate: string, endDate: string): JQueryPromise;
+    getTrainMovementsBetweenLocations(fromStanox: string, toStanox: string, startDate: string, endDate: string): JQueryPromise;
+    getTrainMovementsBetweenStations(fromCrsCode: string, toCrsCode: string, startDate: string, endDate: string): JQueryPromise;
 
     getSchedule(uid: string, date: string): JQueryPromise;
 
@@ -23,8 +28,7 @@ interface IWebApi {
     getPPMData(operatorCode: string, name: string): JQueryPromise;
 }
 
-interface IStanox{
-    Name: string;
+interface IStanox {
     StationName: string;
     Lat: number;
     Lon: number;
@@ -48,7 +52,7 @@ module TrainNotifier {
             }
         }
 
-        private getBaseUrl(){
+        private getBaseUrl() {
             return "http://" + this.serverSettings.apiUrl;
         };
 
@@ -83,29 +87,57 @@ module TrainNotifier {
             return $.getJSON(this.getBaseUrl() + "/Association/" + uid + "/" + date);
         };
 
-        getTrainMovementsTerminatingAt(stanox: string, startDate: string, endDate: string) {
-            return $.getJSON(this.getBaseUrl() + "/TrainMovement/TerminatingAtStation/" + stanox, {
+        getTrainMovementsTerminatingAtLocation(stanox: string, startDate: string, endDate: string) {
+            return $.getJSON(this.getBaseUrl() + "/TrainMovement/TerminatingAt/Location/" + stanox, {
                 startDate: startDate,
                 endDate: endDate
             });
         };
 
-        getTrainMovementsStartingAt(stanox: string, startDate: string, endDate: string) {
-            return $.getJSON(this.getBaseUrl() + "/TrainMovement/StartingAtStation/" + stanox, {
+        getTrainMovementsTerminatingAtStation(crsCode: string, startDate: string, endDate: string) {
+            return $.getJSON(this.getBaseUrl() + "/TrainMovement/TerminatingAt/Station/" + crsCode, {
                 startDate: startDate,
                 endDate: endDate
             });
         };
 
-        getTrainMovementsCallingAt(stanox: string, startDate: string, endDate: string) {
-            return $.getJSON(this.getBaseUrl() + "/TrainMovement/CallingAtStation/" + stanox, {
+        getTrainMovementsStartingAtLocation(stanox: string, startDate: string, endDate: string) {
+            return $.getJSON(this.getBaseUrl() + "/TrainMovement/StartingAt/Location/" + stanox, {
                 startDate: startDate,
                 endDate: endDate
             });
         };
 
-        getTrainMovementsBetween(fromStanox: string, toStanox: string, startDate: string, endDate: string) {
-            return $.getJSON(this.getBaseUrl() + "/TrainMovement/" + fromStanox + "/" + toStanox, {
+        getTrainMovementsStartingAtStation(crsCode: string, startDate: string, endDate: string) {
+            return $.getJSON(this.getBaseUrl() + "/TrainMovement/StartingAt/Station/" + crsCode, {
+                startDate: startDate,
+                endDate: endDate
+            });
+        };
+
+        getTrainMovementsCallingAtLocation(stanox: string, startDate: string, endDate: string) {
+            return $.getJSON(this.getBaseUrl() + "/TrainMovement/CallingAt/Location/" + stanox, {
+                startDate: startDate,
+                endDate: endDate
+            });
+        };
+
+        getTrainMovementsCallingAtStation(crsCode: string, startDate: string, endDate: string) {
+            return $.getJSON(this.getBaseUrl() + "/TrainMovement/CallingAt/Station/" + crsCode, {
+                startDate: startDate,
+                endDate: endDate
+            });
+        };
+
+        getTrainMovementsBetweenLocations(fromStanox: string, toStanox: string, startDate: string, endDate: string) {
+            return $.getJSON(this.getBaseUrl() + "/TrainMovement/Between/Location/" + fromStanox + "/" + toStanox, {
+                startDate: startDate,
+                endDate: endDate
+            });
+        };
+
+        getTrainMovementsBetweenStations(fromCrsCode: string, toCrsCode: string, startDate: string, endDate: string) {
+            return $.getJSON(this.getBaseUrl() + "/TrainMovement/Between/Station/" + fromCrsCode + "/" + toCrsCode, {
                 startDate: startDate,
                 endDate: endDate
             });
@@ -115,13 +147,13 @@ module TrainNotifier {
             return $.getJSON(this.getBaseUrl() + "/Schedule/uid/" + uid + "/" + date);
         };
 
-        getPPMData(operatorCode: string, name: string){
+        getPPMData(operatorCode: string, name: string) {
             return $.getJSON(this.getBaseUrl() + "/PPM/", {
                 operatorCode: operatorCode,
                 name: name
             });
         };
-        
+
         getPPMOperatorRegions(operatorCode: string) {
             return $.getJSON(this.getBaseUrl() + "/PPM/" + operatorCode);
         };

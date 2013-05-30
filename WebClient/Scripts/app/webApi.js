@@ -34,26 +34,50 @@ var TrainNotifier;
         WebApi.prototype.getTrainMovementAssociations = function (uid, date) {
             return $.getJSON(this.getBaseUrl() + "/Association/" + uid + "/" + date);
         };
-        WebApi.prototype.getTrainMovementsTerminatingAt = function (stanox, startDate, endDate) {
-            return $.getJSON(this.getBaseUrl() + "/TrainMovement/TerminatingAtStation/" + stanox, {
+        WebApi.prototype.getTrainMovementsTerminatingAtLocation = function (stanox, startDate, endDate) {
+            return $.getJSON(this.getBaseUrl() + "/TrainMovement/TerminatingAt/Location/" + stanox, {
                 startDate: startDate,
                 endDate: endDate
             });
         };
-        WebApi.prototype.getTrainMovementsStartingAt = function (stanox, startDate, endDate) {
-            return $.getJSON(this.getBaseUrl() + "/TrainMovement/StartingAtStation/" + stanox, {
+        WebApi.prototype.getTrainMovementsTerminatingAtStation = function (crsCode, startDate, endDate) {
+            return $.getJSON(this.getBaseUrl() + "/TrainMovement/TerminatingAt/Station/" + crsCode, {
                 startDate: startDate,
                 endDate: endDate
             });
         };
-        WebApi.prototype.getTrainMovementsCallingAt = function (stanox, startDate, endDate) {
-            return $.getJSON(this.getBaseUrl() + "/TrainMovement/CallingAtStation/" + stanox, {
+        WebApi.prototype.getTrainMovementsStartingAtLocation = function (stanox, startDate, endDate) {
+            return $.getJSON(this.getBaseUrl() + "/TrainMovement/StartingAt/Location/" + stanox, {
                 startDate: startDate,
                 endDate: endDate
             });
         };
-        WebApi.prototype.getTrainMovementsBetween = function (fromStanox, toStanox, startDate, endDate) {
-            return $.getJSON(this.getBaseUrl() + "/TrainMovement/" + fromStanox + "/" + toStanox, {
+        WebApi.prototype.getTrainMovementsStartingAtStation = function (crsCode, startDate, endDate) {
+            return $.getJSON(this.getBaseUrl() + "/TrainMovement/StartingAt/Station/" + crsCode, {
+                startDate: startDate,
+                endDate: endDate
+            });
+        };
+        WebApi.prototype.getTrainMovementsCallingAtLocation = function (stanox, startDate, endDate) {
+            return $.getJSON(this.getBaseUrl() + "/TrainMovement/CallingAt/Location/" + stanox, {
+                startDate: startDate,
+                endDate: endDate
+            });
+        };
+        WebApi.prototype.getTrainMovementsCallingAtStation = function (crsCode, startDate, endDate) {
+            return $.getJSON(this.getBaseUrl() + "/TrainMovement/CallingAt/Station/" + crsCode, {
+                startDate: startDate,
+                endDate: endDate
+            });
+        };
+        WebApi.prototype.getTrainMovementsBetweenLocations = function (fromStanox, toStanox, startDate, endDate) {
+            return $.getJSON(this.getBaseUrl() + "/TrainMovement/Between/Location/" + fromStanox + "/" + toStanox, {
+                startDate: startDate,
+                endDate: endDate
+            });
+        };
+        WebApi.prototype.getTrainMovementsBetweenStations = function (fromCrsCode, toCrsCode, startDate, endDate) {
+            return $.getJSON(this.getBaseUrl() + "/TrainMovement/Between/Station/" + fromCrsCode + "/" + toCrsCode, {
                 startDate: startDate,
                 endDate: endDate
             });

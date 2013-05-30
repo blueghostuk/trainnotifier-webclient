@@ -13,12 +13,13 @@ var titleModel = new TitleViewModel();
 
 var currentStanox: IStanox;
 var currentToStanox: IStanox;
-var currentStartDate = null;
-var currentEndDate = null;
+var currentStartDate: Moment = null;
+var currentEndDate: Moment = null;
 var currentMode;
 var timeTitleFormat = "HH:mm";
 var titleFormat = "ddd Do MMM YYYY";
 var dateApiQuery = "YYYY-MM-DDTHH:mm";
+var timeFrameHours = 0.5;
 
 var thisPage = {
     setCommand: function (command) {
@@ -26,7 +27,6 @@ var thisPage = {
     },
     parseCommand: function () {
         var cmdString = this.getCommand();
-        console.log('parsing command:' + cmdString);
         var idx = cmdString.indexOf("/");
         if (idx == -1)
             return false;
@@ -79,8 +79,6 @@ $(function () {
     loadHashCommand();
 });
 
-
-
 function getDateTime(args) {
     if (args.length > 0) {
         if (args.length == 2) {
@@ -89,7 +87,7 @@ function getDateTime(args) {
             return moment(args[0], TrainNotifier.DateTimeFormats.dateQueryFormat);
         }
     }
-return moment();
+    return moment();
 }
 
 function preAjax() {
@@ -104,8 +102,8 @@ function getCallingBetween(from, to, convertFromCrs, fromDate, toDate) {
         var startDate = fromDate;
         var endDate = toDate;
     } else {
-        var startDate = moment(fromDate).subtract({ hours: 2 });
-        var endDate = moment(fromDate).add({ hours: 2 });
+        var startDate = moment(fromDate).subtract({ hours: timeFrameHours });
+        var endDate = moment(fromDate).add({ hours: timeFrameHours });
     }
     if (endDate.isBefore(startDate)) {
         endDate.add('days', 1);
@@ -137,8 +135,8 @@ function getDestination(crs, convertFromCrs, fromDate, toDate) {
         var startDate = fromDate;
         var endDate = toDate;
     } else {
-        var startDate = moment(fromDate).subtract({ hours: 2 });
-        var endDate = moment(fromDate).add({ hours: 2 });
+        var startDate = moment(fromDate).subtract({ hours: timeFrameHours });
+        var endDate = moment(fromDate).add({ hours: timeFrameHours });
     }
     if (endDate.isBefore(startDate)) {
         endDate.add('days', 1);
@@ -161,14 +159,14 @@ function getDestination(crs, convertFromCrs, fromDate, toDate) {
     });
 }
 
-function getOrigin(crs, convertFromCrs, fromDate, toDate) {
+function getOrigin(crs: string, convertFromCrs: bool, fromDate: Moment, toDate: Moment) {
     $("#commandOptions > li#from" + (convertFromCrs ? "-crs" : "")).addClass("active");
     if (toDate) {
         var startDate = fromDate;
         var endDate = toDate;
     } else {
-        var startDate = moment(fromDate).subtract({ hours: 2 });
-        var endDate = moment(fromDate).add({ hours: 2 });
+        var startDate = moment(fromDate).subtract({ hours: timeFrameHours });
+        var endDate = moment(fromDate).add({ hours: timeFrameHours });
     }
     if (endDate.isBefore(startDate)) {
         endDate.add('days', 1);
@@ -177,14 +175,13 @@ function getOrigin(crs, convertFromCrs, fromDate, toDate) {
     var query: JQueryPromise;
     setHash(hash, null, true);
     preAjax();
-
     if (convertFromCrs) {
         query = webApi.getStanoxByCrsCode(crs);
     } else {
         query = webApi.getStanox(crs);
     }
-    query.done(function (to) {
-        getOriginByStanox(to, startDate, endDate);
+    query.done(function (from) {
+        getOriginByStanox(from, startDate, endDate);
     }).fail(function () {
         $(".progress").hide();
         $("#error-row").show();
@@ -197,14 +194,14 @@ function getStation(crs, convertFromCrs, fromDate, toDate) {
         var startDate = fromDate;
         var endDate = toDate;
     } else {
-        var startDate = moment(fromDate).subtract({ hours: 2 });
-        var endDate = moment(fromDate).add({ hours: 2 });
+        var startDate = moment(fromDate).subtract({ hours: timeFrameHours });
+        var endDate = moment(fromDate).add({ hours: timeFrameHours });
     }
     if (endDate.isBefore(startDate)) {
         endDate.add('days', 1);
     }
     var hash = "at/" + crs;
-    var query:JQueryPromise;
+    var query: JQueryPromise;
     setHash(hash, null, true);
     preAjax();
 
@@ -225,7 +222,7 @@ function getDestinationByStanox(to, startDate, endDate) {
     currentMode = scheduleResultsMode.Terminate;
     if (to) {
         currentToStanox = to;
-        listStation(currentToStanox.Stanox);
+        listStation(currentToStanox);
     }
     currentStanox = null;
     currentStartDate = startDate;
@@ -235,7 +232,7 @@ function getDestinationByStanox(to, startDate, endDate) {
     setTitle("Trains terminating at ");
     setTimeLinks();
 
-    webApi.getTrainMovementsTerminatingAt(currentToStanox.Stanox,
+    webApi.getTrainMovementsTerminatingAtLocation(currentToStanox.Stanox,
         currentStartDate.format(dateApiQuery),
         currentEndDate.format(dateApiQuery)).done(function (data) {
             if (data && data.length) {
@@ -254,11 +251,11 @@ function getDestinationByStanox(to, startDate, endDate) {
         });
 }
 
-function getOriginByStanox(from, startDate, endDate) {
+function getOriginByStanox(from: IStanox, startDate: Moment, endDate: Moment) {
     currentMode = scheduleResultsMode.Origin;
     if (from) {
         currentStanox = from;
-        listStation(currentStanox.Stanox);
+        listStation(currentStanox);
     }
     currentToStanox = null;
     currentStartDate = startDate;
@@ -267,30 +264,42 @@ function getOriginByStanox(from, startDate, endDate) {
     setTitle("Trains starting at ");
     setTimeLinks();
 
-    webApi.getTrainMovementsStartingAt(currentStanox.Stanox,
-        currentStartDate.format(dateApiQuery),
-        currentEndDate.format(dateApiQuery)).done(function (data) {
-            if (data && data.length) {
-                $("#no-results-row").hide();
+    var query: JQueryPromise;
+    var startDateQuery = currentStartDate.format(dateApiQuery);
+    var endDateQuery = currentEndDate.format(dateApiQuery)
+    if (from.CRS && from.CRS.length == 3) {
+        query = webApi.getTrainMovementsStartingAtStation(
+            from.CRS,
+            startDateQuery,
+            endDateQuery);
+    } else {
+        query = webApi.getTrainMovementsStartingAtLocation(
+            currentStanox.Stanox,
+            startDateQuery,
+            endDateQuery);
+    }
+    query.done(function (data) {
+        if (data && data.length) {
+            $("#no-results-row").hide();
 
-                for (var i in data) {
-                    currentOriginResults.addTrain(createTrainElement(data[i]));
-                }
-            } else {
-                $("#no-results-row").show();
+            for (var i in data) {
+                currentOriginResults.addTrain(createTrainElement(data[i]));
             }
-        }).always(function () {
-            $(".progress").hide();
-        }).fail(function () {
-            $("#error-row").show();
-        });
+        } else {
+            $("#no-results-row").show();
+        }
+    }).always(function () {
+        $(".progress").hide();
+    }).fail(function () {
+        $("#error-row").show();
+    });
 }
 
-function getCallingAtStanox(at, startDate, endDate) {
+function getCallingAtStanox(at: IStanox, startDate, endDate) {
     currentMode = scheduleResultsMode.CallingAt;
     if (at) {
         currentStanox = at;
-        listStation(currentStanox.Stanox);
+        listStation(currentStanox);
     }
     currentToStanox = null;
     currentStartDate = startDate;
@@ -299,7 +308,7 @@ function getCallingAtStanox(at, startDate, endDate) {
     setTitle("Trains calling at ");
     setTimeLinks();
 
-    webApi.getTrainMovementsCallingAt(currentStanox.Stanox,
+    webApi.getTrainMovementsCallingAtLocation(currentStanox.Stanox,
         currentStartDate.format(dateApiQuery),
         currentEndDate.format(dateApiQuery)).done(function (data) {
             if (data && data.length) {
@@ -318,11 +327,11 @@ function getCallingAtStanox(at, startDate, endDate) {
         });
 }
 
-function getCallingBetweenByStanox(from, to, startDate, endDate) {
+function getCallingBetweenByStanox(from: IStanox, to: IStanox, startDate, endDate) {
     currentMode = scheduleResultsMode.Between;
     if (from) {
         currentStanox = from;
-        listStation(currentStanox.Stanox);
+        listStation(currentStanox);
     }
     if (to) {
         currentToStanox = to;
@@ -333,7 +342,7 @@ function getCallingBetweenByStanox(from, to, startDate, endDate) {
     setTitle("Trains from ");
     setTimeLinks();
 
-    webApi.getTrainMovementsBetween(currentStanox.Stanox,
+    webApi.getTrainMovementsBetweenLocations(currentStanox.Stanox,
         currentToStanox.Stanox,
         currentStartDate.format(dateApiQuery),
         currentEndDate.format(dateApiQuery)).done(function (data) {
@@ -436,8 +445,8 @@ function createTrainElement(data) {
 
 function previousDate() {
     preAjax();
-    var startDate = moment(currentStartDate).subtract('hours', 2);
-    var endDate = moment(currentEndDate).subtract('hours', 2);
+    var startDate = moment(currentStartDate).subtract({ hours: timeFrameHours });
+    var endDate = moment(currentEndDate).subtract({ hours: timeFrameHours });
     switch (currentMode) {
         case scheduleResultsMode.Origin:
             getOriginByStanox(null, startDate, endDate);
@@ -456,8 +465,8 @@ function previousDate() {
 
 function nextDate() {
     preAjax();
-    var startDate = moment(currentStartDate).add('hours', 2);
-    var endDate = moment(currentEndDate).add('hours', 2);
+    var startDate = moment(currentStartDate).add({ hours: timeFrameHours });
+    var endDate = moment(currentEndDate).add({ hours: timeFrameHours });
     switch (currentMode) {
         case scheduleResultsMode.Origin:
             getOriginByStanox(null, startDate, endDate);
@@ -507,10 +516,10 @@ function setTitle(start) {
 }
 
 function setTimeLinks() {
-    var minusStartDate = moment(currentStartDate).subtract('hours', 2);
-    var minusEndDate = moment(currentEndDate).subtract('hours', 2);
-    var plusStartDate = moment(currentStartDate).add('hours', 2);
-    var plusEndDate = moment(currentEndDate).add('hours', 2);
+    var minusStartDate = moment(currentStartDate).subtract({ hours: timeFrameHours });
+    var minusEndDate = moment(currentEndDate).subtract({ hours: timeFrameHours });
+    var plusStartDate = moment(currentStartDate).add({ hours: timeFrameHours });
+    var plusEndDate = moment(currentEndDate).add({ hours: timeFrameHours });
     var url = "";
     switch (currentMode) {
         case scheduleResultsMode.Origin:
@@ -543,20 +552,18 @@ function setTimeLinks() {
             break;
     }
 
-    $(".neg-2hrs").attr("href", "search/" + url + minusStartDate.format("/YYYY/MM/DD/HH-mm") + minusEndDate.format("/HH-mm"));
-    $(".plus-2hrs").attr("href", "search/" + url + plusStartDate.format("/YYYY/MM/DD/HH-mm") + plusEndDate.format("/HH-mm"));
+    $(".neg-hrs").attr("href", "search/" + url + minusStartDate.format("/YYYY/MM/DD/HH-mm") + minusEndDate.format("/HH-mm"));
+    $(".plus-hrs").attr("href", "search/" + url + plusStartDate.format("/YYYY/MM/DD/HH-mm") + plusEndDate.format("/HH-mm"));
 
     setHash(url, moment(currentStartDate).format("YYYY-MM-DD/HH-mm") + moment(currentEndDate).format("/HH-mm"), true);
 }
 
-function listStation(stanox) {
-    webApi.getStanox(stanox).done(function (data: IStanox) {
-        currentLocation.locationStanox(data.Name);
-        currentLocation.locationTiploc(data.Tiploc);
-        currentLocation.locationDescription(data.Description);
-        currentLocation.locationCRS(data.CRS);
-        currentLocation.stationName(data.StationName);
-    });
+function listStation(stanox: IStanox) {
+    currentLocation.locationStanox(stanox.Stanox);
+    currentLocation.locationTiploc(stanox.Tiploc);
+    currentLocation.locationDescription(stanox.Description);
+    currentLocation.locationCRS(stanox.CRS);
+    currentLocation.stationName(stanox.StationName);
 }
 
 function loadHashCommand() {
