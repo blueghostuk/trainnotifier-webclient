@@ -8,7 +8,7 @@ var TrainNotifier;
             }
         }
         WebApi.prototype.getBaseUrl = function () {
-            return "http://" + this.serverSettings.server + ":" + this.serverSettings.apiPort;
+            return "http://" + this.serverSettings.apiUrl;
         };
         WebApi.prototype.getStations = function () {
             return $.getJSON(this.getBaseUrl() + "/Station/");

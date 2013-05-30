@@ -49,7 +49,7 @@ module TrainNotifier {
         }
 
         private getBaseUrl(){
-            return "http://" + this.serverSettings.server + ":" + this.serverSettings.apiPort;
+            return "http://" + this.serverSettings.apiUrl;
         };
 
         getStations() {

@@ -1,3 +1,4 @@
+/// <reference path="../typings/moment/moment.d.ts" />
 /// <reference path="../typings/jquery/jquery.d.ts" />
 /// <reference path="../typings/bootstrap/bootstrap.d.ts" />
 /// <reference path="webApi.ts" />
@@ -12,9 +13,8 @@ interface IPage {
 }
 
 interface IServerSettings {
-    server: string;
-    apiPort: string;
-    wsPort: string;
+    apiUrl: string;
+    wsUrl: string;
 }
 
 // Module

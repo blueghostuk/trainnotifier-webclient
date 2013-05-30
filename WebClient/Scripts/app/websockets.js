@@ -5,7 +5,7 @@ var TrainNotifier;
         WebSockets.prototype.connect = function () {
             $(".btn-connect").attr("disabled", true);
             $(".btn-disconnect").attr("disabled", false);
-            this.ws = new WebSocket("ws://" + TrainNotifier.Common.serverSettings.server + ":" + TrainNotifier.Common.serverSettings.wsPort);
+            this.ws = new WebSocket("ws://" + TrainNotifier.Common.serverSettings.wsUrl);
             this.ws.onopen = function () {
                 if(TrainNotifier.Common.page.setStatus) {
                     TrainNotifier.Common.page.setStatus("Connected");

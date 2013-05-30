@@ -110,14 +110,9 @@
     @Scripts.Render("~/bundles/app")    
     <script type="text/javascript">
         TrainNotifier.Common.serverSettings = {
-            server: "@System.Configuration.ConfigurationManager.AppSettings["server"]",
-            apiPort: "@System.Configuration.ConfigurationManager.AppSettings["apiPort"]",
-            wsPort: "@System.Configuration.ConfigurationManager.AppSettings["wsPort"]"
+            apiUrl: "@System.Configuration.ConfigurationManager.AppSettings["apiUrl"]",
+            wsUrl: "@System.Configuration.ConfigurationManager.AppSettings["wsUrl"]"
         };
-
-        // old config        
-        var server = "@System.Configuration.ConfigurationManager.AppSettings["server"]";
-        var apiPort = "@System.Configuration.ConfigurationManager.AppSettings["apiPort"]";
     </script>
     @RenderSection("FooterJs", required: false)
     @{
