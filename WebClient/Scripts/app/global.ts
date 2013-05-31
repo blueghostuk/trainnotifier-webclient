@@ -27,7 +27,7 @@ module TrainNotifier {
         static page: IPage;
         static webApi: IWebApi;
         
-        static displayStanox(stanox: IStanox) {
+        static displayStanox(stanox: IStationTiploc) {
             if (!stanox)
                 return;
             var html = "";
@@ -60,6 +60,18 @@ module TrainNotifier {
         public static formatTimeString(time: string) : string {
             if (time){
                 var timeMoment = moment(time, TrainNotifier.DateTimeFormats.timeFormat);
+                var ts = timeMoment.format(TrainNotifier.DateTimeFormats.shortTimeFormat);
+                if (timeMoment.seconds() === 30) {
+                    ts += TrainNotifier.CommonStrings.halfMinute;
+                }
+                return ts;
+            }
+            return null;
+        };
+
+        public static formatDateTimeString(dateTime: string): string {
+            if (dateTime) {
+                var timeMoment = moment(dateTime);
                 var ts = timeMoment.format(TrainNotifier.DateTimeFormats.shortTimeFormat);
                 if (timeMoment.seconds() === 30) {
                     ts += TrainNotifier.CommonStrings.halfMinute;

@@ -48,19 +48,6 @@
                 <li><a data-bind="attr: { href: 'search/to/' + locationStanox(), onclick: 'setHash(\'to/' + locationStanox() + '\');' }" title="View Trains Terminating at this station">Trains Terminating At</a></li>
             </ul>
         </div>
-        <div class="well sidebar-nav">
-            <p class="centerText" style="padding: 2px;">
-                At the moment this only shows trains that have been Activated.<br />
-                <br />
-                Empty rows are activations not matched to a schedule.<br />
-                <br />
-                Use
-                <br />
-                <i>/YYYY-MM-DD/HH-mm/HH-mm</i>
-                <br />
-                at the end of a command to specify a start date/time and end time manually
-            </p>
-        </div>
     </div>
     <!--/span2-->
     <div class="span10">
@@ -85,6 +72,62 @@
                 <li><a href="#" onclick="previousDate(); return false;" class="neg-hrs">&lt; Earlier</a></li>
                 <li><a href="#" onclick="nextDate(); return false;" class="plus-hrs">Later &gt;</a></li>
             </ul>
+            <table class="table table-hover table-bordered table-header-colour" id="starting-at-search-results" data-bind="visible: $data.length > 0">
+                <thead class="header">
+                    <tr>
+                        <th colspan="2"></th>
+                        <th colspan="2">From</th>
+                        <th class="phone-hide" colspan="3">Departure</th>
+                        <th class="phone-show" colspan="2">Departure</th>
+                        <th colspan="2">To</th>
+                        <th class="phone-hide" colspan="3">Arrival</th>
+                        <th class="phone-show" colspan="2">Arrival</th>
+                    </tr>
+                    <tr>
+                        <th class="phone-hide">Train ID</th>
+                        <th class="phone-show">ID</th>
+                        <th class="phone-hide">Operator</th>
+                        <th class="phone-show">Op</th>
+                        <th>Station</th>
+                        <th class="phone-hide">Platform</th>
+                        <th class="phone-show">P</th>
+                        <th class="phone-hide">Public</th>
+                        <th class="phone-show">Ex</th>
+                        <th class="phone-hide">WTT</th>
+                        <th class="phone-hide">Actual</th>
+                        <th class="phone-show">Act</th>
+                        <th>Station</th>
+                        <th class="phone-hide">Platform</th>
+                        <th class="phone-show">P</th>
+                        <th class="phone-hide">Public</th>
+                        <th class="phone-show">Ex</th>
+                        <th class="phone-hide">WTT</th>
+                        <th class="phone-hide">Actual</th>
+                        <th class="phone-show">Act</th>
+                    </tr>
+                </thead>
+                <tbody data-bind="foreach: $data">
+                    <tr>
+                        <td><a data-bind="text: headCode, attr: { href: 'trains/' + trainId + '/' + departureDate }"></a></td>
+                        <td data-bind="text: operatorCode, attr: { title: operatorName }"></td>
+                        <td class="stationName">
+                            <span data-bind="text: fromStation"></span>
+                        </td>
+                        <td data-bind="text: fromPlatform"></td>
+                        <td class="time" title="Public Departure" data-bind="text: publicDeparture"></td>
+                        <td class="phone-hide" title="WTT Departure" data-bind="text: wttDeparture"></td>
+                        <td class="time" title="Actual Departure" data-bind="text: actualDeparture"></td>
+                        <td class="stationName">
+                            <span data-bind="text: toStation"></span>
+                        </td>
+                        <td data-bind="text: toPlatform"></td>
+                        <td class="time" title="Public Arrival" data-bind="text: publicArrival"></td>
+                        <td class="phone-hide" title="WTT Arrival" data-bind="text: wttArrival"></td>
+                        <td class="time" title="Actual Arrival" data-bind="text: actualArrival"></td>
+                    </tr>
+                </tbody>
+            </table>
+
             <table class="table table-hover table-bordered table-header-colour" id="origin-search-results" data-bind="visible: Trains().length > 0">
                 <thead class="header">
                     <tr>

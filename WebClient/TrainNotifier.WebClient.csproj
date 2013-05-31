@@ -141,6 +141,10 @@
     <Content Include="Scripts\app\train.js">
       <DependentUpon>train.ts</DependentUpon>
     </Content>
+    <TypeScriptCompile Include="Scripts\app\tsModels.ts" />
+    <Content Include="Scripts\app\tsModels.js">
+      <DependentUpon>tsModels.ts</DependentUpon>
+    </Content>
     <Content Include="Scripts\app\ViewModels.js">
       <DependentUpon>ViewModels.ts</DependentUpon>
     </Content>

@@ -46,6 +46,17 @@
             }
             return null;
         };
+        DateTimeFormats.formatDateTimeString = function formatDateTimeString(dateTime) {
+            if(dateTime) {
+                var timeMoment = moment(dateTime);
+                var ts = timeMoment.format(TrainNotifier.DateTimeFormats.shortTimeFormat);
+                if(timeMoment.seconds() === 30) {
+                    ts += TrainNotifier.CommonStrings.halfMinute;
+                }
+                return ts;
+            }
+            return null;
+        };
         return DateTimeFormats;
     })();
     TrainNotifier.DateTimeFormats = DateTimeFormats;    
