@@ -28,13 +28,10 @@ interface IWebApi {
     getPPMData(operatorCode: string, name: string): JQueryPromise;
 }
 
-// Module
 module TrainNotifier {
 
-    // Class
     export class WebApi implements IWebApi {
 
-        // Constructor
         constructor(public serverSettings?: IServerSettings) {
             if (!serverSettings) {
                 this.serverSettings = TrainNotifier.Common.serverSettings;

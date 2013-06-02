@@ -1,5 +1,6 @@
 var titleModel = new TitleViewModel();
 var startingAtSearchResults = ko.observableArray();
+var callingAtSearchResults = ko.observableArray();
 var currentLocation = new TrainNotifier.KnockoutModels.CurrentLocation();
 var currentStanox;
 var currentToStanox;
@@ -53,6 +54,7 @@ $(function () {
     ko.applyBindings(currentLocation, $("#stationDetails").get(0));
     ko.applyBindings(titleModel, $("#title").get(0));
     ko.applyBindings(startingAtSearchResults, $("#starting-at-search-results").get(0));
+    ko.applyBindings(callingAtSearchResults, $("#calling-at-search-results").get(0));
     loadHashCommand();
 });
 function getDateTime(args) {
@@ -236,7 +238,7 @@ function getOriginByStanox(from, startDate, endDate) {
     currentStartDate = startDate;
     currentEndDate = endDate;
     clear();
-    setTitle("Trains starting at ");
+    setTitle("Trains starting at " + currentStanox.Description);
     setTimeLinks();
     var query;
     var startDateQuery = currentStartDate.format(TrainNotifier.DateTimeFormats.dateTimeApiFormat);
@@ -274,12 +276,24 @@ function getCallingAtStanox(at, startDate, endDate) {
     currentStartDate = startDate;
     currentEndDate = endDate;
     clear();
-    setTitle("Trains calling at ");
+    setTitle("Trains calling at " + currentStanox.Description);
     setTimeLinks();
-    webApi.getTrainMovementsCallingAtLocation(currentStanox.Stanox, currentStartDate.format(TrainNotifier.DateTimeFormats.dateTimeApiFormat), currentEndDate.format(TrainNotifier.DateTimeFormats.dateTimeApiFormat)).done(function (data) {
+    var query;
+    var startDateQuery = currentStartDate.format(TrainNotifier.DateTimeFormats.dateTimeApiFormat);
+    var endDateQuery = currentEndDate.format(TrainNotifier.DateTimeFormats.dateTimeApiFormat);
+    if(currentStanox.CRS && currentStanox.CRS.length == 3) {
+        query = webApi.getTrainMovementsCallingAtStation(currentStanox.CRS, startDateQuery, endDateQuery);
+    } else {
+        query = webApi.getTrainMovementsCallingAtLocation(currentStanox.Stanox, startDateQuery, endDateQuery);
+    }
+    query.done(function (data) {
         if(data && data.Movements.length > 0) {
             $("#no-results-row").hide();
-            for(var i = 0; i < data.Movements.length; i++) {
+            var viewModels = data.Movements.map(function (movement) {
+                return new TrainNotifier.KnockoutModels.CallingAtTrainMovement(movement, currentStanox, data.Tiplocs);
+            });
+            for(var i = 0; i < viewModels.length; i++) {
+                callingAtSearchResults.push(viewModels[i]);
             }
         } else {
             $("#no-results-row").show();
@@ -368,6 +382,7 @@ function nextDate() {
 }
 function clear() {
     startingAtSearchResults.removeAll();
+    callingAtSearchResults.removeAll();
 }
 function setTitle(start) {
     var title = start;

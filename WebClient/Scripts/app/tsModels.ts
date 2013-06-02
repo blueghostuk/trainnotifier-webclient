@@ -32,6 +32,7 @@ module TrainNotifier.KnockoutModels {
         };
     }
 
+    // base class
     export class TrainMovement {
         public trainId: string;
         public headCode: string;
@@ -115,6 +116,87 @@ module TrainNotifier.KnockoutModels {
                     }
                 }
             }
+            // TODO: what about can/reinstate/c.o.origin
+        }
+    }
+
+    export class CallingAtTrainMovement extends TrainMovement {
+
+        public fromStation: string;
+        public atPlatform: string;
+        public atPublicDeparture: string = "";
+        public atWttDeparture: string;
+        public atActualDeparture: string = "";
+
+        public toStation: string;
+        public atPublicArrival: string = "";
+        public atWttArrival: string;
+        public atActualArrival: string = "";
+
+        public departureDate: string = "";
+
+        constructor(trainMovement: ITrainMovementResult, atTiploc: IStationTiploc, tiplocs: IStationTiploc[]) {
+            super(trainMovement, tiplocs);
+
+            //TODO: if no actual get this elsewhere
+            if (trainMovement.Actual && trainMovement.Actual.OriginDepartTimestamp) {
+                this.departureDate = moment(trainMovement.Actual.OriginDepartTimestamp)
+                    .format(DateTimeFormats.dateUrlFormat);
+            }
+            var atStop: IRunningScheduleTrainStop;
+            if (trainMovement.Schedule.Stops.length > 0) {
+                var fromStop = trainMovement.Schedule.Stops[0];
+                var fromTiploc = StationTiploc.findStationTiploc(fromStop.TiplocStanoxCode, tiplocs);
+                if (fromTiploc) {
+                    this.fromStation = fromTiploc.Description.toLowerCase();
+                }
+
+                // find the at stop
+                var atStops : IRunningScheduleTrainStop[] = trainMovement.Schedule.Stops.filter(
+                    function (element: IRunningScheduleTrainStop, index: number, array: IRunningScheduleTrainStop[]) {
+                        return element.TiplocStanoxCode == atTiploc.Stanox;
+                    });
+
+                if (atStops.length > 0) {
+                    // take first, if it calls at more than 1 we cant handle that at the moment
+                    atStop = atStops[0];
+
+                    this.atPlatform = atStop.Platform;
+                    this.atPublicDeparture = DateTimeFormats.formatTimeString(atStop.PublicDeparture);
+                    this.atWttDeparture = DateTimeFormats.formatTimeString(atStop.Departure);
+                    this.atPublicArrival = DateTimeFormats.formatTimeString(atStop.PublicArrival);
+                    this.atWttArrival = DateTimeFormats.formatTimeString(atStop.Arrival);
+                }                
+
+                var toStop = trainMovement.Schedule.Stops[trainMovement.Schedule.Stops.length - 1];
+                var toTiploc = StationTiploc.findStationTiploc(toStop.TiplocStanoxCode, tiplocs);
+                if (toTiploc) {
+                    this.toStation = toTiploc.Description.toLowerCase();
+                }
+            }
+
+            if (trainMovement.Actual && trainMovement.Actual.Stops.length > 0 && atStop) {
+                // find the at stops
+                var atActualStops: IRunningTrainActualStop[] = trainMovement.Actual.Stops.filter(
+                    function (element: IRunningTrainActualStop, index: number, array: IRunningTrainActualStop[]) {
+                        return element.TiplocStanoxCode == atTiploc.Stanox && element.ScheduleStopNumber == atStop.StopNumber;
+                    });
+
+                if (atActualStops.length > 0) {
+                    for (var i = 0; i < atActualStops.length; i++) {
+                        switch (atActualStops[i].EventType) {
+                            case EventType.Arrival:
+                                this.atActualArrival = DateTimeFormats.formatDateTimeString(atActualStops[i].ActualTimestamp);
+                                break;
+                            case EventType.Departure:
+                                this.atActualDeparture = DateTimeFormats.formatDateTimeString(atActualStops[i].ActualTimestamp);
+                                break;
+                        }
+                    }
+                }
+            }
+
+            // TODO: what about can/reinstate/c.o.origin
         }
     }
 }

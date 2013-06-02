@@ -10,6 +10,7 @@
 var titleModel = new TitleViewModel();
 
 var startingAtSearchResults = ko.observableArray();
+var callingAtSearchResults = ko.observableArray();
 var currentLocation = new TrainNotifier.KnockoutModels.CurrentLocation();
 
 var currentStanox: IStationTiploc;
@@ -18,7 +19,7 @@ var currentStartDate: Moment = null;
 var currentEndDate: Moment = null;
 var currentMode;
 
-var thisPage : IPage = {
+var thisPage: IPage = {
     setCommand: function (command) {
         $("#global-search-box").val(command);
     },
@@ -74,6 +75,7 @@ $(function () {
     ko.applyBindings(titleModel, $("#title").get(0));
 
     ko.applyBindings(startingAtSearchResults, $("#starting-at-search-results").get(0));
+    ko.applyBindings(callingAtSearchResults, $("#calling-at-search-results").get(0));
 
     loadHashCommand();
 });
@@ -261,7 +263,7 @@ function getOriginByStanox(from: IStationTiploc, startDate: Moment, endDate: Mom
     currentStartDate = startDate;
     currentEndDate = endDate;
     clear();
-    setTitle("Trains starting at ");
+    setTitle("Trains starting at " + currentStanox.Description);
     setTimeLinks();
 
     var query: JQueryPromise;
@@ -309,27 +311,43 @@ function getCallingAtStanox(at: IStationTiploc, startDate, endDate) {
     currentStartDate = startDate;
     currentEndDate = endDate;
     clear();
-    setTitle("Trains calling at ");
+    setTitle("Trains calling at " + currentStanox.Description);
     setTimeLinks();
 
-    webApi.getTrainMovementsCallingAtLocation(currentStanox.Stanox,
-        currentStartDate.format(TrainNotifier.DateTimeFormats.dateTimeApiFormat),
-        currentEndDate.format(TrainNotifier.DateTimeFormats.dateTimeApiFormat))
-        .done(function (data) {
-            if (data && data.Movements.length > 0) {
-                $("#no-results-row").hide();
+    var query: JQueryPromise;
+    var startDateQuery = currentStartDate.format(TrainNotifier.DateTimeFormats.dateTimeApiFormat);
+    var endDateQuery = currentEndDate.format(TrainNotifier.DateTimeFormats.dateTimeApiFormat)
+    if (currentStanox.CRS && currentStanox.CRS.length == 3) {
+        query = webApi.getTrainMovementsCallingAtStation(
+            currentStanox.CRS,
+            startDateQuery,
+            endDateQuery);
+    } else {
+        query = webApi.getTrainMovementsCallingAtLocation(
+            currentStanox.Stanox,
+            startDateQuery,
+            endDateQuery);
+    }
 
-                for (var i = 0; i < data.Movements.length; i++) {
-                    //currentCallingAtResults.addTrain(createTrainElement(data.Movements[i], data.Tiplocs));
-                }
-            } else {
-                $("#no-results-row").show();
+    query.done(function (data: ITrainMovementResults) {
+        if (data && data.Movements.length > 0) {
+            $("#no-results-row").hide();
+
+            var viewModels: TrainNotifier.KnockoutModels.CallingAtTrainMovement[] = data.Movements.map(function (movement: ITrainMovementResult) {
+                return new TrainNotifier.KnockoutModels.CallingAtTrainMovement(movement, currentStanox, data.Tiplocs);
+            });
+
+            for (var i = 0; i < viewModels.length; i++) {
+                callingAtSearchResults.push(viewModels[i]);
             }
-        }).always(function () {
-            $(".progress").hide();
-        }).fail(function () {
-            $("#error-row").show();
-        });
+        } else {
+            $("#no-results-row").show();
+        }
+    }).always(function () {
+        $(".progress").hide();
+    }).fail(function () {
+        $("#error-row").show();
+    });
 }
 
 function getCallingBetweenByStanox(from: IStationTiploc, to: IStationTiploc, startDate, endDate) {
@@ -493,6 +511,7 @@ function clear() {
     //currentOriginResults.clearTrains();
     //currentCallingAtResults.clearTrains();
     startingAtSearchResults.removeAll();
+    callingAtSearchResults.removeAll();
 }
 
 function setTitle(start: string) {

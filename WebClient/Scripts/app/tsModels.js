@@ -94,6 +94,63 @@ var TrainNotifier;
             return StartingAtTrainMovement;
         })(TrainMovement);
         KnockoutModels.StartingAtTrainMovement = StartingAtTrainMovement;        
+        var CallingAtTrainMovement = (function (_super) {
+            __extends(CallingAtTrainMovement, _super);
+            function CallingAtTrainMovement(trainMovement, atTiploc, tiplocs) {
+                        _super.call(this, trainMovement, tiplocs);
+                this.atPublicDeparture = "";
+                this.atActualDeparture = "";
+                this.atPublicArrival = "";
+                this.atActualArrival = "";
+                this.departureDate = "";
+                if(trainMovement.Actual && trainMovement.Actual.OriginDepartTimestamp) {
+                    this.departureDate = moment(trainMovement.Actual.OriginDepartTimestamp).format(TrainNotifier.DateTimeFormats.dateUrlFormat);
+                }
+                var atStop;
+                if(trainMovement.Schedule.Stops.length > 0) {
+                    var fromStop = trainMovement.Schedule.Stops[0];
+                    var fromTiploc = TrainNotifier.StationTiploc.findStationTiploc(fromStop.TiplocStanoxCode, tiplocs);
+                    if(fromTiploc) {
+                        this.fromStation = fromTiploc.Description.toLowerCase();
+                    }
+                    var atStops = trainMovement.Schedule.Stops.filter(function (element, index, array) {
+                        return element.TiplocStanoxCode == atTiploc.Stanox;
+                    });
+                    if(atStops.length > 0) {
+                        atStop = atStops[0];
+                        this.atPlatform = atStop.Platform;
+                        this.atPublicDeparture = TrainNotifier.DateTimeFormats.formatTimeString(atStop.PublicDeparture);
+                        this.atWttDeparture = TrainNotifier.DateTimeFormats.formatTimeString(atStop.Departure);
+                        this.atPublicArrival = TrainNotifier.DateTimeFormats.formatTimeString(atStop.PublicArrival);
+                        this.atWttArrival = TrainNotifier.DateTimeFormats.formatTimeString(atStop.Arrival);
+                    }
+                    var toStop = trainMovement.Schedule.Stops[trainMovement.Schedule.Stops.length - 1];
+                    var toTiploc = TrainNotifier.StationTiploc.findStationTiploc(toStop.TiplocStanoxCode, tiplocs);
+                    if(toTiploc) {
+                        this.toStation = toTiploc.Description.toLowerCase();
+                    }
+                }
+                if(trainMovement.Actual && trainMovement.Actual.Stops.length > 0 && atStop) {
+                    var atActualStops = trainMovement.Actual.Stops.filter(function (element, index, array) {
+                        return element.TiplocStanoxCode == atTiploc.Stanox && element.ScheduleStopNumber == atStop.StopNumber;
+                    });
+                    if(atActualStops.length > 0) {
+                        for(var i = 0; i < atActualStops.length; i++) {
+                            switch(atActualStops[i].EventType) {
+                                case TrainNotifier.EventType.Arrival:
+                                    this.atActualArrival = TrainNotifier.DateTimeFormats.formatDateTimeString(atActualStops[i].ActualTimestamp);
+                                    break;
+                                case TrainNotifier.EventType.Departure:
+                                    this.atActualDeparture = TrainNotifier.DateTimeFormats.formatDateTimeString(atActualStops[i].ActualTimestamp);
+                                    break;
+                            }
+                        }
+                    }
+                }
+            }
+            return CallingAtTrainMovement;
+        })(TrainMovement);
+        KnockoutModels.CallingAtTrainMovement = CallingAtTrainMovement;        
     })(TrainNotifier.KnockoutModels || (TrainNotifier.KnockoutModels = {}));
     var KnockoutModels = TrainNotifier.KnockoutModels;
 })(TrainNotifier || (TrainNotifier = {}));
