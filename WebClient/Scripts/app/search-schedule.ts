@@ -7,24 +7,18 @@
 /// <reference path="../typings/knockout/knockout.d.ts" />
 /// <reference path="../typings/jquery/jquery.d.ts" />
 
-var currentLocation = new LocationViewModel();
-var currentOriginResults = new ScheduleSearchResults();
-var currentCallingAtResults = new ScheduleSearchResults();
 var titleModel = new TitleViewModel();
 
 var startingAtSearchResults = ko.observableArray();
+var currentLocation = new TrainNotifier.KnockoutModels.CurrentLocation();
 
 var currentStanox: IStationTiploc;
 var currentToStanox: IStationTiploc;
 var currentStartDate: Moment = null;
 var currentEndDate: Moment = null;
 var currentMode;
-var timeTitleFormat = "HH:mm";
-var titleFormat = "ddd Do MMM YYYY";
-var dateApiQuery = "YYYY-MM-DDTHH:mm";
-var timeFrameHours = 1;
 
-var thisPage = {
+var thisPage : IPage = {
     setCommand: function (command) {
         $("#global-search-box").val(command);
     },
@@ -75,8 +69,8 @@ $(function () {
     TrainNotifier.Common.webApi = webApi;
 
     ko.applyBindings(currentLocation, $("#stationDetails").get(0));
-    ko.applyBindings(currentOriginResults, $("#origin-search-results").get(0));
-    ko.applyBindings(currentCallingAtResults, $("#callingAt-search-results").get(0));
+    //ko.applyBindings(currentOriginResults, $("#origin-search-results").get(0));
+    //ko.applyBindings(currentCallingAtResults, $("#callingAt-search-results").get(0));
     ko.applyBindings(titleModel, $("#title").get(0));
 
     ko.applyBindings(startingAtSearchResults, $("#starting-at-search-results").get(0));
@@ -107,8 +101,8 @@ function getCallingBetween(from, to, convertFromCrs, fromDate, toDate) {
         var startDate = fromDate;
         var endDate = toDate;
     } else {
-        var startDate = moment(fromDate).subtract({ hours: timeFrameHours });
-        var endDate = moment(fromDate).add({ hours: timeFrameHours });
+        var startDate = moment(fromDate).subtract({ hours: TrainNotifier.DateTimeFormats.timeFrameHours });
+        var endDate = moment(fromDate).add({ hours: TrainNotifier.DateTimeFormats.timeFrameHours });
     }
     if (endDate.isBefore(startDate)) {
         endDate.add('days', 1);
@@ -140,8 +134,8 @@ function getDestination(crs, convertFromCrs, fromDate, toDate) {
         var startDate = fromDate;
         var endDate = toDate;
     } else {
-        var startDate = moment(fromDate).subtract({ hours: timeFrameHours });
-        var endDate = moment(fromDate).add({ hours: timeFrameHours });
+        var startDate = moment(fromDate).subtract({ hours: TrainNotifier.DateTimeFormats.timeFrameHours });
+        var endDate = moment(fromDate).add({ hours: TrainNotifier.DateTimeFormats.timeFrameHours });
     }
     if (endDate.isBefore(startDate)) {
         endDate.add('days', 1);
@@ -170,8 +164,8 @@ function getOrigin(crs: string, convertFromCrs: bool, fromDate: Moment, toDate: 
         var startDate = fromDate;
         var endDate = toDate;
     } else {
-        var startDate = moment(fromDate).subtract({ hours: timeFrameHours });
-        var endDate = moment(fromDate).add({ hours: timeFrameHours });
+        var startDate = moment(fromDate).subtract({ hours: TrainNotifier.DateTimeFormats.timeFrameHours });
+        var endDate = moment(fromDate).add({ hours: TrainNotifier.DateTimeFormats.timeFrameHours });
     }
     if (endDate.isBefore(startDate)) {
         endDate.add('days', 1);
@@ -199,8 +193,8 @@ function getStation(crs, convertFromCrs, fromDate, toDate) {
         var startDate = fromDate;
         var endDate = toDate;
     } else {
-        var startDate = moment(fromDate).subtract({ hours: timeFrameHours });
-        var endDate = moment(fromDate).add({ hours: timeFrameHours });
+        var startDate = moment(fromDate).subtract({ hours: TrainNotifier.DateTimeFormats.timeFrameHours });
+        var endDate = moment(fromDate).add({ hours: TrainNotifier.DateTimeFormats.timeFrameHours });
     }
     if (endDate.isBefore(startDate)) {
         endDate.add('days', 1);
@@ -238,13 +232,14 @@ function getDestinationByStanox(to, startDate, endDate) {
     setTimeLinks();
 
     webApi.getTrainMovementsTerminatingAtLocation(currentToStanox.Stanox,
-        currentStartDate.format(dateApiQuery),
-        currentEndDate.format(dateApiQuery)).done(function (data) {
+        currentStartDate.format(TrainNotifier.DateTimeFormats.dateTimeApiFormat),
+        currentEndDate.format(TrainNotifier.DateTimeFormats.dateTimeApiFormat))
+        .done(function (data) {
             if (data && data.Movements.length > 0) {
                 $("#no-results-row").hide();
 
                 for (var i = 0; i < data.Movements.length; i++) {
-                    currentOriginResults.addTrain(createTrainElement(data.Movements[i], data.Tiplocs));
+                    //currentOriginResults.addTrain(createTrainElement(data.Movements[i], data.Tiplocs));
                 }
             } else {
                 $("#no-results-row").show();
@@ -270,8 +265,8 @@ function getOriginByStanox(from: IStationTiploc, startDate: Moment, endDate: Mom
     setTimeLinks();
 
     var query: JQueryPromise;
-    var startDateQuery = currentStartDate.format(dateApiQuery);
-    var endDateQuery = currentEndDate.format(dateApiQuery)
+    var startDateQuery = currentStartDate.format(TrainNotifier.DateTimeFormats.dateTimeApiFormat);
+    var endDateQuery = currentEndDate.format(TrainNotifier.DateTimeFormats.dateTimeApiFormat)
     if (currentStanox.CRS && currentStanox.CRS.length == 3) {
         query = webApi.getTrainMovementsStartingAtStation(
             currentStanox.CRS,
@@ -318,13 +313,14 @@ function getCallingAtStanox(at: IStationTiploc, startDate, endDate) {
     setTimeLinks();
 
     webApi.getTrainMovementsCallingAtLocation(currentStanox.Stanox,
-        currentStartDate.format(dateApiQuery),
-        currentEndDate.format(dateApiQuery)).done(function (data) {
+        currentStartDate.format(TrainNotifier.DateTimeFormats.dateTimeApiFormat),
+        currentEndDate.format(TrainNotifier.DateTimeFormats.dateTimeApiFormat))
+        .done(function (data) {
             if (data && data.Movements.length > 0) {
                 $("#no-results-row").hide();
 
                 for (var i = 0; i < data.Movements.length; i++) {
-                    currentCallingAtResults.addTrain(createTrainElement(data.Movements[i], data.Tiplocs));
+                    //currentCallingAtResults.addTrain(createTrainElement(data.Movements[i], data.Tiplocs));
                 }
             } else {
                 $("#no-results-row").show();
@@ -353,13 +349,14 @@ function getCallingBetweenByStanox(from: IStationTiploc, to: IStationTiploc, sta
 
     webApi.getTrainMovementsBetweenLocations(currentStanox.Stanox,
         currentToStanox.Stanox,
-        currentStartDate.format(dateApiQuery),
-        currentEndDate.format(dateApiQuery)).done(function (data) {
+        currentStartDate.format(TrainNotifier.DateTimeFormats.dateTimeApiFormat),
+        currentEndDate.format(TrainNotifier.DateTimeFormats.dateTimeApiFormat))
+        .done(function (data) {
             if (data && data.Movements.length > 0) {
                 $("#no-results-row").hide();
 
                 for (var i = 0; i < data.Movements.length; i++) {
-                    currentCallingAtResults.addTrain(createTrainElement(data.Movements[i], data.Tiplocs));
+                    //currentCallingAtResults.addTrain(createTrainElement(data.Movements[i], data.Tiplocs));
                 }
             } else {
                 $("#no-results-row").show();
@@ -454,8 +451,8 @@ function createTrainElement(data: ITrainMovementResult, tiplocs: IStationTiploc[
 
 function previousDate() {
     preAjax();
-    var startDate = moment(currentStartDate).subtract({ hours: timeFrameHours });
-    var endDate = moment(currentEndDate).subtract({ hours: timeFrameHours });
+    var startDate = moment(currentStartDate).subtract({ hours: TrainNotifier.DateTimeFormats.timeFrameHours });
+    var endDate = moment(currentEndDate).subtract({ hours: TrainNotifier.DateTimeFormats.timeFrameHours });
     switch (currentMode) {
         case scheduleResultsMode.Origin:
             getOriginByStanox(null, startDate, endDate);
@@ -474,8 +471,8 @@ function previousDate() {
 
 function nextDate() {
     preAjax();
-    var startDate = moment(currentStartDate).add({ hours: timeFrameHours });
-    var endDate = moment(currentEndDate).add({ hours: timeFrameHours });
+    var startDate = moment(currentStartDate).add({ hours: TrainNotifier.DateTimeFormats.timeFrameHours });
+    var endDate = moment(currentEndDate).add({ hours: TrainNotifier.DateTimeFormats.timeFrameHours });
     switch (currentMode) {
         case scheduleResultsMode.Origin:
             getOriginByStanox(null, startDate, endDate);
@@ -493,8 +490,8 @@ function nextDate() {
 }
 
 function clear() {
-    currentOriginResults.clearTrains();
-    currentCallingAtResults.clearTrains();
+    //currentOriginResults.clearTrains();
+    //currentCallingAtResults.clearTrains();
     startingAtSearchResults.removeAll();
 }
 
@@ -519,15 +516,17 @@ function setTitle(start: string) {
         title += currentToStanox.Description.toLowerCase();
     }
     title += " on ";
-    var date = currentStartDate.format(titleFormat) + " " + currentStartDate.format(timeTitleFormat) + " - " + currentEndDate.format(timeTitleFormat);
+    var date = currentStartDate.format(TrainNotifier.DateTimeFormats.dateTitleFormat) + " "
+        + currentStartDate.format(TrainNotifier.DateTimeFormats.shortTimeFormat) + " - "
+        + currentEndDate.format(TrainNotifier.DateTimeFormats.shortTimeFormat);
     title += date;
     titleModel.DateRange(date);
     titleModel.setTitle(title);
 }
 
 function setTimeLinks() {
-    var minusStartDate = moment(currentStartDate).subtract({ hours: timeFrameHours });
-    var plusStartDate = moment(currentStartDate).add({ hours: timeFrameHours });
+    var minusStartDate = moment(currentStartDate).subtract({ hours: TrainNotifier.DateTimeFormats.timeFrameHours });
+    var plusStartDate = moment(currentStartDate).add({ hours: TrainNotifier.DateTimeFormats.timeFrameHours });
     var url = "";
     switch (currentMode) {
         case scheduleResultsMode.Origin:
@@ -567,11 +566,7 @@ function setTimeLinks() {
 }
 
 function listStation(stanox: IStationTiploc) {
-    currentLocation.locationStanox(stanox.Stanox);
-    currentLocation.locationTiploc(stanox.Tiploc);
-    currentLocation.locationDescription(stanox.Description);
-    currentLocation.locationCRS(stanox.CRS);
-    currentLocation.stationName(stanox.StationName);
+    currentLocation.update(stanox);
 }
 
 function loadHashCommand() {

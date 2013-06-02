@@ -41,11 +41,11 @@
         </div>
         <div class="well sidebar-nav" id="stationDetails">
             <ul class="nav nav-list">
-                <li class="nav-header" data-bind="text: toDisplay()">Station Details</li>
-                <li><strong>CRS:</strong><span data-bind="text: locationCRS"></span></li>
-                <li><a data-bind="attr: { href: 'search/from/' + locationStanox(), onclick: 'setHash(\'from/' + locationStanox() + '\');' }" title="View Trains Starting from this station">Trains Starting From</a></li>
-                <li><a data-bind="attr: { href: 'search/at/' + locationStanox(), onclick: 'setHash(\'at/' + locationStanox() + '\');' }" title="View Trains Calling at this station">Trains Calling At</a></li>
-                <li><a data-bind="attr: { href: 'search/to/' + locationStanox(), onclick: 'setHash(\'to/' + locationStanox() + '\');' }" title="View Trains Terminating at this station">Trains Terminating At</a></li>
+                <li class="nav-header" data-bind="text: name">Station Details</li>
+                <li><strong>CRS:</strong><span data-bind="text: crsCode"></span></li>
+                <li><a data-bind="attr: { href: 'search/from/' + url(), onclick: 'setHash(\'from/' + url() + '\');' }" title="View Trains Starting from this station">Trains Starting From</a></li>
+                <li><a data-bind="attr: { href: 'search/at/' + url(), onclick: 'setHash(\'at/' + url() + '\');' }" title="View Trains Calling at this station">Trains Calling At</a></li>
+                <li><a data-bind="attr: { href: 'search/to/' + url(), onclick: 'setHash(\'to/' + url() + '\');' }" title="View Trains Terminating at this station">Trains Terminating At</a></li>
             </ul>
         </div>
     </div>
@@ -124,142 +124,6 @@
                         <td class="time" title="Public Arrival" data-bind="text: publicArrival"></td>
                         <td class="phone-hide" title="WTT Arrival" data-bind="text: wttArrival"></td>
                         <td class="time" title="Actual Arrival" data-bind="text: actualArrival"></td>
-                    </tr>
-                </tbody>
-            </table>
-
-            <table class="table table-hover table-bordered table-header-colour" id="origin-search-results" data-bind="visible: Trains().length > 0">
-                <thead class="header">
-                    <tr>
-                        <th colspan="2"></th>
-                        <th colspan="2">From</th>
-                        <th class="phone-hide" colspan="3">Departure</th>
-                        <th class="phone-show" colspan="2">Departure</th>
-                        <th colspan="2">To</th>
-                        <th class="phone-hide" colspan="3">Arrival</th>
-                        <th class="phone-show" colspan="2">Arrival</th>
-                    </tr>
-                    <tr>
-                        <th class="phone-hide">Train ID</th>
-                        <th class="phone-show">ID</th>
-                        <th class="phone-hide">Operator</th>
-                        <th class="phone-show">Op</th>
-                        <th>Station</th>
-                        <th class="phone-hide">Platform</th>
-                        <th class="phone-show">P</th>
-                        <th class="phone-hide">Public</th>
-                        <th class="phone-show">Ex</th>
-                        <th class="phone-hide">WTT</th>
-                        <th class="phone-hide">Actual</th>
-                        <th class="phone-show">Act</th>
-                        <th>Station</th>
-                        <th class="phone-hide">Platform</th>
-                        <th class="phone-show">P</th>
-                        <th class="phone-hide">Public</th>
-                        <th class="phone-show">Ex</th>
-                        <th class="phone-hide">WTT</th>
-                        <th class="phone-hide">Actual</th>
-                        <th class="phone-show">Act</th>
-                    </tr>
-                </thead>
-                <tbody data-bind="foreach: Trains">
-                    <tr data-bind="css: { error: Cancellation, info: ChangeOfOrigin, reinstatement: Reinstatement }, attr: { title: Tooltip }">
-                        <td><a data-bind="text: HeadCode, attr: { href: 'trains/' + TrainUid() + '/' + SchedOriginDeparture() }"></a></td>
-                        <td data-bind="text: AtocCode.Code, attr: { title: AtocCode.Name }"></td>
-                        <td class="stationName">
-                            <span data-bind="text: Origin.Description, css: { changeOfOrigin: ChangeOfOrigin }"></span>
-                            <!-- ko if: ChangeOfOrigin -->
-                            <br />
-                            <span data-bind="text: ChangeOfOrigin.NewOrigin.Description().toLowerCase()"></span>
-                            <!-- /ko -->
-                        </td>
-                        <td data-bind="text: Origin.Platform"></td>
-                        <td class="time" title="Public Departure" data-bind="text: Origin.PublicDeparture"></td>
-                        <td class="phone-hide" title="WTT Departure" data-bind="text: Origin.Departure"></td>
-                        <td class="time" title="Actual Departure" data-bind="text: ActualDeparture"></td>
-                        <td class="stationName">
-                            <span data-bind="text: Destination.Description, css: { changeOfDestination: Cancellation && Cancellation.Type && Cancellation.Type() == 'EN ROUTE' }"></span>
-                            <!-- ko if: Cancellation && Cancellation.Type && Cancellation.Type() == 'EN ROUTE' -->
-                            <br />
-                            <span data-bind="text: Cancellation.CancelledAt.Description().toLowerCase()"></span>
-                            <!-- /ko -->
-                        </td>
-                        <td data-bind="text: Destination.Platform"></td>
-                        <td class="time" title="Public Arrival" data-bind="text: Destination.PublicArrival"></td>
-                        <td class="phone-hide" title="WTT Arrival" data-bind="text: Destination.Arrival"></td>
-                        <td class="time" title="Actual Arrival" data-bind="text: ActualArrival"></td>
-                    </tr>
-                </tbody>
-            </table>
-            <table class="table table-hover table-bordered table-header-colour" id="callingAt-search-results" data-bind="visible: Trains().length > 0">
-                <thead class="header">
-                    <tr>
-                        <th colspan="2"></th>
-                        <th>From</th>
-                        <th></th>
-                        <th class="phone-hide" colspan="3">Arrival</th>
-                        <th class="phone-show" colspan="2">Arrival</th>
-                        <th class="phone-hide" colspan="3">Departure</th>
-                        <th class="phone-show" colspan="2">Departure</th>
-                        <th>To</th>
-                        <th class="phone-hide" colspan="3">Arrival</th>
-                        <th class="phone-show" colspan="2">Arrival</th>
-                    </tr>
-                    <tr>
-                        <th class="phone-hide">Train ID</th>
-                        <th class="phone-show">ID</th>
-                        <th class="phone-hide">Operator</th>
-                        <th class="phone-show">Op</th>
-                        <th>Station</th>
-                        <th class="phone-hide">Platform</th>
-                        <th class="phone-show">P</th>
-                        <th class="phone-hide">Expected</th>
-                        <th class="phone-show">Ex</th>
-                        <th class="phone-hide">WTT</th>
-                        <th class="phone-hide">Actual</th>
-                        <th class="phone-show">Act</th>
-                        <th class="phone-hide">Expected</th>
-                        <th class="phone-show">Ex</th>
-                        <th class="phone-hide">WTT</th>
-                        <th class="phone-hide">Actual</th>
-                        <th class="phone-show">Act</th>
-                        <th>Station</th>
-                        <th class="phone-hide">Expected</th>
-                        <th class="phone-show">Ex</th>
-                        <th class="phone-hide">Actual</th>
-                        <th class="phone-show">Act</th>
-                    </tr>
-                </thead>
-                <tbody data-bind="foreach: Trains">
-                    <tr data-bind="css: { pass: Pass, cancel: Cancellation, info: ChangeOfOrigin, reinstatement: Reinstatement }, attr: { title: Tooltip }">
-                        <td><a data-bind="text: HeadCode, attr: { href: 'trains/' + TrainUid() + '/' + SchedOriginDeparture() }"></a></td>
-                        <td data-bind="text: AtocCode.Code, attr: { title: AtocCode.Name }"></td>
-                        <td class="stationName">
-                            <span data-bind="text: Origin.Description, css: { changeOfOrigin: ChangeOfOrigin }"></span>
-                            <!-- ko if: ChangeOfOrigin -->
-                            <br />
-                            <span data-bind="text: ChangeOfOrigin.NewOrigin.Description().toLowerCase()"></span>
-                            <!-- /ko -->
-                        </td>
-                        <td data-bind="text: Origin.Platform"></td>
-                        <td title="Expected Arrival" data-bind="text: Origin.PublicArrival, visible: !Pass()"></td>
-                        <td class="phone-hide" title="WTT Arrival" data-bind="text: Pass() ? 'Pass' : Origin.Arrival, attr: { colspan: Pass() ? 2 : 0 }"></td>
-                        <td class="phone-show" colspan="2" data-bind="visible: Pass()">Pass</td>
-                        <td title="Actual Arrival" data-bind="text: ActualArrival"></td>
-                        <td title="Expected Departure" data-bind="text: Destination.PublicDeparture, visible: !Pass()"></td>
-                        <td class="phone-hide" title="WTT Departure" data-bind="text: Pass() ? Pass : Destination.Departure, attr: { colspan: Pass() ? 2 : 0 }"></td>
-                        <td class="phone-show" data-bind="text: Pass, visible: Pass()"></td>
-                        <td class="phone-hide" title="Actual Departure" data-bind="text: ActualDeparture"></td>
-                        <td class="phone-show" title="Actual Departure" data-bind="text: ActualDeparture, visible: !Pass()"></td>
-                        <td class="stationName">
-                            <span data-bind="text: Destination.Description, css: { changeOfDestination: Cancellation && Cancellation.Type && Cancellation.Type() == 'EN ROUTE' }"></span>
-                            <!-- ko if: Cancellation && Cancellation.Type && Cancellation.Type() == 'EN ROUTE' -->
-                            <br />
-                            <span data-bind="text: Cancellation.CancelledAt.Description().toLowerCase()"></span>
-                            <!-- /ko -->
-                        </td>
-                        <td title="Expected Arrival" data-bind="text: ExpectedDestinationArrival"></td>
-                        <td title="Actual Arrival" data-bind="text: ActualDestinationArrival"></td>
                     </tr>
                 </tbody>
             </table>
