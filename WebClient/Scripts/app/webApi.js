@@ -244,7 +244,7 @@ var TrainNotifier;
     var StationTiploc = (function () {
         function StationTiploc() { }
         StationTiploc.findStationTiplocs = function findStationTiplocs(stanoxCode, tiplocs) {
-            return tiplocs.filter(function (element, index, array) {
+            return tiplocs.filter(function (element) {
                 return element.Stanox == stanoxCode;
             });
         };

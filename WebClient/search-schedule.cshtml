@@ -72,7 +72,7 @@
                 <li><a href="#" onclick="previousDate(); return false;" class="neg-hrs">&lt; Earlier</a></li>
                 <li><a href="#" onclick="nextDate(); return false;" class="plus-hrs">Later &gt;</a></li>
             </ul>
-            <table class="table table-hover table-bordered table-header-colour" id="starting-at-search-results" data-bind="visible: $data.length > 0">
+            <table class="table table-hover table-bordered table-header-colour" id="start-end-at-search-results" data-bind="visible: $data.length > 0">
                 <thead class="header">
                     <tr>
                         <!-- 1 -->
@@ -207,6 +207,74 @@
                         <td class="time" title="Public Departure" data-bind="text: atPublicDeparture"></td>
                         <td class="phone-hide" title="WTT Departure" data-bind="text: atWttDeparture"></td>
                         <td class="time" title="Actual Departure" data-bind="text: atActualDeparture"></td>
+                    </tr>
+                </tbody>
+            </table>
+            <table class="table table-hover table-bordered table-header-colour" id="calling-between-search-results" data-bind="visible: results().length > 0">
+                <thead class="header">
+                    <tr>
+                        <!-- 1 -->
+                        <th colspan="2"></th>
+                        <!-- 2 -->
+                        <th rowspan="2">From</th>
+                        <!-- 3 -->
+                        <th rowspan="2">To</th>
+                        <!-- 4 -->
+                        <th class="phone-hide" colspan="4">Departure from <span class="stationName" data-bind="text: fromStation"></span></th>
+                        <th class="phone-show" colspan="3">Dept. <span class="stationName" data-bind="text: fromShortStation"></span></th>
+                        <!-- 5 -->
+                        <th class="phone-hide" colspan="4">Arrival at <span class="stationName" data-bind="text: toStation"></span></th>
+                        <th class="phone-show" colspan="3">Arr. <span class="stationName" data-bind="text: toShortStation"></span></th>
+                    </tr>
+                    <tr>
+                        <!-- 1 -->
+                        <th class="phone-hide">Train ID</th>
+                        <th class="phone-show">ID</th>
+                        <th class="phone-hide">Operator</th>
+                        <th class="phone-show">Op</th>
+                        <!-- 2 rowspan2 -->
+                        <!-- 3 rowspan2 -->
+                        <!-- 4 -->
+                        <th class="phone-hide">Platform</th>
+                        <th class="phone-show">P</th>
+                        <th class="phone-hide">Public</th>
+                        <th class="phone-show">Ex</th>
+                        <th class="phone-hide">WTT</th>
+                        <th class="phone-hide">Actual</th>
+                        <th class="phone-show">Act</th>
+                        <!-- 5 -->
+                        <th class="phone-hide">Platform</th>
+                        <th class="phone-show">P</th>
+                        <th class="phone-hide">Public</th>
+                        <th class="phone-show">Ex</th>
+                        <th class="phone-hide">WTT</th>
+                        <th class="phone-hide">Actual</th>
+                        <th class="phone-show">Act</th>
+                    </tr>
+                </thead>
+                <tbody data-bind="foreach: results">
+                    <tr>
+                        <!-- 1 -->
+                        <td><a data-bind="text: headCode, attr: { href: 'trains/' + trainId + '/' + departureDate }"></a></td>
+                        <td data-bind="text: operatorCode, attr: { title: operatorName }"></td>
+                        <!-- 2 -->
+                        <td class="stationName">
+                            <span data-bind="text: fromStation"></span>
+                        </td>
+                        <!-- 3 -->
+                        <td class="stationName">
+                            <span data-bind="text: toStation"></span>
+                        </td>
+                        <!-- 4 -->
+                        <td class="centerText" data-bind="text: fromPlatform"></td>
+                        <td class="time" title="Public Departure" data-bind="text: publicDeparture"></td>
+                        <td class="phone-hide" title="WTT Departure" data-bind="text: wttDeparture"></td>
+                        <td class="time" title="Actual Departure" data-bind="text: actualDeparture"></td>
+                        <!-- 5 -->
+                        <td class="centerText" data-bind="text: toPlatform"></td>
+                        <td class="time" title="Public Arrival" data-bind="text: publicArrival"></td>
+                        <td class="phone-hide" title="WTT Arrival" data-bind="text: wttArrival"></td>
+                        <td class="time" title="Actual Arrival" data-bind="text: actualArrival"></td>
                     </tr>
                 </tbody>
             </table>

@@ -296,7 +296,7 @@ module TrainNotifier {
 
     export class StationTiploc {
         public static findStationTiplocs(stanoxCode: string, tiplocs: IStationTiploc[]) {
-            return tiplocs.filter(function (element: IStationTiploc, index: number, array: IStationTiploc[]) {
+            return tiplocs.filter(function (element: IStationTiploc) {
                 return element.Stanox == stanoxCode;
             });
         };
