@@ -38,8 +38,13 @@ module TrainNotifier.KnockoutModels {
         public headCode: string;
         public operatorCode: string = "NA";
         public operatorName: string = "Unknown";
+        public title: string = null;
+        public cancel: bool = false;
+        public cancelEnRoute: string = null;
+        public reinstate: string = null;
+        public changeOfOrigin: string = null;
 
-        constructor(trainMovement: ITrainMovementResult) {
+        constructor(trainMovement: ITrainMovementResult, tiplocs: IStationTiploc[]) {
             this.trainId = trainMovement.Schedule.TrainUid;
             if (trainMovement.Schedule.AtocCode) {
                 this.operatorCode = trainMovement.Schedule.AtocCode.Code;
@@ -50,6 +55,24 @@ module TrainNotifier.KnockoutModels {
             } else {
                 // if no actual we can only show the uid
                 this.headCode = this.trainId;
+            }
+
+            if (trainMovement.Cancellations && trainMovement.Cancellations.length > 0) {
+                var cancellation = trainMovement.Cancellations[0];
+                var cancelText = "Cancelled " + cancellation.Type;
+                var cancelValue = "";
+                var cancelTiploc = StationTiploc.findStationTiploc(cancellation.CancelledAtStanoxCode, tiplocs);
+                if (cancelTiploc) {
+                    cancelText += " at " + cancelTiploc.Description;
+                    if (cancellation.Type == CancellationCodes.EnRoute) {
+                        this.cancelEnRoute = cancelTiploc.Description.toLowerCase();
+                    }
+                }
+                cancelText += " at " + moment(cancellation.CancelledTimestamp).format(DateTimeFormats.timeFormat);
+                cancelText += " (" + cancellation.Description + ")";
+
+                this.cancel = true;
+                this.title = cancelText;
             }
         }
     }
@@ -70,7 +93,7 @@ module TrainNotifier.KnockoutModels {
         public departureDate: string = "";
 
         constructor(trainMovement: ITrainMovementResult, tiplocs: IStationTiploc[]) {
-            super(trainMovement);
+            super(trainMovement, tiplocs);
 
             var toStop: IRunningScheduleTrainStop;
             //TODO: if no actual get this elsewhere
@@ -136,7 +159,7 @@ module TrainNotifier.KnockoutModels {
         public departureDate: string = "";
 
         constructor(trainMovement: ITrainMovementResult, tiplocs: IStationTiploc[]) {
-            super(trainMovement);
+            super(trainMovement, tiplocs);
 
             var toStop: IRunningScheduleTrainStop;
             //TODO: if no actual get this elsewhere
@@ -201,8 +224,10 @@ module TrainNotifier.KnockoutModels {
 
         public departureDate: string = "";
 
+        public pass = false;
+
         constructor(trainMovement: ITrainMovementResult, atTiploc: IStationTiploc, tiplocs: IStationTiploc[]) {
-            super(trainMovement);
+            super(trainMovement, tiplocs);
 
             //TODO: if no actual get this elsewhere
             if (trainMovement.Actual && trainMovement.Actual.OriginDepartTimestamp) {
@@ -226,12 +251,20 @@ module TrainNotifier.KnockoutModels {
                 if (atStops.length > 0) {
                     // take first, if it calls at more than 1 we cant handle that at the moment
                     atStop = atStops[0];
-
                     this.atPlatform = atStop.Platform;
-                    this.atPublicDeparture = DateTimeFormats.formatTimeString(atStop.PublicDeparture);
-                    this.atWttDeparture = DateTimeFormats.formatTimeString(atStop.Departure);
-                    this.atPublicArrival = DateTimeFormats.formatTimeString(atStop.PublicArrival);
-                    this.atWttArrival = DateTimeFormats.formatTimeString(atStop.Arrival);
+
+                    if (atStop.Pass) {
+                        this.pass = true;
+                        this.atPublicDeparture = "Pass";
+                        this.atWttDeparture = DateTimeFormats.formatTimeString(atStop.Pass);
+                        this.atPublicArrival = "Pass";
+                        this.atWttArrival = DateTimeFormats.formatTimeString(atStop.Pass);
+                    } else {
+                        this.atPublicDeparture = DateTimeFormats.formatTimeString(atStop.PublicDeparture);
+                        this.atWttDeparture = DateTimeFormats.formatTimeString(atStop.Departure);
+                        this.atPublicArrival = DateTimeFormats.formatTimeString(atStop.PublicArrival);
+                        this.atWttArrival = DateTimeFormats.formatTimeString(atStop.Arrival);
+                    }
                 }
 
                 var toStop = trainMovement.Schedule.Stops[trainMovement.Schedule.Stops.length - 1];
@@ -290,7 +323,7 @@ module TrainNotifier.KnockoutModels {
         public departureDate: string = "";
 
         constructor(trainMovement: ITrainMovementResult, fromTiploc: IStationTiploc, toTiploc: IStationTiploc, tiplocs: IStationTiploc[]) {
-            super(trainMovement);
+            super(trainMovement, tiplocs);
 
             //TODO: if no actual get this elsewhere
             if (trainMovement.Actual && trainMovement.Actual.OriginDepartTimestamp) {

@@ -256,6 +256,10 @@ module TrainNotifier {
         };
     }
 
+    export class CancellationCodes {
+        public static EnRoute = "EN ROUTE";
+    }
+
     export class STPIndicator {
         public static Cancellation: ISTPIndicator = {
             STPIndicatorId: 1,

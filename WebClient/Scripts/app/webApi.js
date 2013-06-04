@@ -201,6 +201,12 @@ var TrainNotifier;
         return ScheduleStatus;
     })();
     TrainNotifier.ScheduleStatus = ScheduleStatus;    
+    var CancellationCodes = (function () {
+        function CancellationCodes() { }
+        CancellationCodes.EnRoute = "EN ROUTE";
+        return CancellationCodes;
+    })();
+    TrainNotifier.CancellationCodes = CancellationCodes;    
     var STPIndicator = (function () {
         function STPIndicator() { }
         STPIndicator.Cancellation = {

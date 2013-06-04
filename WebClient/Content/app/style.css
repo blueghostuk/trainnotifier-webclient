@@ -35,8 +35,16 @@ table.table-header-colour thead th {
     text-decoration: line-through;
 }
 
+tr.info > td > span.changeOfOrigin{
+    display: block;
+}
+
 .changeOfDestination {
     text-decoration: line-through;
+}
+
+tr.error > td > span.changeOfDestination{
+    display: block;
 }
 
 .table tbody tr.reinstatement > td {

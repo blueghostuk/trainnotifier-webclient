@@ -32,9 +32,14 @@ var TrainNotifier;
         })();
         KnockoutModels.CurrentLocation = CurrentLocation;        
         var TrainMovement = (function () {
-            function TrainMovement(trainMovement) {
+            function TrainMovement(trainMovement, tiplocs) {
                 this.operatorCode = "NA";
                 this.operatorName = "Unknown";
+                this.title = null;
+                this.cancel = false;
+                this.cancelEnRoute = null;
+                this.reinstate = null;
+                this.changeOfOrigin = null;
                 this.trainId = trainMovement.Schedule.TrainUid;
                 if(trainMovement.Schedule.AtocCode) {
                     this.operatorCode = trainMovement.Schedule.AtocCode.Code;
@@ -45,6 +50,22 @@ var TrainNotifier;
                 } else {
                     this.headCode = this.trainId;
                 }
+                if(trainMovement.Cancellations && trainMovement.Cancellations.length > 0) {
+                    var cancellation = trainMovement.Cancellations[0];
+                    var cancelText = "Cancelled " + cancellation.Type;
+                    var cancelValue = "";
+                    var cancelTiploc = TrainNotifier.StationTiploc.findStationTiploc(cancellation.CancelledAtStanoxCode, tiplocs);
+                    if(cancelTiploc) {
+                        cancelText += " at " + cancelTiploc.Description;
+                        if(cancellation.Type == TrainNotifier.CancellationCodes.EnRoute) {
+                            this.cancelEnRoute = cancelTiploc.Description.toLowerCase();
+                        }
+                    }
+                    cancelText += " at " + moment(cancellation.CancelledTimestamp).format(TrainNotifier.DateTimeFormats.timeFormat);
+                    cancelText += " (" + cancellation.Description + ")";
+                    this.cancel = true;
+                    this.title = cancelText;
+                }
             }
             return TrainMovement;
         })();
@@ -52,7 +73,7 @@ var TrainNotifier;
         var StartingAtTrainMovement = (function (_super) {
             __extends(StartingAtTrainMovement, _super);
             function StartingAtTrainMovement(trainMovement, tiplocs) {
-                        _super.call(this, trainMovement);
+                        _super.call(this, trainMovement, tiplocs);
                 this.publicDeparture = "";
                 this.actualDeparture = "";
                 this.publicArrival = "";
@@ -97,7 +118,7 @@ var TrainNotifier;
         var TerminatingAtTrainMovement = (function (_super) {
             __extends(TerminatingAtTrainMovement, _super);
             function TerminatingAtTrainMovement(trainMovement, tiplocs) {
-                        _super.call(this, trainMovement);
+                        _super.call(this, trainMovement, tiplocs);
                 this.publicDeparture = "";
                 this.actualDeparture = "";
                 this.publicArrival = "";
@@ -142,12 +163,13 @@ var TrainNotifier;
         var CallingAtTrainMovement = (function (_super) {
             __extends(CallingAtTrainMovement, _super);
             function CallingAtTrainMovement(trainMovement, atTiploc, tiplocs) {
-                        _super.call(this, trainMovement);
+                        _super.call(this, trainMovement, tiplocs);
                 this.atPublicDeparture = "";
                 this.atActualDeparture = "";
                 this.atPublicArrival = "";
                 this.atActualArrival = "";
                 this.departureDate = "";
+                this.pass = false;
                 if(trainMovement.Actual && trainMovement.Actual.OriginDepartTimestamp) {
                     this.departureDate = moment(trainMovement.Actual.OriginDepartTimestamp).format(TrainNotifier.DateTimeFormats.dateUrlFormat);
                 }
@@ -164,10 +186,18 @@ var TrainNotifier;
                     if(atStops.length > 0) {
                         atStop = atStops[0];
                         this.atPlatform = atStop.Platform;
-                        this.atPublicDeparture = TrainNotifier.DateTimeFormats.formatTimeString(atStop.PublicDeparture);
-                        this.atWttDeparture = TrainNotifier.DateTimeFormats.formatTimeString(atStop.Departure);
-                        this.atPublicArrival = TrainNotifier.DateTimeFormats.formatTimeString(atStop.PublicArrival);
-                        this.atWttArrival = TrainNotifier.DateTimeFormats.formatTimeString(atStop.Arrival);
+                        if(atStop.Pass) {
+                            this.pass = true;
+                            this.atPublicDeparture = "Pass";
+                            this.atWttDeparture = TrainNotifier.DateTimeFormats.formatTimeString(atStop.Pass);
+                            this.atPublicArrival = "Pass";
+                            this.atWttArrival = TrainNotifier.DateTimeFormats.formatTimeString(atStop.Pass);
+                        } else {
+                            this.atPublicDeparture = TrainNotifier.DateTimeFormats.formatTimeString(atStop.PublicDeparture);
+                            this.atWttDeparture = TrainNotifier.DateTimeFormats.formatTimeString(atStop.Departure);
+                            this.atPublicArrival = TrainNotifier.DateTimeFormats.formatTimeString(atStop.PublicArrival);
+                            this.atWttArrival = TrainNotifier.DateTimeFormats.formatTimeString(atStop.Arrival);
+                        }
                     }
                     var toStop = trainMovement.Schedule.Stops[trainMovement.Schedule.Stops.length - 1];
                     var toTiploc = TrainNotifier.StationTiploc.findStationTiploc(toStop.TiplocStanoxCode, tiplocs);
@@ -210,7 +240,7 @@ var TrainNotifier;
         var CallingBetweenTrainMovement = (function (_super) {
             __extends(CallingBetweenTrainMovement, _super);
             function CallingBetweenTrainMovement(trainMovement, fromTiploc, toTiploc, tiplocs) {
-                        _super.call(this, trainMovement);
+                        _super.call(this, trainMovement, tiplocs);
                 this.publicDeparture = "";
                 this.actualDeparture = "";
                 this.publicArrival = "";
