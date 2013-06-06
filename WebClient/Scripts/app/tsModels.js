@@ -39,7 +39,8 @@ var TrainNotifier;
                 this.cancel = false;
                 this.cancelEnRoute = null;
                 this.reinstate = null;
-                this.changeOfOrigin = null;
+                this.changeOfOrigin = false;
+                this.changeOfOriginStation = null;
                 this.trainId = trainMovement.Schedule.TrainUid;
                 if(trainMovement.Schedule.AtocCode) {
                     this.operatorCode = trainMovement.Schedule.AtocCode.Code;
@@ -50,7 +51,7 @@ var TrainNotifier;
                 } else {
                     this.headCode = this.trainId;
                 }
-                if(trainMovement.Cancellations && trainMovement.Cancellations.length > 0) {
+                if(trainMovement.Cancellations.length > 0) {
                     var cancellation = trainMovement.Cancellations[0];
                     var cancelText = "Cancelled " + cancellation.Type;
                     var cancelValue = "";
@@ -65,6 +66,19 @@ var TrainNotifier;
                     cancelText += " (" + cancellation.Description + ")";
                     this.cancel = true;
                     this.title = cancelText;
+                }
+                if(trainMovement.ChangeOfOrigins.length > 0) {
+                    var coo = trainMovement.ChangeOfOrigins[0];
+                    var cooText = "Will start";
+                    var cooTiploc = TrainNotifier.StationTiploc.findStationTiploc(coo.NewOriginStanoxCode, tiplocs);
+                    if(cooTiploc) {
+                        cooText += " from " + cooTiploc.Description.toLocaleLowerCase();
+                        this.changeOfOriginStation = cooTiploc.Description.toLocaleLowerCase();
+                    }
+                    cooText += " at " + moment(coo.NewDepartureTime).format(TrainNotifier.DateTimeFormats.timeFormat);
+                    cooText += " (" + coo.Description + ")";
+                    this.changeOfOrigin = true;
+                    this.title = cooText;
                 }
             }
             return TrainMovement;

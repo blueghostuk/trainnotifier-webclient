@@ -123,7 +123,8 @@
                         <td data-bind="text: operatorCode, attr: { title: operatorName }"></td>
                         <!-- 2 -->
                         <td class="stationName">
-                            <span data-bind="text: fromStation"></span>
+                            <span data-bind="text: fromStation, css: { changeOfOrigin: changeOfOriginStation }"></span>
+                            <span data-bind="text: changeOfOriginStation"></span>
                         </td>
                         <td data-bind="text: fromPlatform"></td>
                         <!-- 3 -->
@@ -196,7 +197,8 @@
                         <td class="time" title="Actual Arrival" data-bind="text: atActualArrival"></td>
                         <!-- 3 -->
                         <td class="stationName">
-                            <span data-bind="text: fromStation"></span>
+                            <span data-bind="text: fromStation, css: { changeOfOrigin: changeOfOriginStation }"></span>
+                            <span data-bind="text: changeOfOriginStation"></span>
                         </td>
                         <!-- 4 -->
                         <td class="centerText" data-bind="text: atPlatform"></td>
@@ -261,7 +263,8 @@
                         <td data-bind="text: operatorCode, attr: { title: operatorName }"></td>
                         <!-- 2 -->
                         <td class="stationName">
-                            <span data-bind="text: fromStation"></span>
+                            <span data-bind="text: fromStation, css: { changeOfOrigin: changeOfOriginStation }"></span>
+                            <span data-bind="text: changeOfOriginStation"></span>
                         </td>
                         <!-- 3 -->
                         <td class="stationName">
