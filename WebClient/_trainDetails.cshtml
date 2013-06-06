@@ -4,9 +4,9 @@
     <li><span class="label label-info">Id:</span> <span data-bind="text: Headcode"></span></li>
     <li><span class="label label-info">Live Id:</span> <a onclick="subTrain();" data-bind="text: Id, attr: { href: '#sub/' + TrainUid() + '/' + Date() }" title="View Live Updates for this train" style="display: inline;"></a></li>
     <li><span class="label label-info">Activated:</span> <span data-bind="text: Activated"></span></li>
-    <li data-bind="visible: Cancellation" style="display: none;"><span class="label label-important">Cancelled:</span> <span data-bind="    text: Cancellation"></span></li>
-    <li data-bind="visible: ChangeOfOrigin" style="display: none;"><span class="label label-important">Will start from:</span> <span data-bind="    text: ChangeOfOrigin"></span></li>
-    <li data-bind="visible: Reinstatement" style="display: none;"><span class="label label-important">Reinstated:</span> <span data-bind="    text: Reinstatement"></span></li>
+    <li data-bind="visible: Cancellation" style="display: none;"><span class="label label-important">Cancelled:</span> <span data-bind="text: Cancellation"></span></li>
+    <li data-bind="visible: ChangeOfOrigin" style="display: none;"><span class="label label-important">Will start from:</span> <span data-bind="text: ChangeOfOrigin"></span></li>
+    <li data-bind="visible: Reinstatement" style="display: none;"><span class="label label-important">Reinstated:</span> <span data-bind="text: Reinstatement"></span></li>
 </ul>
 <h4>Schedule Details</h4>
 <hr />

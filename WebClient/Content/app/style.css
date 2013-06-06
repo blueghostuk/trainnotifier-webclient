@@ -48,7 +48,11 @@ tr.error > td > span.changeOfDestination{
 }
 
 .table tbody tr.reinstatement > td {
-    background-color: white !important;
+    background-color: #0099dd !important;
+    color: white !important;
+}
+.table tbody tr.reinstatement > td > a {
+    color: white !important;
 }
 
 #map {

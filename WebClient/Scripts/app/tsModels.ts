@@ -41,7 +41,7 @@ module TrainNotifier.KnockoutModels {
         public title: string = null;
         public cancel: bool = false;
         public cancelEnRoute: string = null;
-        public reinstate: string = null;
+        public reinstate: bool = false;
         public changeOfOrigin: bool = false;
         public changeOfOriginStation: string = null;
 
@@ -60,35 +60,48 @@ module TrainNotifier.KnockoutModels {
 
             if (trainMovement.Cancellations.length > 0) {
                 var cancellation = trainMovement.Cancellations[0];
-                var cancelText = "Cancelled " + cancellation.Type;
-                var cancelValue = "";
                 var cancelTiploc = StationTiploc.findStationTiploc(cancellation.CancelledAtStanoxCode, tiplocs);
                 if (cancelTiploc) {
-                    cancelText += " at " + cancelTiploc.Description;
+                    var titleText = "Cancelled " + cancellation.Type
+                        + " at " + cancelTiploc.Description
+                        + " at " + moment(cancellation.CancelledTimestamp).format(DateTimeFormats.timeFormat)
+                        + " (" + cancellation.Description + ")";
+
                     if (cancellation.Type == CancellationCodes.EnRoute) {
                         this.cancelEnRoute = cancelTiploc.Description.toLowerCase();
                     }
-                }
-                cancelText += " at " + moment(cancellation.CancelledTimestamp).format(DateTimeFormats.timeFormat);
-                cancelText += " (" + cancellation.Description + ")";
 
-                this.cancel = true;
-                this.title = cancelText;
+                    this.cancel = true;
+                    this.title = titleText;
+                }
             }
 
             if (trainMovement.ChangeOfOrigins.length > 0) {
                 var coo = trainMovement.ChangeOfOrigins[0];
-                var cooText = "Will start";
                 var cooTiploc = StationTiploc.findStationTiploc(coo.NewOriginStanoxCode, tiplocs);
                 if (cooTiploc) {
-                    cooText += " from " + cooTiploc.Description.toLocaleLowerCase();
-                    this.changeOfOriginStation = cooTiploc.Description.toLocaleLowerCase();
-                }
-                cooText += " at " + moment(coo.NewDepartureTime).format(DateTimeFormats.timeFormat);
-                cooText += " (" + coo.Description + ")";
+                    var titleText = "Will start from " + cooTiploc.Description.toLocaleLowerCase()
+                        + " at " + moment(coo.NewDepartureTime).format(DateTimeFormats.timeFormat)
+                        + " (" + coo.Description + ")";
 
-                this.changeOfOrigin = true;
-                this.title = cooText;
+                    this.changeOfOriginStation = cooTiploc.Description.toLocaleLowerCase();
+                    this.changeOfOrigin = true;
+                    this.title = titleText;
+                }
+            }
+            if (trainMovement.Reinstatements.length > 0) {
+                var reinstatement = trainMovement.Reinstatements[0];
+                var reinstateTiploc = StationTiploc.findStationTiploc(reinstatement.NewOriginStanoxCode, tiplocs);
+                if (reinstateTiploc) {
+                    var titleText = "Reinstated at " + reinstateTiploc.Description.toLowerCase()
+                        + " at " + moment(reinstatement.PlannedDepartureTime).format(DateTimeFormats.timeFormat);
+
+                    this.reinstate = true;
+                    this.title = titleText;
+
+                    this.cancel = false;
+                    this.cancelEnRoute = null;
+                }
             }
         }
     }

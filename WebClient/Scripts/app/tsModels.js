@@ -38,7 +38,7 @@ var TrainNotifier;
                 this.title = null;
                 this.cancel = false;
                 this.cancelEnRoute = null;
-                this.reinstate = null;
+                this.reinstate = false;
                 this.changeOfOrigin = false;
                 this.changeOfOriginStation = null;
                 this.trainId = trainMovement.Schedule.TrainUid;
@@ -53,32 +53,36 @@ var TrainNotifier;
                 }
                 if(trainMovement.Cancellations.length > 0) {
                     var cancellation = trainMovement.Cancellations[0];
-                    var cancelText = "Cancelled " + cancellation.Type;
-                    var cancelValue = "";
                     var cancelTiploc = TrainNotifier.StationTiploc.findStationTiploc(cancellation.CancelledAtStanoxCode, tiplocs);
                     if(cancelTiploc) {
-                        cancelText += " at " + cancelTiploc.Description;
+                        var titleText = "Cancelled " + cancellation.Type + " at " + cancelTiploc.Description + " at " + moment(cancellation.CancelledTimestamp).format(TrainNotifier.DateTimeFormats.timeFormat) + " (" + cancellation.Description + ")";
                         if(cancellation.Type == TrainNotifier.CancellationCodes.EnRoute) {
                             this.cancelEnRoute = cancelTiploc.Description.toLowerCase();
                         }
+                        this.cancel = true;
+                        this.title = titleText;
                     }
-                    cancelText += " at " + moment(cancellation.CancelledTimestamp).format(TrainNotifier.DateTimeFormats.timeFormat);
-                    cancelText += " (" + cancellation.Description + ")";
-                    this.cancel = true;
-                    this.title = cancelText;
                 }
                 if(trainMovement.ChangeOfOrigins.length > 0) {
                     var coo = trainMovement.ChangeOfOrigins[0];
-                    var cooText = "Will start";
                     var cooTiploc = TrainNotifier.StationTiploc.findStationTiploc(coo.NewOriginStanoxCode, tiplocs);
                     if(cooTiploc) {
-                        cooText += " from " + cooTiploc.Description.toLocaleLowerCase();
+                        var titleText = "Will start from " + cooTiploc.Description.toLocaleLowerCase() + " at " + moment(coo.NewDepartureTime).format(TrainNotifier.DateTimeFormats.timeFormat) + " (" + coo.Description + ")";
                         this.changeOfOriginStation = cooTiploc.Description.toLocaleLowerCase();
+                        this.changeOfOrigin = true;
+                        this.title = titleText;
                     }
-                    cooText += " at " + moment(coo.NewDepartureTime).format(TrainNotifier.DateTimeFormats.timeFormat);
-                    cooText += " (" + coo.Description + ")";
-                    this.changeOfOrigin = true;
-                    this.title = cooText;
+                }
+                if(trainMovement.Reinstatements.length > 0) {
+                    var reinstatement = trainMovement.Reinstatements[0];
+                    var reinstateTiploc = TrainNotifier.StationTiploc.findStationTiploc(reinstatement.NewOriginStanoxCode, tiplocs);
+                    if(reinstateTiploc) {
+                        var titleText = "Reinstated at " + reinstateTiploc.Description.toLowerCase() + " at " + moment(reinstatement.PlannedDepartureTime).format(TrainNotifier.DateTimeFormats.timeFormat);
+                        this.reinstate = true;
+                        this.title = titleText;
+                        this.cancel = false;
+                        this.cancelEnRoute = null;
+                    }
                 }
             }
             return TrainMovement;
