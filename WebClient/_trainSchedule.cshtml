@@ -1,4 +1,4 @@
-﻿<table class="table table-hover table-bordered table-header-colour" id="scheduleView">
+﻿<table class="table table-hover table-bordered table-header-colour">
     <thead>
         <tr>
             <th>&nbsp;</th>
@@ -18,20 +18,16 @@
             <th class="phone-hide">Allowances</th>
         </tr>
     </thead>
-    <tbody data-bind="foreach: Stops">
-        <tr data-bind="css: { pass: Pass }">
-            <td class="stationName"><a class="pointer" data-bind="text: Tiploc.Description, click: function (d, e) { listStation(d.Tiploc.Stanox()); }"></a></td>
-            <td data-bind="text: Pass ? 'Pass' : Arrival, attr: { colspan: Pass ? 2 : 1 }"></td>
-            <td data-bind="text: PublicArrival, visible: !Pass"></td>
-            <td data-bind="text: Pass ? Pass : Departure, attr: { colspan: Pass ? 2 : 1 }"></td>
-            <td data-bind="text: Pass ? '' : PublicDeparture, visible: !Pass"></td>
-            <td data-bind="text: Line"></td>
-            <td data-bind="text: Platform"></td>
-            <td class="phone-hide">
-                <span title="Engineering Allowance" data-bind="visible: EngineeringAllowance">E:<span data-bind="    text: EngineeringAllowance"></span>,</span>
-                <span title="Pathing Allowance" data-bind="visible: PathingAllowance">Pa:<span data-bind="    text: PathingAllowance"></span>,</span>
-                <span title="Performance Allowance" data-bind="visible: PerformanceAllowance">Pe:<span data-bind="    text: PerformanceAllowance"></span></span>
-            </td>
+    <tbody data-bind="foreach: $data">
+        <tr data-bind="css: { pass: pass }">
+            <td class="stationName"><a class="pointer" data-bind="text: location, click: function (d, e) { listStation(d.locationStanox); }"></a></td>
+            <td data-bind="text: pass ? 'Pass' : wttArrive, attr: { colspan: pass ? 2 : 1 }"></td>
+            <td data-bind="text: publicArrive, visible: !pass"></td>
+            <td data-bind="text: pass ? pass : wttDepart, attr: { colspan: pass ? 2 : 1 }"></td>
+            <td data-bind="text: pass ? '' : publicDepart, visible: !pass"></td>
+            <td data-bind="text: line"></td>
+            <td data-bind="text: platform"></td>
+            <td class="phone-hide" data-bind="text: allowances"></td>
         </tr>
     </tbody>
 </table>

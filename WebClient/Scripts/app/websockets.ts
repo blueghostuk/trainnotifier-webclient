@@ -1,7 +1,48 @@
 /// <reference path="global.ts" />
 /// <reference path="webApi.ts" />
 
+interface IWebSocketResponse {
+    Command: string;
+    Args: string;
+    Response: any[];
+}
+
+interface IWebSocketTrainMovement {
+    TrainId?: string;
+    // in UPPERCASE
+    EventType: string;
+    // date time
+    PlannedTime: string;
+    // date time
+    ActualTimeStamp: string;
+    Stanox: string;
+    Line: string;
+    Platform: string;
+    State: string;
+    ScheduleStopNumber?: number;
+    OffRoute: bool;
+    NextStanox: string;
+    // Timestamp
+    ExpectedAtNextStanox: string;
+}
+
+interface IWebSocketBerthStep {
+    From: string;
+    To: string;
+    // date time
+    Time: string;
+    AreaId: string;
+    Description: string;
+    Type: string;
+}
+
 module TrainNotifier{
+
+    export class WebSocketCommands {
+        public static BerthUpdate = "subtrainupdate-berth";
+        public static LocationUpdate = "subtrainupdate";
+    }
+
     export class WebSockets{
         private ws: WebSocket;
 

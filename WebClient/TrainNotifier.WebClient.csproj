@@ -138,12 +138,16 @@
     <Content Include="Scripts\app\search-schedule.js">
       <DependentUpon>search-schedule.ts</DependentUpon>
     </Content>
+    <Content Include="Scripts\app\searchModels.js">
+      <DependentUpon>searchModels.ts</DependentUpon>
+    </Content>
     <Content Include="Scripts\app\train.js">
       <DependentUpon>train.ts</DependentUpon>
     </Content>
-    <TypeScriptCompile Include="Scripts\app\tsModels.ts" />
-    <Content Include="Scripts\app\tsModels.js">
-      <DependentUpon>tsModels.ts</DependentUpon>
+    <TypeScriptCompile Include="Scripts\app\searchModels.ts" />
+    <TypeScriptCompile Include="Scripts\app\trainModels.ts" />
+    <Content Include="Scripts\app\trainModels.js">
+      <DependentUpon>trainModels.ts</DependentUpon>
     </Content>
     <Content Include="Scripts\app\ViewModels.js">
       <DependentUpon>ViewModels.ts</DependentUpon>

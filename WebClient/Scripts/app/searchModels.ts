@@ -3,7 +3,7 @@
 /// <reference path="../typings/knockout/knockout.d.ts" />
 /// <reference path="webApi.ts" />
 
-module TrainNotifier.KnockoutModels {
+module TrainNotifier.KnockoutModels.Search {
 
     export class CurrentLocation {
         public name = ko.observable();
@@ -234,7 +234,6 @@ module TrainNotifier.KnockoutModels {
                     }
                 }
             }
-            // TODO: what about can/reinstate/c.o.origin
         }
     }
 
@@ -323,8 +322,6 @@ module TrainNotifier.KnockoutModels {
                     }
                 }
             }
-
-            // TODO: what about can/reinstate/c.o.origin
         }
     }
 
@@ -429,8 +426,6 @@ module TrainNotifier.KnockoutModels {
                     }
                 }
             }
-
-            // TODO: what about can/reinstate/c.o.origin
         }
     }
 }

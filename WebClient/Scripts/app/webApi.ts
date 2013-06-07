@@ -375,6 +375,7 @@ interface IRunningScheduleTrainStop {
     Platform?: string;
     EngineeringAllowance?: number;
     PathingAllowance?: number;
+    PerformanceAllowance?: number;
     Origin: bool;
     Intermediate: bool;
     Terminate: bool;
@@ -419,5 +420,10 @@ interface ITrainMovementResult {
 
 interface ITrainMovementResults {
     Movements: ITrainMovementResult[];
+    Tiplocs: IStationTiploc[];
+}
+
+interface ISingleTrainMovementResult {
+    Movement: ITrainMovementResult;
     Tiplocs: IStationTiploc[];
 }

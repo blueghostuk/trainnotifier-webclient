@@ -1,5 +1,12 @@
 var TrainNotifier;
 (function (TrainNotifier) {
+    var WebSocketCommands = (function () {
+        function WebSocketCommands() { }
+        WebSocketCommands.BerthUpdate = "subtrainupdate-berth";
+        WebSocketCommands.LocationUpdate = "subtrainupdate";
+        return WebSocketCommands;
+    })();
+    TrainNotifier.WebSocketCommands = WebSocketCommands;    
     var WebSockets = (function () {
         function WebSockets() { }
         WebSockets.prototype.connect = function () {
