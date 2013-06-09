@@ -18,7 +18,7 @@ interface IWebSocketTrainMovement {
     Stanox: string;
     Line: string;
     Platform: string;
-    State: string;
+    State: number;
     ScheduleStopNumber?: number;
     OffRoute: bool;
     NextStanox: string;
@@ -68,7 +68,9 @@ module TrainNotifier{
                     if (TrainNotifier.Common.page.wsOpenCommand) {
                         TrainNotifier.Common.page.wsOpenCommand();
                     }
-                } catch (err) { }
+                } catch (err) {
+                    console.error(err.message);
+                }
             };
             this.ws.onclose = function () {
                 if (TrainNotifier.Common.page.setStatus) {

@@ -4,7 +4,7 @@
 /// <reference path="../typings/knockout/knockout.d.ts" />
 /// <reference path="webApi.ts" />
 
-interface KnockoutObservableLiveStop extends KnockoutObservableBase{
+interface KnockoutObservableLiveStop extends KnockoutObservableBase {
     (): TrainNotifier.KnockoutModels.Train.LiveStopBase;
     (value: TrainNotifier.KnockoutModels.Train.LiveStopBase): void;
 
@@ -356,6 +356,223 @@ module TrainNotifier.KnockoutModels.Train {
             this.actualArrival(moment.utc(berthUpdate.Time).local().format(DateTimeFormats.timeFormat));
             this.notes("From Area: " + berthUpdate.AreaId);
         }
+    }
+
+    export class TrainDetails {
+
+        public id: KnockoutObservableString = ko.observable();
+        public trainUid: KnockoutObservableString = ko.observable();
+        public scheduleDate: KnockoutObservableString = ko.observable();
+        public liveId: KnockoutObservableString = ko.observable();
+        public activated: KnockoutObservableString = ko.observable();
+
+        public toc: KnockoutObservableString = ko.observable();
+        public type: KnockoutObservableString = ko.observable();
+        public from: KnockoutObservableString = ko.observable();
+        public to: KnockoutObservableString = ko.observable();
+        public runs: KnockoutObservableString = ko.observable();
+
+        public otherSites: ExternalSiteBase[] = [];
+
+        constructor() {
+            this.otherSites.push(new RealtimeTrainsExternalSite());
+            this.otherSites.push(new OpenTrainTimesExternalSite());
+            this.otherSites.push(new TrainsImExternalSite());
+            this.otherSites.push(new RaildarExternalSite());
+        }
+
+        reset() {
+            this.updateFromTrainMovement(null);
+        }
+
+        updateFromTrainMovement(train: ITrainMovementResult) {
+            if (train && train.Actual) {
+                this.id(train.Actual.HeadCode);
+                this.liveId(train.Actual.TrainId);
+                this.activated(moment(train.Actual.Activated).format(DateTimeFormats.dateTimeFormat));
+                this.scheduleDate(moment(train.Actual.OriginDepartTimestamp).format(DateTimeFormats.dateQueryFormat));
+            } else {
+                this.id(null);
+                this.liveId(null);
+                this.activated(null);
+                this.scheduleDate(null);
+            }
+
+            if (train && train.Schedule) {
+                this.trainUid(train.Schedule.TrainUid);
+                this.toc(train.Schedule.AtocCode.Name);
+                this.type(this.getStpIndicator(train.Schedule.STPIndicatorId));
+                this.from(moment(train.Schedule.StartDate).format(DateTimeFormats.dateFormat));
+                this.to(moment(train.Schedule.EndDate).format(DateTimeFormats.dateFormat));
+                this.runs(this.getDaysRun(train.Schedule.Schedule));
+            } else {
+                this.trainUid(null);
+                this.toc(null);
+                this.type(null);
+                this.from(null);
+                this.to(null);
+                this.runs(null);
+            }
+
+            for (var i = 0; i < this.otherSites.length; i++) {
+                this.otherSites[i].updateFromTrainMovement(train);
+            }
+        }
+
+        private getStpIndicator(stpIndicatorId: number) {
+            switch (stpIndicatorId) {
+                case 1:
+                    return "Cancellation";
+                case 2:
+                    return "STP";
+                case 3:
+                    return "Overlay";
+                case 4:
+                    return "Permanent";
+            }
+
+            return null;
+        }
+
+        private getDaysRun(schedule: ISchedule) {
+            var days: string[] = [];
+            if (schedule.Monday) {
+                days.push("M");
+            }
+            if (schedule.Tuesday) {
+                days.push("Tu");
+            }
+            if (schedule.Wednesday) {
+                days.push("W");
+            }
+            if (schedule.Thursday) {
+                days.push("Th");
+            }
+            if (schedule.Friday) {
+                days.push("F");
+            }
+            if (schedule.Saturday) {
+                days.push("Sa");
+            }
+            if (schedule.Sunday) {
+                days.push("Su");
+            }
+            return days.join(",");
+        }
+    }
+
+    export class ExternalSiteBase {
+
+        public text: string;
+        public url: KnockoutObservableString = ko.observable();
+
+        constructor(name: string) {
+            this.text = name;
+        }
+
+        updateFromTrainMovement(train: ITrainMovementResult) {
+
+        }
+    }
+
+    export class RealtimeTrainsExternalSite extends ExternalSiteBase {
+
+        private static baseUrl: string = "http://www.realtimetrains.co.uk/train/";
+
+        constructor() {
+            super("Realtime Trains");
+        }
+
+        updateFromTrainMovement(train: ITrainMovementResult) {
+            if (train && train.Schedule && train.Actual) {
+                this.url(RealtimeTrainsExternalSite.baseUrl + train.Schedule.TrainUid + "/" +
+                    moment(train.Actual.OriginDepartTimestamp).format("YYYY/MM/DD"));
+            } else {
+                this.url(null);
+            }
+        }
+
+    }
+
+    export class OpenTrainTimesExternalSite extends ExternalSiteBase {
+
+        private static baseUrl: string = "http://www.opentraintimes.com/schedule/";
+
+        constructor() {
+            super("Open Train Times");
+        }
+
+        updateFromTrainMovement(train: ITrainMovementResult) {
+            if (train && train.Schedule && train.Actual) {
+                this.url(RealtimeTrainsExternalSite.baseUrl + train.Schedule.TrainUid + "/" +
+                    moment(train.Actual.OriginDepartTimestamp).format("YYYY-MM-DD"));
+            } else {
+                this.url(null);
+            }
+        }
+
+    }
+
+    export class TrainsImExternalSite extends ExternalSiteBase {
+
+        private static baseUrl: string = "http://www.trains.im/schedule/";
+
+        constructor() {
+            super("trains.im");
+        }
+
+        updateFromTrainMovement(train: ITrainMovementResult) {
+            if (train && train.Schedule && train.Actual) {
+                this.url(RealtimeTrainsExternalSite.baseUrl + train.Schedule.TrainUid + "/" +
+                    moment(train.Actual.OriginDepartTimestamp).format("YYYY/MM/DD"));
+            } else {
+                this.url(null);
+            }
+        }
+
+    }
+
+    export class RaildarExternalSite extends ExternalSiteBase {
+
+        private static baseUrl: string = "http://raildar.co.uk/timetable/train/trainid/";
+
+        constructor() {
+            super("Raildar");
+        }
+
+        updateFromTrainMovement(train: ITrainMovementResult) {
+            if (train && train.Schedule && train.Actual) {
+                this.url(RealtimeTrainsExternalSite.baseUrl + train.Schedule.TrainUid);
+            } else {
+                this.url(null);
+            }
+        }
+
+    }
+
+    export class TrainTitleViewModel {
+
+        public Id = ko.observable();
+        public From = ko.observable();
+        public To = ko.observable();
+        public Start = ko.observable();
+        public End = ko.observable();
+        public FullTitle: KnockoutComputed;
+
+        constructor() {
+            var self = this;
+            this.FullTitle = ko.computed(function () {
+                if (TrainNotifier.Common.page && TrainNotifier.Common.page.pageTitle &&
+                    self.Id() && self.From() && self.To() && self.Start() && self.End()) {
+                    document.title = self.Id() + " "
+                        + self.From()
+                        + " to " + self.To() + " "
+                        + self.Start() + " - " + self.End()
+                        + " - " + TrainNotifier.Common.page.pageTitle;
+                }
+                return "";
+            }).extend({ throttle: 500 });
+        };
     }
 
 }

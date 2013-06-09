@@ -28,6 +28,7 @@ var TrainNotifier;
                         TrainNotifier.Common.page.wsOpenCommand();
                     }
                 } catch (err) {
+                    console.error(err.message);
                 }
             };
             this.ws.onclose = function () {

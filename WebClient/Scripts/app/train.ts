@@ -10,13 +10,13 @@
 /// <reference path="../typings/moment/moment.d.ts" />
 
 var currentLocation = new LocationViewModel();
-var titleModel = new TrainNotifier.ViewModels.TrainTitleViewModel();
-var detailsModel = new TrainDetailsViewModel();
+var titleModel = new TrainNotifier.KnockoutModels.Train.TrainTitleViewModel();
 
 var _lastTrainData: ISingleTrainMovementResult;
 
 var scheduleStops: KnockoutObservableArrayScheduleStop = ko.observableArray();
 var liveStops: KnockoutObservableArrayLiveStop = ko.observableArray();
+var currentTrainDetails = new TrainNotifier.KnockoutModels.Train.TrainDetails();
 
 var currentTiplocs: IStationTiploc[] = [];
 
@@ -88,7 +88,7 @@ $(function () {
     ko.applyBindings(scheduleStops, $("#schedule").get(0));
     ko.applyBindings(scheduleStops, $("#mix").get(0));
     ko.applyBindings(titleModel, $("#title").get(0));
-    ko.applyBindings(detailsModel, $("#details").get(0));
+    ko.applyBindings(currentTrainDetails, $("#details").get(0));
 
     if (document.location.hash.length > 0) {
         thisPage.setCommand(document.location.hash.substr(1));
@@ -118,7 +118,8 @@ $(function () {
 function reset() {
     scheduleStops.removeAll();
     liveStops.removeAll();
-    //currentTiplocs = new [];
+    currentTrainDetails.reset();
+    currentTiplocs = [];
 }
 
 function loadScheduleMap() {
@@ -147,8 +148,6 @@ function connectWs() {
         var data: any = jQuery.parseJSON(msg.data);
         if (data.Command == "subtrainupdate") {
             var stops: IWebSocketTrainMovement[] = data.Response;
-            //TODO: var lu = moment().format(TrainNotifier.DateTimeFormats.dateTimeFormat);
-            //TODO: currentTrain.LastUpdate(lu);
 
             for (var i = 0; i < stops.length; i++) {
                 var added = addStop(stops[i]);
@@ -189,11 +188,11 @@ function connectWs() {
     }, 2000);
 }
 
-function addStop(stop: IWebSocketTrainMovement, terminateStop?: bool) {
+function addStop(stop: IWebSocketTrainMovement) {
     // train terminated so unsubscribe
-    /*if (terminateStop && stopEl.State == 1) {
+    if (stop.State === 1) {
         sendWsCommand("unsubtrain:");
-    }*/
+    }
 
     var stopTiploc = TrainNotifier.StationTiploc.findStationTiploc(stop.Stanox, currentTiplocs);
     var nextStopTiploc = TrainNotifier.StationTiploc.findStationTiploc(stop.NextStanox, currentTiplocs);
@@ -406,12 +405,12 @@ function getTrainData(trainUid, date, subscribe: bool) {
                     }
                 }
             }
+
+            currentTrainDetails.updateFromTrainMovement(data.Movement);
         }
         $(".tooltip-dynamic").tooltip();
-        /*
-        }).then(function () {
-            return getAssociations(_lastLiveData);
-        })*/
+    }).then(function () {
+        return getAssociations();
     }).then(function () {
         if (subscribe) {
             doSubTrain();
@@ -427,20 +426,20 @@ function doSubTrain() {
     sendWsCommand("subtrain:" + _lastTrainData.Movement.Actual.TrainId);
 }
 
-function getAssociations(data) {
-    detailsModel.clearAssociations();
-    if (!data) {
+function getAssociations() {
+    //detailsModel.clearAssociations();
+    if (!_lastTrainData || !_lastTrainData.Movement || !_lastTrainData.Movement.Schedule || !_lastTrainData.Movement.Actual) {
         return;
     }
     return webApi.getTrainMovementAssociations(
-        data.TrainUid,
-        moment(data.SchedOriginDeparture).format(TrainNotifier.DateTimeFormats.dateQueryFormat))
+        _lastTrainData.Movement.Schedule.TrainUid,
+        moment(_lastTrainData.Movement.Actual.OriginDepartTimestamp).format(TrainNotifier.DateTimeFormats.dateQueryFormat))
         .done(function (associations) {
             if (associations.length == 0)
                 return;
 
             for (var i in associations) {
-                detailsModel.addAssociation(associations[i], data.TrainUid, moment(data.SchedOriginDeparture));
+                //detailsModel.addAssociation(associations[i], data.TrainUid, moment(data.SchedOriginDeparture));
             }
         });
 }

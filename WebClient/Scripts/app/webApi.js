@@ -120,6 +120,22 @@ var TrainNotifier;
         return TrainState;
     })();
     TrainNotifier.TrainState = TrainState;    
+    var AssociationType = (function () {
+        function AssociationType() { }
+        AssociationType.NextTrain = 0;
+        AssociationType.Join = 1;
+        AssociationType.Split = 2;
+        return AssociationType;
+    })();
+    TrainNotifier.AssociationType = AssociationType;    
+    var AssociationDateType = (function () {
+        function AssociationDateType() { }
+        AssociationDateType.SameDay = 0;
+        AssociationDateType.PreviousDay = 1;
+        AssociationDateType.NextDay = 2;
+        return AssociationDateType;
+    })();
+    TrainNotifier.AssociationDateType = AssociationDateType;    
     var ScheduleStatus = (function () {
         function ScheduleStatus() { }
         ScheduleStatus.Bus = {

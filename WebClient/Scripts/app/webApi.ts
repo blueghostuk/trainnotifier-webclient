@@ -150,15 +150,18 @@ module TrainNotifier {
     }
 }
 
-interface IStationTiploc {
-    StationName: string;
-    Lat: number;
-    Lon: number;
+interface ITiploc {
     Tiploc: string;
     Nalco: string;
     Description: string;
     Stanox: string;
     CRS: string;
+}
+
+interface IStationTiploc extends ITiploc {
+    StationName: string;
+    Lat: number;
+    Lon: number;
 }
 
 module TrainNotifier {
@@ -174,6 +177,18 @@ module TrainNotifier {
         public static ActivatedAndCancelled = 3;
         public static Terminated = 4;
         public static ActivatedAndTerminated = 5;
+    }
+
+    export class AssociationType {
+        public static NextTrain = 0;
+        public static Join = 1;
+        public static Split = 2;
+    }
+
+    export class AssociationDateType {
+        public static SameDay = 0;
+        public static PreviousDay = 1;
+        public static NextDay = 2;
     }
 
     export class ScheduleStatus {
@@ -408,6 +423,7 @@ interface IRunningScheduleTrain {
     ScheduleStatusId: number;
     STPIndicatorId: number;
     Stops: IRunningScheduleTrainStop[];
+    Schedule: ISchedule;
 }
 
 interface ITrainMovementResult {
@@ -426,4 +442,17 @@ interface ITrainMovementResults {
 interface ISingleTrainMovementResult {
     Movement: ITrainMovementResult;
     Tiplocs: IStationTiploc[];
+}
+
+interface IAssociation {
+    AssociationType: number;
+    MainTrainUid: string;
+    AssocTrainUid: string;
+    StartDate: string;
+    EndDate: string;
+    DateType: number;
+    // not used
+    Schedule?: any;
+    STPIndicator: number;
+    Location: ITiploc;
 }

@@ -1,9 +1,9 @@
 var currentLocation = new LocationViewModel();
-var titleModel = new TrainNotifier.ViewModels.TrainTitleViewModel();
-var detailsModel = new TrainDetailsViewModel();
+var titleModel = new TrainNotifier.KnockoutModels.Train.TrainTitleViewModel();
 var _lastTrainData;
 var scheduleStops = ko.observableArray();
 var liveStops = ko.observableArray();
+var currentTrainDetails = new TrainNotifier.KnockoutModels.Train.TrainDetails();
 var currentTiplocs = [];
 var _lastLiveData;
 var _lastScheduleData;
@@ -66,7 +66,7 @@ $(function () {
     ko.applyBindings(scheduleStops, $("#schedule").get(0));
     ko.applyBindings(scheduleStops, $("#mix").get(0));
     ko.applyBindings(titleModel, $("#title").get(0));
-    ko.applyBindings(detailsModel, $("#details").get(0));
+    ko.applyBindings(currentTrainDetails, $("#details").get(0));
     if(document.location.hash.length > 0) {
         thisPage.setCommand(document.location.hash.substr(1));
     }
@@ -92,6 +92,8 @@ $(function () {
 function reset() {
     scheduleStops.removeAll();
     liveStops.removeAll();
+    currentTrainDetails.reset();
+    currentTiplocs = [];
 }
 function loadScheduleMap() {
     var points = [];
@@ -147,7 +149,10 @@ function connectWs() {
         }
     }, 2000);
 }
-function addStop(stop, terminateStop) {
+function addStop(stop) {
+    if(stop.State === 1) {
+        sendWsCommand("unsubtrain:");
+    }
     var stopTiploc = TrainNotifier.StationTiploc.findStationTiploc(stop.Stanox, currentTiplocs);
     var nextStopTiploc = TrainNotifier.StationTiploc.findStationTiploc(stop.NextStanox, currentTiplocs);
     var queries = [];
@@ -339,8 +344,11 @@ function getTrainData(trainUid, date, subscribe) {
                     }
                 }
             }
+            currentTrainDetails.updateFromTrainMovement(data.Movement);
         }
         $(".tooltip-dynamic").tooltip();
+    }).then(function () {
+        return getAssociations();
     }).then(function () {
         if(subscribe) {
             doSubTrain();
@@ -354,17 +362,15 @@ function getTrainData(trainUid, date, subscribe) {
 function doSubTrain() {
     sendWsCommand("subtrain:" + _lastTrainData.Movement.Actual.TrainId);
 }
-function getAssociations(data) {
-    detailsModel.clearAssociations();
-    if(!data) {
+function getAssociations() {
+    if(!_lastTrainData || !_lastTrainData.Movement || !_lastTrainData.Movement.Schedule || !_lastTrainData.Movement.Actual) {
         return;
     }
-    return webApi.getTrainMovementAssociations(data.TrainUid, moment(data.SchedOriginDeparture).format(TrainNotifier.DateTimeFormats.dateQueryFormat)).done(function (associations) {
+    return webApi.getTrainMovementAssociations(_lastTrainData.Movement.Schedule.TrainUid, moment(_lastTrainData.Movement.Actual.OriginDepartTimestamp).format(TrainNotifier.DateTimeFormats.dateQueryFormat)).done(function (associations) {
         if(associations.length == 0) {
             return;
         }
         for(var i in associations) {
-            detailsModel.addAssociation(associations[i], data.TrainUid, moment(data.SchedOriginDeparture));
         }
     });
 }
