@@ -41,6 +41,9 @@ module TrainNotifier{
     export class WebSocketCommands {
         public static BerthUpdate = "subtrainupdate-berth";
         public static LocationUpdate = "subtrainupdate";
+
+        public static Departure = "DEPARTURE";
+        public static Arrival = "ARRIVAL";
     }
 
     export class WebSockets{

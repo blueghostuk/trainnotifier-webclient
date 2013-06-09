@@ -4,6 +4,8 @@ var TrainNotifier;
         function WebSocketCommands() { }
         WebSocketCommands.BerthUpdate = "subtrainupdate-berth";
         WebSocketCommands.LocationUpdate = "subtrainupdate";
+        WebSocketCommands.Departure = "DEPARTURE";
+        WebSocketCommands.Arrival = "ARRIVAL";
         return WebSocketCommands;
     })();
     TrainNotifier.WebSocketCommands = WebSocketCommands;    

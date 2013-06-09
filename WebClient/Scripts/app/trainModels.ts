@@ -74,15 +74,12 @@ module TrainNotifier.KnockoutModels.Train {
         public nextAt: KnockoutObservableString = ko.observable();
         public berthUpdate = false;
         public offRoute: KnockoutObservableBool = ko.observable(false);
+        public notes: KnockoutObservableString = ko.observable();
         private departureSet = false;
         private arrivalSet = false;
         private timeStamp: Number = 0;
 
-        constructor(location: string, tiplocs: IStationTiploc[]) {
-            var tiploc = StationTiploc.findStationTiploc(location, tiplocs);
-            this.location = tiploc.Description.toLowerCase();
-            this.locationStanox = tiploc.Stanox;
-
+        constructor(location?: string, tiplocs?: IStationTiploc[]) {
             var self = this;
             this.arrivalDelayCss = ko.computed(function () {
                 return self.getDelayCss(self.arrivalDelay());
@@ -90,6 +87,13 @@ module TrainNotifier.KnockoutModels.Train {
             this.departureDelayCss = ko.computed(function () {
                 return self.getDelayCss(self.departureDelay());
             });
+
+            if (!location || !tiplocs || tiplocs.length == 0)
+                return;
+
+            var tiploc = StationTiploc.findStationTiploc(location, tiplocs);
+            this.location = tiploc.Description.toLowerCase();
+            this.locationStanox = tiploc.Stanox;
         }
 
         private getDelayCss(value: Number) {
@@ -201,14 +205,14 @@ module TrainNotifier.KnockoutModels.Train {
         }
 
         validArrival(arrivalStanox: string, tiplocs: IStationTiploc[]) {
-            if (this.arrivalSet)
+            if (this.arrivalSet || this.berthUpdate)
                 return false;
             var arrivalTiploc = StationTiploc.findStationTiploc(arrivalStanox, tiplocs);
             return this.validateStop(arrivalTiploc);
         }
 
         validDeparture(departureStanox: string, tiplocs: IStationTiploc[]) {
-            if (this.departureSet)
+            if (this.departureSet || this.berthUpdate)
                 return false;
             var departureTiploc = StationTiploc.findStationTiploc(departureStanox, tiplocs);
             return this.validateStop(departureTiploc);
@@ -246,6 +250,23 @@ module TrainNotifier.KnockoutModels.Train {
             if (departureStop) {
                 this.updateWebSocketDeparture(departureStop, tiplocs);
             }
+        }
+    }
+
+    export class BerthLiveStop extends LiveStopBase {
+
+        constructor(berthUpdate: IWebSocketBerthStep) {
+            super();
+
+            this.berthUpdate = true;
+            this.location = berthUpdate.From;
+            if (berthUpdate.To && berthUpdate.To.length > 0)
+                this.location += " - " + berthUpdate.To;
+
+            // supplied time is in UTC, want to format to local (in theory this is UK)
+            // note these times are shown with seconds as they may not be on the 00/30 mark
+            this.actualArrival(moment.utc(berthUpdate.Time).local().format(DateTimeFormats.timeFormat));
+            this.notes("From Area: " + berthUpdate.AreaId);
         }
     }
 

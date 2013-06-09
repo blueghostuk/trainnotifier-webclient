@@ -68,12 +68,10 @@ var TrainNotifier;
                     this.nextAt = ko.observable();
                     this.berthUpdate = false;
                     this.offRoute = ko.observable(false);
+                    this.notes = ko.observable();
                     this.departureSet = false;
                     this.arrivalSet = false;
                     this.timeStamp = 0;
-                    var tiploc = TrainNotifier.StationTiploc.findStationTiploc(location, tiplocs);
-                    this.location = tiploc.Description.toLowerCase();
-                    this.locationStanox = tiploc.Stanox;
                     var self = this;
                     this.arrivalDelayCss = ko.computed(function () {
                         return self.getDelayCss(self.arrivalDelay());
@@ -81,6 +79,12 @@ var TrainNotifier;
                     this.departureDelayCss = ko.computed(function () {
                         return self.getDelayCss(self.departureDelay());
                     });
+                    if(!location || !tiplocs || tiplocs.length == 0) {
+                        return;
+                    }
+                    var tiploc = TrainNotifier.StationTiploc.findStationTiploc(location, tiplocs);
+                    this.location = tiploc.Description.toLowerCase();
+                    this.locationStanox = tiploc.Stanox;
                 }
                 LiveStopBase.prototype.getDelayCss = function (value) {
                     if(value == 0) {
@@ -153,14 +157,14 @@ var TrainNotifier;
                     this.updateDeparture(departureStop.PlannedTime, departureStop.ActualTimeStamp, departureStop.Line, departureStop.Platform, departureStop.OffRoute, departureStop.NextStanox, departureStop.ExpectedAtNextStanox, tiplocs);
                 };
                 LiveStopBase.prototype.validArrival = function (arrivalStanox, tiplocs) {
-                    if(this.arrivalSet) {
+                    if(this.arrivalSet || this.berthUpdate) {
                         return false;
                     }
                     var arrivalTiploc = TrainNotifier.StationTiploc.findStationTiploc(arrivalStanox, tiplocs);
                     return this.validateStop(arrivalTiploc);
                 };
                 LiveStopBase.prototype.validDeparture = function (departureStanox, tiplocs) {
-                    if(this.departureSet) {
+                    if(this.departureSet || this.berthUpdate) {
                         return false;
                     }
                     var departureTiploc = TrainNotifier.StationTiploc.findStationTiploc(departureStanox, tiplocs);
@@ -200,6 +204,21 @@ var TrainNotifier;
                 return NewLiveStop;
             })(LiveStopBase);
             Train.NewLiveStop = NewLiveStop;            
+            var BerthLiveStop = (function (_super) {
+                __extends(BerthLiveStop, _super);
+                function BerthLiveStop(berthUpdate) {
+                                _super.call(this);
+                    this.berthUpdate = true;
+                    this.location = berthUpdate.From;
+                    if(berthUpdate.To && berthUpdate.To.length > 0) {
+                        this.location += " - " + berthUpdate.To;
+                    }
+                    this.actualArrival(moment.utc(berthUpdate.Time).local().format(TrainNotifier.DateTimeFormats.timeFormat));
+                    this.notes("From Area: " + berthUpdate.AreaId);
+                }
+                return BerthLiveStop;
+            })(LiveStopBase);
+            Train.BerthLiveStop = BerthLiveStop;            
         })(KnockoutModels.Train || (KnockoutModels.Train = {}));
         var Train = KnockoutModels.Train;
     })(TrainNotifier.KnockoutModels || (TrainNotifier.KnockoutModels = {}));
