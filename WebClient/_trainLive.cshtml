@@ -9,23 +9,21 @@
             <th class="phone-hide">Notes</th>
         </tr>
     </thead>
-    <tbody data-bind="foreach: Stops">
-        <tr data-bind="css: StateClass, attr: { title: StateTitle }, css: { info: OffRoute , pass: BerthUpdate }">
+    <tbody data-bind="foreach: $data">
+        <tr data-bind="css: { info: offRoute, pass: berthUpdate }">
             <td class="stationName">
-                <a class="pointer" data-bind="text: Stanox, css: Stanox, click: function(d,e) { listStation(d.Stanox()); }"></a>
+                <a class="pointer" data-bind="text: location, click: function (d, e) { listStation(d.locationStanox); }"></a>
             </td>
             <td>
-                <span data-bind="text: ArrivalActualTimeStamp, attr: { title: ArrivalPlannedTime }" class="tooltip-dynamic"></span>&nbsp;
-                <span class="badge" data-bind="text: ArrivalDelay, css: ArrivalDelayResult, attr: { title: ArrivalDelayTitle }"></span></td>
+                <span data-bind="text: actualArrival, attr: { title: plannedArrival }" class="tooltip-dynamic"></span>&nbsp;
+                <span class="badge" data-bind="text: arrivalDelay, css: arrivalDelayCss"></span></td>
             <td>
-                <span data-bind="text: DepartActualTimeStamp, attr: { title: DepartPlannedTime }" class="tooltip-dynamic"></span>&nbsp;
-                <span class="badge" data-bind="text: DepartDelay, css: DepartDelayResult, attr: { title: DepartDelayTitle }"></span></td>
-            <td class="phone-hide" data-bind="text: Line"></td>
-            <td data-bind="text: Platform"></td>
+                <span data-bind="text: actualDeparture, attr: { title: plannedDeparture }" class="tooltip-dynamic"></span>&nbsp;
+                <span class="badge" data-bind="text: departureDelay, css: departureDelayCss"></span></td>
+            <td class="phone-hide" data-bind="text: line"></td>
+            <td data-bind="text: platform"></td>
             <td class="phone-hide">
-                <span data-bind="text: Notes"></span>
-                <span data-bind="text: OffRoute"></span>
-                <span data-bind="visible: NextStanox">Next @@ <span data-bind="css: NextStanox()"></span> in <span data-bind="text: ExpectedAtNextStanox"></span></span>
+                <span data-bind="visible: nextLocation">Next @@ <span data-bind="text: nextLocation" class="stationName"></span> in <span data-bind="text: nextAt"></span></span>
             </td>
         </tr>
     </tbody>

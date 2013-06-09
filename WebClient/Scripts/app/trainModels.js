@@ -55,40 +55,119 @@ var TrainNotifier;
             })();
             Train.ScheduleStop = ScheduleStop;            
             var LiveStopBase = (function () {
-                function LiveStopBase() {
-                    this.plannedArrival = null;
-                    this.actualArrival = null;
-                    this.arrivalDelay = null;
+                function LiveStopBase(location, tiplocs) {
+                    this.plannedArrival = ko.observable();
+                    this.actualArrival = ko.observable();
+                    this.arrivalDelay = ko.observable();
                     this.plannedDeparture = ko.observable();
                     this.actualDeparture = ko.observable();
                     this.departureDelay = ko.observable();
-                    this.line = null;
-                    this.platform = null;
+                    this.line = ko.observable();
+                    this.platform = ko.observable();
                     this.nextLocation = ko.observable();
-                    this.nextStatox = ko.observable();
                     this.nextAt = ko.observable();
                     this.berthUpdate = false;
-                    this.offRoute = false;
+                    this.offRoute = ko.observable(false);
+                    this.departureSet = false;
+                    this.arrivalSet = false;
+                    this.timeStamp = 0;
+                    var tiploc = TrainNotifier.StationTiploc.findStationTiploc(location, tiplocs);
+                    this.location = tiploc.Description.toLowerCase();
+                    this.locationStanox = tiploc.Stanox;
+                    var self = this;
+                    this.arrivalDelayCss = ko.computed(function () {
+                        return self.getDelayCss(self.arrivalDelay());
+                    });
+                    this.departureDelayCss = ko.computed(function () {
+                        return self.getDelayCss(self.departureDelay());
+                    });
                 }
-                LiveStopBase.prototype.updateDeparture = function (departureStop, tiplocs) {
-                    this.plannedDeparture(TrainNotifier.DateTimeFormats.formatDateTimeString(departureStop.PlannedTime));
-                    this.actualDeparture(TrainNotifier.DateTimeFormats.formatDateTimeString(departureStop.ActualTimeStamp));
-                    var planned = moment(departureStop.PlannedTime);
-                    var actual = moment(departureStop.ActualTimeStamp);
+                LiveStopBase.prototype.getDelayCss = function (value) {
+                    if(value == 0) {
+                        return "badge-success";
+                    }
+                    if(value < 0) {
+                        return "badge-info";
+                    }
+                    if(value > 10) {
+                        return "badge-important";
+                    }
+                    if(value > 0) {
+                        return "badge-warning";
+                    }
+                    return "hidden";
+                };
+                LiveStopBase.prototype.updateArrival = function (plannedArrival, actualArrival, line, platform, offRoute, nextStanox, expectedAtNextStanox, tiplocs) {
+                    this.arrivalSet = true;
+                    this.plannedArrival(TrainNotifier.DateTimeFormats.formatDateTimeString(plannedArrival));
+                    this.actualArrival(TrainNotifier.DateTimeFormats.formatDateTimeString(actualArrival));
+                    var planned = moment(plannedArrival);
+                    var actual = moment(actualArrival);
+                    this.arrivalDelay(actual.diff(planned, 'minutes'));
+                    this.timeStamp = actual.unix();
+                    this.updateCommon(line, platform, offRoute, nextStanox, expectedAtNextStanox, tiplocs);
+                };
+                LiveStopBase.prototype.updateDeparture = function (plannedDeparture, actualDeparture, line, platform, offRoute, nextStanox, expectedAtNextStanox, tiplocs) {
+                    this.departureSet = true;
+                    this.plannedDeparture(TrainNotifier.DateTimeFormats.formatDateTimeString(plannedDeparture));
+                    this.actualDeparture(TrainNotifier.DateTimeFormats.formatDateTimeString(actualDeparture));
+                    var planned = moment(plannedDeparture);
+                    var actual = moment(actualDeparture);
                     this.departureDelay(actual.diff(planned, 'minutes'));
-                    this.line = this.line || departureStop.Line;
-                    this.platform = this.platform || departureStop.Platform;
-                    this.offRoute = departureStop.OffRoute;
-                    if(departureStop.NextStanox) {
-                        this.nextStatox(departureStop.NextStanox);
-                        var nextAtTiploc = TrainNotifier.StationTiploc.findStationTiploc(departureStop.NextStanox, tiplocs);
+                    if(this.timeStamp == 0) {
+                        this.timeStamp = actual.unix();
+                    }
+                    this.updateCommon(line, platform, offRoute, nextStanox, expectedAtNextStanox, tiplocs);
+                };
+                LiveStopBase.prototype.updateCommon = function (line, platform, offRoute, nextStanox, expectedAtNextStanox, tiplocs) {
+                    this.line(this.line() || line);
+                    this.platform(this.platform() || platform);
+                    this.offRoute(this.offRoute() || offRoute);
+                    if(nextStanox) {
+                        var nextAtTiploc = TrainNotifier.StationTiploc.findStationTiploc(nextStanox, tiplocs);
                         if(nextAtTiploc) {
                             this.nextLocation(nextAtTiploc.Description.toLowerCase());
                         }
-                        if(departureStop.ExpectedAtNextStanox) {
-                            this.nextAt(TrainNotifier.DateTimeFormats.formatTimeString(departureStop.ExpectedAtNextStanox));
+                        if(expectedAtNextStanox) {
+                            this.nextAt(TrainNotifier.DateTimeFormats.formatTimeString(expectedAtNextStanox));
                         }
                     }
+                };
+                Object.defineProperty(LiveStopBase.prototype, "timeStampForSorting", {
+                    get: function () {
+                        return this.timeStamp;
+                    },
+                    enumerable: true,
+                    configurable: true
+                });
+                LiveStopBase.prototype.updateExistingArrival = function (arrivalStop, tiplocs) {
+                    this.updateArrival(arrivalStop.PlannedTimestamp, arrivalStop.ActualTimestamp, arrivalStop.Line, arrivalStop.Platform, null, null, null, tiplocs);
+                };
+                LiveStopBase.prototype.updateExistingDeparture = function (departureStop, tiplocs) {
+                    this.updateDeparture(departureStop.PlannedTimestamp, departureStop.ActualTimestamp, departureStop.Line, departureStop.Platform, null, null, null, tiplocs);
+                };
+                LiveStopBase.prototype.updateWebSocketArrival = function (arrivalStop, tiplocs) {
+                    this.updateArrival(arrivalStop.PlannedTime, arrivalStop.ActualTimeStamp, arrivalStop.Line, arrivalStop.Platform, arrivalStop.OffRoute, arrivalStop.NextStanox, arrivalStop.ExpectedAtNextStanox, tiplocs);
+                };
+                LiveStopBase.prototype.updateWebSocketDeparture = function (departureStop, tiplocs) {
+                    this.updateDeparture(departureStop.PlannedTime, departureStop.ActualTimeStamp, departureStop.Line, departureStop.Platform, departureStop.OffRoute, departureStop.NextStanox, departureStop.ExpectedAtNextStanox, tiplocs);
+                };
+                LiveStopBase.prototype.validArrival = function (arrivalStanox, tiplocs) {
+                    if(this.arrivalSet) {
+                        return false;
+                    }
+                    var arrivalTiploc = TrainNotifier.StationTiploc.findStationTiploc(arrivalStanox, tiplocs);
+                    return this.validateStop(arrivalTiploc);
+                };
+                LiveStopBase.prototype.validDeparture = function (departureStanox, tiplocs) {
+                    if(this.departureSet) {
+                        return false;
+                    }
+                    var departureTiploc = TrainNotifier.StationTiploc.findStationTiploc(departureStanox, tiplocs);
+                    return this.validateStop(departureTiploc);
+                };
+                LiveStopBase.prototype.validateStop = function (tiploc) {
+                    return tiploc && tiploc.Stanox === this.locationStanox;
                 };
                 return LiveStopBase;
             })();
@@ -96,28 +175,12 @@ var TrainNotifier;
             var ExistingLiveStop = (function (_super) {
                 __extends(ExistingLiveStop, _super);
                 function ExistingLiveStop(tiplocs, arrivalStop, departureStop) {
-                                _super.call(this);
-                    var stop = arrivalStop || departureStop;
-                    var tiploc = TrainNotifier.StationTiploc.findStationTiploc(stop.TiplocStanoxCode, tiplocs);
-                    this.location = tiploc.Description.toLowerCase();
-                    this.locationStanox = stop.TiplocStanoxCode;
+                                _super.call(this, arrivalStop ? arrivalStop.TiplocStanoxCode : departureStop.TiplocStanoxCode, tiplocs);
                     if(arrivalStop) {
-                        this.plannedArrival = TrainNotifier.DateTimeFormats.formatDateTimeString(arrivalStop.PlannedTimestamp);
-                        this.actualArrival = TrainNotifier.DateTimeFormats.formatDateTimeString(arrivalStop.ActualTimestamp);
-                        var planned = moment(arrivalStop.PlannedTimestamp);
-                        var actual = moment(arrivalStop.ActualTimestamp);
-                        this.arrivalDelay = actual.diff(planned, 'minutes');
-                        this.line = arrivalStop.Line;
-                        this.platform = arrivalStop.Platform;
+                        this.updateExistingArrival(arrivalStop, tiplocs);
                     }
                     if(departureStop) {
-                        this.plannedDeparture(TrainNotifier.DateTimeFormats.formatDateTimeString(departureStop.PlannedTimestamp));
-                        this.actualDeparture(TrainNotifier.DateTimeFormats.formatDateTimeString(departureStop.ActualTimestamp));
-                        var planned = moment(departureStop.PlannedTimestamp);
-                        var actual = moment(departureStop.ActualTimestamp);
-                        this.departureDelay(actual.diff(planned, 'minutes'));
-                        this.line = this.line || departureStop.Line;
-                        this.platform = this.platform || departureStop.Platform;
+                        this.updateExistingDeparture(departureStop, tiplocs);
                     }
                 }
                 return ExistingLiveStop;
@@ -126,50 +189,12 @@ var TrainNotifier;
             var NewLiveStop = (function (_super) {
                 __extends(NewLiveStop, _super);
                 function NewLiveStop(tiplocs, arrivalStop, departureStop) {
-                                _super.call(this);
-                    var stop = arrivalStop || departureStop;
-                    var tiploc = TrainNotifier.StationTiploc.findStationTiploc(stop.Stanox, tiplocs);
-                    this.location = tiploc.Description.toLowerCase();
-                    this.locationStanox = stop.Stanox;
+                                _super.call(this, arrivalStop ? arrivalStop.Stanox : departureStop.Stanox, tiplocs);
                     if(arrivalStop) {
-                        this.plannedArrival = TrainNotifier.DateTimeFormats.formatDateTimeString(arrivalStop.PlannedTime);
-                        this.actualArrival = TrainNotifier.DateTimeFormats.formatDateTimeString(arrivalStop.ActualTimeStamp);
-                        var planned = moment(arrivalStop.PlannedTime);
-                        var actual = moment(arrivalStop.ActualTimeStamp);
-                        this.arrivalDelay = actual.diff(planned, 'minutes');
-                        this.line = arrivalStop.Line;
-                        this.platform = arrivalStop.Platform;
-                        this.offRoute = arrivalStop.OffRoute;
-                        if(arrivalStop.NextStanox) {
-                            this.nextStatox(arrivalStop.NextStanox);
-                            var nextAtTiploc = TrainNotifier.StationTiploc.findStationTiploc(arrivalStop.NextStanox, tiplocs);
-                            if(nextAtTiploc) {
-                                this.nextLocation(nextAtTiploc.Description.toLowerCase());
-                            }
-                            if(arrivalStop.ExpectedAtNextStanox) {
-                                this.nextAt(TrainNotifier.DateTimeFormats.formatTimeString(arrivalStop.ExpectedAtNextStanox));
-                            }
-                        }
+                        this.updateWebSocketArrival(arrivalStop, tiplocs);
                     }
                     if(departureStop) {
-                        this.plannedDeparture(TrainNotifier.DateTimeFormats.formatDateTimeString(departureStop.PlannedTime));
-                        this.actualDeparture(TrainNotifier.DateTimeFormats.formatDateTimeString(departureStop.ActualTimeStamp));
-                        var planned = moment(departureStop.PlannedTime);
-                        var actual = moment(departureStop.ActualTimeStamp);
-                        this.departureDelay(actual.diff(planned, 'minutes'));
-                        this.line = this.line || departureStop.Line;
-                        this.platform = this.platform || departureStop.Platform;
-                        this.offRoute = this.offRoute || arrivalStop.OffRoute;
-                        if(departureStop.NextStanox) {
-                            this.nextStatox(departureStop.NextStanox);
-                            var nextAtTiploc = TrainNotifier.StationTiploc.findStationTiploc(departureStop.NextStanox, tiplocs);
-                            if(nextAtTiploc) {
-                                this.nextLocation(nextAtTiploc.Description.toLowerCase());
-                            }
-                            if(departureStop.ExpectedAtNextStanox) {
-                                this.nextAt(TrainNotifier.DateTimeFormats.formatTimeString(departureStop.ExpectedAtNextStanox));
-                            }
-                        }
+                        this.updateWebSocketDeparture(departureStop, tiplocs);
                     }
                 }
                 return NewLiveStop;

@@ -509,7 +509,7 @@ module TrainNotifier.ViewModels {
             this.Stops.removeAll();
         };
 
-        updateFromJSON(data : ISingleTrainMovementResult) {
+        updateFromJSON(data: ISingleTrainMovementResult) {
             this.clearStops();
             if (data.Movement.Actual) {
                 this.Id(data.Movement.Actual.TrainId);
@@ -618,7 +618,7 @@ module TrainNotifier.ViewModels {
             stopModel.Stanox(stopEl.Stanox);
         };
 
-        private static getTimes(stopEl: IRunningTrainActualStop) : ITimeResult {
+        private static getTimes(stopEl: IRunningTrainActualStop): ITimeResult {
             var setTimes = true;
             var result: ITimeResult = {
                 ActualTimeStamp: null,
@@ -651,7 +651,7 @@ module TrainNotifier.ViewModels {
         };
     };
 
-    private interface ITimeResult{
+    private interface ITimeResult {
         ActualTimeStamp: string;
         PlannedTimeStamp: string;
         Delay: number;
@@ -678,7 +678,7 @@ module TrainNotifier.ViewModels {
                         + " - " + TrainNotifier.Common.page.pageTitle;
                 }
                 return "";
-            });
+            }).extend({ throttle: 500 });
         };
     }
 }

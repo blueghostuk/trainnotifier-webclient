@@ -576,6 +576,8 @@ var TrainNotifier;
                         document.title = self.Id() + " " + self.From() + " to " + self.To() + " " + self.Start() + " - " + self.End() + " - " + TrainNotifier.Common.page.pageTitle;
                     }
                     return "";
+                }).extend({
+                    throttle: 500
                 });
             }
             return TrainTitleViewModel;
