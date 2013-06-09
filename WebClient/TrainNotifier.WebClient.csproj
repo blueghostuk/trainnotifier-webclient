@@ -157,6 +157,9 @@
     </Content>
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <None Include="Scripts\jquery-1.10.1.intellisense.js" />
+    <Content Include="Scripts\jquery-1.10.1.js" />
+    <Content Include="Scripts\jquery-1.10.1.min.js" />
     <Content Include="Scripts\typings\bootstrap\bootstrap.d.ts" />
     <TypeScriptCompile Include="Scripts\app\webApi.ts" />
     <Content Include="Scripts\typings\jquery\jquery.d.ts" />
@@ -171,9 +174,6 @@
     <Content Include="_ppmTable.cshtml" />
     <Content Include="_ppmOperator.cshtml" />
     <None Include="Properties\PublishProfiles\azure.pubxml" />
-    <None Include="Scripts\jquery-1.9.1.intellisense.js" />
-    <Content Include="Scripts\jquery-1.9.1.js" />
-    <Content Include="Scripts\jquery-1.9.1.min.js" />
     <Content Include="Scripts\jquery.ba-hashchange.js" />
     <Content Include="Scripts\jquery.ba-hashchange.min.js" />
     <Content Include="Scripts\jquery.color-2.1.2.js" />
@@ -213,8 +213,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Scripts\jquery-1.9.1.min.map" />
     <Content Include="search-schedule.cshtml" />
+    <Content Include="Scripts\jquery-1.10.1.min.map" />
     <None Include="Web.Azure.config">
       <DependentUpon>Web.config</DependentUpon>
       <SubType>Designer</SubType>
