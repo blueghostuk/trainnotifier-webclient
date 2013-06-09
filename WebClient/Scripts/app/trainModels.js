@@ -17,6 +17,7 @@ var TrainNotifier;
                     this.platform = null;
                     this.allowances = null;
                     this.pass = null;
+                    this.associateLiveStop = ko.observable();
                     var tiploc = TrainNotifier.StationTiploc.findStationTiploc(scheduleStop.TiplocStanoxCode, tiplocs);
                     this.location = tiploc.Description.toLowerCase();
                     this.locationStanox = scheduleStop.TiplocStanoxCode;
@@ -50,7 +51,62 @@ var TrainNotifier;
                     if(allowances.length > 0) {
                         this.allowances = allowances.join(", ");
                     }
+                    var self = this;
+                    this.actualArrival = ko.computed(function () {
+                        if(self.associateLiveStop()) {
+                            return self.associateLiveStop().actualArrival();
+                        }
+                        return null;
+                    });
+                    this.arrivalDelay = ko.computed(function () {
+                        if(self.associateLiveStop()) {
+                            return self.associateLiveStop().arrivalDelay();
+                        }
+                        return null;
+                    });
+                    this.arrivalDelayCss = ko.computed(function () {
+                        return self.getDelayCss(self.arrivalDelay());
+                    });
+                    this.actualDeparture = ko.computed(function () {
+                        if(self.associateLiveStop()) {
+                            return self.associateLiveStop().actualDeparture();
+                        }
+                        return null;
+                    });
+                    this.departureDelay = ko.computed(function () {
+                        if(self.associateLiveStop()) {
+                            return self.associateLiveStop().departureDelay();
+                        }
+                        return null;
+                    });
+                    this.departureDelayCss = ko.computed(function () {
+                        return self.getDelayCss(self.departureDelay());
+                    });
                 }
+                ScheduleStop.prototype.getDelayCss = function (value) {
+                    if(value === 0) {
+                        return "badge-success";
+                    }
+                    if(value < 0) {
+                        return "badge-info";
+                    }
+                    if(value > 10) {
+                        return "badge-important";
+                    }
+                    if(value > 0) {
+                        return "badge-warning";
+                    }
+                    return "hidden";
+                };
+                ScheduleStop.prototype.associateWithLiveStop = function (liveStop) {
+                    this.associateLiveStop(liveStop);
+                };
+                ScheduleStop.prototype.validateAssociation = function (liveStop) {
+                    if(this.associateLiveStop()) {
+                        return false;
+                    }
+                    return liveStop.locationStanox === this.locationStanox;
+                };
                 return ScheduleStop;
             })();
             Train.ScheduleStop = ScheduleStop;            
@@ -87,7 +143,7 @@ var TrainNotifier;
                     this.locationStanox = tiploc.Stanox;
                 }
                 LiveStopBase.prototype.getDelayCss = function (value) {
-                    if(value == 0) {
+                    if(value === 0) {
                         return "badge-success";
                     }
                     if(value < 0) {

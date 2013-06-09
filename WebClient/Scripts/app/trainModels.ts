@@ -4,6 +4,30 @@
 /// <reference path="../typings/knockout/knockout.d.ts" />
 /// <reference path="webApi.ts" />
 
+interface KnockoutObservableLiveStop extends KnockoutObservableBase{
+    (): TrainNotifier.KnockoutModels.Train.LiveStopBase;
+    (value: TrainNotifier.KnockoutModels.Train.LiveStopBase): void;
+
+    subscribe(callback: (newValue: TrainNotifier.KnockoutModels.Train.LiveStopBase) => void , target?: any, topic?: string): KnockoutSubscription;
+    notifySubscribers(valueToWrite: TrainNotifier.KnockoutModels.Train.LiveStopBase, topic?: string);
+}
+
+interface KnockoutObservableArrayLiveStop extends KnockoutObservableArrayFunctions {
+    (): TrainNotifier.KnockoutModels.Train.LiveStopBase[];
+    (value: TrainNotifier.KnockoutModels.Train.LiveStopBase[]): void;
+
+    subscribe(callback: (newValue: TrainNotifier.KnockoutModels.Train.LiveStopBase[]) => void , target?: any, topic?: string): KnockoutSubscription;
+    notifySubscribers(valueToWrite: TrainNotifier.KnockoutModels.Train.LiveStopBase[], topic?: string);
+}
+
+interface KnockoutObservableArrayScheduleStop extends KnockoutObservableArrayFunctions {
+    (): TrainNotifier.KnockoutModels.Train.ScheduleStop[];
+    (value: TrainNotifier.KnockoutModels.Train.ScheduleStop[]): void;
+
+    subscribe(callback: (newValue: TrainNotifier.KnockoutModels.Train.ScheduleStop[]) => void , target?: any, topic?: string): KnockoutSubscription;
+    notifySubscribers(valueToWrite: TrainNotifier.KnockoutModels.Train.ScheduleStop[], topic?: string);
+}
+
 module TrainNotifier.KnockoutModels.Train {
 
     export class ScheduleStop {
@@ -11,12 +35,19 @@ module TrainNotifier.KnockoutModels.Train {
         public locationStanox: string;
         public wttArrive: string = null;
         public publicArrive: string = null;
+        public actualArrival: KnockoutComputed;
+        public arrivalDelay: KnockoutComputed;
+        public arrivalDelayCss: KnockoutComputed;
         public wttDepart: string = null;
         public publicDepart: string = null;
+        public actualDeparture: KnockoutComputed;
+        public departureDelay: KnockoutComputed;
+        public departureDelayCss: KnockoutComputed;
         public line: string = null;
         public platform: string = null;
         public allowances: string = null;
         public pass: string = null;
+        private associateLiveStop: KnockoutObservableLiveStop = ko.observable();
 
         constructor(scheduleStop: IRunningScheduleTrainStop, tiplocs: IStationTiploc[]) {
             var tiploc = StationTiploc.findStationTiploc(scheduleStop.TiplocStanoxCode, tiplocs);
@@ -54,6 +85,63 @@ module TrainNotifier.KnockoutModels.Train {
             if (allowances.length > 0) {
                 this.allowances = allowances.join(", ");
             }
+
+            var self = this;
+            this.actualArrival = ko.computed(function () {
+                if (self.associateLiveStop())
+                    return self.associateLiveStop().actualArrival();
+
+                return null;
+            });
+            this.arrivalDelay = ko.computed(function () {
+                if (self.associateLiveStop())
+                    return self.associateLiveStop().arrivalDelay();
+
+                return null;
+            });
+            this.arrivalDelayCss = ko.computed(function () {
+                return self.getDelayCss(self.arrivalDelay());
+            });
+
+            this.actualDeparture = ko.computed(function () {
+                if (self.associateLiveStop())
+                    return self.associateLiveStop().actualDeparture();
+
+                return null;
+            });
+            this.departureDelay = ko.computed(function () {
+                if (self.associateLiveStop())
+                    return self.associateLiveStop().departureDelay();
+
+                return null;
+            });
+            this.departureDelayCss = ko.computed(function () {
+                return self.getDelayCss(self.departureDelay());
+            });
+        }
+
+        private getDelayCss(value: Number) {
+            if (value === 0)
+                return "badge-success";
+            if (value < 0)
+                return "badge-info";
+            if (value > 10)
+                return "badge-important";
+            if (value > 0)
+                return "badge-warning";
+
+            return "hidden";
+        }
+
+        associateWithLiveStop(liveStop: LiveStopBase) {
+            this.associateLiveStop(liveStop);
+        }
+
+        validateAssociation(liveStop: LiveStopBase) {
+            if (this.associateLiveStop())
+                return false;
+
+            return liveStop.locationStanox === this.locationStanox;
         }
     }
 
@@ -97,7 +185,7 @@ module TrainNotifier.KnockoutModels.Train {
         }
 
         private getDelayCss(value: Number) {
-            if (value == 0)
+            if (value === 0)
                 return "badge-success";
             if (value < 0)
                 return "badge-info";
@@ -132,7 +220,7 @@ module TrainNotifier.KnockoutModels.Train {
             this.departureDelay(actual.diff(planned, 'minutes'));
             if (this.timeStamp == 0)
                 this.timeStamp = actual.unix();
-            
+
             this.updateCommon(line, platform, offRoute, nextStanox, expectedAtNextStanox, tiplocs);
         }
 

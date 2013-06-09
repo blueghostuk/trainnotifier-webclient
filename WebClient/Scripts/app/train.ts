@@ -10,14 +10,13 @@
 /// <reference path="../typings/moment/moment.d.ts" />
 
 var currentLocation = new LocationViewModel();
-var mixModel = new TrainNotifier.ViewModels.ScheduleTrainViewModel();
 var titleModel = new TrainNotifier.ViewModels.TrainTitleViewModel();
 var detailsModel = new TrainDetailsViewModel();
 
 var _lastTrainData: ISingleTrainMovementResult;
 
-var scheduleStops = ko.observableArray();
-var liveStops = ko.observableArray();
+var scheduleStops: KnockoutObservableArrayScheduleStop = ko.observableArray();
+var liveStops: KnockoutObservableArrayLiveStop = ko.observableArray();
 
 var currentTiplocs: IStationTiploc[] = [];
 
@@ -87,7 +86,7 @@ $(function () {
     ko.applyBindings(liveStops, $("#trains").get(0));
     ko.applyBindings(currentLocation, $(".station-details").get(0));
     ko.applyBindings(scheduleStops, $("#schedule").get(0));
-    ko.applyBindings(mixModel, $("#mix").get(0));
+    ko.applyBindings(scheduleStops, $("#mix").get(0));
     ko.applyBindings(titleModel, $("#title").get(0));
     ko.applyBindings(detailsModel, $("#details").get(0));
 
@@ -247,6 +246,13 @@ function addStop(stop: IWebSocketTrainMovement, terminateStop?: bool) {
             }
             var newStop = new TrainNotifier.KnockoutModels.Train.NewLiveStop(currentTiplocs, arrivalStop, departureStop);
             liveStops.push(newStop);
+            for (var i = 0; i < scheduleStops().length; i++) {
+                var scheduleStop = scheduleStops()[i];
+                if (scheduleStop.validateAssociation(newStop)) {
+                    scheduleStop.associateWithLiveStop(newStop);
+                    break;
+                }
+            }
         }
     });
 }
@@ -372,6 +378,15 @@ function getTrainData(trainUid, date, subscribe: bool) {
                         if (!setDept) {
                             modelStops.push(new TrainNotifier.KnockoutModels.Train.ExistingLiveStop(
                                 currentTiplocs, null, departure));
+                        }
+                    }
+                    for (var i = 0; i < modelStops.length; i++) {
+                        for (var j = 0; j < scheduleStops().length; j++) {
+                            var scheduleStop = scheduleStops()[j];
+                            if (scheduleStop.validateAssociation(modelStops[i])) {
+                                scheduleStop.associateWithLiveStop(modelStops[i]);
+                                break;
+                            }
                         }
                     }
 
