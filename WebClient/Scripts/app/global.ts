@@ -1,3 +1,4 @@
+/// <reference path="../typings/moment/moment.d.ts" />
 /// <reference path="../typings/jquery/jquery.d.ts" />
 /// <reference path="../typings/bootstrap/bootstrap.d.ts" />
 /// <reference path="webApi.ts" />
@@ -12,9 +13,8 @@ interface IPage {
 }
 
 interface IServerSettings {
-    server: string;
-    apiPort: string;
-    wsPort: string;
+    apiUrl: string;
+    wsUrl: string;
 }
 
 // Module
@@ -27,7 +27,7 @@ module TrainNotifier {
         static page: IPage;
         static webApi: IWebApi;
         
-        static displayStanox(stanox: IStanox) {
+        static displayStanox(stanox: IStationTiploc) {
             if (!stanox)
                 return;
             var html = "";
@@ -56,10 +56,25 @@ module TrainNotifier {
         public static dateTimeHashFormat = "YYYY-MM-DD/HH-mm";
         public static dateQueryFormat = "YYYY-MM-DD";
         public static dateUrlFormat = "YYYY/MM/DD";
+        public static dateTitleFormat = "ddd Do MMM YYYY";
+        public static dateTimeApiFormat = "YYYY-MM-DDTHH:mm";
+        public static timeFrameHours = 1;
 
         public static formatTimeString(time: string) : string {
             if (time){
                 var timeMoment = moment(time, TrainNotifier.DateTimeFormats.timeFormat);
+                var ts = timeMoment.format(TrainNotifier.DateTimeFormats.shortTimeFormat);
+                if (timeMoment.seconds() === 30) {
+                    ts += TrainNotifier.CommonStrings.halfMinute;
+                }
+                return ts;
+            }
+            return null;
+        };
+
+        public static formatDateTimeString(dateTime: string): string {
+            if (dateTime) {
+                var timeMoment = moment(dateTime);
                 var ts = timeMoment.format(TrainNotifier.DateTimeFormats.shortTimeFormat);
                 if (timeMoment.seconds() === 30) {
                     ts += TrainNotifier.CommonStrings.halfMinute;

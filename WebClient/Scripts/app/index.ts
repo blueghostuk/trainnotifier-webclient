@@ -28,16 +28,16 @@ $(function () {
     ko.applyBindings(toLocal, $("#to-local").get(0));
     ko.applyBindings(atLocal, $("#at-local").get(0));
 
-    webApi.getStations().done(function (results) {
+    webApi.getStations().done(function (results: IStanox[]) {
         var locations = [];
-        for (var i in results) {
+        for (var i = 0; i < results.length; i++) {
             locations.push(results[i].StationName + ' (' + results[i].CRS + ' - ' + results[i].Tiploc + ')');
         }
         $(".station-lookup").typeahead({
             source: locations,
-            sorter: function (items : Array) {
+            sorter: function (items: Array) {
                 var self = this;
-                return items.sort(function (a : string, b: string) {
+                return items.sort(function (a: string, b: string) {
                     var aCrs = a.substr(a.lastIndexOf('(') + 1, 3);
                     var bCrs = b.substr(b.lastIndexOf('(') + 1, 3);
 
@@ -130,10 +130,10 @@ function getTime(timeVal) {
 
 function lookupLocalFrom() {
     navigator.geolocation.getCurrentPosition(function (position) {
-        webApi.getStationByLocation(position.coords.latitude, position.coords.longitude).done(function (stations) {
+        webApi.getStationByLocation(position.coords.latitude, position.coords.longitude).done(function (stations : IStanox[]) {
             fromLocal.removeAll();
             if (stations && stations.length > 0) {
-                for (var i in stations) {
+                for (var i = 0; i < stations.length; i++) {
                     fromLocal.push(stations[i].StationName + ' (' + stations[i].CRS + ' - ' + stations[i].Tiploc + ')');
                 }
             }
@@ -143,10 +143,10 @@ function lookupLocalFrom() {
 
 function lookupLocalTo() {
     navigator.geolocation.getCurrentPosition(function (position) {
-        webApi.getStationByLocation(position.coords.latitude, position.coords.longitude).done(function (stations) {
+        webApi.getStationByLocation(position.coords.latitude, position.coords.longitude).done(function (stations : IStanox[]) {
             toLocal.removeAll();
             if (stations && stations.length > 0) {
-                for (var i in stations) {
+                for (var i = 0; i < stations.length; i++) {
                     toLocal.push(stations[i].StationName + ' (' + stations[i].CRS + ' - ' + stations[i].Tiploc + ')');
                 }
             }
@@ -155,10 +155,10 @@ function lookupLocalTo() {
 }
 function lookupLocalAt() {
     navigator.geolocation.getCurrentPosition(function (position) {
-        webApi.getStationByLocation(position.coords.latitude, position.coords.longitude).done(function (stations) {
+        webApi.getStationByLocation(position.coords.latitude, position.coords.longitude).done(function (stations : IStanox[]) {
             atLocal.removeAll();
             if (stations && stations.length > 0) {
-                for (var i in stations) {
+                for (var i = 0; i < stations.length; i++) {
                     atLocal.push(stations[i].StationName + ' (' + stations[i].CRS + ' - ' + stations[i].Tiploc + ')');
                 }
             }

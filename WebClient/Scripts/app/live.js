@@ -1,5 +1,4 @@
 var _locations;
-var currentLocation = new LocationViewModel();
 var webSockets = new TrainNotifier.WebSockets();
 var thisPage = {
     setStatus: function (status) {
@@ -25,11 +24,10 @@ var webApi;
 $(function () {
     webApi = new TrainNotifier.WebApi();
     TrainNotifier.Common.webApi = webApi;
-    ko.applyBindings(currentLocation, $("#locationDetails").get(0));
     $("#filter-location").attr("placeholder", "Loading stations ...");
     webApi.getStations().done(function (results) {
         var locations = [];
-        for(var i in results) {
+        for(var i = 0; i < results.length; i++) {
             locations.push(results[i].StationName + ' (' + results[i].CRS + ' - ' + results[i].Tiploc + ')');
         }
         $("#filter-location").typeahead({

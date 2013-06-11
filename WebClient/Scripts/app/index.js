@@ -18,7 +18,7 @@ $(function () {
     ko.applyBindings(atLocal, $("#at-local").get(0));
     webApi.getStations().done(function (results) {
         var locations = [];
-        for(var i in results) {
+        for(var i = 0; i < results.length; i++) {
             locations.push(results[i].StationName + ' (' + results[i].CRS + ' - ' + results[i].Tiploc + ')');
         }
         $(".station-lookup").typeahead({
@@ -123,7 +123,7 @@ function lookupLocalFrom() {
         webApi.getStationByLocation(position.coords.latitude, position.coords.longitude).done(function (stations) {
             fromLocal.removeAll();
             if(stations && stations.length > 0) {
-                for(var i in stations) {
+                for(var i = 0; i < stations.length; i++) {
                     fromLocal.push(stations[i].StationName + ' (' + stations[i].CRS + ' - ' + stations[i].Tiploc + ')');
                 }
             }
@@ -135,7 +135,7 @@ function lookupLocalTo() {
         webApi.getStationByLocation(position.coords.latitude, position.coords.longitude).done(function (stations) {
             toLocal.removeAll();
             if(stations && stations.length > 0) {
-                for(var i in stations) {
+                for(var i = 0; i < stations.length; i++) {
                     toLocal.push(stations[i].StationName + ' (' + stations[i].CRS + ' - ' + stations[i].Tiploc + ')');
                 }
             }
@@ -147,7 +147,7 @@ function lookupLocalAt() {
         webApi.getStationByLocation(position.coords.latitude, position.coords.longitude).done(function (stations) {
             atLocal.removeAll();
             if(stations && stations.length > 0) {
-                for(var i in stations) {
+                for(var i = 0; i < stations.length; i++) {
                     atLocal.push(stations[i].StationName + ' (' + stations[i].CRS + ' - ' + stations[i].Tiploc + ')');
                 }
             }

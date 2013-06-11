@@ -1,11 +1,10 @@
-var currentLocation = new LocationViewModel();
-var currentTrain = new TrainNotifier.ViewModels.LiveTrainViewModel();
-var mixModel = new TrainNotifier.ViewModels.ScheduleTrainViewModel();
-var titleModel = new TrainNotifier.ViewModels.TrainTitleViewModel();
-var detailsModel = new TrainDetailsViewModel();
-var _lastLiveData;
-var _lastScheduleData;
-var _lastStopNumber = 0;
+var currentLocation = new TrainNotifier.KnockoutModels.CurrentLocation();
+var titleModel = new TrainNotifier.KnockoutModels.Train.TrainTitleViewModel();
+var _lastTrainData;
+var scheduleStops = ko.observableArray();
+var liveStops = ko.observableArray();
+var currentTrainDetails = new TrainNotifier.KnockoutModels.Train.TrainDetails();
+var currentTiplocs = [];
 var map;
 var webSockets = new TrainNotifier.WebSockets();
 var thisPage = {
@@ -39,7 +38,7 @@ var thisPage = {
                 trainUid = args.substring(0, hashIdx);
                 date = args.substring(hashIdx + 1);
             }
-            getByUid(trainUid, date, subscribe);
+            getTrainData(trainUid, date, subscribe);
             return true;
         }
         return false;
@@ -59,12 +58,12 @@ var webApi;
 $(function () {
     webApi = new TrainNotifier.WebApi();
     TrainNotifier.Common.webApi = webApi;
-    ko.applyBindings(currentTrain, $("#trains").get(0));
+    ko.applyBindings(liveStops, $("#trains").get(0));
     ko.applyBindings(currentLocation, $(".station-details").get(0));
-    ko.applyBindings(mixModel, $("#schedule").get(0));
-    ko.applyBindings(mixModel, $("#mix").get(0));
+    ko.applyBindings(scheduleStops, $("#schedule").get(0));
+    ko.applyBindings(scheduleStops, $("#mix").get(0));
     ko.applyBindings(titleModel, $("#title").get(0));
-    ko.applyBindings(detailsModel, $("#details").get(0));
+    ko.applyBindings(currentTrainDetails, $("#details").get(0));
     if(document.location.hash.length > 0) {
         thisPage.setCommand(document.location.hash.substr(1));
     }
@@ -72,7 +71,12 @@ $(function () {
         if($(e.target).attr("href") == "#map" && !map) {
             map = new L.Map('map').setView(new L.LatLng(51.505, -0.09), 13);
             var layer = new L.TileLayer('http://otile{s}.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.png', {
-                subdomains: "1 2 3 4",
+                subdomains: [
+                    "1", 
+                    "2", 
+                    "3", 
+                    "4"
+                ],
                 attribution: 'Tiles Courtesy of <a href="http://www.mapquest.com/" target="_blank">MapQuest</a><img src="http://developer.mapquest.com/content/osm/mq_logo.png">. Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>.',
                 maxZoom: 18
             });
@@ -87,19 +91,31 @@ $(function () {
         console.error("Failed to connect to web socket server: {0}", err);
     }
 });
+function reset() {
+    scheduleStops.removeAll();
+    liveStops.removeAll();
+    currentTrainDetails.reset();
+    currentTiplocs = [];
+}
 function loadScheduleMap() {
+    if(!_lastTrainData || !_lastTrainData.Movement || !_lastTrainData.Movement.Schedule || !_lastTrainData.Movement.Schedule.Stops || !currentTiplocs) {
+        return;
+    }
     var points = [];
-    for(var i in _lastScheduleData.Stops) {
-        var tiploc = _lastScheduleData.Stops[i].Tiploc;
-        if(tiploc && tiploc.Lat && tiploc.Lon) {
-            points.push(new L.LatLng(tiploc.Lat, tiploc.Lon));
-            var marker = new L.Marker(new L.LatLng(tiploc.Lat, tiploc.Lon), {
-                title: tiploc.Description
+    for(var i = 0; i < _lastTrainData.Movement.Schedule.Stops.length; i++) {
+        var stop = _lastTrainData.Movement.Schedule.Stops[i];
+        var stopTiploc = TrainNotifier.StationTiploc.findStationTiploc(stop.TiplocStanoxCode, currentTiplocs);
+        if(stopTiploc && stopTiploc.Lat && stopTiploc.Lon) {
+            var location = new L.LatLng(stopTiploc.Lat, stopTiploc.Lon);
+            points.push(location);
+            var marker = new L.Marker(location, {
+                title: stopTiploc.Description
             });
             marker.addTo(map);
         }
     }
-    map.fitBounds(points);
+    var bounds = new L.LatLngBounds(points);
+    map.fitBounds(bounds);
 }
 function loadLiveMap() {
 }
@@ -108,11 +124,11 @@ function connectWs() {
     webSockets.onMessageHandler(function (msg) {
         var data = jQuery.parseJSON(msg.data);
         if(data.Command == "subtrainupdate") {
-            data = data.Response;
-            var lu = moment().format(TrainNotifier.DateTimeFormats.dateTimeFormat);
-            currentTrain.LastUpdate(lu);
-            for(var i in data) {
-                addStop(data[i], true, true);
+            var stops = data.Response;
+            for(var i = 0; i < stops.length; i++) {
+                var added = addStop(stops[i]);
+                while(added.state() === "pending") {
+                }
             }
             $(".tooltip-dynamic").tooltip();
             $('html, body').animate({
@@ -129,9 +145,9 @@ function connectWs() {
                 }
             });
         } else if(data.Command == "subtrainupdate-berth") {
-            data = data.Response;
-            for(var i in data) {
-                currentTrain.addBerthStop(data[i]);
+            var berthSteps = data.Response;
+            for(var i = 0; i < stops.length; i++) {
+                liveStops.push(new TrainNotifier.KnockoutModels.Train.BerthLiveStop(berthSteps[i]));
             }
         }
     });
@@ -141,49 +157,81 @@ function connectWs() {
         }
     }, 2000);
 }
-function addStop(stopEl, terminateStop, mixIn) {
-    if(terminateStop && stopEl.State == 1) {
+function addStop(stop) {
+    if(stop.State === 1) {
         sendWsCommand("unsubtrain:");
     }
-    currentTrain.addStop(stopEl);
-    if(mixIn) {
-        mixInLiveStop(stopEl);
+    var stopTiploc = TrainNotifier.StationTiploc.findStationTiploc(stop.Stanox, currentTiplocs);
+    var nextStopTiploc = TrainNotifier.StationTiploc.findStationTiploc(stop.NextStanox, currentTiplocs);
+    var queries = [];
+    if(!stopTiploc) {
+        queries.push(webApi.getStanox(stop.Stanox));
     }
-    fetchLocation(stopEl.Stanox);
-    if(stopEl.NextStanox && stopEl.NextStanox.length > 0) {
-        fetchLocation(stopEl.NextStanox);
+    if(!nextStopTiploc && stop.NextStanox) {
+        queries.push(webApi.getStanox(stop.NextStanox));
     }
-}
-function fetchLocation(stanox) {
-    webApi.getStanox(stanox).done(function (data) {
-        if(!data) {
-            return;
+    return $.when(queries).done(function (tiplocA, tiplocB) {
+        if(tiplocA && tiplocA.Stanox) {
+            currentTiplocs.push(tiplocA);
         }
-        var html = "";
-        if(data.StationName) {
-            html = data.StationName;
-        } else {
-            html = data.Tiploc;
+        if(tiplocB && tiplocB.Stanox) {
+            currentTiplocs.push(tiplocB);
         }
-        if(data.CRS) {
-            html += "(" + data.CRS + ")";
+    }).done(function () {
+        var mixedIn = false;
+        for(var i = 0; i < liveStops().length; i++) {
+            var liveStop = liveStops()[i];
+            switch(stop.EventType) {
+                case TrainNotifier.WebSocketCommands.Arrival:
+                    if(liveStop.validArrival(stop.Stanox, currentTiplocs)) {
+                        liveStop.updateWebSocketArrival(stop, currentTiplocs);
+                        mixedIn = true;
+                    }
+                    break;
+                case TrainNotifier.WebSocketCommands.Departure:
+                    if(liveStop.validDeparture(stop.Stanox, currentTiplocs)) {
+                        liveStop.updateWebSocketDeparture(stop, currentTiplocs);
+                        mixedIn = true;
+                    }
+                    break;
+            }
+            if(mixedIn) {
+                break;
+            }
         }
-        $("." + data.Name).html(html);
-        $("." + data.Name).attr('title', data.Description + '(' + data.Name + ')');
-        $("." + data.Name).tooltip();
-        $("." + data.Name).data("title", html);
+        if(!mixedIn) {
+            var arrivalStop;
+            var departureStop;
+            switch(stop.EventType) {
+                case TrainNotifier.WebSocketCommands.Arrival:
+                    arrivalStop = stop;
+                    break;
+                case TrainNotifier.WebSocketCommands.Departure:
+                    departureStop = stop;
+                    break;
+            }
+            var newStop = new TrainNotifier.KnockoutModels.Train.NewLiveStop(currentTiplocs, arrivalStop, departureStop);
+            liveStops.push(newStop);
+            for(var i = 0; i < scheduleStops().length; i++) {
+                var scheduleStop = scheduleStops()[i];
+                if(scheduleStop.validateAssociation(newStop)) {
+                    scheduleStop.associateWithLiveStop(newStop);
+                    break;
+                }
+            }
+        }
     });
 }
 function sendWsCommand(command) {
-    if(webSockets && webSockets && webSockets.state == WebSocket.OPEN) {
+    if(webSockets && webSockets.state == WebSocket.OPEN) {
         webSockets.send(command);
     }
 }
 function subTrain() {
-    if(_lastLiveData) {
+    if(_lastTrainData && _lastTrainData.Movement.Actual && webSockets && webSockets.state == WebSocket.OPEN) {
         $("#commandOptions > li.active").removeClass("active");
         $("#commandOptions > li#sub").addClass("active");
-        thisPage.setCommand("sub/" + _lastLiveData.TrainUid + "/" + moment(_lastLiveData.SchedOriginDeparture).format(TrainNotifier.DateTimeFormats.dateQueryFormat));
+        thisPage.setCommand("sub/" + _lastTrainData.Movement.Schedule.TrainUid + "/" + moment(_lastTrainData.Movement.Actual.OriginDepartTimestamp).format(TrainNotifier.DateTimeFormats.dateQueryFormat));
         doSubTrain();
     }
 }
@@ -195,7 +243,7 @@ function getById(id) {
             $("#commandOptions > li.active").removeClass("active");
             $("#commandOptions > li#get").addClass("active");
             thisPage.setCommand("get/" + data.TrainUid + "/" + moment(data.SchedOriginDeparture).format(TrainNotifier.DateTimeFormats.dateUrlFormat));
-            getByUid(data.TrainUid, moment(data.SchedOriginDeparture).format(TrainNotifier.DateTimeFormats.dateQueryFormat), false);
+            getTrainData(data.TrainUid, moment(data.SchedOriginDeparture).format(TrainNotifier.DateTimeFormats.dateQueryFormat), false);
         } else {
             $("#no-results-row").show();
             $(".progress").hide();
@@ -205,40 +253,110 @@ function getById(id) {
         $("#error-row").show();
     });
 }
-function getByUid(trainUid, date, subscribe) {
-    getTrainData(webApi.getTrainMovementByUid(trainUid, date), subscribe);
-}
-function getTrainData(action, subscribe) {
+function getTrainData(trainUid, date, subscribe) {
     $(".progress").show();
     $("#no-results-row").hide();
     sendWsCommand("unsubtrain:");
-    action.done(function (data, textStatus, jqXHR) {
+    reset();
+    webApi.getTrainMovementByUid(trainUid, date).done(function (data) {
         if(!data) {
             $("#no-results-row").show();
             return;
         }
-        if(data.length && data.length > 0) {
-            data = data[0];
-        }
-        titleModel.Id(data.HeadCode);
-        currentTrain.updateFromJSON(data);
-        if(data.SchedOriginStanox && data.SchedOriginStanox.length > 0) {
-            fetchLocation(data.SchedOriginStanox);
-        }
-        for(var i in data.Steps) {
-            addStop(data.Steps[i]);
+        _lastTrainData = data;
+        currentTiplocs = data.Tiplocs;
+        if(data.Movement) {
+            if(data.Movement.Schedule && data.Movement.Schedule.Stops.length > 0) {
+                for(var i = 0; i < data.Movement.Schedule.Stops.length; i++) {
+                    scheduleStops.push(new TrainNotifier.KnockoutModels.Train.ScheduleStop(data.Movement.Schedule.Stops[i], currentTiplocs));
+                }
+                if(data.Movement.ChangeOfOrigins.length > 0) {
+                    var coo = data.Movement.ChangeOfOrigins[0];
+                    var cooTiploc = TrainNotifier.StationTiploc.findStationTiploc(coo.NewOriginStanoxCode, currentTiplocs);
+                    titleModel.From(cooTiploc.Description.toLowerCase());
+                    titleModel.Start(moment(coo.NewDepartureTime).format(TrainNotifier.DateTimeFormats.shortTimeFormat));
+                } else {
+                    var start = data.Movement.Schedule.Stops[0];
+                    var startTiploc = TrainNotifier.StationTiploc.findStationTiploc(start.TiplocStanoxCode, currentTiplocs);
+                    titleModel.From(startTiploc.Description.toLowerCase());
+                    var departureTs = start.PublicDeparture ? start.PublicDeparture : start.Departure;
+                    titleModel.Start(moment(departureTs, TrainNotifier.DateTimeFormats.timeFormat).format(TrainNotifier.DateTimeFormats.shortTimeFormat));
+                }
+                if(data.Movement.Cancellations.length > 0) {
+                    var cancel = data.Movement.Cancellations[0];
+                    var cancelAtTiploc = TrainNotifier.StationTiploc.findStationTiploc(cancel.CancelledAtStanoxCode, currentTiplocs);
+                    titleModel.To(cancelAtTiploc.Description.toLowerCase());
+                    titleModel.End(moment(cancel.CancelledTimestamp).format(TrainNotifier.DateTimeFormats.shortTimeFormat));
+                } else if(data.Movement.Schedule.Stops.length > 1) {
+                    var end = data.Movement.Schedule.Stops[data.Movement.Schedule.Stops.length - 1];
+                    var endTiploc = TrainNotifier.StationTiploc.findStationTiploc(end.TiplocStanoxCode, currentTiplocs);
+                    titleModel.To(endTiploc.Description.toLowerCase());
+                    var arrivalTs = end.PublicArrival ? end.PublicArrival : end.Arrival;
+                    titleModel.End(moment(arrivalTs, TrainNotifier.DateTimeFormats.timeFormat).format(TrainNotifier.DateTimeFormats.shortTimeFormat));
+                }
+            } else {
+                titleModel.To(null);
+                titleModel.From(null);
+                titleModel.Start(null);
+                titleModel.End(null);
+            }
+            if(data.Movement.Actual) {
+                titleModel.Id(data.Movement.Actual.HeadCode);
+                if(data.Movement.Actual.Stops.length > 0) {
+                    var arrivals = data.Movement.Actual.Stops.filter(function (stop) {
+                        return stop.EventType === TrainNotifier.EventType.Arrival;
+                    });
+                    var departures = data.Movement.Actual.Stops.filter(function (stop) {
+                        return stop.EventType === TrainNotifier.EventType.Departure;
+                    });
+                    var modelStops = [];
+                    for(var i = 0; i < arrivals.length; i++) {
+                        modelStops.push(new TrainNotifier.KnockoutModels.Train.ExistingLiveStop(currentTiplocs, arrivals[i]));
+                    }
+                    for(var i = 0; i < departures.length; i++) {
+                        var departure = departures[i];
+                        var setDept = false;
+                        for(var j = 0; j < modelStops.length; j++) {
+                            if(modelStops[j].validDeparture(departure.TiplocStanoxCode, currentTiplocs)) {
+                                modelStops[j].updateExistingDeparture(departure, currentTiplocs);
+                                setDept = true;
+                                break;
+                            }
+                        }
+                        if(!setDept) {
+                            modelStops.push(new TrainNotifier.KnockoutModels.Train.ExistingLiveStop(currentTiplocs, null, departure));
+                        }
+                    }
+                    for(var i = 0; i < modelStops.length; i++) {
+                        for(var j = 0; j < scheduleStops().length; j++) {
+                            var scheduleStop = scheduleStops()[j];
+                            if(scheduleStop.validateAssociation(modelStops[i])) {
+                                scheduleStop.associateWithLiveStop(modelStops[i]);
+                                break;
+                            }
+                        }
+                    }
+                    var orderedModelStops = modelStops.sort(function (a, b) {
+                        var aTime = a.timeStampForSorting;
+                        var bTime = b.timeStampForSorting;
+                        if(aTime < bTime) {
+                            return -1;
+                        }
+                        if(aTime > bTime) {
+                            return 1;
+                        }
+                        return 0;
+                    });
+                    for(var i = 0; i < orderedModelStops.length; i++) {
+                        liveStops.push(orderedModelStops[i]);
+                    }
+                }
+            }
+            currentTrainDetails.updateFromTrainMovement(data.Movement, currentTiplocs);
         }
         $(".tooltip-dynamic").tooltip();
-    }).then(function (data) {
-        if(!data) {
-            return;
-        }
-        if(data.length && data.length >= 0) {
-            data = data[0];
-        }
-        return getSchedule(data);
     }).then(function () {
-        return getAssociations(_lastLiveData);
+        return getAssociations();
     }).then(function () {
         if(subscribe) {
             doSubTrain();
@@ -250,93 +368,30 @@ function getTrainData(action, subscribe) {
     });
 }
 function doSubTrain() {
-    sendWsCommand("subtrain:" + _lastLiveData.TrainId);
+    sendWsCommand("subtrain:" + _lastTrainData.Movement.Actual.TrainId);
 }
-function getAssociations(data) {
-    detailsModel.clearAssociations();
-    if(!data) {
+function getAssociations() {
+    if(!_lastTrainData || !_lastTrainData.Movement || !_lastTrainData.Movement.Schedule || !_lastTrainData.Movement.Actual) {
         return;
     }
-    return webApi.getTrainMovementAssociations(data.TrainUid, moment(data.SchedOriginDeparture).format(TrainNotifier.DateTimeFormats.dateQueryFormat)).done(function (associations) {
+    return webApi.getTrainMovementAssociations(_lastTrainData.Movement.Schedule.TrainUid, moment(_lastTrainData.Movement.Actual.OriginDepartTimestamp).format(TrainNotifier.DateTimeFormats.dateQueryFormat)).done(function (associations) {
         if(associations.length == 0) {
             return;
         }
-        for(var i in associations) {
-            detailsModel.addAssociation(associations[i], data.TrainUid, moment(data.SchedOriginDeparture));
+        for(var i = 0; i < associations.length; i++) {
+            currentTrainDetails.associations.push(new TrainNotifier.KnockoutModels.Train.TrainAssociation(associations[i], _lastTrainData.Movement.Schedule.TrainUid, _lastTrainData.Movement.Actual.OriginDepartTimestamp));
         }
     });
-}
-function getSchedule(data) {
-    _lastLiveData = data;
-    return webApi.getSchedule(data.TrainUid, moment(data.SchedOriginDeparture).format(TrainNotifier.DateTimeFormats.dateQueryFormat)).done(function (schedule) {
-        _lastScheduleData = schedule;
-        mixModel.updateFromJson(schedule);
-        detailsModel.updateFromJson(schedule, _lastLiveData);
-        if(schedule && schedule.Stops && schedule.Stops.length > 0) {
-            if(_lastLiveData && _lastLiveData.ChangeOfOrigin && _lastLiveData.ChangeOfOrigin.NewOrigin) {
-                titleModel.From(_lastLiveData.ChangeOfOrigin.NewOrigin.Description.toLowerCase());
-                titleModel.Start(moment(_lastLiveData.ChangeOfOrigin.NewDepartureTime).format(TrainNotifier.DateTimeFormats.shortTimeFormat));
-            } else {
-                titleModel.From(schedule.Stops[0].Tiploc.Description.toLowerCase());
-                var departure = schedule.Stops[0].PublicDeparture ? schedule.Stops[0].PublicDeparture : schedule.Stops[0].Departure;
-                titleModel.Start(moment(departure, TrainNotifier.DateTimeFormats.timeFormat).format(TrainNotifier.DateTimeFormats.shortTimeFormat));
-            }
-            if(_lastLiveData && _lastLiveData.Cancellation && _lastLiveData.Cancellation.CancelledAt) {
-                titleModel.To(_lastLiveData.Cancellation.CancelledAt.Description.toLowerCase());
-                titleModel.End(moment(_lastLiveData.Cancellation.CancelledTimestamp).format(TrainNotifier.DateTimeFormats.shortTimeFormat));
-            } else if(schedule.Stops.length > 1) {
-                titleModel.To(schedule.Stops[schedule.Stops.length - 1].Tiploc.Description.toLowerCase());
-                var arrival = schedule.Stops[schedule.Stops.length - 1].PublicArrival ? schedule.Stops[schedule.Stops.length - 1].PublicArrival : schedule.Stops[schedule.Stops.length - 1].Arrival;
-                titleModel.End(moment(arrival, TrainNotifier.DateTimeFormats.timeFormat).format(TrainNotifier.DateTimeFormats.shortTimeFormat));
-            } else {
-                titleModel.To(null);
-            }
-        } else {
-            titleModel.To(null);
-            titleModel.From(null);
-            titleModel.Start(null);
-            titleModel.End(null);
-        }
-        for(var i = 0; i < _lastLiveData.Steps.length; i++) {
-            mixInStop(_lastLiveData.Steps[i]);
-        }
-    });
-}
-function mixInStop(step, stopNumber) {
-    var stopNumber = stopNumber || step.ScheduleStopNumber;
-    if(stopNumber || stopNumber == 0) {
-        var time = moment(step.ActualTimeStamp).format(TrainNotifier.DateTimeFormats.timeFormat);
-        switch(step.EventType) {
-            case "DEPARTURE":
-                mixModel.Stops()[stopNumber].setActualDepartureTime(time);
-                break;
-            case "ARRIVAL":
-                mixModel.Stops()[stopNumber].setActualArrivalTime(time);
-                break;
-        }
-        _lastStopNumber = stopNumber;
-    }
-}
-function mixInLiveStop(stop, stopNumber) {
-    var stopLook = stopNumber || _lastStopNumber;
-    try  {
-        var latestStanox = mixModel.Stops()[stopLook].Tiploc.Stanox();
-        if(stop.Stanox == latestStanox) {
-            mixInStop(stop, stopLook);
-        } else {
-            mixInLiveStop(stop, ++stopLook);
-        }
-    } catch (err) {
-    }
 }
 function listStation(stanox) {
-    webApi.getStanox(stanox).done(function (data) {
-        currentLocation.locationStanox(data.Name);
-        currentLocation.locationTiploc(data.Tiploc);
-        currentLocation.locationDescription(data.Description);
-        currentLocation.locationCRS(data.CRS);
-        currentLocation.stationName(data.StationName);
-    });
+    var tiploc = TrainNotifier.StationTiploc.findStationTiploc(stanox, currentTiplocs);
+    if(tiploc) {
+        currentLocation.update(tiploc);
+    } else {
+        webApi.getStanox(stanox).done(function (data) {
+            currentLocation.update(data);
+        });
+    }
 }
 function tryConnect() {
     if(webSockets && webSockets.state === WebSocket.CLOSED) {

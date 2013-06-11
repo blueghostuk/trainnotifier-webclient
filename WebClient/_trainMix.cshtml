@@ -1,4 +1,4 @@
-﻿<table class="table table-hover table-bordered table-header-colour" id="mixView">
+﻿<table class="table table-hover table-bordered table-header-colour">
     <thead>
         <tr>
             <th>&nbsp;</th>
@@ -22,25 +22,21 @@
             <th class="phone-hide">Allowances</th>
         </tr>
     </thead>
-    <tbody data-bind="foreach: Stops">
-        <tr data-bind="css: { pass: Pass }">
-            <td class="stationName"><a class="pointer" data-bind="text: Tiploc.Description, click: function (d, e) { listStation(d.Tiploc.Stanox()); }"></a></td>
-            <td class="phone-hide" data-bind="text: Pass ? 'Pass' : Arrival, attr: { colspan: Pass ? 3 : 0 }"></td>
-            <td class="phone-show" colspan="2" data-bind="visible: Pass">Pass</td>
-            <td data-bind="text: PublicArrival, visible: !Pass"></td>
-            <td data-bind="text: ActualArrival, visible: !Pass"></td>
-            <td class="phone-hide" data-bind="text: Pass ? Pass : Departure"></td>
-            <td class="phone-show" data-bind="text: Pass ? Pass : Departure, visible: Pass"></td>
-            <td class="phone-hide" data-bind="text: PublicDeparture"></td>
-            <td class="phone-show" data-bind="text: PublicDeparture, visible: !Pass"></td>
-            <td data-bind="text: ActualDeparture"></td>
-            <td class="phone-hide" data-bind="text: Line"></td>
-            <td data-bind="text: Platform"></td>
-            <td class="phone-hide">
-                <span title="Engineering Allowance" data-bind="visible: EngineeringAllowance">E:<span data-bind="text: EngineeringAllowance"></span>,</span>
-                <span title="Pathing Allowance" data-bind="visible: PathingAllowance">Pa:<span data-bind="text: PathingAllowance"></span>,</span>
-                <span title="Performance Allowance" data-bind="visible: PerformanceAllowance">Pe:<span data-bind="text: PerformanceAllowance"></span></span>
-            </td>
+    <tbody data-bind="foreach: $data">
+        <tr data-bind="css: { pass: pass }">
+            <td class="stationName"><a class="pointer" data-bind="text: location, click: function (d, e) { listStation(d.locationStanox); }"></a></td>
+            <td class="phone-hide" data-bind="text: pass ? 'Pass' : wttArrive, attr: { colspan: pass ? 3 : 0 }"></td>
+            <td class="phone-show" colspan="2" data-bind="visible: pass">Pass</td>
+            <td data-bind="text: publicArrive, visible: !pass"></td>
+            <td data-bind="text: actualArrival, visible: !pass"></td>
+            <td class="phone-hide" data-bind="text: pass ? pass : wttDepart"></td>
+            <td class="phone-show" data-bind="text: pass ? pass : wttDepart, visible: pass"></td>
+            <td class="phone-hide" data-bind="text: publicDepart"></td>
+            <td class="phone-show" data-bind="text: publicDepart, visible: !pass"></td>
+            <td data-bind="text: actualDeparture"></td>
+            <td class="phone-hide" data-bind="text: line"></td>
+            <td data-bind="text: platform"></td>
+            <td class="phone-hide" data-bind="text: allowances"></td>
         </tr>
     </tbody>
 </table>

@@ -35,9 +35,23 @@
         DateTimeFormats.dateTimeHashFormat = "YYYY-MM-DD/HH-mm";
         DateTimeFormats.dateQueryFormat = "YYYY-MM-DD";
         DateTimeFormats.dateUrlFormat = "YYYY/MM/DD";
+        DateTimeFormats.dateTitleFormat = "ddd Do MMM YYYY";
+        DateTimeFormats.dateTimeApiFormat = "YYYY-MM-DDTHH:mm";
+        DateTimeFormats.timeFrameHours = 1;
         DateTimeFormats.formatTimeString = function formatTimeString(time) {
             if(time) {
                 var timeMoment = moment(time, TrainNotifier.DateTimeFormats.timeFormat);
+                var ts = timeMoment.format(TrainNotifier.DateTimeFormats.shortTimeFormat);
+                if(timeMoment.seconds() === 30) {
+                    ts += TrainNotifier.CommonStrings.halfMinute;
+                }
+                return ts;
+            }
+            return null;
+        };
+        DateTimeFormats.formatDateTimeString = function formatDateTimeString(dateTime) {
+            if(dateTime) {
+                var timeMoment = moment(dateTime);
                 var ts = timeMoment.format(TrainNotifier.DateTimeFormats.shortTimeFormat);
                 if(timeMoment.seconds() === 30) {
                     ts += TrainNotifier.CommonStrings.halfMinute;

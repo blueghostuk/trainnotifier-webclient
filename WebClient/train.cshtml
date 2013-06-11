@@ -32,11 +32,11 @@
         </div>
         <div class="well sidebar-nav station-details">
             <ul class="nav nav-list">
-                <li class="nav-header" data-bind="text: toDisplay()">Station Details</li>
-                <li><strong>CRS:</strong><span data-bind="text: locationCRS"></span></li>
-                <li><a data-bind="attr: { href: 'search/from/' + locationStanox() }" title="View Trains Starting from this station">Trains Starting From</a></li>
-                <li><a data-bind="attr: { href: 'search/at/' + locationStanox() }" title="View Trains Calling at this station">Trains Calling At</a></li>
-                <li><a data-bind="attr: { href: 'search/to/' + locationStanox() }" title="View Trains Terminating at this station">Trains Terminating At</a></li>
+                <li class="nav-header" data-bind="text: name">Station Details</li>
+                <li><strong>CRS:</strong><span data-bind="text: crsCode"></span></li>
+                <li><a data-bind="attr: { href: 'search/from/' + url(), onclick: 'setHash(\'from/' + url() + '\');' }" title="View Trains Starting from this station">Trains Starting From</a></li>
+                <li><a data-bind="attr: { href: 'search/at/' + url(), onclick: 'setHash(\'at/' + url() + '\');' }" title="View Trains Calling at this station">Trains Calling At</a></li>
+                <li><a data-bind="attr: { href: 'search/to/' + url(), onclick: 'setHash(\'to/' + url() + '\');' }" title="View Trains Terminating at this station">Trains Terminating At</a></li>
             </ul>
         </div>
     </div>
