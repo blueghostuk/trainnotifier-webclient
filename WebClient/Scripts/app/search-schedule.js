@@ -7,7 +7,7 @@ var currentStanox;
 var currentToStanox;
 var currentStartDate = null;
 var currentEndDate = null;
-var currentMode;
+var currentMode = null;
 var thisPage = {
     setCommand: function (command) {
         $("#global-search-box").val(command);
@@ -205,7 +205,7 @@ function getStation(crs, convertFromCrs, fromDate, toDate) {
     });
 }
 function getDestinationByStanox(to, startDate, endDate) {
-    currentMode = scheduleResultsMode.Terminate;
+    currentMode = TrainNotifier.Search.SearchMode.terminate;
     if(to) {
         currentToStanox = to;
         listStation(currentToStanox);
@@ -243,7 +243,7 @@ function getDestinationByStanox(to, startDate, endDate) {
     });
 }
 function getOriginByStanox(from, startDate, endDate) {
-    currentMode = scheduleResultsMode.Origin;
+    currentMode = TrainNotifier.Search.SearchMode.origin;
     if(from) {
         currentStanox = from;
         listStation(currentStanox);
@@ -281,7 +281,7 @@ function getOriginByStanox(from, startDate, endDate) {
     });
 }
 function getCallingAtStanox(at, startDate, endDate) {
-    currentMode = scheduleResultsMode.CallingAt;
+    currentMode = TrainNotifier.Search.SearchMode.callingAt;
     if(at) {
         currentStanox = at;
         listStation(currentStanox);
@@ -319,7 +319,7 @@ function getCallingAtStanox(at, startDate, endDate) {
     });
 }
 function getCallingBetweenByStanox(from, to, startDate, endDate) {
-    currentMode = scheduleResultsMode.Between;
+    currentMode = TrainNotifier.Search.SearchMode.between;
     if(from) {
         currentStanox = from;
         listStation(currentStanox);
@@ -371,16 +371,16 @@ function previousDate() {
         hours: TrainNotifier.DateTimeFormats.timeFrameHours
     });
     switch(currentMode) {
-        case scheduleResultsMode.Origin:
+        case TrainNotifier.Search.SearchMode.origin:
             getOriginByStanox(null, startDate, endDate);
             break;
-        case scheduleResultsMode.Terminate:
+        case TrainNotifier.Search.SearchMode.terminate:
             getDestinationByStanox(null, startDate, endDate);
             break;
-        case scheduleResultsMode.CallingAt:
+        case TrainNotifier.Search.SearchMode.callingAt:
             getCallingAtStanox(null, startDate, endDate);
             break;
-        case scheduleResultsMode.Between:
+        case TrainNotifier.Search.SearchMode.between:
             getCallingBetweenByStanox(null, null, startDate, endDate);
             break;
     }
@@ -394,16 +394,16 @@ function nextDate() {
         hours: TrainNotifier.DateTimeFormats.timeFrameHours
     });
     switch(currentMode) {
-        case scheduleResultsMode.Origin:
+        case TrainNotifier.Search.SearchMode.origin:
             getOriginByStanox(null, startDate, endDate);
             break;
-        case scheduleResultsMode.Terminate:
+        case TrainNotifier.Search.SearchMode.terminate:
             getDestinationByStanox(null, startDate, endDate);
             break;
-        case scheduleResultsMode.CallingAt:
+        case TrainNotifier.Search.SearchMode.callingAt:
             getCallingAtStanox(null, startDate, endDate);
             break;
-        case scheduleResultsMode.Between:
+        case TrainNotifier.Search.SearchMode.between:
             getCallingBetweenByStanox(null, null, startDate, endDate);
             break;
     }
@@ -448,28 +448,28 @@ function setTimeLinks() {
     });
     var url = "";
     switch(currentMode) {
-        case scheduleResultsMode.Origin:
+        case TrainNotifier.Search.SearchMode.origin:
             if(currentStanox.CRS) {
                 url = "from/" + currentStanox.CRS;
             } else {
                 url = "from/" + currentStanox.Stanox;
             }
             break;
-        case scheduleResultsMode.Terminate:
+        case TrainNotifier.Search.SearchMode.terminate:
             if(currentToStanox.CRS) {
                 url = "to/" + currentToStanox.CRS;
             } else {
                 url = "to/" + currentToStanox.Stanox;
             }
             break;
-        case scheduleResultsMode.CallingAt:
+        case TrainNotifier.Search.SearchMode.callingAt:
             if(currentStanox.CRS) {
                 url = "at/" + currentStanox.CRS;
             } else {
                 url = "at/" + currentStanox.Stanox;
             }
             break;
-        case scheduleResultsMode.Between:
+        case TrainNotifier.Search.SearchMode.between:
             if(currentStanox.CRS && currentToStanox.CRS) {
                 url = "from/" + currentStanox.CRS + "/to/" + currentToStanox.CRS;
             } else {

@@ -402,7 +402,7 @@ var TrainNotifier;
                 OpenTrainTimesExternalSite.baseUrl = "http://www.opentraintimes.com/schedule/";
                 OpenTrainTimesExternalSite.prototype.updateFromTrainMovement = function (train) {
                     if(train && train.Schedule && train.Actual) {
-                        this.url(RealtimeTrainsExternalSite.baseUrl + train.Schedule.TrainUid + "/" + moment(train.Actual.OriginDepartTimestamp).format("YYYY-MM-DD"));
+                        this.url(OpenTrainTimesExternalSite.baseUrl + train.Schedule.TrainUid + "/" + moment(train.Actual.OriginDepartTimestamp).format("YYYY-MM-DD"));
                     } else {
                         this.url(null);
                     }
@@ -418,7 +418,7 @@ var TrainNotifier;
                 TrainsImExternalSite.baseUrl = "http://www.trains.im/schedule/";
                 TrainsImExternalSite.prototype.updateFromTrainMovement = function (train) {
                     if(train && train.Schedule && train.Actual) {
-                        this.url(RealtimeTrainsExternalSite.baseUrl + train.Schedule.TrainUid + "/" + moment(train.Actual.OriginDepartTimestamp).format("YYYY/MM/DD"));
+                        this.url(TrainsImExternalSite.baseUrl + train.Schedule.TrainUid + "/" + moment(train.Actual.OriginDepartTimestamp).format("YYYY/MM/DD"));
                     } else {
                         this.url(null);
                     }
@@ -434,7 +434,7 @@ var TrainNotifier;
                 RaildarExternalSite.baseUrl = "http://raildar.co.uk/timetable/train/trainid/";
                 RaildarExternalSite.prototype.updateFromTrainMovement = function (train) {
                     if(train && train.Schedule && train.Actual) {
-                        this.url(RealtimeTrainsExternalSite.baseUrl + train.Schedule.TrainUid);
+                        this.url(RaildarExternalSite.baseUrl + train.Schedule.TrainUid);
                     } else {
                         this.url(null);
                     }

@@ -5,6 +5,21 @@ var __extends = this.__extends || function (d, b) {
 };
 var TrainNotifier;
 (function (TrainNotifier) {
+    (function (Search) {
+        var SearchMode = (function () {
+            function SearchMode() { }
+            SearchMode.terminate = 1;
+            SearchMode.origin = 2;
+            SearchMode.callingAt = 3;
+            SearchMode.between = 4;
+            return SearchMode;
+        })();
+        Search.SearchMode = SearchMode;        
+    })(TrainNotifier.Search || (TrainNotifier.Search = {}));
+    var Search = TrainNotifier.Search;
+})(TrainNotifier || (TrainNotifier = {}));
+var TrainNotifier;
+(function (TrainNotifier) {
     (function (KnockoutModels) {
         (function (Search) {
             var CurrentLocation = (function () {

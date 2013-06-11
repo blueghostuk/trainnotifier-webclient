@@ -504,7 +504,7 @@ module TrainNotifier.KnockoutModels.Train {
 
         updateFromTrainMovement(train: ITrainMovementResult) {
             if (train && train.Schedule && train.Actual) {
-                this.url(RealtimeTrainsExternalSite.baseUrl + train.Schedule.TrainUid + "/" +
+                this.url(OpenTrainTimesExternalSite.baseUrl + train.Schedule.TrainUid + "/" +
                     moment(train.Actual.OriginDepartTimestamp).format("YYYY-MM-DD"));
             } else {
                 this.url(null);
@@ -523,7 +523,7 @@ module TrainNotifier.KnockoutModels.Train {
 
         updateFromTrainMovement(train: ITrainMovementResult) {
             if (train && train.Schedule && train.Actual) {
-                this.url(RealtimeTrainsExternalSite.baseUrl + train.Schedule.TrainUid + "/" +
+                this.url(TrainsImExternalSite.baseUrl + train.Schedule.TrainUid + "/" +
                     moment(train.Actual.OriginDepartTimestamp).format("YYYY/MM/DD"));
             } else {
                 this.url(null);
@@ -542,7 +542,7 @@ module TrainNotifier.KnockoutModels.Train {
 
         updateFromTrainMovement(train: ITrainMovementResult) {
             if (train && train.Schedule && train.Actual) {
-                this.url(RealtimeTrainsExternalSite.baseUrl + train.Schedule.TrainUid);
+                this.url(RaildarExternalSite.baseUrl + train.Schedule.TrainUid);
             } else {
                 this.url(null);
             }

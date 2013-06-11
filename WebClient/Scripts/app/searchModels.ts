@@ -3,7 +3,18 @@
 /// <reference path="../typings/knockout/knockout.d.ts" />
 /// <reference path="webApi.ts" />
 
+module TrainNotifier.Search {
+
+    export class SearchMode {
+        public static terminate = 1;
+        public static origin = 2;
+        public static callingAt = 3;
+        public static between = 4;
+    }
+}
+
 module TrainNotifier.KnockoutModels.Search {
+
 
     export class CurrentLocation {
         public name = ko.observable();
