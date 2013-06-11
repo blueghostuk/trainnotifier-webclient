@@ -92,6 +92,7 @@ var TrainNotifier;
             });
         };
         WebApi.prototype.getPPMOperatorRegions = function (operatorCode) {
+            operatorCode = operatorCode || "";
             return $.getJSON(this.getBaseUrl() + "/PPM/" + operatorCode);
         };
         WebApi.prototype.getPPMSectors = function () {

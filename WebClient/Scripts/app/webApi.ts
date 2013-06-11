@@ -141,6 +141,7 @@ module TrainNotifier {
         };
 
         getPPMOperatorRegions(operatorCode: string) {
+            operatorCode = operatorCode || "";
             return $.getJSON(this.getBaseUrl() + "/PPM/" + operatorCode);
         };
 
