@@ -163,8 +163,13 @@ var TrainNotifier;
                     this.actualArrival(TrainNotifier.DateTimeFormats.formatDateTimeString(actualArrival));
                     var planned = moment(plannedArrival);
                     var actual = moment(actualArrival);
-                    this.arrivalDelay(actual.diff(planned, 'minutes'));
-                    this.timeStamp = actual.unix();
+                    if(planned && planned.isValid() && actual && actual.isValid()) {
+                        this.arrivalDelay(actual.diff(planned, 'minutes'));
+                        this.timeStamp = actual.unix();
+                    } else {
+                        this.arrivalDelay(0);
+                        this.timeStamp = 0;
+                    }
                     this.updateCommon(line, platform, offRoute, nextStanox, expectedAtNextStanox, tiplocs);
                 };
                 LiveStopBase.prototype.updateDeparture = function (plannedDeparture, actualDeparture, line, platform, offRoute, nextStanox, expectedAtNextStanox, tiplocs) {
@@ -173,9 +178,14 @@ var TrainNotifier;
                     this.actualDeparture(TrainNotifier.DateTimeFormats.formatDateTimeString(actualDeparture));
                     var planned = moment(plannedDeparture);
                     var actual = moment(actualDeparture);
-                    this.departureDelay(actual.diff(planned, 'minutes'));
-                    if(this.timeStamp == 0) {
-                        this.timeStamp = actual.unix();
+                    if(planned && planned.isValid() && actual && actual.isValid()) {
+                        this.departureDelay(actual.diff(planned, 'minutes'));
+                        if(this.timeStamp == 0) {
+                            this.timeStamp = actual.unix();
+                        }
+                    } else {
+                        this.departureDelay(0);
+                        this.timeStamp = 0;
                     }
                     this.updateCommon(line, platform, offRoute, nextStanox, expectedAtNextStanox, tiplocs);
                 };
@@ -275,6 +285,60 @@ var TrainNotifier;
                 return BerthLiveStop;
             })(LiveStopBase);
             Train.BerthLiveStop = BerthLiveStop;            
+            var TrainAssociation = (function () {
+                function TrainAssociation(association, currentTrainUid, currentDate) {
+                    switch(association.AssociationType) {
+                        case TrainNotifier.AssociationType.NextTrain:
+                            if(association.MainTrainUid === currentTrainUid) {
+                                this.title = "Forms next train: ";
+                            } else {
+                                this.title = "Formed of train: ";
+                            }
+                            break;
+                        case TrainNotifier.AssociationType.Join:
+                            this.title = "Joins with Train: ";
+                            break;
+                        case TrainNotifier.AssociationType.Split:
+                            this.title = "Splits from Train: ";
+                            break;
+                    }
+                    if(association.MainTrainUid === currentTrainUid) {
+                        this.trainId = association.AssocTrainUid;
+                    } else {
+                        this.trainId = association.MainTrainUid;
+                    }
+                    this.date = moment(currentDate);
+                    switch(association.DateType) {
+                        case TrainNotifier.AssociationDateType.NextDay:
+                            this.date = this.date.add({
+                                days: 1
+                            });
+                            break;
+                        case TrainNotifier.AssociationDateType.PreviousDay:
+                            this.date = this.date.subtract({
+                                days: 1
+                            });
+                            break;
+                    }
+                    this.location = association.Location.Description.toLowerCase();
+                }
+                Object.defineProperty(TrainAssociation.prototype, "url", {
+                    get: function () {
+                        return this.trainId + "/" + this.date.format(TrainNotifier.DateTimeFormats.dateUrlFormat);
+                    },
+                    enumerable: true,
+                    configurable: true
+                });
+                Object.defineProperty(TrainAssociation.prototype, "javascript", {
+                    get: function () {
+                        return this.trainId + "/" + this.date.format(TrainNotifier.DateTimeFormats.dateQueryFormat);
+                    },
+                    enumerable: true,
+                    configurable: true
+                });
+                return TrainAssociation;
+            })();
+            Train.TrainAssociation = TrainAssociation;            
             var TrainDetails = (function () {
                 function TrainDetails() {
                     this.id = ko.observable();
@@ -287,16 +351,21 @@ var TrainNotifier;
                     this.from = ko.observable();
                     this.to = ko.observable();
                     this.runs = ko.observable();
+                    this.cancellation = ko.observable();
+                    this.changeOfOrigin = ko.observable();
+                    this.reinstatement = ko.observable();
                     this.otherSites = [];
+                    this.associations = ko.observableArray();
                     this.otherSites.push(new RealtimeTrainsExternalSite());
                     this.otherSites.push(new OpenTrainTimesExternalSite());
                     this.otherSites.push(new TrainsImExternalSite());
                     this.otherSites.push(new RaildarExternalSite());
                 }
                 TrainDetails.prototype.reset = function () {
-                    this.updateFromTrainMovement(null);
+                    this.updateFromTrainMovement(null, null);
+                    this.associations.removeAll();
                 };
-                TrainDetails.prototype.updateFromTrainMovement = function (train) {
+                TrainDetails.prototype.updateFromTrainMovement = function (train, tiplocs) {
                     if(train && train.Actual) {
                         this.id(train.Actual.HeadCode);
                         this.liveId(train.Actual.TrainId);
@@ -325,6 +394,40 @@ var TrainNotifier;
                     }
                     for(var i = 0; i < this.otherSites.length; i++) {
                         this.otherSites[i].updateFromTrainMovement(train);
+                    }
+                    if(train && train.Cancellations.length > 0) {
+                        var can = train.Cancellations[0];
+                        var canTxt = can.Type;
+                        if(can.CancelledAtStanoxCode) {
+                            var canTiploc = TrainNotifier.StationTiploc.findStationTiploc(can.CancelledAtStanoxCode, tiplocs);
+                            canTxt += " @ " + canTiploc.Description.toLowerCase();
+                        }
+                        canTxt += " @ " + moment(can.CancelledTimestamp).format(TrainNotifier.DateTimeFormats.timeFormat) + " - Reason: ";
+                        if(can.Description) {
+                            canTxt += can.Description;
+                        }
+                        canTxt += " (" + can.ReasonCode + ")";
+                        this.cancellation(canTxt);
+                    } else {
+                        this.cancellation(null);
+                    }
+                    if(train && train.Reinstatements.length > 0) {
+                        var reinstate = train.Reinstatements[0];
+                        var reinstateTiploc = TrainNotifier.StationTiploc.findStationTiploc(reinstate.NewOriginStanoxCode, tiplocs);
+                        this.reinstatement(reinstateTiploc.Description + " @ " + moment(reinstate.PlannedDepartureTime).format(TrainNotifier.DateTimeFormats.timeFormat));
+                    } else {
+                        this.reinstatement(null);
+                    }
+                    if(train && train.ChangeOfOrigins.length > 0) {
+                        var coo = train.ChangeOfOrigins[0];
+                        var cooTiploc = TrainNotifier.StationTiploc.findStationTiploc(coo.NewOriginStanoxCode, tiplocs);
+                        var originText = cooTiploc.Description + " @ " + moment(coo.NewDepartureTime).format(TrainNotifier.DateTimeFormats.timeFormat);
+                        if(coo.ReasonCode) {
+                            originText += " (" + coo.ReasonCode + ": " + coo.Description + ")";
+                        }
+                        this.changeOfOrigin(originText);
+                    } else {
+                        this.changeOfOrigin(null);
                     }
                 };
                 TrainDetails.prototype.getStpIndicator = function (stpIndicatorId) {

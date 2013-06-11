@@ -9,8 +9,6 @@
 
 var _locations;
 
-var currentLocation = new LocationViewModel();
-
 var webSockets = new TrainNotifier.WebSockets();
 
 var thisPage: IPage = {
@@ -23,7 +21,7 @@ var thisPage: IPage = {
         if (station.length > 0) {
             var fromCrs = station.substr(station.lastIndexOf('(') + 1, 3);
             if (fromCrs.length == 3) {
-                TrainNotifier.Common.webApi.getStanoxByCrsCode(fromCrs).done(function (tiplocCode: IStanox) {
+                TrainNotifier.Common.webApi.getStanoxByCrsCode(fromCrs).done(function (tiplocCode: ITiploc) {
                     webSockets.send("substanox:" + tiplocCode.Stanox)
                 });
                 return;
@@ -40,13 +38,11 @@ $(function () {
     webApi = new TrainNotifier.WebApi();
     TrainNotifier.Common.webApi = webApi;
 
-    ko.applyBindings(currentLocation, $("#locationDetails").get(0));
-
     $("#filter-location").attr("placeholder", "Loading stations ...");
 
-    webApi.getStations().done(function (results) {
+    webApi.getStations().done(function (results : IStationTiploc[]) {
         var locations = [];
-        for (var i in results) {
+        for(var i=0; i < results.length; i++){
             locations.push(results[i].StationName + ' (' + results[i].CRS + ' - ' + results[i].Tiploc + ')');
         }
         $("#filter-location").typeahead({

@@ -1,3 +1,34 @@
+var TrainNotifier;
+(function (TrainNotifier) {
+    (function (KnockoutModels) {
+        var CurrentLocation = (function () {
+            function CurrentLocation(location) {
+                this.name = ko.observable();
+                this.crsCode = ko.observable();
+                this.stanox = ko.observable();
+                var self = this;
+                this.update(location);
+                this.url = ko.computed(function () {
+                    return self.crsCode() ? self.crsCode() : self.stanox() ? self.stanox() : "";
+                });
+            }
+            CurrentLocation.prototype.update = function (location) {
+                if(location) {
+                    this.name(location.Description);
+                    this.crsCode(location.CRS);
+                    this.stanox(location.Stanox);
+                } else {
+                    this.name(null);
+                    this.crsCode(null);
+                    this.stanox(null);
+                }
+            };
+            return CurrentLocation;
+        })();
+        KnockoutModels.CurrentLocation = CurrentLocation;        
+    })(TrainNotifier.KnockoutModels || (TrainNotifier.KnockoutModels = {}));
+    var KnockoutModels = TrainNotifier.KnockoutModels;
+})(TrainNotifier || (TrainNotifier = {}));
 function PPMViewModel(ppmModel, parent) {
     var self = this;
     self.Operator = ko.observable(ppmModel ? ppmModel.Description : null);
@@ -65,18 +96,4 @@ function TitleViewModel() {
             document.title = title + " - " + TrainNotifier.Common.page.pageTitle;
         }
     };
-}
-function LocationViewModel() {
-    var self = this;
-    self.locationStanox = ko.observable();
-    self.locationTiploc = ko.observable();
-    self.locationDescription = ko.observable();
-    self.locationCRS = ko.observable();
-    self.stationName = ko.observable();
-    self.stationLocation = ko.observable();
-    self.Lat = ko.observable();
-    self.Lon = ko.observable();
-    self.toDisplay = ko.computed(function () {
-        return self.stationName() ? self.stationName() : self.locationDescription();
-    });
 }

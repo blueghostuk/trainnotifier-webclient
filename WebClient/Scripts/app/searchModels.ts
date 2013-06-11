@@ -15,34 +15,6 @@ module TrainNotifier.Search {
 
 module TrainNotifier.KnockoutModels.Search {
 
-
-    export class CurrentLocation {
-        public name = ko.observable();
-        public crsCode = ko.observable();
-        public stanox = ko.observable();
-        public url: KnockoutComputed;
-
-        constructor(location?: IStationTiploc) {
-            var self = this;
-            this.update(location);
-            this.url = ko.computed(function () {
-                return self.crsCode() ? self.crsCode() : self.name() ? self.name() : "";
-            });
-        }
-
-        update(location?: IStationTiploc) {
-            if (location) {
-                this.name(location.Description);
-                this.crsCode(location.CRS);
-                this.stanox(location.Stanox);
-            } else {
-                this.name(null);
-                this.crsCode(null);
-                this.stanox(null);
-            }
-        };
-    }
-
     // base class
     export class TrainMovement {
         public trainId: string;

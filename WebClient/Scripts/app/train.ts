@@ -9,7 +9,7 @@
 /// <reference path="../typings/jquery/jquery.d.ts" />
 /// <reference path="../typings/moment/moment.d.ts" />
 
-var currentLocation = new LocationViewModel();
+var currentLocation = new TrainNotifier.KnockoutModels.CurrentLocation();
 var titleModel = new TrainNotifier.KnockoutModels.Train.TrainTitleViewModel();
 
 var _lastTrainData: ISingleTrainMovementResult;
@@ -20,9 +20,6 @@ var currentTrainDetails = new TrainNotifier.KnockoutModels.Train.TrainDetails();
 
 var currentTiplocs: IStationTiploc[] = [];
 
-var _lastLiveData;
-var _lastScheduleData;
-var _lastStopNumber = 0;
 var map: L.Map;
 var webSockets = new TrainNotifier.WebSockets();
 
@@ -97,7 +94,7 @@ $(function () {
         if ($(e.target).attr("href") == "#map" && !map) {
             map = new L.Map('map').setView(new L.LatLng(51.505, -0.09), 13);
             var layer = new L.TileLayer('http://otile{s}.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.png', {
-                subdomains: "1 2 3 4",
+                subdomains: ["1", "2", "3", "4"],
                 attribution: 'Tiles Courtesy of <a href="http://www.mapquest.com/" target="_blank">MapQuest</a><img src="http://developer.mapquest.com/content/osm/mq_logo.png">. Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>.',
                 maxZoom: 18
             });
@@ -123,18 +120,29 @@ function reset() {
 }
 
 function loadScheduleMap() {
-    var points = [];
-    for (var i in _lastScheduleData.Stops) {
-        var tiploc = _lastScheduleData.Stops[i].Tiploc;
-        if (tiploc && tiploc.Lat && tiploc.Lon) {
-            points.push(new L.LatLng(tiploc.Lat, tiploc.Lon));
-            var marker = new L.Marker(new L.LatLng(tiploc.Lat, tiploc.Lon), {
-                title: tiploc.Description
+    if (!_lastTrainData
+        || !_lastTrainData.Movement
+        || !_lastTrainData.Movement.Schedule
+        || !_lastTrainData.Movement.Schedule.Stops
+        || !currentTiplocs)
+        return;
+
+    var points: L.LatLng [] = [];
+
+    for (var i = 0; i < _lastTrainData.Movement.Schedule.Stops.length; i++) {
+        var stop = _lastTrainData.Movement.Schedule.Stops[i];
+        var stopTiploc = TrainNotifier.StationTiploc.findStationTiploc(stop.TiplocStanoxCode, currentTiplocs);
+        if (stopTiploc && stopTiploc.Lat && stopTiploc.Lon) {
+            var location = new L.LatLng(stopTiploc.Lat, stopTiploc.Lon);
+            points.push(location);
+            var marker = new L.Marker(location, {
+                title: stopTiploc.Description
             });
             marker.addTo(map);
         }
     }
-    map.fitBounds(points);
+    var bounds = new L.LatLngBounds(points);
+    map.fitBounds(bounds);
 }
 
 function loadLiveMap() {
@@ -406,7 +414,7 @@ function getTrainData(trainUid, date, subscribe: bool) {
                 }
             }
 
-            currentTrainDetails.updateFromTrainMovement(data.Movement);
+            currentTrainDetails.updateFromTrainMovement(data.Movement, currentTiplocs);
         }
         $(".tooltip-dynamic").tooltip();
     }).then(function () {
@@ -427,19 +435,19 @@ function doSubTrain() {
 }
 
 function getAssociations() {
-    //detailsModel.clearAssociations();
     if (!_lastTrainData || !_lastTrainData.Movement || !_lastTrainData.Movement.Schedule || !_lastTrainData.Movement.Actual) {
         return;
     }
     return webApi.getTrainMovementAssociations(
         _lastTrainData.Movement.Schedule.TrainUid,
         moment(_lastTrainData.Movement.Actual.OriginDepartTimestamp).format(TrainNotifier.DateTimeFormats.dateQueryFormat))
-        .done(function (associations) {
+        .done(function (associations : IAssociation[]) {
             if (associations.length == 0)
                 return;
 
-            for (var i in associations) {
-                //detailsModel.addAssociation(associations[i], data.TrainUid, moment(data.SchedOriginDeparture));
+            for(var i = 0; i < associations.length; i++){
+                currentTrainDetails.associations.push(new TrainNotifier.KnockoutModels.Train.TrainAssociation(
+                    associations[i], _lastTrainData.Movement.Schedule.TrainUid, _lastTrainData.Movement.Actual.OriginDepartTimestamp));
             }
         });
 }
@@ -447,20 +455,12 @@ function getAssociations() {
 function listStation(stanox) {
     var tiploc = TrainNotifier.StationTiploc.findStationTiploc(stanox, currentTiplocs);
     if (tiploc) {
-        listTiploc(tiploc);
+        currentLocation.update(tiploc);
     } else {
         webApi.getStanox(stanox).done(function (data: IStationTiploc) {
-            listTiploc(data);
+            currentLocation.update(data);
         });
     }
-}
-
-function listTiploc(data: IStationTiploc) {
-    currentLocation.locationStanox(data.Stanox);
-    currentLocation.locationTiploc(data.Tiploc);
-    currentLocation.locationDescription(data.Description);
-    currentLocation.locationCRS(data.CRS);
-    currentLocation.stationName(data.StationName);
 }
 
 function tryConnect() {

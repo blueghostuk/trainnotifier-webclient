@@ -4,9 +4,9 @@
     <li><span class="label label-info">Id:</span> <span data-bind="text: id"></span></li>
     <li><span class="label label-info">Live Id:</span> <a onclick="subTrain();" data-bind="text: liveId, attr: { href: '#sub/' + trainUid() + '/' + scheduleDate() }" title="View Live Updates for this train" style="display: inline;"></a></li>
     <li><span class="label label-info">Activated:</span> <span data-bind="text: activated"></span></li>
-    @*<li data-bind="visible: Cancellation" style="display: none;"><span class="label label-important">Cancelled:</span> <span data-bind="text: Cancellation"></span></li>
-    <li data-bind="visible: ChangeOfOrigin" style="display: none;"><span class="label label-important">Will start from:</span> <span data-bind="text: ChangeOfOrigin"></span></li>
-    <li data-bind="visible: Reinstatement" style="display: none;"><span class="label label-important">Reinstated:</span> <span data-bind="text: Reinstatement"></span></li>*@
+    <li data-bind="visible: cancellation" style="display: none;"><span class="label label-important">Cancelled:</span> <span data-bind="text: cancellation"></span></li>
+    <li data-bind="visible: changeOfOrigin" style="display: none;"><span class="label label-important">Will start from:</span> <span data-bind="text: changeOfOrigin"></span></li>
+    <li data-bind="visible: reinstatement" style="display: none;"><span class="label label-important">Reinstated:</span> <span data-bind="text: reinstatement"></span></li>
 </ul>
 <h4>Schedule Details</h4>
 <hr />
@@ -19,9 +19,13 @@
 </ul>
 <h4>Associations</h4>
 <hr />
-@*<ul data-bind="foreach: Associations">
-    <li><span class="label label-info" data-bind="text: Title"></span><a data-bind="    text: Train, attr: { href: 'trains/' + Link(), onclick: 'setCommand(\'get/' + View() + '\');parseCommand(); return false;' }"></a>@@ <span data-bind="    text: Location.Description()"></span></li>
-</ul>*@
+<ul data-bind="foreach: associations">
+    <li>
+        <span class="label label-info" data-bind="text: title"></span>
+        <a data-bind="text: trainId, attr: { href: 'trains/' + url, onclick: 'setCommand(\'get/' + javascript + '\');parseCommand(); return false;' }"></a>
+        @@ <span class="stationName" data-bind="text: location"></span>
+    </li>
+</ul>
 <h4>Other Sites</h4>
 <ul data-bind="foreach: otherSites">
     <li><a data-bind="text: text, attr: { href: url }" target="_blank"></a></li>

@@ -12,7 +12,7 @@ var titleModel = new TitleViewModel();
 var startEndSearchResults = ko.observableArray();
 var callingAtSearchResults = ko.observableArray();
 var callingBetweenSearchResults = new TrainNotifier.KnockoutModels.Search.CallingBetweenResults();
-var currentLocation = new TrainNotifier.KnockoutModels.Search.CurrentLocation();
+var currentLocation = new TrainNotifier.KnockoutModels.CurrentLocation();
 
 var currentStanox: IStationTiploc;
 var currentToStanox: IStationTiploc;

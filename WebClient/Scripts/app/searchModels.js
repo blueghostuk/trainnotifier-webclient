@@ -22,31 +22,6 @@ var TrainNotifier;
 (function (TrainNotifier) {
     (function (KnockoutModels) {
         (function (Search) {
-            var CurrentLocation = (function () {
-                function CurrentLocation(location) {
-                    this.name = ko.observable();
-                    this.crsCode = ko.observable();
-                    this.stanox = ko.observable();
-                    var self = this;
-                    this.update(location);
-                    this.url = ko.computed(function () {
-                        return self.crsCode() ? self.crsCode() : self.name() ? self.name() : "";
-                    });
-                }
-                CurrentLocation.prototype.update = function (location) {
-                    if(location) {
-                        this.name(location.Description);
-                        this.crsCode(location.CRS);
-                        this.stanox(location.Stanox);
-                    } else {
-                        this.name(null);
-                        this.crsCode(null);
-                        this.stanox(null);
-                    }
-                };
-                return CurrentLocation;
-            })();
-            Search.CurrentLocation = CurrentLocation;            
             var TrainMovement = (function () {
                 function TrainMovement(trainMovement, tiplocs) {
                     this.operatorCode = "NA";
