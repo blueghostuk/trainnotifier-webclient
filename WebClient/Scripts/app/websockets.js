@@ -1,11 +1,20 @@
 var TrainNotifier;
 (function (TrainNotifier) {
+    var WebSocketCommands = (function () {
+        function WebSocketCommands() { }
+        WebSocketCommands.BerthUpdate = "subtrainupdate-berth";
+        WebSocketCommands.LocationUpdate = "subtrainupdate";
+        WebSocketCommands.Departure = "DEPARTURE";
+        WebSocketCommands.Arrival = "ARRIVAL";
+        return WebSocketCommands;
+    })();
+    TrainNotifier.WebSocketCommands = WebSocketCommands;    
     var WebSockets = (function () {
         function WebSockets() { }
         WebSockets.prototype.connect = function () {
             $(".btn-connect").attr("disabled", true);
             $(".btn-disconnect").attr("disabled", false);
-            this.ws = new WebSocket("ws://" + TrainNotifier.Common.serverSettings.server + ":" + TrainNotifier.Common.serverSettings.wsPort);
+            this.ws = new WebSocket("ws://" + TrainNotifier.Common.serverSettings.wsUrl);
             this.ws.onopen = function () {
                 if(TrainNotifier.Common.page.setStatus) {
                     TrainNotifier.Common.page.setStatus("Connected");
@@ -19,6 +28,7 @@ var TrainNotifier;
                         TrainNotifier.Common.page.wsOpenCommand();
                     }
                 } catch (err) {
+                    console.error(err.message);
                 }
             };
             this.ws.onclose = function () {

@@ -119,6 +119,9 @@ interface Moment {
     lang(reset: bool);
     lang(): string;
 
+    // 2.0 features
+    isBefore(moment: Moment): bool;
+
 }
 
 interface MomentCalendar {
