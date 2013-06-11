@@ -274,7 +274,6 @@ declare module L {
           * zoom level possible.
           */
         fitBounds(bounds: LatLngBounds): Map;
-        fitBounds(bounds: LatLng[]): Map;
     
         /**
           * Sets a map view that mostly contains the whole world with the maximum zoom
@@ -1933,7 +1932,7 @@ declare module L {
     
     }
 
-    export class DivIcon {
+    export class DivIcon extends Icon{
         /**
           * Creates a div icon instance with the given options.
           */
