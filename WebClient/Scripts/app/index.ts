@@ -28,7 +28,7 @@ $(function () {
     ko.applyBindings(toLocal, $("#to-local").get(0));
     ko.applyBindings(atLocal, $("#at-local").get(0));
 
-    webApi.getStations().done(function (results: IStanox[]) {
+    webApi.getStations().done(function (results: IStationTiploc[]) {
         var locations = [];
         for (var i = 0; i < results.length; i++) {
             locations.push(results[i].StationName + ' (' + results[i].CRS + ' - ' + results[i].Tiploc + ')');
@@ -130,7 +130,7 @@ function getTime(timeVal) {
 
 function lookupLocalFrom() {
     navigator.geolocation.getCurrentPosition(function (position) {
-        webApi.getStationByLocation(position.coords.latitude, position.coords.longitude).done(function (stations : IStanox[]) {
+        webApi.getStationByLocation(position.coords.latitude, position.coords.longitude).done(function (stations : IStationTiploc[]) {
             fromLocal.removeAll();
             if (stations && stations.length > 0) {
                 for (var i = 0; i < stations.length; i++) {
@@ -143,7 +143,7 @@ function lookupLocalFrom() {
 
 function lookupLocalTo() {
     navigator.geolocation.getCurrentPosition(function (position) {
-        webApi.getStationByLocation(position.coords.latitude, position.coords.longitude).done(function (stations : IStanox[]) {
+        webApi.getStationByLocation(position.coords.latitude, position.coords.longitude).done(function (stations: IStationTiploc[]) {
             toLocal.removeAll();
             if (stations && stations.length > 0) {
                 for (var i = 0; i < stations.length; i++) {
@@ -155,7 +155,7 @@ function lookupLocalTo() {
 }
 function lookupLocalAt() {
     navigator.geolocation.getCurrentPosition(function (position) {
-        webApi.getStationByLocation(position.coords.latitude, position.coords.longitude).done(function (stations : IStanox[]) {
+        webApi.getStationByLocation(position.coords.latitude, position.coords.longitude).done(function (stations: IStationTiploc[]) {
             atLocal.removeAll();
             if (stations && stations.length > 0) {
                 for (var i = 0; i < stations.length; i++) {
