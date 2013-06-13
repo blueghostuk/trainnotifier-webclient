@@ -217,7 +217,6 @@
     <Content Include="Scripts\jquery-1.10.1.min.map" />
     <None Include="Web.Azure.config">
       <DependentUpon>Web.config</DependentUpon>
-      <SubType>Designer</SubType>
     </None>
     <None Include="Web.Debug-Local.config">
       <DependentUpon>Web.config</DependentUpon>

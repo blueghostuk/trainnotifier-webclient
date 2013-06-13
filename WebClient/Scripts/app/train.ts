@@ -315,6 +315,9 @@ function getTrainData(trainUid, date, subscribe: bool) {
         currentTiplocs = data.Tiplocs;
 
         if (data.Movement) {
+            if (data.Movement.Schedule) {
+                titleModel.id(data.Movement.Schedule.Headcode);
+            }
             if (data.Movement.Schedule && data.Movement.Schedule.Stops.length > 0) {
                 for (var i = 0; i < data.Movement.Schedule.Stops.length; i++) {
                     scheduleStops.push(new TrainNotifier.KnockoutModels.Train.ScheduleStop(
@@ -324,38 +327,38 @@ function getTrainData(trainUid, date, subscribe: bool) {
                 if (data.Movement.ChangeOfOrigins.length > 0) {
                     var coo = data.Movement.ChangeOfOrigins[0];
                     var cooTiploc = TrainNotifier.StationTiploc.findStationTiploc(coo.NewOriginStanoxCode, currentTiplocs);
-                    titleModel.From(cooTiploc.Description.toLowerCase());
-                    titleModel.Start(moment(coo.NewDepartureTime).format(TrainNotifier.DateTimeFormats.shortTimeFormat));
+                    titleModel.from(cooTiploc.Description.toLowerCase());
+                    titleModel.start(moment(coo.NewDepartureTime).format(TrainNotifier.DateTimeFormats.shortTimeFormat));
                 } else {
                     var start = data.Movement.Schedule.Stops[0];
                     var startTiploc = TrainNotifier.StationTiploc.findStationTiploc(
                         start.TiplocStanoxCode, currentTiplocs);
-                    titleModel.From(startTiploc.Description.toLowerCase());
+                    titleModel.from(startTiploc.Description.toLowerCase());
                     var departureTs = start.PublicDeparture ? start.PublicDeparture : start.Departure;
-                    titleModel.Start(moment(departureTs, TrainNotifier.DateTimeFormats.timeFormat)
+                    titleModel.start(moment(departureTs, TrainNotifier.DateTimeFormats.timeFormat)
                         .format(TrainNotifier.DateTimeFormats.shortTimeFormat));
                 }
                 if (data.Movement.Cancellations.length > 0) {
                     var cancel = data.Movement.Cancellations[0];
                     var cancelAtTiploc = TrainNotifier.StationTiploc.findStationTiploc(cancel.CancelledAtStanoxCode, currentTiplocs);
-                    titleModel.To(cancelAtTiploc.Description.toLowerCase());
-                    titleModel.End(moment(cancel.CancelledTimestamp).format(TrainNotifier.DateTimeFormats.shortTimeFormat));
+                    titleModel.to(cancelAtTiploc.Description.toLowerCase());
+                    titleModel.end(moment(cancel.CancelledTimestamp).format(TrainNotifier.DateTimeFormats.shortTimeFormat));
                 } else if (data.Movement.Schedule.Stops.length > 1) {
                     var end = data.Movement.Schedule.Stops[data.Movement.Schedule.Stops.length - 1];
                     var endTiploc = TrainNotifier.StationTiploc.findStationTiploc(
                         end.TiplocStanoxCode, currentTiplocs);
-                    titleModel.To(endTiploc.Description.toLowerCase());
+                    titleModel.to(endTiploc.Description.toLowerCase());
                     var arrivalTs = end.PublicArrival ? end.PublicArrival : end.Arrival;
-                    titleModel.End(moment(arrivalTs, TrainNotifier.DateTimeFormats.timeFormat).format(TrainNotifier.DateTimeFormats.shortTimeFormat));
+                    titleModel.end(moment(arrivalTs, TrainNotifier.DateTimeFormats.timeFormat).format(TrainNotifier.DateTimeFormats.shortTimeFormat));
                 }
             } else {
-                titleModel.To(null);
-                titleModel.From(null);
-                titleModel.Start(null);
-                titleModel.End(null);
+                titleModel.to(null);
+                titleModel.from(null);
+                titleModel.start(null);
+                titleModel.end(null);
             }
             if (data.Movement.Actual) {
-                titleModel.Id(data.Movement.Actual.HeadCode);
+                titleModel.id(data.Movement.Actual.HeadCode);
                 if (data.Movement.Actual.Stops.length > 0) {
                     var arrivals = data.Movement.Actual.Stops.filter(function (stop: IRunningTrainActualStop) {
                         return stop.EventType === TrainNotifier.EventType.Arrival;

@@ -666,22 +666,22 @@ module TrainNotifier.KnockoutModels.Train {
 
     export class TrainTitleViewModel {
 
-        public Id = ko.observable();
-        public From = ko.observable();
-        public To = ko.observable();
-        public Start = ko.observable();
-        public End = ko.observable();
-        public FullTitle: KnockoutComputed;
+        public id = ko.observable();
+        public from = ko.observable();
+        public to = ko.observable();
+        public start = ko.observable();
+        public end = ko.observable();
+        public fullTitle: KnockoutComputed;
 
         constructor() {
             var self = this;
-            this.FullTitle = ko.computed(function () {
+            this.fullTitle = ko.computed(function () {
                 if (TrainNotifier.Common.page && TrainNotifier.Common.page.pageTitle &&
-                    self.Id() && self.From() && self.To() && self.Start() && self.End()) {
-                    document.title = self.Id() + " "
-                        + self.From()
-                        + " to " + self.To() + " "
-                        + self.Start() + " - " + self.End()
+                    self.id() && self.from() && self.to() && self.start() && self.end()) {
+                    document.title = self.id() + " "
+                        + self.from()
+                        + " to " + self.to() + " "
+                        + self.start() + " - " + self.end()
                         + " - " + TrainNotifier.Common.page.pageTitle;
                 }
                 return "";

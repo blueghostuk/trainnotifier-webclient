@@ -547,15 +547,15 @@ var TrainNotifier;
             Train.RaildarExternalSite = RaildarExternalSite;            
             var TrainTitleViewModel = (function () {
                 function TrainTitleViewModel() {
-                    this.Id = ko.observable();
-                    this.From = ko.observable();
-                    this.To = ko.observable();
-                    this.Start = ko.observable();
-                    this.End = ko.observable();
+                    this.id = ko.observable();
+                    this.from = ko.observable();
+                    this.to = ko.observable();
+                    this.start = ko.observable();
+                    this.end = ko.observable();
                     var self = this;
-                    this.FullTitle = ko.computed(function () {
-                        if(TrainNotifier.Common.page && TrainNotifier.Common.page.pageTitle && self.Id() && self.From() && self.To() && self.Start() && self.End()) {
-                            document.title = self.Id() + " " + self.From() + " to " + self.To() + " " + self.Start() + " - " + self.End() + " - " + TrainNotifier.Common.page.pageTitle;
+                    this.fullTitle = ko.computed(function () {
+                        if(TrainNotifier.Common.page && TrainNotifier.Common.page.pageTitle && self.id() && self.from() && self.to() && self.start() && self.end()) {
+                            document.title = self.id() + " " + self.from() + " to " + self.to() + " " + self.start() + " - " + self.end() + " - " + TrainNotifier.Common.page.pageTitle;
                         }
                         return "";
                     }).extend({
