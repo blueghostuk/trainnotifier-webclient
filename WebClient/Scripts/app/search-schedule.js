@@ -228,7 +228,7 @@ function getDestinationByStanox(to, startDate, endDate) {
         if(data && data.Movements.length > 0) {
             $("#no-results-row").hide();
             var viewModels = data.Movements.map(function (movement) {
-                return new TrainNotifier.KnockoutModels.Search.TerminatingAtTrainMovement(movement, data.Tiplocs);
+                return new TrainNotifier.KnockoutModels.Search.TerminatingAtTrainMovement(movement, data.Tiplocs, currentStartDate);
             });
             for(var i = 0; i < viewModels.length; i++) {
                 startEndSearchResults.push(viewModels[i]);
@@ -266,7 +266,7 @@ function getOriginByStanox(from, startDate, endDate) {
         if(data && data.Movements.length > 0) {
             $("#no-results-row").hide();
             var viewModels = data.Movements.map(function (movement) {
-                return new TrainNotifier.KnockoutModels.Search.StartingAtTrainMovement(movement, data.Tiplocs);
+                return new TrainNotifier.KnockoutModels.Search.StartingAtTrainMovement(movement, data.Tiplocs, currentStartDate);
             });
             for(var i = 0; i < viewModels.length; i++) {
                 startEndSearchResults.push(viewModels[i]);
@@ -304,7 +304,7 @@ function getCallingAtStanox(at, startDate, endDate) {
         if(data && data.Movements.length > 0) {
             $("#no-results-row").hide();
             var viewModels = data.Movements.map(function (movement) {
-                return new TrainNotifier.KnockoutModels.Search.CallingAtTrainMovement(movement, currentStanox, data.Tiplocs);
+                return new TrainNotifier.KnockoutModels.Search.CallingAtTrainMovement(movement, currentStanox, data.Tiplocs, currentStartDate);
             });
             for(var i = 0; i < viewModels.length; i++) {
                 callingAtSearchResults.push(viewModels[i]);
@@ -348,7 +348,7 @@ function getCallingBetweenByStanox(from, to, startDate, endDate) {
         if(data && data.Movements.length > 0) {
             $("#no-results-row").hide();
             var viewModels = data.Movements.map(function (movement) {
-                return new TrainNotifier.KnockoutModels.Search.CallingBetweenTrainMovement(movement, currentStanox, currentToStanox, data.Tiplocs);
+                return new TrainNotifier.KnockoutModels.Search.CallingBetweenTrainMovement(movement, currentStanox, currentToStanox, data.Tiplocs, currentStartDate);
             });
             for(var i = 0; i < viewModels.length; i++) {
                 callingBetweenSearchResults.results.push(viewModels[i]);

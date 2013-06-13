@@ -82,9 +82,6 @@ var TrainNotifier;
                 endDate: endDate
             });
         };
-        WebApi.prototype.getSchedule = function (uid, date) {
-            return $.getJSON(this.getBaseUrl() + "/Schedule/uid/" + uid + "/" + date);
-        };
         WebApi.prototype.getPPMData = function (operatorCode, name) {
             return $.getJSON(this.getBaseUrl() + "/PPM/", {
                 operatorCode: operatorCode,

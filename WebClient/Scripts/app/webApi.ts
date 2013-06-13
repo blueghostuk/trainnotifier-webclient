@@ -20,9 +20,7 @@ interface IWebApi {
     getTrainMovementsCallingAtStation(crsCode: string, startDate: string, endDate: string): JQueryPromise;
     getTrainMovementsBetweenLocations(fromStanox: string, toStanox: string, startDate: string, endDate: string): JQueryPromise;
     getTrainMovementsBetweenStations(fromCrsCode: string, toCrsCode: string, startDate: string, endDate: string): JQueryPromise;
-
-    getSchedule(uid: string, date: string): JQueryPromise;
-
+    
     getPPMSectors(): JQueryPromise;
     getPPMOperatorRegions(operatorCode: string): JQueryPromise;
     getPPMData(operatorCode: string, name: string): JQueryPromise;
@@ -127,10 +125,6 @@ module TrainNotifier {
                 startDate: startDate,
                 endDate: endDate
             });
-        };
-
-        getSchedule(uid: string, date: string) {
-            return $.getJSON(this.getBaseUrl() + "/Schedule/uid/" + uid + "/" + date);
         };
 
         getPPMData(operatorCode: string, name: string) {
@@ -418,6 +412,7 @@ interface IChangeOfOrigin {
 
 interface IRunningScheduleTrain {
     TrainUid: string;
+    Headcode: string;
     StartDate: string;
     EndDate: string;
     AtocCode: IAtocCode;

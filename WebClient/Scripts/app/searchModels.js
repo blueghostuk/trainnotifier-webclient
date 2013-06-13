@@ -23,7 +23,7 @@ var TrainNotifier;
     (function (KnockoutModels) {
         (function (Search) {
             var TrainMovement = (function () {
-                function TrainMovement(trainMovement, tiplocs) {
+                function TrainMovement(trainMovement, tiplocs, queryStartDate) {
                     this.operatorCode = "NA";
                     this.operatorName = "Unknown";
                     this.title = null;
@@ -32,6 +32,7 @@ var TrainNotifier;
                     this.reinstate = false;
                     this.changeOfOrigin = false;
                     this.changeOfOriginStation = null;
+                    this.departureDate = "";
                     this.trainId = trainMovement.Schedule.TrainUid;
                     if(trainMovement.Schedule.AtocCode) {
                         this.operatorCode = trainMovement.Schedule.AtocCode.Code;
@@ -40,7 +41,12 @@ var TrainNotifier;
                     if(trainMovement.Actual) {
                         this.headCode = trainMovement.Actual.HeadCode;
                     } else {
-                        this.headCode = this.trainId;
+                        this.headCode = trainMovement.Schedule.Headcode || trainMovement.Schedule.TrainUid;
+                    }
+                    if(trainMovement.Actual && trainMovement.Actual.OriginDepartTimestamp) {
+                        this.departureDate = moment(trainMovement.Actual.OriginDepartTimestamp).format(TrainNotifier.DateTimeFormats.dateUrlFormat);
+                    } else {
+                        this.departureDate = queryStartDate.format(TrainNotifier.DateTimeFormats.dateUrlFormat);
                     }
                     if(trainMovement.Cancellations.length > 0) {
                         var cancellation = trainMovement.Cancellations[0];
@@ -81,17 +87,13 @@ var TrainNotifier;
             Search.TrainMovement = TrainMovement;            
             var StartingAtTrainMovement = (function (_super) {
                 __extends(StartingAtTrainMovement, _super);
-                function StartingAtTrainMovement(trainMovement, tiplocs) {
-                                _super.call(this, trainMovement, tiplocs);
+                function StartingAtTrainMovement(trainMovement, tiplocs, queryStartDate) {
+                                _super.call(this, trainMovement, tiplocs, queryStartDate);
                     this.publicDeparture = "";
                     this.actualDeparture = "";
                     this.publicArrival = "";
                     this.actualArrival = "";
-                    this.departureDate = "";
                     var toStop;
-                    if(trainMovement.Actual && trainMovement.Actual.OriginDepartTimestamp) {
-                        this.departureDate = moment(trainMovement.Actual.OriginDepartTimestamp).format(TrainNotifier.DateTimeFormats.dateUrlFormat);
-                    }
                     if(trainMovement.Schedule.Stops.length > 0) {
                         var fromStop = trainMovement.Schedule.Stops[0];
                         var fromTiploc = TrainNotifier.StationTiploc.findStationTiploc(fromStop.TiplocStanoxCode, tiplocs);
@@ -126,17 +128,13 @@ var TrainNotifier;
             Search.StartingAtTrainMovement = StartingAtTrainMovement;            
             var TerminatingAtTrainMovement = (function (_super) {
                 __extends(TerminatingAtTrainMovement, _super);
-                function TerminatingAtTrainMovement(trainMovement, tiplocs) {
-                                _super.call(this, trainMovement, tiplocs);
+                function TerminatingAtTrainMovement(trainMovement, tiplocs, queryStartDate) {
+                                _super.call(this, trainMovement, tiplocs, queryStartDate);
                     this.publicDeparture = "";
                     this.actualDeparture = "";
                     this.publicArrival = "";
                     this.actualArrival = "";
-                    this.departureDate = "";
                     var toStop;
-                    if(trainMovement.Actual && trainMovement.Actual.OriginDepartTimestamp) {
-                        this.departureDate = moment(trainMovement.Actual.OriginDepartTimestamp).format(TrainNotifier.DateTimeFormats.dateUrlFormat);
-                    }
                     if(trainMovement.Schedule.Stops.length > 0) {
                         var fromStop = trainMovement.Schedule.Stops[0];
                         var fromTiploc = TrainNotifier.StationTiploc.findStationTiploc(fromStop.TiplocStanoxCode, tiplocs);
@@ -171,17 +169,13 @@ var TrainNotifier;
             Search.TerminatingAtTrainMovement = TerminatingAtTrainMovement;            
             var CallingAtTrainMovement = (function (_super) {
                 __extends(CallingAtTrainMovement, _super);
-                function CallingAtTrainMovement(trainMovement, atTiploc, tiplocs) {
-                                _super.call(this, trainMovement, tiplocs);
+                function CallingAtTrainMovement(trainMovement, atTiploc, tiplocs, queryStartDate) {
+                                _super.call(this, trainMovement, tiplocs, queryStartDate);
                     this.atPublicDeparture = "";
                     this.atActualDeparture = "";
                     this.atPublicArrival = "";
                     this.atActualArrival = "";
-                    this.departureDate = "";
                     this.pass = false;
-                    if(trainMovement.Actual && trainMovement.Actual.OriginDepartTimestamp) {
-                        this.departureDate = moment(trainMovement.Actual.OriginDepartTimestamp).format(TrainNotifier.DateTimeFormats.dateUrlFormat);
-                    }
                     var atStop;
                     if(trainMovement.Schedule.Stops.length > 0) {
                         var fromStop = trainMovement.Schedule.Stops[0];
@@ -248,16 +242,12 @@ var TrainNotifier;
             Search.CallingBetweenResults = CallingBetweenResults;            
             var CallingBetweenTrainMovement = (function (_super) {
                 __extends(CallingBetweenTrainMovement, _super);
-                function CallingBetweenTrainMovement(trainMovement, fromTiploc, toTiploc, tiplocs) {
-                                _super.call(this, trainMovement, tiplocs);
+                function CallingBetweenTrainMovement(trainMovement, fromTiploc, toTiploc, tiplocs, queryStartDate) {
+                                _super.call(this, trainMovement, tiplocs, queryStartDate);
                     this.publicDeparture = "";
                     this.actualDeparture = "";
                     this.publicArrival = "";
                     this.actualArrival = "";
-                    this.departureDate = "";
-                    if(trainMovement.Actual && trainMovement.Actual.OriginDepartTimestamp) {
-                        this.departureDate = moment(trainMovement.Actual.OriginDepartTimestamp).format(TrainNotifier.DateTimeFormats.dateUrlFormat);
-                    }
                     if(trainMovement.Schedule.Stops.length > 0) {
                         var originStop = trainMovement.Schedule.Stops[0];
                         var originTiploc = TrainNotifier.StationTiploc.findStationTiploc(originStop.TiplocStanoxCode, tiplocs);

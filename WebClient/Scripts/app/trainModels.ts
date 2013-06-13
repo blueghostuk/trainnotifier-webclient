@@ -499,7 +499,7 @@ module TrainNotifier.KnockoutModels.Train {
                     var canTiploc = StationTiploc.findStationTiploc(can.CancelledAtStanoxCode, tiplocs);
                     canTxt += " @ " + canTiploc.Description.toLowerCase();
                 }
-                canTxt += " @ " + moment(can.CancelledTimestamp).format(TrainNotifier.DateTimeFormats.timeFormat)
+                canTxt += " @ " + moment(can.CancelledTimestamp).format(DateTimeFormats.timeFormat)
                     + " - Reason: ";
                 if (can.Description) {
                     canTxt += can.Description;
@@ -514,7 +514,7 @@ module TrainNotifier.KnockoutModels.Train {
                 var reinstate = train.Reinstatements[0];
                 var reinstateTiploc = StationTiploc.findStationTiploc(reinstate.NewOriginStanoxCode, tiplocs);
                 this.reinstatement(reinstateTiploc.Description + " @ "
-                    + moment(reinstate.PlannedDepartureTime).format(TrainNotifier.DateTimeFormats.timeFormat));
+                    + moment(reinstate.PlannedDepartureTime).format(DateTimeFormats.timeFormat));
             } else {
                 this.reinstatement(null);
             }
@@ -523,7 +523,7 @@ module TrainNotifier.KnockoutModels.Train {
                 var coo = train.ChangeOfOrigins[0];
                 var cooTiploc = StationTiploc.findStationTiploc(coo.NewOriginStanoxCode, tiplocs);
                 var originText = cooTiploc.Description
-                    + " @ " + moment(coo.NewDepartureTime).format(TrainNotifier.DateTimeFormats.timeFormat);
+                    + " @ " + moment(coo.NewDepartureTime).format(DateTimeFormats.timeFormat);
                 if (coo.ReasonCode) {
                     originText += " (" + coo.ReasonCode + ": " + coo.Description + ")";
                 }

@@ -28,7 +28,9 @@ module TrainNotifier.KnockoutModels.Search {
         public changeOfOrigin: bool = false;
         public changeOfOriginStation: string = null;
 
-        constructor(trainMovement: ITrainMovementResult, tiplocs: IStationTiploc[]) {
+        public departureDate: string = "";
+
+        constructor(trainMovement: ITrainMovementResult, tiplocs: IStationTiploc[], queryStartDate: Moment) {
             this.trainId = trainMovement.Schedule.TrainUid;
             if (trainMovement.Schedule.AtocCode) {
                 this.operatorCode = trainMovement.Schedule.AtocCode.Code;
@@ -38,7 +40,13 @@ module TrainNotifier.KnockoutModels.Search {
                 this.headCode = trainMovement.Actual.HeadCode;
             } else {
                 // if no actual we can only show the uid
-                this.headCode = this.trainId;
+                this.headCode = trainMovement.Schedule.Headcode || trainMovement.Schedule.TrainUid;
+            }
+            if (trainMovement.Actual && trainMovement.Actual.OriginDepartTimestamp) {
+                this.departureDate = moment(trainMovement.Actual.OriginDepartTimestamp)
+                    .format(DateTimeFormats.dateUrlFormat);
+            } else {
+                this.departureDate = queryStartDate.format(DateTimeFormats.dateUrlFormat);
             }
 
             if (trainMovement.Cancellations.length > 0) {
@@ -102,17 +110,10 @@ module TrainNotifier.KnockoutModels.Search {
         public wttArrival: string;
         public actualArrival: string = "";
 
-        public departureDate: string = "";
-
-        constructor(trainMovement: ITrainMovementResult, tiplocs: IStationTiploc[]) {
-            super(trainMovement, tiplocs);
+        constructor(trainMovement: ITrainMovementResult, tiplocs: IStationTiploc[], queryStartDate: Moment) {
+            super(trainMovement, tiplocs, queryStartDate);
 
             var toStop: IRunningScheduleTrainStop;
-            //TODO: if no actual get this elsewhere
-            if (trainMovement.Actual && trainMovement.Actual.OriginDepartTimestamp) {
-                this.departureDate = moment(trainMovement.Actual.OriginDepartTimestamp)
-                    .format(DateTimeFormats.dateUrlFormat);
-            }
             if (trainMovement.Schedule.Stops.length > 0) {
                 var fromStop = trainMovement.Schedule.Stops[0];
                 var fromTiploc = StationTiploc.findStationTiploc(fromStop.TiplocStanoxCode, tiplocs);
@@ -168,17 +169,10 @@ module TrainNotifier.KnockoutModels.Search {
         public wttArrival: string;
         public actualArrival: string = "";
 
-        public departureDate: string = "";
-
-        constructor(trainMovement: ITrainMovementResult, tiplocs: IStationTiploc[]) {
-            super(trainMovement, tiplocs);
+        constructor(trainMovement: ITrainMovementResult, tiplocs: IStationTiploc[], queryStartDate: Moment) {
+            super(trainMovement, tiplocs, queryStartDate);
 
             var toStop: IRunningScheduleTrainStop;
-            //TODO: if no actual get this elsewhere
-            if (trainMovement.Actual && trainMovement.Actual.OriginDepartTimestamp) {
-                this.departureDate = moment(trainMovement.Actual.OriginDepartTimestamp)
-                    .format(DateTimeFormats.dateUrlFormat);
-            }
             if (trainMovement.Schedule.Stops.length > 0) {
                 var fromStop = trainMovement.Schedule.Stops[0];
                 var fromTiploc = StationTiploc.findStationTiploc(fromStop.TiplocStanoxCode, tiplocs);
@@ -233,18 +227,11 @@ module TrainNotifier.KnockoutModels.Search {
         public atWttArrival: string;
         public atActualArrival: string = "";
 
-        public departureDate: string = "";
-
         public pass = false;
 
-        constructor(trainMovement: ITrainMovementResult, atTiploc: IStationTiploc, tiplocs: IStationTiploc[]) {
-            super(trainMovement, tiplocs);
+        constructor(trainMovement: ITrainMovementResult, atTiploc: IStationTiploc, tiplocs: IStationTiploc[], queryStartDate: Moment) {
+            super(trainMovement, tiplocs, queryStartDate);
 
-            //TODO: if no actual get this elsewhere
-            if (trainMovement.Actual && trainMovement.Actual.OriginDepartTimestamp) {
-                this.departureDate = moment(trainMovement.Actual.OriginDepartTimestamp)
-                    .format(DateTimeFormats.dateUrlFormat);
-            }
             var atStop: IRunningScheduleTrainStop;
             if (trainMovement.Schedule.Stops.length > 0) {
                 var fromStop = trainMovement.Schedule.Stops[0];
@@ -329,16 +316,9 @@ module TrainNotifier.KnockoutModels.Search {
         public wttArrival: string;
         public actualArrival: string = "";
 
-        public departureDate: string = "";
+        constructor(trainMovement: ITrainMovementResult, fromTiploc: IStationTiploc, toTiploc: IStationTiploc, tiplocs: IStationTiploc[], queryStartDate: Moment) {
+            super(trainMovement, tiplocs, queryStartDate);
 
-        constructor(trainMovement: ITrainMovementResult, fromTiploc: IStationTiploc, toTiploc: IStationTiploc, tiplocs: IStationTiploc[]) {
-            super(trainMovement, tiplocs);
-
-            //TODO: if no actual get this elsewhere
-            if (trainMovement.Actual && trainMovement.Actual.OriginDepartTimestamp) {
-                this.departureDate = moment(trainMovement.Actual.OriginDepartTimestamp)
-                    .format(DateTimeFormats.dateUrlFormat);
-            }
             if (trainMovement.Schedule.Stops.length > 0) {
                 var originStop = trainMovement.Schedule.Stops[0];
                 var originTiploc = TrainNotifier.StationTiploc.findStationTiploc(originStop.TiplocStanoxCode, tiplocs);
