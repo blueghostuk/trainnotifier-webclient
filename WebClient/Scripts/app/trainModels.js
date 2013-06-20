@@ -365,7 +365,7 @@ var TrainNotifier;
                     this.updateFromTrainMovement(null, null);
                     this.associations.removeAll();
                 };
-                TrainDetails.prototype.updateFromTrainMovement = function (train, tiplocs) {
+                TrainDetails.prototype.updateFromTrainMovement = function (train, tiplocs, date) {
                     if(train && train.Actual) {
                         this.id(train.Actual.HeadCode);
                         this.liveId(train.Actual.TrainId);
@@ -378,6 +378,9 @@ var TrainNotifier;
                         this.scheduleDate(null);
                     }
                     if(train && train.Schedule) {
+                        if(!this.id()) {
+                            this.id(train.Schedule.Headcode);
+                        }
                         this.trainUid(train.Schedule.TrainUid);
                         this.toc(train.Schedule.AtocCode.Name);
                         this.type(this.getStpIndicator(train.Schedule.STPIndicatorId));
@@ -392,8 +395,11 @@ var TrainNotifier;
                         this.to(null);
                         this.runs(null);
                     }
+                    if(!this.scheduleDate() && date) {
+                        this.scheduleDate(moment(date).format(TrainNotifier.DateTimeFormats.dateQueryFormat));
+                    }
                     for(var i = 0; i < this.otherSites.length; i++) {
-                        this.otherSites[i].updateFromTrainMovement(train);
+                        this.otherSites[i].updateFromTrainMovement(train, date);
                     }
                     if(train && train.Cancellations.length > 0) {
                         var can = train.Cancellations[0];
@@ -476,7 +482,7 @@ var TrainNotifier;
                     this.url = ko.observable();
                     this.text = name;
                 }
-                ExternalSiteBase.prototype.updateFromTrainMovement = function (train) {
+                ExternalSiteBase.prototype.updateFromTrainMovement = function (train, date) {
                 };
                 return ExternalSiteBase;
             })();
@@ -487,9 +493,9 @@ var TrainNotifier;
                                 _super.call(this, "Realtime Trains");
                 }
                 RealtimeTrainsExternalSite.baseUrl = "http://www.realtimetrains.co.uk/train/";
-                RealtimeTrainsExternalSite.prototype.updateFromTrainMovement = function (train) {
-                    if(train && train.Schedule && train.Actual) {
-                        this.url(RealtimeTrainsExternalSite.baseUrl + train.Schedule.TrainUid + "/" + moment(train.Actual.OriginDepartTimestamp).format("YYYY/MM/DD"));
+                RealtimeTrainsExternalSite.prototype.updateFromTrainMovement = function (train, date) {
+                    if(train && train.Schedule && (train.Actual || date)) {
+                        this.url(RealtimeTrainsExternalSite.baseUrl + train.Schedule.TrainUid + "/" + moment(train.Actual ? train.Actual.OriginDepartTimestamp : date).format("YYYY/MM/DD"));
                     } else {
                         this.url(null);
                     }
@@ -503,9 +509,9 @@ var TrainNotifier;
                                 _super.call(this, "Open Train Times");
                 }
                 OpenTrainTimesExternalSite.baseUrl = "http://www.opentraintimes.com/schedule/";
-                OpenTrainTimesExternalSite.prototype.updateFromTrainMovement = function (train) {
-                    if(train && train.Schedule && train.Actual) {
-                        this.url(OpenTrainTimesExternalSite.baseUrl + train.Schedule.TrainUid + "/" + moment(train.Actual.OriginDepartTimestamp).format("YYYY-MM-DD"));
+                OpenTrainTimesExternalSite.prototype.updateFromTrainMovement = function (train, date) {
+                    if(train && train.Schedule && (train.Actual || date)) {
+                        this.url(OpenTrainTimesExternalSite.baseUrl + train.Schedule.TrainUid + "/" + moment(train.Actual ? train.Actual.OriginDepartTimestamp : date).format("YYYY-MM-DD"));
                     } else {
                         this.url(null);
                     }
@@ -519,9 +525,9 @@ var TrainNotifier;
                                 _super.call(this, "trains.im");
                 }
                 TrainsImExternalSite.baseUrl = "http://www.trains.im/schedule/";
-                TrainsImExternalSite.prototype.updateFromTrainMovement = function (train) {
-                    if(train && train.Schedule && train.Actual) {
-                        this.url(TrainsImExternalSite.baseUrl + train.Schedule.TrainUid + "/" + moment(train.Actual.OriginDepartTimestamp).format("YYYY/MM/DD"));
+                TrainsImExternalSite.prototype.updateFromTrainMovement = function (train, date) {
+                    if(train && train.Schedule && (train.Actual || date)) {
+                        this.url(TrainsImExternalSite.baseUrl + train.Schedule.TrainUid + "/" + moment(train.Actual ? train.Actual.OriginDepartTimestamp : date).format("YYYY/MM/DD"));
                     } else {
                         this.url(null);
                     }
@@ -535,8 +541,8 @@ var TrainNotifier;
                                 _super.call(this, "Raildar");
                 }
                 RaildarExternalSite.baseUrl = "http://raildar.co.uk/timetable/train/trainid/";
-                RaildarExternalSite.prototype.updateFromTrainMovement = function (train) {
-                    if(train && train.Schedule && train.Actual) {
+                RaildarExternalSite.prototype.updateFromTrainMovement = function (train, date) {
+                    if(train && train.Schedule) {
                         this.url(RaildarExternalSite.baseUrl + train.Schedule.TrainUid);
                     } else {
                         this.url(null);

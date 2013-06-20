@@ -417,7 +417,7 @@ function getTrainData(trainUid, date, subscribe: bool) {
                 }
             }
 
-            currentTrainDetails.updateFromTrainMovement(data.Movement, currentTiplocs);
+            currentTrainDetails.updateFromTrainMovement(data.Movement, currentTiplocs, date);
         }
         $(".tooltip-dynamic").tooltip();
     }).then(function () {

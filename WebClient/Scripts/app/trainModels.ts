@@ -459,7 +459,7 @@ module TrainNotifier.KnockoutModels.Train {
             this.associations.removeAll();
         }
 
-        updateFromTrainMovement(train: ITrainMovementResult, tiplocs: IStationTiploc[]) {
+        updateFromTrainMovement(train: ITrainMovementResult, tiplocs: IStationTiploc[], date?: string) {
             if (train && train.Actual) {
                 this.id(train.Actual.HeadCode);
                 this.liveId(train.Actual.TrainId);
@@ -473,6 +473,9 @@ module TrainNotifier.KnockoutModels.Train {
             }
 
             if (train && train.Schedule) {
+                if (!this.id()) {
+                    this.id(train.Schedule.Headcode);
+                }
                 this.trainUid(train.Schedule.TrainUid);
                 this.toc(train.Schedule.AtocCode.Name);
                 this.type(this.getStpIndicator(train.Schedule.STPIndicatorId));
@@ -487,9 +490,12 @@ module TrainNotifier.KnockoutModels.Train {
                 this.to(null);
                 this.runs(null);
             }
+            if (!this.scheduleDate() && date) {
+                this.scheduleDate(moment(date).format(DateTimeFormats.dateQueryFormat));
+            }
 
             for (var i = 0; i < this.otherSites.length; i++) {
-                this.otherSites[i].updateFromTrainMovement(train);
+                this.otherSites[i].updateFromTrainMovement(train, date);
             }
 
             if (train && train.Cancellations.length > 0) {
@@ -584,7 +590,7 @@ module TrainNotifier.KnockoutModels.Train {
             this.text = name;
         }
 
-        updateFromTrainMovement(train: ITrainMovementResult) {
+        updateFromTrainMovement(train: ITrainMovementResult, date?: string) {
 
         }
     }
@@ -597,10 +603,10 @@ module TrainNotifier.KnockoutModels.Train {
             super("Realtime Trains");
         }
 
-        updateFromTrainMovement(train: ITrainMovementResult) {
-            if (train && train.Schedule && train.Actual) {
+        updateFromTrainMovement(train: ITrainMovementResult, date?: string) {
+            if (train && train.Schedule && (train.Actual || date)) {
                 this.url(RealtimeTrainsExternalSite.baseUrl + train.Schedule.TrainUid + "/" +
-                    moment(train.Actual.OriginDepartTimestamp).format("YYYY/MM/DD"));
+                    moment(train.Actual ? train.Actual.OriginDepartTimestamp : date).format("YYYY/MM/DD"));
             } else {
                 this.url(null);
             }
@@ -616,10 +622,10 @@ module TrainNotifier.KnockoutModels.Train {
             super("Open Train Times");
         }
 
-        updateFromTrainMovement(train: ITrainMovementResult) {
-            if (train && train.Schedule && train.Actual) {
+        updateFromTrainMovement(train: ITrainMovementResult, date?: string) {
+            if (train && train.Schedule && (train.Actual || date)) {
                 this.url(OpenTrainTimesExternalSite.baseUrl + train.Schedule.TrainUid + "/" +
-                    moment(train.Actual.OriginDepartTimestamp).format("YYYY-MM-DD"));
+                    moment(train.Actual ? train.Actual.OriginDepartTimestamp : date).format("YYYY-MM-DD"));
             } else {
                 this.url(null);
             }
@@ -635,10 +641,10 @@ module TrainNotifier.KnockoutModels.Train {
             super("trains.im");
         }
 
-        updateFromTrainMovement(train: ITrainMovementResult) {
-            if (train && train.Schedule && train.Actual) {
+        updateFromTrainMovement(train: ITrainMovementResult, date?: string) {
+            if (train && train.Schedule && (train.Actual || date)) {
                 this.url(TrainsImExternalSite.baseUrl + train.Schedule.TrainUid + "/" +
-                    moment(train.Actual.OriginDepartTimestamp).format("YYYY/MM/DD"));
+                    moment(train.Actual ? train.Actual.OriginDepartTimestamp : date).format("YYYY/MM/DD"));
             } else {
                 this.url(null);
             }
@@ -654,8 +660,8 @@ module TrainNotifier.KnockoutModels.Train {
             super("Raildar");
         }
 
-        updateFromTrainMovement(train: ITrainMovementResult) {
-            if (train && train.Schedule && train.Actual) {
+        updateFromTrainMovement(train: ITrainMovementResult, date?: string) {
+            if (train && train.Schedule) {
                 this.url(RaildarExternalSite.baseUrl + train.Schedule.TrainUid);
             } else {
                 this.url(null);
