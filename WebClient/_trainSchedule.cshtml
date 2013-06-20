@@ -20,14 +20,14 @@
     </thead>
     <tbody data-bind="foreach: $data">
         <tr data-bind="css: { pass: pass }">
-            <td class="stationName"><a class="pointer" data-bind="text: location, click: function (d, e) { listStation(d.locationStanox); }"></a></td>
-            <td data-bind="text: pass ? 'Pass' : wttArrive, attr: { colspan: pass ? 2 : 1 }"></td>
-            <td data-bind="text: publicArrive, visible: !pass"></td>
-            <td data-bind="text: pass ? pass : wttDepart, attr: { colspan: pass ? 2 : 1 }"></td>
-            <td data-bind="text: pass ? '' : publicDepart, visible: !pass"></td>
-            <td data-bind="text: line"></td>
-            <td data-bind="text: platform"></td>
-            <td class="phone-hide" data-bind="text: allowances"></td>
+            <td class="col station stationName"><a class="pointer" data-bind="text: location, click: function (d, e) { listStation(d.locationStanox); }"></a></td>
+            <td class="col arrive wtt" data-bind="text: pass ? 'Pass' : wttArrive, attr: { colspan: pass ? 2 : 1 }"></td>
+            <td class="col arrive public" data-bind="text: publicArrive, visible: !pass"></td>
+            <td class="col depart wtt" data-bind="text: pass ? pass : wttDepart, attr: { colspan: pass ? 2 : 1 }"></td>
+            <td class="col depart public" data-bind="text: pass ? '' : publicDepart, visible: !pass"></td>
+            <td class="col extra line" data-bind="text: line"></td>
+            <td class="col extra platform" data-bind="text: platform"></td>
+            <td class="col extra allowances phone-hide" data-bind="text: allowances"></td>
         </tr>
     </tbody>
 </table>

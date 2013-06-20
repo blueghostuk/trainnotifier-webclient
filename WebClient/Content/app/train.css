@@ -19,6 +19,22 @@ tr.info a {
     color: white;
 }
 
+.col.station {
+    background-color: #EEEEED;
+}
+
+.col.arrive {
+    background-color: #E8E8E7;
+}
+
+.col.depart {
+    background-color: #E3E3E2;
+}
+
+.col.extra {
+    background-color: #E0E0DF;
+}
+
 div#title {
     margin-top: 5px;
     font-size: large;

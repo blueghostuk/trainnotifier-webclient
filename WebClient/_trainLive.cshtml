@@ -11,18 +11,18 @@
     </thead>
     <tbody data-bind="foreach: $data">
         <tr data-bind="css: { info: offRoute, pass: berthUpdate }">
-            <td class="stationName">
+            <td class="col station stationName">
                 <a class="pointer" data-bind="text: location, click: function (d, e) { listStation(d.locationStanox); }"></a>
             </td>
-            <td>
+            <td class="col arrive actual">
                 <span data-bind="text: actualArrival, attr: { title: plannedArrival }" class="tooltip-dynamic"></span>&nbsp;
                 <span class="badge" data-bind="text: arrivalDelay, css: arrivalDelayCss"></span></td>
-            <td>
+            <td class="col depart actual">
                 <span data-bind="text: actualDeparture, attr: { title: plannedDeparture }" class="tooltip-dynamic"></span>&nbsp;
                 <span class="badge" data-bind="text: departureDelay, css: departureDelayCss"></span></td>
-            <td class="phone-hide" data-bind="text: line"></td>
-            <td data-bind="text: platform"></td>
-            <td class="phone-hide">
+            <td class="col extra line phone-hide" data-bind="text: line"></td>
+            <td class="col extra platform" data-bind="text: platform"></td>
+            <td class="col extra notes phone-hide">
                 <span data-bind="visible: nextLocation">Next @@ <span data-bind="text: nextLocation" class="stationName"></span> in <span data-bind="text: nextAt"></span></span>
                 <span data-bind="visible: notes, text: notes"></span>
             </td>

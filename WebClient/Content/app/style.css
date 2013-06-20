@@ -15,7 +15,7 @@
 }
 
 .table tbody tr.pass > td {
-    background-color: #faf2cc;
+    background-color: #F2F2DB;
     font-style: italic;
 }
 
@@ -24,7 +24,8 @@
 }
 
 table.table-header-colour thead th {
-    background-color: #EEE;
+    background-color: #CFCFCE;
+    color: #333E42;
 }
 
 .stationName {
@@ -35,7 +36,7 @@ table.table-header-colour thead th {
     text-decoration: line-through;
 }
 
-tr.info > td > span.changeOfOrigin{
+tr.info > td > span.changeOfOrigin {
     display: block;
 }
 
@@ -43,7 +44,7 @@ tr.info > td > span.changeOfOrigin{
     text-decoration: line-through;
 }
 
-tr.error > td > span.changeOfDestination{
+tr.error > td > span.changeOfDestination {
     display: block;
 }
 
@@ -51,16 +52,17 @@ tr.error > td > span.changeOfDestination{
     background-color: #0099dd !important;
     color: white !important;
 }
-.table tbody tr.reinstatement > td > a {
-    color: white !important;
-}
+
+    .table tbody tr.reinstatement > td > a {
+        color: white !important;
+    }
 
 #map {
     margin-top: 5px;
     height: 780px;
 }
 
-.top-search{
+.top-search {
     margin-right: 5px;
 }
 
