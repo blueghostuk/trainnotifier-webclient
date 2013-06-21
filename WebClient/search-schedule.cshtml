@@ -272,15 +272,17 @@
                             <span data-bind="text: cancelEnRoute"></span>
                         </td>
                         <!-- 4 -->
-                        <td class="centerText" data-bind="text: fromPlatform"></td>
-                        <td class="time" title="Public Departure" data-bind="text: publicDeparture"></td>
-                        <td class="phone-hide" title="WTT Departure" data-bind="text: wttDeparture"></td>
-                        <td class="time" title="Actual Departure" data-bind="text: actualDeparture"></td>
+                        <td class="centerText" data-bind="text: fromPlatform, css: { pass: passDeparture }"></td>
+                        <td class="pass" data-bind="visible: passDeparture">Pass</td>
+                        <td class="time" title="Public Departure" data-bind="text: publicDeparture, visible: !passDeparture"></td>
+                        <td class="phone-hide" title="WTT Departure" data-bind="text: wttDeparture, css: { pass: passDeparture }"></td>
+                        <td class="time" title="Actual Departure" data-bind="text: actualDeparture, css: { pass: passDeparture }"></td>
                         <!-- 5 -->
-                        <td class="centerText" data-bind="text: toPlatform"></td>
-                        <td class="time" title="Public Arrival" data-bind="text: publicArrival"></td>
-                        <td class="phone-hide" title="WTT Arrival" data-bind="text: wttArrival"></td>
-                        <td class="time" title="Actual Arrival" data-bind="text: actualArrival"></td>
+                        <td class="centerText" data-bind="text: toPlatform, css: { pass: passArrival }"></td>
+                        <td class="pass" data-bind="visible: passArrival">Pass</td>
+                        <td class="time" title="Public Arrival" data-bind="text: publicArrival, visible: !passArrival"></td>
+                        <td class="phone-hide" title="WTT Arrival" data-bind="text: wttArrival, css: { pass: passArrival }"></td>
+                        <td class="time" title="Actual Arrival" data-bind="text: actualArrival, css: { pass: passArrival }"></td>
                     </tr>
                 </tbody>
             </table>

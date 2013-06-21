@@ -316,6 +316,9 @@ module TrainNotifier.KnockoutModels.Search {
         public wttArrival: string;
         public actualArrival: string = "";
 
+        public passDeparture = false;
+        public passArrival = false;
+
         constructor(trainMovement: ITrainMovementResult, fromTiploc: IStationTiploc, toTiploc: IStationTiploc, tiplocs: IStationTiploc[], queryStartDate: Moment) {
             super(trainMovement, tiplocs, queryStartDate);
 
@@ -368,6 +371,10 @@ module TrainNotifier.KnockoutModels.Search {
                         this.actualDeparture = DateTimeFormats.formatDateTimeString(fromDepartStops[0].ActualTimestamp);
                     }
                 }
+                this.passDeparture = fromTiplocStop.Pass != null;
+                if (this.passDeparture) {
+                    this.wttDeparture = DateTimeFormats.formatTimeString(fromTiplocStop.Pass);
+                }
             }
             if (toTiplocStop) {
                 this.publicArrival = DateTimeFormats.formatTimeString(toTiplocStop.PublicArrival);
@@ -387,6 +394,10 @@ module TrainNotifier.KnockoutModels.Search {
                     if (toArriveStops.length > 0) {
                         this.actualArrival = DateTimeFormats.formatDateTimeString(toArriveStops[0].ActualTimestamp);
                     }
+                }
+                this.passArrival = toTiplocStop.Pass != null;
+                if (this.passArrival) {
+                    this.wttArrival = DateTimeFormats.formatTimeString(toTiplocStop.Pass);
                 }
             }
         }

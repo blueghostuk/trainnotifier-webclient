@@ -19,6 +19,11 @@
     font-style: italic;
 }
 
+.table tbody tr td.pass {
+    background-color: #F2F2DB;
+    font-style: italic;
+}
+
 .table tbody tr.cancel > td {
     background-color: #f2dede !important;
 }
@@ -101,6 +106,15 @@ tr.error > td > span.changeOfDestination {
 /* override bootstrap */
 ul.nav.nav-tabs {
     margin-bottom: 0px;
+}
+
+/* override spacelab bootstrap */
+.table tbody tr.error > td {
+    background-color: #cd0200 !important;
+}
+
+.table tbody tr.info > td {
+    background-color: #3399f3 !important;
 }
 
 /* override spacelab bootstrap */

@@ -248,6 +248,8 @@ var TrainNotifier;
                     this.actualDeparture = "";
                     this.publicArrival = "";
                     this.actualArrival = "";
+                    this.passDeparture = false;
+                    this.passArrival = false;
                     if(trainMovement.Schedule.Stops.length > 0) {
                         var originStop = trainMovement.Schedule.Stops[0];
                         var originTiploc = TrainNotifier.StationTiploc.findStationTiploc(originStop.TiplocStanoxCode, tiplocs);
@@ -288,6 +290,10 @@ var TrainNotifier;
                                 this.actualDeparture = TrainNotifier.DateTimeFormats.formatDateTimeString(fromDepartStops[0].ActualTimestamp);
                             }
                         }
+                        this.passDeparture = fromTiplocStop.Pass != null;
+                        if(this.passDeparture) {
+                            this.wttDeparture = TrainNotifier.DateTimeFormats.formatTimeString(fromTiplocStop.Pass);
+                        }
                     }
                     if(toTiplocStop) {
                         this.publicArrival = TrainNotifier.DateTimeFormats.formatTimeString(toTiplocStop.PublicArrival);
@@ -300,6 +306,10 @@ var TrainNotifier;
                             if(toArriveStops.length > 0) {
                                 this.actualArrival = TrainNotifier.DateTimeFormats.formatDateTimeString(toArriveStops[0].ActualTimestamp);
                             }
+                        }
+                        this.passArrival = toTiplocStop.Pass != null;
+                        if(this.passArrival) {
+                            this.wttArrival = TrainNotifier.DateTimeFormats.formatTimeString(toTiplocStop.Pass);
                         }
                     }
                 }
