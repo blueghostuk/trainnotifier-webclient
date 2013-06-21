@@ -421,7 +421,7 @@ function getTrainData(trainUid, date, subscribe: bool) {
         }
         $(".tooltip-dynamic").tooltip();
     }).then(function () {
-        return getAssociations();
+        return getAssociations(date);
     }).then(function () {
         if (subscribe) {
             doSubTrain();
@@ -437,13 +437,14 @@ function doSubTrain() {
     sendWsCommand("subtrain:" + _lastTrainData.Movement.Actual.TrainId);
 }
 
-function getAssociations() {
-    if (!_lastTrainData || !_lastTrainData.Movement || !_lastTrainData.Movement.Schedule || !_lastTrainData.Movement.Actual) {
+function getAssociations(date?: string) {
+    if (!_lastTrainData || !_lastTrainData.Movement || !_lastTrainData.Movement.Schedule || (!_lastTrainData.Movement.Actual && !date)) {
         return;
     }
+    var queryDate = _lastTrainData.Movement.Actual ? _lastTrainData.Movement.Actual.OriginDepartTimestamp : date;
     return webApi.getTrainMovementAssociations(
         _lastTrainData.Movement.Schedule.TrainUid,
-        moment(_lastTrainData.Movement.Actual.OriginDepartTimestamp).format(TrainNotifier.DateTimeFormats.dateQueryFormat))
+        moment(queryDate).format(TrainNotifier.DateTimeFormats.dateQueryFormat))
         .done(function (associations : IAssociation[]) {
             if (associations.length == 0)
                 return;
