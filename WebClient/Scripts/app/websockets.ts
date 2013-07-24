@@ -82,7 +82,7 @@ module TrainNotifier{
                 $(".btn-connect").attr("disabled", false);
                 $(".btn-disconnect").attr("disabled", true);
             };
-        };
+        }
 
         disconnect() {
             $(".btn-connect").attr("disabled", false);
@@ -95,18 +95,18 @@ module TrainNotifier{
             $("#status").removeClass("btn-success");
             $("#status").removeClass("btn-info");
             $("#status").addClass("btn-warning");
-        };
+        }
 
         onMessageHandler(handler : any) {
             this.ws.onmessage = handler;
-        };
+        }
 
         send(message: any) {
             this.ws.send(message);
-        };
+        }
 
         get state() {
             return this.ws !== null ? this.ws.readyState : WebSocket.CLOSED;
-        };
+        }
     }
 }

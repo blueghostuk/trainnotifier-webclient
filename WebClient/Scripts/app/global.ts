@@ -1,4 +1,4 @@
-/// <reference path="../typings/moment/moment.d.ts" />
+ï»¿/// <reference path="../typings/moment/moment.d.ts" />
 /// <reference path="../typings/jquery/jquery.d.ts" />
 /// <reference path="../typings/bootstrap/bootstrap.d.ts" />
 /// <reference path="webApi.ts" />
@@ -44,8 +44,8 @@ module TrainNotifier {
                 title: stanox.Stanox
             });
             $(".stanox-" + stanox.Stanox).addClass("stationName");
-        };
-    };
+        }
+    }
 
     export class DateTimeFormats {
         public static timeUrlFormat = "HH-mm";
@@ -70,7 +70,7 @@ module TrainNotifier {
                 return ts;
             }
             return null;
-        };
+        }
 
         public static formatDateTimeString(dateTime: string): string {
             if (dateTime) {
@@ -82,11 +82,11 @@ module TrainNotifier {
                 return ts;
             }
             return null;
-        };
-    };
+        }
+    }
 
     export class CommonStrings{
-        public static halfMinute = "½";
-    };
+        public static halfMinute = "ï¿½";
+    }
 
 }

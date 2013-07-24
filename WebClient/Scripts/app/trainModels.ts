@@ -692,7 +692,7 @@ module TrainNotifier.KnockoutModels.Train {
                 }
                 return "";
             }).extend({ throttle: 500 });
-        };
+        }
     }
 
 }

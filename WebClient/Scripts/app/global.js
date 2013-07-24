@@ -1,18 +1,18 @@
 ﻿var TrainNotifier;
 (function (TrainNotifier) {
     var Common = (function () {
-        function Common() { }
-        Common.displayStanox = function displayStanox(stanox) {
-            if(!stanox) {
+        function Common() {
+        }
+        Common.displayStanox = function (stanox) {
+            if (!stanox)
                 return;
-            }
             var html = "";
-            if(stanox.StationName) {
+            if (stanox.StationName) {
                 html = stanox.StationName.toLowerCase();
             } else {
                 html = stanox.Tiploc.toLowerCase();
             }
-            if(stanox.CRS) {
+            if (stanox.CRS) {
                 html += " (" + stanox.CRS + ")";
             }
             $(".stanox-" + stanox.Stanox).html(html);
@@ -23,10 +23,34 @@
         };
         return Common;
     })();
-    TrainNotifier.Common = Common;    
-    ;
+    TrainNotifier.Common = Common;
+
     var DateTimeFormats = (function () {
-        function DateTimeFormats() { }
+        function DateTimeFormats() {
+        }
+        DateTimeFormats.formatTimeString = function (time) {
+            if (time) {
+                var timeMoment = moment(time, TrainNotifier.DateTimeFormats.timeFormat);
+                var ts = timeMoment.format(TrainNotifier.DateTimeFormats.shortTimeFormat);
+                if (timeMoment.seconds() === 30) {
+                    ts += TrainNotifier.CommonStrings.halfMinute;
+                }
+                return ts;
+            }
+            return null;
+        };
+
+        DateTimeFormats.formatDateTimeString = function (dateTime) {
+            if (dateTime) {
+                var timeMoment = moment(dateTime);
+                var ts = timeMoment.format(TrainNotifier.DateTimeFormats.shortTimeFormat);
+                if (timeMoment.seconds() === 30) {
+                    ts += TrainNotifier.CommonStrings.halfMinute;
+                }
+                return ts;
+            }
+            return null;
+        };
         DateTimeFormats.timeUrlFormat = "HH-mm";
         DateTimeFormats.timeFormat = "HH:mm:ss";
         DateTimeFormats.shortTimeFormat = "HH:mm";
@@ -38,37 +62,15 @@
         DateTimeFormats.dateTitleFormat = "ddd Do MMM YYYY";
         DateTimeFormats.dateTimeApiFormat = "YYYY-MM-DDTHH:mm";
         DateTimeFormats.timeFrameHours = 1;
-        DateTimeFormats.formatTimeString = function formatTimeString(time) {
-            if(time) {
-                var timeMoment = moment(time, TrainNotifier.DateTimeFormats.timeFormat);
-                var ts = timeMoment.format(TrainNotifier.DateTimeFormats.shortTimeFormat);
-                if(timeMoment.seconds() === 30) {
-                    ts += TrainNotifier.CommonStrings.halfMinute;
-                }
-                return ts;
-            }
-            return null;
-        };
-        DateTimeFormats.formatDateTimeString = function formatDateTimeString(dateTime) {
-            if(dateTime) {
-                var timeMoment = moment(dateTime);
-                var ts = timeMoment.format(TrainNotifier.DateTimeFormats.shortTimeFormat);
-                if(timeMoment.seconds() === 30) {
-                    ts += TrainNotifier.CommonStrings.halfMinute;
-                }
-                return ts;
-            }
-            return null;
-        };
         return DateTimeFormats;
     })();
-    TrainNotifier.DateTimeFormats = DateTimeFormats;    
-    ;
+    TrainNotifier.DateTimeFormats = DateTimeFormats;
+
     var CommonStrings = (function () {
-        function CommonStrings() { }
-        CommonStrings.halfMinute = "½";
+        function CommonStrings() {
+        }
+        CommonStrings.halfMinute = "�";
         return CommonStrings;
     })();
-    TrainNotifier.CommonStrings = CommonStrings;    
-    ;
+    TrainNotifier.CommonStrings = CommonStrings;
 })(TrainNotifier || (TrainNotifier = {}));

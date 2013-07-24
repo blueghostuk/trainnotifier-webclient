@@ -28,7 +28,7 @@ module TrainNotifier.KnockoutModels {
                 this.crsCode(null);
                 this.stanox(null);
             }
-        };
+        }
     }
 }
 
