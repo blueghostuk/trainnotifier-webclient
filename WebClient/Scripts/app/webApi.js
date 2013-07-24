@@ -302,4 +302,77 @@ var TrainNotifier;
         return StationTiploc;
     })();
     TrainNotifier.StationTiploc = StationTiploc;
+
+    var RunningTrainEstimater = (function () {
+        function RunningTrainEstimater() {
+        }
+        RunningTrainEstimater.estimateTrainTimes = function (trainMovement) {
+            if (trainMovement.Schedule && trainMovement.Schedule.Stops && trainMovement.Schedule.Stops.length > 0) {
+                var currentDelay = 0;
+                if (trainMovement.Actual && trainMovement.Actual.Stops && trainMovement.Actual.Stops.length > 0) {
+                    var lastStop = trainMovement.Actual.Stops[trainMovement.Actual.Stops.length - 1];
+                    currentDelay = moment(lastStop.ActualTimestamp).diff(moment(lastStop.PlannedTimestamp), 'minutes');
+                }
+
+                trainMovement.Schedule.Stops.forEach(function (stop) {
+                    var estimate = RunningTrainEstimater.estimateTimes(stop, currentDelay);
+                    currentDelay = estimate.CurrentDelay;
+                });
+            }
+        };
+
+        RunningTrainEstimater.estimateTimes = function (scheduleStop, currentDelay) {
+            if (typeof currentDelay === "undefined") { currentDelay = 0; }
+            var arrival, pubArrival, departure, pubDeparture, pass;
+
+            if (currentDelay > 0) {
+                if (scheduleStop.EngineeringAllowance) {
+                    currentDelay -= scheduleStop.EngineeringAllowance;
+                }
+                if (scheduleStop.PathingAllowance) {
+                    currentDelay -= scheduleStop.PathingAllowance;
+                }
+                if (scheduleStop.PerformanceAllowance) {
+                    currentDelay -= scheduleStop.PerformanceAllowance;
+                }
+            }
+            if (currentDelay < 0) {
+                currentDelay = 0;
+            }
+
+            if (scheduleStop.Arrival) {
+                arrival = moment(scheduleStop.Arrival, TrainNotifier.DateTimeFormats.timeFormat);
+                arrival = arrival.add({ minutes: currentDelay });
+            }
+            if (scheduleStop.PublicArrival) {
+                pubArrival = moment(scheduleStop.PublicArrival, TrainNotifier.DateTimeFormats.timeFormat);
+                pubArrival = pubArrival.add({ minutes: currentDelay });
+            }
+
+            if (scheduleStop.Departure) {
+                departure = moment(scheduleStop.Departure, TrainNotifier.DateTimeFormats.timeFormat);
+                departure = departure.add({ minutes: currentDelay });
+            }
+            if (scheduleStop.PublicDeparture) {
+                pubDeparture = moment(scheduleStop.PublicDeparture, TrainNotifier.DateTimeFormats.timeFormat);
+                pubDeparture = pubDeparture.add({ minutes: currentDelay });
+            }
+            if (scheduleStop.Pass) {
+                pass = moment(scheduleStop.Pass, TrainNotifier.DateTimeFormats.timeFormat);
+                pass = pass.add({ minutes: currentDelay });
+            }
+
+            scheduleStop.Estimate = {
+                Arrival: arrival,
+                PublicArrival: pubArrival,
+                Departure: departure,
+                PublicDeparture: pubDeparture,
+                Pass: pass,
+                CurrentDelay: currentDelay
+            };
+            return scheduleStop.Estimate;
+        };
+        return RunningTrainEstimater;
+    })();
+    TrainNotifier.RunningTrainEstimater = RunningTrainEstimater;
 })(TrainNotifier || (TrainNotifier = {}));

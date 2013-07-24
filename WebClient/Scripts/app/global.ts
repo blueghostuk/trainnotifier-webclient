@@ -63,11 +63,7 @@ module TrainNotifier {
         public static formatTimeString(time: string) : string {
             if (time){
                 var timeMoment = moment(time, TrainNotifier.DateTimeFormats.timeFormat);
-                var ts = timeMoment.format(TrainNotifier.DateTimeFormats.shortTimeFormat);
-                if (timeMoment.seconds() === 30) {
-                    ts += TrainNotifier.CommonStrings.halfMinute;
-                }
-                return ts;
+                return DateTimeFormats.formatTimeMoment(timeMoment);
             }
             return null;
         }
@@ -75,6 +71,13 @@ module TrainNotifier {
         public static formatDateTimeString(dateTime: string): string {
             if (dateTime) {
                 var timeMoment = moment(dateTime);
+                return DateTimeFormats.formatTimeMoment(timeMoment);
+            }
+            return null;
+        }
+
+        public static formatTimeMoment(timeMoment: Moment): string {
+            if (timeMoment && timeMoment.isValid()) {
                 var ts = timeMoment.format(TrainNotifier.DateTimeFormats.shortTimeFormat);
                 if (timeMoment.seconds() === 30) {
                     ts += TrainNotifier.CommonStrings.halfMinute;

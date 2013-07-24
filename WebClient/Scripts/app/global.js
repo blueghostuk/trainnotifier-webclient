@@ -31,11 +31,7 @@
         DateTimeFormats.formatTimeString = function (time) {
             if (time) {
                 var timeMoment = moment(time, TrainNotifier.DateTimeFormats.timeFormat);
-                var ts = timeMoment.format(TrainNotifier.DateTimeFormats.shortTimeFormat);
-                if (timeMoment.seconds() === 30) {
-                    ts += TrainNotifier.CommonStrings.halfMinute;
-                }
-                return ts;
+                return DateTimeFormats.formatTimeMoment(timeMoment);
             }
             return null;
         };
@@ -43,6 +39,13 @@
         DateTimeFormats.formatDateTimeString = function (dateTime) {
             if (dateTime) {
                 var timeMoment = moment(dateTime);
+                return DateTimeFormats.formatTimeMoment(timeMoment);
+            }
+            return null;
+        };
+
+        DateTimeFormats.formatTimeMoment = function (timeMoment) {
+            if (timeMoment && timeMoment.isValid()) {
                 var ts = timeMoment.format(TrainNotifier.DateTimeFormats.shortTimeFormat);
                 if (timeMoment.seconds() === 30) {
                     ts += TrainNotifier.CommonStrings.halfMinute;

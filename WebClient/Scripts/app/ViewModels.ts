@@ -8,7 +8,7 @@ module TrainNotifier.KnockoutModels {
         public name = ko.observable();
         public crsCode = ko.observable();
         public stanox = ko.observable();
-        public url: KnockoutComputed;
+        public url: KnockoutComputed<string>;
 
         constructor(location?: IStationTiploc) {
             var self = this;

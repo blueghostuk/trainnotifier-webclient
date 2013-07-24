@@ -1,29 +1,39 @@
 /// <reference path="global.ts" />
 /// <reference path="../typings/jquery/jquery.d.ts" />
+/// <reference path="../typings/moment/moment.d.ts" />
 
 interface IWebApi {
-    getStanox(stanox: string): JQueryPromise;
-    getStanoxByCrsCode(crsCode: string): JQueryPromise;
+    getStanox(stanox: string): JQueryPromise<any>;
+    getStanoxByCrsCode(crsCode: string): JQueryPromise<any>;
 
-    getStations(): JQueryPromise;
-    getStationByLocation(lat: number, lon: number): JQueryPromise;
+    getStations(): JQueryPromise<any>;
+    getStationByLocation(lat: number, lon: number): JQueryPromise<any>;
 
-    getTrainMovementByUid(uid: string, date: string): JQueryPromise;
-    getTrainMovementById(id: string): JQueryPromise;
-    getTrainMovementAssociations(uid: string, date: string): JQueryPromise;
+    getTrainMovementByUid(uid: string, date: string): JQueryPromise<any>;
+    getTrainMovementById(id: string): JQueryPromise<any>;
+    getTrainMovementAssociations(uid: string, date: string): JQueryPromise<any>;
 
-    getTrainMovementsTerminatingAtLocation(stanox: string, startDate: string, endDate: string): JQueryPromise;
-    getTrainMovementsTerminatingAtStation(crsCode: string, startDate: string, endDate: string): JQueryPromise;
-    getTrainMovementsStartingAtLocation(stanox: string, startDate: string, endDate: string): JQueryPromise;
-    getTrainMovementsStartingAtStation(crsCode: string, startDate: string, endDate: string): JQueryPromise;
-    getTrainMovementsCallingAtLocation(stanox: string, startDate: string, endDate: string): JQueryPromise;
-    getTrainMovementsCallingAtStation(crsCode: string, startDate: string, endDate: string): JQueryPromise;
-    getTrainMovementsBetweenLocations(fromStanox: string, toStanox: string, startDate: string, endDate: string): JQueryPromise;
-    getTrainMovementsBetweenStations(fromCrsCode: string, toCrsCode: string, startDate: string, endDate: string): JQueryPromise;
-    
-    getPPMSectors(): JQueryPromise;
-    getPPMOperatorRegions(operatorCode: string): JQueryPromise;
-    getPPMData(operatorCode: string, name: string): JQueryPromise;
+    getTrainMovementsTerminatingAtLocation(stanox: string, startDate: string, endDate: string): JQueryPromise<any>;
+    getTrainMovementsTerminatingAtStation(crsCode: string, startDate: string, endDate: string): JQueryPromise<any>;
+    getTrainMovementsStartingAtLocation(stanox: string, startDate: string, endDate: string): JQueryPromise<any>;
+    getTrainMovementsStartingAtStation(crsCode: string, startDate: string, endDate: string): JQueryPromise<any>;
+    getTrainMovementsCallingAtLocation(stanox: string, startDate: string, endDate: string): JQueryPromise<any>;
+    getTrainMovementsCallingAtStation(crsCode: string, startDate: string, endDate: string): JQueryPromise<any>;
+    getTrainMovementsBetweenLocations(fromStanox: string, toStanox: string, startDate: string, endDate: string): JQueryPromise<any>;
+    getTrainMovementsBetweenStations(fromCrsCode: string, toCrsCode: string, startDate: string, endDate: string): JQueryPromise<any>;
+
+    getPPMSectors(): JQueryPromise<any>;
+    getPPMOperatorRegions(operatorCode: string): JQueryPromise<any>;
+    getPPMData(operatorCode: string, name: string): JQueryPromise<any>;
+}
+
+interface IEstimate {
+    Arrival?: Moment;
+    PublicArrival?: Moment;
+    Departure?: Moment;
+    PublicDeparture?: Moment;
+    Pass?: Moment;
+    CurrentDelay: number;
 }
 
 module TrainNotifier {
@@ -321,6 +331,83 @@ module TrainNotifier {
             return null;
         }
     }
+
+    export class RunningTrainEstimater {
+
+        public static estimateTrainTimes(trainMovement: ITrainMovementResult) {
+            if (trainMovement.Schedule && trainMovement.Schedule.Stops && trainMovement.Schedule.Stops.length > 0) {
+                var currentDelay = 0;
+                if (trainMovement.Actual && trainMovement.Actual.Stops && trainMovement.Actual.Stops.length > 0) {
+                    var lastStop = trainMovement.Actual.Stops[trainMovement.Actual.Stops.length - 1];
+                    currentDelay = moment(lastStop.ActualTimestamp)
+                        .diff(moment(lastStop.PlannedTimestamp), 'minutes');
+                }
+
+                trainMovement.Schedule.Stops.forEach(function (stop: IRunningScheduleTrainStop) {
+                    var estimate = RunningTrainEstimater.estimateTimes(stop, currentDelay);
+                    currentDelay = estimate.CurrentDelay;
+                });
+            }
+        }
+
+        public static estimateTimes(
+            scheduleStop: IRunningScheduleTrainStop,
+            currentDelay: number = 0): IEstimate {
+
+            var arrival: Moment,
+                pubArrival: Moment,
+                departure: Moment,
+                pubDeparture: Moment,
+                pass: Moment;
+
+            if (currentDelay > 0) {
+                if (scheduleStop.EngineeringAllowance) {
+                    currentDelay -= scheduleStop.EngineeringAllowance;
+                }
+                if (scheduleStop.PathingAllowance) {
+                    currentDelay -= scheduleStop.PathingAllowance;
+                }
+                if (scheduleStop.PerformanceAllowance) {
+                    currentDelay -= scheduleStop.PerformanceAllowance;
+                }
+            }
+            if (currentDelay < 0) {
+                currentDelay = 0;
+            }
+
+            if (scheduleStop.Arrival) {
+                arrival = moment(scheduleStop.Arrival, TrainNotifier.DateTimeFormats.timeFormat);
+                arrival = arrival.add({ minutes: currentDelay });
+            }
+            if (scheduleStop.PublicArrival) {
+                pubArrival = moment(scheduleStop.PublicArrival, TrainNotifier.DateTimeFormats.timeFormat);
+                pubArrival = pubArrival.add({ minutes: currentDelay });
+            }
+
+            if (scheduleStop.Departure) {
+                departure = moment(scheduleStop.Departure, TrainNotifier.DateTimeFormats.timeFormat);
+                departure = departure.add({ minutes: currentDelay });
+            }
+            if (scheduleStop.PublicDeparture) {
+                pubDeparture = moment(scheduleStop.PublicDeparture, TrainNotifier.DateTimeFormats.timeFormat);
+                pubDeparture = pubDeparture.add({ minutes: currentDelay });
+            }
+            if (scheduleStop.Pass) {
+                pass = moment(scheduleStop.Pass, TrainNotifier.DateTimeFormats.timeFormat);
+                pass = pass.add({ minutes: currentDelay });
+            }
+
+            scheduleStop.Estimate = {
+                Arrival: arrival,
+                PublicArrival: pubArrival,
+                Departure: departure,
+                PublicDeparture: pubDeparture,
+                Pass: pass,
+                CurrentDelay: currentDelay
+            };
+            return scheduleStop.Estimate;
+        }
+    }
 }
 
 interface IRunningTrainActualStop {
@@ -389,6 +476,8 @@ interface IRunningScheduleTrainStop {
     Origin: bool;
     Intermediate: bool;
     Terminate: bool;
+
+    Estimate?: IEstimate;
 }
 
 interface ICancellation {

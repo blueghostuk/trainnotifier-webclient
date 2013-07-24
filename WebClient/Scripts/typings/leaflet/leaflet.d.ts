@@ -808,7 +808,7 @@ declare module L {
           * Subdomains of the tile service. Can be passed in the form of one string (where
           * each letter is a subdomain name) or an array of strings.
           */
-        subdomains?: string;
+        subdomains?: any;
 
         /**
           * URL to the tile image to show in place of the tile that failed to load.
@@ -1641,6 +1641,8 @@ declare module L {
           * of the rectangle.
           */
         constructor(southWest: LatLng, northEast: LatLng);
+
+        constructor(latlngs : LatLng[]);
 
         /**
           * Extends the bounds to contain the given point or bounds.

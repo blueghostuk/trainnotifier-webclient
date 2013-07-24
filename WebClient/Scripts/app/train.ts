@@ -14,8 +14,8 @@ var titleModel = new TrainNotifier.KnockoutModels.Train.TrainTitleViewModel();
 
 var _lastTrainData: ISingleTrainMovementResult;
 
-var scheduleStops: KnockoutObservableArrayScheduleStop = ko.observableArray();
-var liveStops: KnockoutObservableArrayLiveStop = ko.observableArray();
+var scheduleStops: KnockoutObservableArray<TrainNotifier.KnockoutModels.Train.ScheduleStop> = ko.observableArray();
+var liveStops: KnockoutObservableArray<TrainNotifier.KnockoutModels.Train.LiveStopBase> = ko.observableArray();
 var currentTrainDetails = new TrainNotifier.KnockoutModels.Train.TrainDetails();
 
 var currentTiplocs: IStationTiploc[] = [];
@@ -127,7 +127,7 @@ function loadScheduleMap() {
         || !currentTiplocs)
         return;
 
-    var points: L.LatLng [] = [];
+    var points: Array<L.LatLng> = [];
 
     for (var i = 0; i < _lastTrainData.Movement.Schedule.Stops.length; i++) {
         var stop = _lastTrainData.Movement.Schedule.Stops[i];
@@ -205,7 +205,7 @@ function addStop(stop: IWebSocketTrainMovement) {
     var stopTiploc = TrainNotifier.StationTiploc.findStationTiploc(stop.Stanox, currentTiplocs);
     var nextStopTiploc = TrainNotifier.StationTiploc.findStationTiploc(stop.NextStanox, currentTiplocs);
 
-    var queries: JQueryPromise[] = [];
+    var queries: JQueryPromise<any>[] = [];
 
     if (!stopTiploc) {
         queries.push(webApi.getStanox(stop.Stanox));
@@ -214,7 +214,7 @@ function addStop(stop: IWebSocketTrainMovement) {
         queries.push(webApi.getStanox(stop.NextStanox));
     }
 
-    return $.when(queries).done(function (tiplocA: IStationTiploc, tiplocB: IStationTiploc) {
+    return <JQueryDeferred<any>>$.when(queries).done(function (tiplocA: IStationTiploc, tiplocB: IStationTiploc) {
         if (tiplocA && tiplocA.Stanox)
             currentTiplocs.push(tiplocA)
         if (tiplocB && tiplocB.Stanox)
