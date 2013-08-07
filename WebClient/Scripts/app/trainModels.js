@@ -7,6 +7,11 @@ var __extends = this.__extends || function (d, b) {
 var TrainNotifier;
 (function (TrainNotifier) {
     (function (KnockoutModels) {
+        /// <reference path="websockets.ts" />
+        /// <reference path="global.ts" />
+        /// <reference path="../typings/moment/moment.d.ts" />
+        /// <reference path="../typings/knockout/knockout.d.ts" />
+        /// <reference path="webApi.ts" />
         (function (Train) {
             var ScheduleStop = (function () {
                 function ScheduleStop(scheduleStop, tiplocs) {
@@ -303,6 +308,8 @@ var TrainNotifier;
                     if (berthUpdate.To && berthUpdate.To.length > 0)
                         this.location += " - " + berthUpdate.To;
 
+                    // supplied time is in UTC, want to format to local (in theory this is UK)
+                    // note these times are shown with seconds as they may not be on the 00/30 mark
                     this.actualArrival(moment.utc(berthUpdate.Time).local().format(TrainNotifier.DateTimeFormats.timeFormat));
                     this.notes("From Area: " + berthUpdate.AreaId);
                 }
@@ -315,7 +322,8 @@ var TrainNotifier;
                     switch (association.AssociationType) {
                         case TrainNotifier.AssociationType.NextTrain:
                             if (association.MainTrainUid === currentTrainUid)
-                                this.title = "Forms next train: "; else
+                                this.title = "Forms next train: ";
+else
                                 this.title = "Formed of train: ";
                             break;
                         case TrainNotifier.AssociationType.Join:

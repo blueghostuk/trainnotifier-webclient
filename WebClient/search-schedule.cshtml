@@ -122,7 +122,7 @@
                         <td><a data-bind="text: headCode, attr: { href: 'trains/' + trainId + '/' + departureDate }"></a></td>
                         <td data-bind="text: operatorCode, attr: { title: operatorName }"></td>
                         <!-- 2 -->
-                        <td class="stationName">
+                        <td class="stationName" data-bind="css: fromStationCss">
                             <span data-bind="text: fromStation, css: { changeOfOrigin: changeOfOriginStation }"></span>
                             <span data-bind="text: changeOfOriginStation"></span>
                         </td>
@@ -132,7 +132,7 @@
                         <td class="phone-hide" title="WTT Departure" data-bind="text: wttDeparture"></td>
                         <td class="time" title="Actual Departure" data-bind="text: actualDeparture"></td>
                         <!-- 4 -->
-                        <td class="stationName">
+                        <td class="stationName" data-bind="css: toStationCss">
                             <span data-bind="text: toStation, css: { changeOfDestination: cancelEnRoute }"></span>
                             <span data-bind="text: cancelEnRoute"></span>
                         </td>
@@ -196,14 +196,14 @@
                         <td class="phone-hide" title="WTT Arrival" data-bind="text: atWttArrival"></td>
                         <td class="time" title="Actual Arrival" data-bind="text: atActualArrival"></td>
                         <!-- 3 -->
-                        <td class="stationName">
+                        <td class="stationName" data-bind="css : fromStationCss">
                             <span data-bind="text: fromStation, css: { changeOfOrigin: changeOfOriginStation }"></span>
                             <span data-bind="text: changeOfOriginStation"></span>
                         </td>
                         <!-- 4 -->
                         <td class="centerText" data-bind="text: atPlatform"></td>
                         <!-- 5 -->
-                        <td class="stationName">
+                        <td class="stationName" data-bind="css: toStationCss">
                             <span data-bind="text: toStation, css: { changeOfDestination: cancelEnRoute }"></span>
                             <span data-bind="text: cancelEnRoute"></span>
                         </td>
@@ -262,12 +262,12 @@
                         <td><a data-bind="text: headCode, attr: { href: 'trains/' + trainId + '/' + departureDate }"></a></td>
                         <td data-bind="text: operatorCode, attr: { title: operatorName }"></td>
                         <!-- 2 -->
-                        <td class="stationName">
+                        <td class="stationName" data-bind="css: fromStationCss">
                             <span data-bind="text: fromStation, css: { changeOfOrigin: changeOfOriginStation }"></span>
                             <span data-bind="text: changeOfOriginStation"></span>
                         </td>
                         <!-- 3 -->
-                        <td class="stationName">
+                        <td class="stationName" data-bind="css: toStationCss">
                             <span data-bind="text: toStation, css: { changeOfDestination: cancelEnRoute }"></span>
                             <span data-bind="text: cancelEnRoute"></span>
                         </td>

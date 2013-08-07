@@ -1,4 +1,12 @@
-﻿var _locations;
+﻿/// <reference path="../typings/moment/moment.d.ts" />
+/// <reference path="ViewModels.ts" />
+/// <reference path="websockets.ts" />
+/// <reference path="../typings/knockout/knockout.d.ts" />
+/// <reference path="global.ts" />
+/// <reference path="webApi.ts" />
+/// <reference path="../typings/moment/moment.d.ts" />
+/// <reference path="../typings/jquery/jquery.d.ts" />
+var _locations;
 
 var webSockets = new TrainNotifier.WebSockets();
 
@@ -45,8 +53,10 @@ $(function () {
                     var bCrs = b.substr(b.lastIndexOf('(') + 1, 3);
 
                     if (self.query.toLowerCase() == aCrs.toLowerCase())
-                        return -1; else if (self.query.toLowerCase() == bCrs.toLowerCase())
-                        return 1; else
+                        return -1;
+else if (self.query.toLowerCase() == bCrs.toLowerCase())
+                        return 1;
+else
                         return aCrs > bCrs ? 1 : -1;
                 });
             }

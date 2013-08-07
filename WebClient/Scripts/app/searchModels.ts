@@ -22,13 +22,19 @@ module TrainNotifier.KnockoutModels.Search {
         public operatorCode: string = "NA";
         public operatorName: string = "Unknown";
         public title: string = null;
-        public cancel: bool = false;
+        public cancel: boolean = false;
         public cancelEnRoute: string = null;
-        public reinstate: bool = false;
-        public changeOfOrigin: bool = false;
+        public reinstate: boolean = false;
+        public changeOfOrigin: boolean = false;
         public changeOfOriginStation: string = null;
 
         public departureDate: string = "";
+
+        public fromStation: string;
+        public fromStationCss: string = null;
+
+        public toStation: string;
+        public toStationCss: string = null;
 
         constructor(trainMovement: ITrainMovementResult, tiplocs: IStationTiploc[], queryStartDate: Moment) {
             this.trainId = trainMovement.Schedule.TrainUid;
@@ -98,13 +104,12 @@ module TrainNotifier.KnockoutModels.Search {
     }
 
     export class StartingAtTrainMovement extends TrainMovement {
-        public fromStation: string;
+                
         public fromPlatform: string;
         public publicDeparture: string = "";
         public wttDeparture: string;
         public actualDeparture: string = "";
 
-        public toStation: string;
         public toPlatform: string;
         public publicArrival: string = "";
         public wttArrival: string;
@@ -118,7 +123,8 @@ module TrainNotifier.KnockoutModels.Search {
                 var fromStop = trainMovement.Schedule.Stops[0];
                 var fromTiploc = StationTiploc.findStationTiploc(fromStop.TiplocStanoxCode, tiplocs);
                 if (fromTiploc) {
-                    this.fromStation = fromTiploc.Description.toLowerCase();
+                    this.fromStation = "Starts here";
+                    this.fromStationCss = "starts";
                 }
 
                 // TODO: compare to actual 
@@ -157,13 +163,12 @@ module TrainNotifier.KnockoutModels.Search {
     }
 
     export class TerminatingAtTrainMovement extends TrainMovement {
-        public fromStation: string;
+
         public fromPlatform: string;
         public publicDeparture: string = "";
         public wttDeparture: string;
         public actualDeparture: string = "";
 
-        public toStation: string;
         public toPlatform: string;
         public publicArrival: string = "";
         public wttArrival: string;
@@ -188,7 +193,8 @@ module TrainNotifier.KnockoutModels.Search {
                 toStop = trainMovement.Schedule.Stops[trainMovement.Schedule.Stops.length - 1];
                 var toTiploc = StationTiploc.findStationTiploc(toStop.TiplocStanoxCode, tiplocs);
                 if (toTiploc) {
-                    this.toStation = toTiploc.Description.toLowerCase();
+                    this.toStation = "Terminates here";
+                    this.toStationCss = "terminates";
                 }
                 // TODO: compare to actual 
                 this.toPlatform = toStop.Platform;
@@ -216,13 +222,11 @@ module TrainNotifier.KnockoutModels.Search {
 
     export class CallingAtTrainMovement extends TrainMovement {
 
-        public fromStation: string;
         public atPlatform: string;
         public atPublicDeparture: string = "";
         public atWttDeparture: string;
         public atActualDeparture: string = "";
-
-        public toStation: string;
+        
         public atPublicArrival: string = "";
         public atWttArrival: string;
         public atActualArrival: string = "";
@@ -237,7 +241,12 @@ module TrainNotifier.KnockoutModels.Search {
                 var fromStop = trainMovement.Schedule.Stops[0];
                 var fromTiploc = StationTiploc.findStationTiploc(fromStop.TiplocStanoxCode, tiplocs);
                 if (fromTiploc) {
-                    this.fromStation = fromTiploc.Description.toLowerCase();
+                    if (fromTiploc.Stanox == atTiploc.Stanox) {
+                        this.fromStation = "Starts here";
+                        this.fromStationCss = "starts";
+                    } else {
+                        this.fromStation = fromTiploc.Description.toLowerCase();
+                    }
                 }
 
                 // find the at stop
@@ -268,7 +277,12 @@ module TrainNotifier.KnockoutModels.Search {
                 var toStop = trainMovement.Schedule.Stops[trainMovement.Schedule.Stops.length - 1];
                 var toTiploc = StationTiploc.findStationTiploc(toStop.TiplocStanoxCode, tiplocs);
                 if (toTiploc) {
-                    this.toStation = toTiploc.Description.toLowerCase();
+                    if (toTiploc.Stanox == atTiploc.Stanox) {
+                        this.toStation = "Terminates here";
+                        this.toStationCss = "terminates";
+                    } else {
+                        this.toStation = toTiploc.Description.toLowerCase();
+                    }
                 }
             }
 
@@ -304,13 +318,12 @@ module TrainNotifier.KnockoutModels.Search {
     }
 
     export class CallingBetweenTrainMovement extends TrainMovement {
-        public fromStation: string;
+
         public fromPlatform: string;
         public publicDeparture: string = "";
         public wttDeparture: string;
         public actualDeparture: string = "";
 
-        public toStation: string;
         public toPlatform: string;
         public publicArrival: string = "";
         public wttArrival: string;
@@ -326,7 +339,7 @@ module TrainNotifier.KnockoutModels.Search {
                 var originStop = trainMovement.Schedule.Stops[0];
                 var originTiploc = TrainNotifier.StationTiploc.findStationTiploc(originStop.TiplocStanoxCode, tiplocs);
                 if (originTiploc) {
-                    this.fromStation = originTiploc.Description.toLowerCase();
+                    this.fromStation = fromTiploc.Description.toLowerCase();
                 }
 
                 var destStop = trainMovement.Schedule.Stops[trainMovement.Schedule.Stops.length - 1];

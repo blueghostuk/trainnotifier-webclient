@@ -20,7 +20,7 @@ interface IWebSocketTrainMovement {
     Platform: string;
     State: number;
     ScheduleStopNumber?: number;
-    OffRoute: bool;
+    OffRoute: boolean;
     NextStanox: string;
     // Timestamp
     ExpectedAtNextStanox: string;

@@ -1,4 +1,4 @@
-var __extends = this.__extends || function (d, b) {
+﻿var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
     __.prototype = b.prototype;
@@ -6,6 +6,10 @@ var __extends = this.__extends || function (d, b) {
 };
 var TrainNotifier;
 (function (TrainNotifier) {
+    /// <reference path="global.ts" />
+    /// <reference path="../typings/moment/moment.d.ts" />
+    /// <reference path="../typings/knockout/knockout.d.ts" />
+    /// <reference path="webApi.ts" />
     (function (Search) {
         var SearchMode = (function () {
             function SearchMode() {
@@ -25,6 +29,7 @@ var TrainNotifier;
 (function (TrainNotifier) {
     (function (KnockoutModels) {
         (function (Search) {
+            // base class
             var TrainMovement = (function () {
                 function TrainMovement(trainMovement, tiplocs, queryStartDate) {
                     this.operatorCode = "NA";
@@ -36,6 +41,8 @@ var TrainNotifier;
                     this.changeOfOrigin = false;
                     this.changeOfOriginStation = null;
                     this.departureDate = "";
+                    this.fromStationCss = null;
+                    this.toStationCss = null;
                     this.trainId = trainMovement.Schedule.TrainUid;
                     if (trainMovement.Schedule.AtocCode) {
                         this.operatorCode = trainMovement.Schedule.AtocCode.Code;
@@ -44,6 +51,7 @@ var TrainNotifier;
                     if (trainMovement.Actual) {
                         this.headCode = trainMovement.Actual.HeadCode;
                     } else {
+                        // if no actual we can only show the uid
                         this.headCode = trainMovement.Schedule.Headcode || trainMovement.Schedule.TrainUid;
                     }
                     if (trainMovement.Actual && trainMovement.Actual.OriginDepartTimestamp) {
@@ -110,9 +118,11 @@ var TrainNotifier;
                         var fromStop = trainMovement.Schedule.Stops[0];
                         var fromTiploc = TrainNotifier.StationTiploc.findStationTiploc(fromStop.TiplocStanoxCode, tiplocs);
                         if (fromTiploc) {
-                            this.fromStation = fromTiploc.Description.toLowerCase();
+                            this.fromStation = "Starts here";
+                            this.fromStationCss = "starts";
                         }
 
+                        // TODO: compare to actual
                         this.fromPlatform = fromStop.Platform;
                         this.publicDeparture = TrainNotifier.DateTimeFormats.formatTimeString(fromStop.PublicDeparture);
                         this.wttDeparture = TrainNotifier.DateTimeFormats.formatTimeString(fromStop.Departure);
@@ -123,12 +133,14 @@ var TrainNotifier;
                             this.toStation = toTiploc.Description.toLowerCase();
                         }
 
+                        // TODO: compare to actual
                         this.toPlatform = toStop.Platform;
                         this.publicArrival = TrainNotifier.DateTimeFormats.formatTimeString(toStop.PublicArrival);
                         this.wttArrival = TrainNotifier.DateTimeFormats.formatTimeString(toStop.Arrival);
                     }
 
                     if (trainMovement.Actual && trainMovement.Actual.Stops.length > 0) {
+                        // TODO: check is actual location and is departure
                         var fromActual = trainMovement.Actual.Stops[0];
                         this.actualDeparture = TrainNotifier.DateTimeFormats.formatDateTimeString(fromActual.ActualTimestamp);
 
@@ -139,6 +151,7 @@ var TrainNotifier;
                             }
                         }
                     }
+                    // TODO: what about can/reinstate/c.o.origin
                 }
                 return StartingAtTrainMovement;
             })(TrainMovement);
@@ -161,6 +174,7 @@ var TrainNotifier;
                             this.fromStation = fromTiploc.Description.toLowerCase();
                         }
 
+                        // TODO: compare to actual
                         this.fromPlatform = fromStop.Platform;
                         this.publicDeparture = TrainNotifier.DateTimeFormats.formatTimeString(fromStop.PublicDeparture);
                         this.wttDeparture = TrainNotifier.DateTimeFormats.formatTimeString(fromStop.Departure);
@@ -168,15 +182,18 @@ var TrainNotifier;
                         toStop = trainMovement.Schedule.Stops[trainMovement.Schedule.Stops.length - 1];
                         var toTiploc = TrainNotifier.StationTiploc.findStationTiploc(toStop.TiplocStanoxCode, tiplocs);
                         if (toTiploc) {
-                            this.toStation = toTiploc.Description.toLowerCase();
+                            this.toStation = "Terminates here";
+                            this.toStationCss = "terminates";
                         }
 
+                        // TODO: compare to actual
                         this.toPlatform = toStop.Platform;
                         this.publicArrival = TrainNotifier.DateTimeFormats.formatTimeString(toStop.PublicArrival);
                         this.wttArrival = TrainNotifier.DateTimeFormats.formatTimeString(toStop.Arrival);
                     }
 
                     if (trainMovement.Actual && trainMovement.Actual.Stops.length > 0) {
+                        // TODO: check is actual location and is departure
                         var fromActual = trainMovement.Actual.Stops[0];
                         this.actualDeparture = TrainNotifier.DateTimeFormats.formatDateTimeString(fromActual.ActualTimestamp);
 
@@ -207,14 +224,21 @@ var TrainNotifier;
                         var fromStop = trainMovement.Schedule.Stops[0];
                         var fromTiploc = TrainNotifier.StationTiploc.findStationTiploc(fromStop.TiplocStanoxCode, tiplocs);
                         if (fromTiploc) {
-                            this.fromStation = fromTiploc.Description.toLowerCase();
+                            if (fromTiploc.Stanox == atTiploc.Stanox) {
+                                this.fromStation = "Starts here";
+                                this.fromStationCss = "starts";
+                            } else {
+                                this.fromStation = fromTiploc.Description.toLowerCase();
+                            }
                         }
 
+                        // find the at stop
                         var atStops = trainMovement.Schedule.Stops.filter(function (element) {
                             return element.TiplocStanoxCode == atTiploc.Stanox;
                         });
 
                         if (atStops.length > 0) {
+                            // take first, if it calls at more than 1 we cant handle that at the moment
                             atStop = atStops[0];
                             this.atPlatform = atStop.Platform;
 
@@ -235,11 +259,17 @@ var TrainNotifier;
                         var toStop = trainMovement.Schedule.Stops[trainMovement.Schedule.Stops.length - 1];
                         var toTiploc = TrainNotifier.StationTiploc.findStationTiploc(toStop.TiplocStanoxCode, tiplocs);
                         if (toTiploc) {
-                            this.toStation = toTiploc.Description.toLowerCase();
+                            if (toTiploc.Stanox == atTiploc.Stanox) {
+                                this.toStation = "Terminates here";
+                                this.toStationCss = "terminates";
+                            } else {
+                                this.toStation = toTiploc.Description.toLowerCase();
+                            }
                         }
                     }
 
                     if (trainMovement.Actual && trainMovement.Actual.Stops.length > 0 && atStop) {
+                        // find the at stops
                         var atActualStops = trainMovement.Actual.Stops.filter(function (element) {
                             return element.TiplocStanoxCode == atTiploc.Stanox && element.ScheduleStopNumber == atStop.StopNumber;
                         });
@@ -289,7 +319,7 @@ var TrainNotifier;
                         var originStop = trainMovement.Schedule.Stops[0];
                         var originTiploc = TrainNotifier.StationTiploc.findStationTiploc(originStop.TiplocStanoxCode, tiplocs);
                         if (originTiploc) {
-                            this.fromStation = originTiploc.Description.toLowerCase();
+                            this.fromStation = fromTiploc.Description.toLowerCase();
                         }
 
                         var destStop = trainMovement.Schedule.Stops[trainMovement.Schedule.Stops.length - 1];
@@ -319,9 +349,11 @@ var TrainNotifier;
                         this.publicDeparture = TrainNotifier.DateTimeFormats.formatTimeString(fromTiplocStop.PublicDeparture);
                         this.wttDeparture = TrainNotifier.DateTimeFormats.formatTimeString(fromTiplocStop.Departure);
 
+                        // TODO: compare to actual
                         this.fromPlatform = fromTiplocStop.Platform;
 
                         if (trainMovement.Actual && trainMovement.Actual.Stops.length > 0) {
+                            // find the from stops
                             var fromDepartStops = trainMovement.Actual.Stops.filter(function (element) {
                                 return element.TiplocStanoxCode == fromTiplocStop.TiplocStanoxCode && element.ScheduleStopNumber == fromTiplocStop.StopNumber && element.EventType == TrainNotifier.EventType.Departure;
                             });
@@ -339,9 +371,11 @@ var TrainNotifier;
                         this.publicArrival = TrainNotifier.DateTimeFormats.formatTimeString(toTiplocStop.PublicArrival);
                         this.wttArrival = TrainNotifier.DateTimeFormats.formatTimeString(toTiplocStop.Arrival);
 
+                        // TODO: compare to actual
                         this.toPlatform = toTiplocStop.Platform;
 
                         if (trainMovement.Actual && trainMovement.Actual.Stops.length > 0) {
+                            // find the from stops
                             var toArriveStops = trainMovement.Actual.Stops.filter(function (element) {
                                 return element.TiplocStanoxCode == toTiplocStop.TiplocStanoxCode && element.ScheduleStopNumber == toTiplocStop.StopNumber && element.EventType == TrainNotifier.EventType.Arrival;
                             });

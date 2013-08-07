@@ -5,7 +5,7 @@
 
 interface IPage {
     setCommand?(command: string);
-    parseCommand?(): bool;
+    parseCommand?(): boolean;
     getCommand?(): string;
     setStatus? (status: string);
     wsOpenCommand? ();
@@ -58,6 +58,7 @@ module TrainNotifier {
         public static dateUrlFormat = "YYYY/MM/DD";
         public static dateTitleFormat = "ddd Do MMM YYYY";
         public static dateTimeApiFormat = "YYYY-MM-DDTHH:mm";
+        public static timeFrameMinutesBefore = 15;
         public static timeFrameHours = 1;
 
         public static formatTimeString(time: string) : string {
@@ -89,7 +90,7 @@ module TrainNotifier {
     }
 
     export class CommonStrings{
-        public static halfMinute = "�";
+        public static halfMinute = "½";
     }
 
 }

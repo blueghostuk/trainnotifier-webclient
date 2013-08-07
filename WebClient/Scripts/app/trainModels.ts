@@ -173,7 +173,7 @@ module TrainNotifier.KnockoutModels.Train {
             return "hidden";
         }
 
-        private updateArrival(plannedArrival: string, actualArrival: string, line: string, platform: string, offRoute: bool, nextStanox: string, expectedAtNextStanox: string, tiplocs: IStationTiploc[]) {
+        private updateArrival(plannedArrival: string, actualArrival: string, line: string, platform: string, offRoute: boolean, nextStanox: string, expectedAtNextStanox: string, tiplocs: IStationTiploc[]) {
             this.arrivalSet = true;
             this.plannedArrival(DateTimeFormats.formatDateTimeString(plannedArrival));
             this.actualArrival(DateTimeFormats.formatDateTimeString(actualArrival));
@@ -191,7 +191,7 @@ module TrainNotifier.KnockoutModels.Train {
             this.updateCommon(line, platform, offRoute, nextStanox, expectedAtNextStanox, tiplocs);
         }
 
-        private updateDeparture(plannedDeparture: string, actualDeparture: string, line: string, platform: string, offRoute: bool, nextStanox: string, expectedAtNextStanox: string, tiplocs: IStationTiploc[]) {
+        private updateDeparture(plannedDeparture: string, actualDeparture: string, line: string, platform: string, offRoute: boolean, nextStanox: string, expectedAtNextStanox: string, tiplocs: IStationTiploc[]) {
             this.departureSet = true;
             this.plannedDeparture(DateTimeFormats.formatDateTimeString(plannedDeparture));
             this.actualDeparture(DateTimeFormats.formatDateTimeString(actualDeparture));
@@ -210,7 +210,7 @@ module TrainNotifier.KnockoutModels.Train {
             this.updateCommon(line, platform, offRoute, nextStanox, expectedAtNextStanox, tiplocs);
         }
 
-        private updateCommon(line: string, platform: string, offRoute: bool, nextStanox: string, expectedAtNextStanox: string, tiplocs: IStationTiploc[]) {
+        private updateCommon(line: string, platform: string, offRoute: boolean, nextStanox: string, expectedAtNextStanox: string, tiplocs: IStationTiploc[]) {
             this.line(this.line() || line);
             this.platform(this.platform() || platform);
 

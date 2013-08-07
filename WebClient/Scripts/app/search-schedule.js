@@ -1,4 +1,12 @@
-﻿var titleModel = new TitleViewModel();
+﻿/// <reference path="searchModels.ts" />
+/// <reference path="../typings/knockout.mapping/knockout.mapping.d.ts" />
+/// <reference path="webApi.ts" />
+/// <reference path="global.ts" />
+/// <reference path="ViewModels.ts" />
+/// <reference path="../typings/moment/moment.d.ts" />
+/// <reference path="../typings/knockout/knockout.d.ts" />
+/// <reference path="../typings/jquery/jquery.d.ts" />
+var titleModel = new TitleViewModel();
 
 var startEndSearchResults = ko.observableArray();
 var callingAtSearchResults = ko.observableArray();
@@ -94,7 +102,7 @@ function getCallingBetween(from, to, convertFromCrs, fromDate, toDate) {
         var startDate = fromDate;
         var endDate = toDate;
     } else {
-        var startDate = moment(fromDate).subtract({ hours: TrainNotifier.DateTimeFormats.timeFrameHours });
+        var startDate = moment(fromDate).subtract({ minutes: TrainNotifier.DateTimeFormats.timeFrameMinutesBefore });
         var endDate = moment(fromDate).add({ hours: TrainNotifier.DateTimeFormats.timeFrameHours });
     }
     if (endDate.isBefore(startDate)) {
@@ -127,7 +135,7 @@ function getDestination(crs, convertFromCrs, fromDate, toDate) {
         var startDate = fromDate;
         var endDate = toDate;
     } else {
-        var startDate = moment(fromDate).subtract({ hours: TrainNotifier.DateTimeFormats.timeFrameHours });
+        var startDate = moment(fromDate).subtract({ minutes: TrainNotifier.DateTimeFormats.timeFrameMinutesBefore });
         var endDate = moment(fromDate).add({ hours: TrainNotifier.DateTimeFormats.timeFrameHours });
     }
     if (endDate.isBefore(startDate)) {
@@ -157,7 +165,7 @@ function getOrigin(crs, convertFromCrs, fromDate, toDate) {
         var startDate = fromDate;
         var endDate = toDate;
     } else {
-        var startDate = moment(fromDate).subtract({ hours: TrainNotifier.DateTimeFormats.timeFrameHours });
+        var startDate = moment(fromDate).subtract({ minutes: TrainNotifier.DateTimeFormats.timeFrameMinutesBefore });
         var endDate = moment(fromDate).add({ hours: TrainNotifier.DateTimeFormats.timeFrameHours });
     }
     if (endDate.isBefore(startDate)) {
@@ -186,7 +194,7 @@ function getStation(crs, convertFromCrs, fromDate, toDate) {
         var startDate = fromDate;
         var endDate = toDate;
     } else {
-        var startDate = moment(fromDate).subtract({ hours: TrainNotifier.DateTimeFormats.timeFrameHours });
+        var startDate = moment(fromDate).subtract({ minutes: TrainNotifier.DateTimeFormats.timeFrameMinutesBefore });
         var endDate = moment(fromDate).add({ hours: TrainNotifier.DateTimeFormats.timeFrameHours });
     }
     if (endDate.isBefore(startDate)) {

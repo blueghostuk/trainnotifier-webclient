@@ -437,14 +437,14 @@ interface IAtocCode {
 }
 
 interface ISchedule {
-    Monday: bool;
-    Tuesday: bool;
-    Wednesday: bool;
-    Thursday: bool;
-    Friday: bool;
-    Saturday: bool;
-    Sunday: bool;
-    BankHoliday: bool;
+    Monday: boolean;
+    Tuesday: boolean;
+    Wednesday: boolean;
+    Thursday: boolean;
+    Friday: boolean;
+    Saturday: boolean;
+    Sunday: boolean;
+    BankHoliday: boolean;
 }
 
 interface IScheduleStatus {
@@ -473,9 +473,9 @@ interface IRunningScheduleTrainStop {
     EngineeringAllowance?: number;
     PathingAllowance?: number;
     PerformanceAllowance?: number;
-    Origin: bool;
-    Intermediate: bool;
-    Terminate: bool;
+    Origin: boolean;
+    Intermediate: boolean;
+    Terminate: boolean;
 
     Estimate?: IEstimate;
 }

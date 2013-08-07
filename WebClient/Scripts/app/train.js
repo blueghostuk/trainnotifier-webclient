@@ -1,4 +1,14 @@
-﻿var currentLocation = new TrainNotifier.KnockoutModels.CurrentLocation();
+﻿/// <reference path="trainModels.ts" />
+/// <reference path="webApi.ts" />
+/// <reference path="websockets.ts" />
+/// <reference path="../typings/leaflet/leaflet.d.ts" />
+/// <reference path="global.ts" />
+/// <reference path="ViewModels.ts" />
+/// <reference path="../typings/knockout.mapping/knockout.mapping.d.ts" />
+/// <reference path="../typings/knockout/knockout.d.ts" />
+/// <reference path="../typings/jquery/jquery.d.ts" />
+/// <reference path="../typings/moment/moment.d.ts" />
+var currentLocation = new TrainNotifier.KnockoutModels.CurrentLocation();
 var titleModel = new TrainNotifier.KnockoutModels.Train.TrainTitleViewModel();
 
 var _lastTrainData;
@@ -131,6 +141,7 @@ function loadScheduleMap() {
 }
 
 function loadLiveMap() {
+    // need co-ords of stops from schedule
 }
 
 function connectWs() {
@@ -149,16 +160,20 @@ function connectWs() {
             }
             $(".tooltip-dynamic").tooltip();
 
+            // scroll to last table element
             $('html, body').animate({
                 scrollTop: $("#tableView tr:last").offset().top
             }, 1000);
 
+            // highlight last element and last update
             $("#tableView tr:last, #lastUpdate").animate({
+                // essentially bootstrap success class
                 backgroundColor: '#dff0d8'
             }, {
                 duration: 30000,
                 complete: function () {
                     $(this).animate({
+                        // white
                         backgroundColor: '#FFF'
                     });
                 }

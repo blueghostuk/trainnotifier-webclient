@@ -1,4 +1,10 @@
-﻿var data = ko.observableArray();
+﻿/// <reference path="webApi.ts" />
+/// <reference path="global.ts" />
+/// <reference path="ViewModels.ts" />
+/// <reference path="../typings/jquery/jquery.d.ts" />
+/// <reference path="../typings/knockout/knockout.d.ts" />
+/// <reference path="../typings/moment/moment.d.ts" />
+var data = ko.observableArray();
 var title = {
     ts: ko.observable(),
     next: ko.observable(65)

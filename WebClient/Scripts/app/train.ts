@@ -300,7 +300,7 @@ function getById(id) {
     });
 }
 
-function getTrainData(trainUid, date, subscribe: bool) {
+function getTrainData(trainUid, date, subscribe: boolean) {
     $(".progress").show();
     $("#no-results-row").hide();
     sendWsCommand("unsubtrain:");

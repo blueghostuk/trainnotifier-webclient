@@ -1,5 +1,8 @@
 var TrainNotifier;
 (function (TrainNotifier) {
+    /// <reference path="global.ts" />
+    /// <reference path="../typings/knockout/knockout.d.ts" />
+    /// <reference path="../typings/moment/moment.d.ts" />
     (function (KnockoutModels) {
         var CurrentLocation = (function () {
             function CurrentLocation(location) {

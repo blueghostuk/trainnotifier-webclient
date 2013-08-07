@@ -1,3 +1,6 @@
+/// <reference path="global.ts" />
+/// <reference path="../typings/jquery/jquery.d.ts" />
+/// <reference path="../typings/moment/moment.d.ts" />
 var TrainNotifier;
 (function (TrainNotifier) {
     var WebApi = (function () {
@@ -122,7 +125,6 @@ var TrainNotifier;
 (function (TrainNotifier) {
     (function (EventType) {
         EventType[EventType["Departure"] = 1] = "Departure";
-
         EventType[EventType["Arrival"] = 2] = "Arrival";
     })(TrainNotifier.EventType || (TrainNotifier.EventType = {}));
     var EventType = TrainNotifier.EventType;
@@ -132,7 +134,6 @@ var TrainNotifier;
         TrainState[TrainState["Cancelled"] = 2] = "Cancelled";
         TrainState[TrainState["ActivatedAndCancelled"] = 3] = "ActivatedAndCancelled";
         TrainState[TrainState["Terminated"] = 4] = "Terminated";
-
         TrainState[TrainState["ActivatedAndTerminated"] = 5] = "ActivatedAndTerminated";
     })(TrainNotifier.TrainState || (TrainNotifier.TrainState = {}));
     var TrainState = TrainNotifier.TrainState;
@@ -140,7 +141,6 @@ var TrainNotifier;
     (function (AssociationType) {
         AssociationType[AssociationType["NextTrain"] = 0] = "NextTrain";
         AssociationType[AssociationType["Join"] = 1] = "Join";
-
         AssociationType[AssociationType["Split"] = 2] = "Split";
     })(TrainNotifier.AssociationType || (TrainNotifier.AssociationType = {}));
     var AssociationType = TrainNotifier.AssociationType;
@@ -148,7 +148,6 @@ var TrainNotifier;
     (function (AssociationDateType) {
         AssociationDateType[AssociationDateType["SameDay"] = 0] = "SameDay";
         AssociationDateType[AssociationDateType["PreviousDay"] = 1] = "PreviousDay";
-
         AssociationDateType[AssociationDateType["NextDay"] = 2] = "NextDay";
     })(TrainNotifier.AssociationDateType || (TrainNotifier.AssociationDateType = {}));
     var AssociationDateType = TrainNotifier.AssociationDateType;

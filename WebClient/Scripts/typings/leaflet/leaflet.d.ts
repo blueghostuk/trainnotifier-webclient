@@ -1538,7 +1538,7 @@ declare module L {
         /**
           * Function that will be used to decide whether to show a feature or not.
           */
-        filter?: (featureData: any, layer: ILayer) => bool;
+        filter?: (featureData: any, layer: ILayer) => boolean;
 
     }
 
@@ -1642,7 +1642,7 @@ declare module L {
           */
         constructor(southWest: LatLng, northEast: LatLng);
 
-        constructor(latlngs : LatLng[]);
+        constructor(latlngs: LatLng[]);
 
         /**
           * Extends the bounds to contain the given point or bounds.
@@ -2442,7 +2442,7 @@ declare module L {
         /**
           * Returns a function which always returns false.
           */
-        static falseFn(): () => bool;
+        static falseFn(): () => boolean;
 
         /**
           * Returns the number num rounded to digits decimals.
@@ -2928,7 +2928,7 @@ declare module L {
       * This method restores the L global variale to the original value it had
       * before Leaflet inclusion, and returns the real Leaflet namespace.
       */
-    export var noConflict: () => L;
+    //export var noConflict: () => L;
 
     /**
       * A constant that represents the Leaflet version in use.

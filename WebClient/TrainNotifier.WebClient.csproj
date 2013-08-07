@@ -168,17 +168,17 @@
     <Content Include="Scripts\knockout-2.3.0.js" />
     <Content Include="Scripts\moment.js" />
     <Content Include="Scripts\moment.min.js" />
-    <Content Include="Scripts\typings\bootstrap\bootstrap.d.ts" />
     <TypeScriptCompile Include="Scripts\app\webApi.ts" />
+    <Content Include="Scripts\typings\bootstrap\bootstrap.d.ts" />
     <Content Include="Scripts\typings\jquery\jquery.d.ts" />
     <Content Include="Scripts\typings\knockout.mapping\knockout.mapping.d.ts" />
     <Content Include="Scripts\typings\knockout\knockout.amd.d.ts" />
     <Content Include="Scripts\typings\knockout\knockout.d.ts" />
     <Content Include="Scripts\typings\leaflet\leaflet.d.ts" />
-    <Content Include="Scripts\typings\moment\moment.d.ts" />
     <Content Include="Scripts\app\webApi.js">
       <DependentUpon>webApi.ts</DependentUpon>
     </Content>
+    <Content Include="Scripts\typings\moment\moment.d.ts" />
     <Content Include="_ppmTable.cshtml" />
     <Content Include="_ppmOperator.cshtml" />
     <None Include="Properties\PublishProfiles\azure.pubxml" />

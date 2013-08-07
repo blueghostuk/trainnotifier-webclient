@@ -1,5 +1,11 @@
-﻿var TrainNotifier;
+﻿/// <reference path="../typings/moment/moment.d.ts" />
+/// <reference path="../typings/jquery/jquery.d.ts" />
+/// <reference path="../typings/bootstrap/bootstrap.d.ts" />
+/// <reference path="webApi.ts" />
+// Module
+var TrainNotifier;
 (function (TrainNotifier) {
+    // Class
     var Common = (function () {
         function Common() {
         }
@@ -64,6 +70,7 @@
         DateTimeFormats.dateUrlFormat = "YYYY/MM/DD";
         DateTimeFormats.dateTitleFormat = "ddd Do MMM YYYY";
         DateTimeFormats.dateTimeApiFormat = "YYYY-MM-DDTHH:mm";
+        DateTimeFormats.timeFrameMinutesBefore = 15;
         DateTimeFormats.timeFrameHours = 1;
         return DateTimeFormats;
     })();
@@ -72,7 +79,7 @@
     var CommonStrings = (function () {
         function CommonStrings() {
         }
-        CommonStrings.halfMinute = "�";
+        CommonStrings.halfMinute = "½";
         return CommonStrings;
     })();
     TrainNotifier.CommonStrings = CommonStrings;

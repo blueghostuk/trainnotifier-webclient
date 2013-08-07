@@ -1,4 +1,11 @@
-﻿var fromLocal = ko.observableArray();
+﻿/// <reference path="global.ts" />
+/// <reference path="../moment-datepicker.d.ts" />
+/// <reference path="../typings/moment/moment.d.ts" />
+/// <reference path="../typings/bootstrap/bootstrap.d.ts" />
+/// <reference path="../typings/knockout/knockout.d.ts" />
+/// <reference path="../typings/jquery/jquery.d.ts" />
+/// <reference path="webApi.ts" />
+var fromLocal = ko.observableArray();
 var toLocal = ko.observableArray();
 var atLocal = ko.observableArray();
 
@@ -34,8 +41,10 @@ $(function () {
                     var bCrs = b.substr(b.lastIndexOf('(') + 1, 3);
 
                     if (self.query.toLowerCase() == aCrs.toLowerCase())
-                        return -1; else if (self.query.toLowerCase() == bCrs.toLowerCase())
-                        return 1; else
+                        return -1;
+else if (self.query.toLowerCase() == bCrs.toLowerCase())
+                        return 1;
+else
                         return aCrs > bCrs ? 1 : -1;
                 });
             }
