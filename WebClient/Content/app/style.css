@@ -10,6 +10,14 @@
     display: none;
 }
 
+.simple {
+    display: normal;
+}
+
+.advanced{
+    display: none;
+}
+
 .centerText {
     text-align: center !important;
 }

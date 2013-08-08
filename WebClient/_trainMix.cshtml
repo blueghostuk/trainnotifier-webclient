@@ -2,34 +2,36 @@
     <thead>
         <tr>
             <th>&nbsp;</th>
-            <th class="phone-hide" colspan="3">Arrive</th>
+            <th class="phone-hide advanced" colspan="3">Arrive</th>
+            <th class="phone-hide simple" colspan="2">Arrive</th>
             <th class="phone-show" colspan="2">Arrive</th>
-            <th class="phone-hide" colspan="3">Depart</th>
+            <th class="phone-hide advanced" colspan="3">Depart</th>
+            <th class="phone-hide simple" colspan="2">Depart</th>
             <th class="phone-show" colspan="2">Depart</th>
             <th class="phone-hide" colspan="3"></th>
             <th class="phone-show"></th>
         </tr>
         <tr>
             <th>Location</th>
-            <th class="phone-hide">WTT</th>
+            <th class="phone-hide advanced">WTT</th>
             <th>Expected</th>
             <th>Actual</th>
-            <th class="phone-hide">WTT</th>
+            <th class="phone-hide advanced">WTT</th>
             <th>Expected</th>
             <th>Actual</th>
             <th class="phone-hide">Line</th>
-            <th>Platform</th>
+            <th>Pfm</th>
             <th class="phone-hide">Allowances</th>
         </tr>
     </thead>
     <tbody data-bind="foreach: $data">
         <tr data-bind="css: { pass: pass }">
             <td class="col station stationName"><a class="pointer" data-bind="text: location, click: function (d, e) { listStation(d.locationStanox); }"></a></td>
-            <td class="col arrive wtt phone-hide" data-bind="text: pass ? 'Pass' : wttArrive, attr: { colspan: pass ? 3 : 0 }"></td>
-            <td class="col arrive pass phone-show" colspan="2" data-bind="visible: pass">Pass</td>
-            <td class="col arrive public" data-bind="text: publicArrive, visible: !pass"></td>
-            <td class="col arrive actual" data-bind="text: actualArrival, visible: !pass"></td>
-            <td class="col depart wtt phone-hide" data-bind="text: pass ? pass : wttDepart"></td>
+            <td class="col arrive wtt phone-hide advanced" data-bind="text: pass ? 'Pass' : wttArrive"></td>
+            <td class="col arrive public advanced" data-bind="text: pass ? '' : publicArrive"></td>
+            <td class="col arrive public simple" data-bind="text: pass ? 'Pass' : publicArrive"></td>
+            <td class="col arrive actual" data-bind="text: pass ? '' : actualArrival"></td>
+            <td class="col depart wtt phone-hide advanced" data-bind="text: pass ? pass : wttDepart"></td>
             <td class="col depart pass phone-show" data-bind="text: pass ? pass : wttDepart, visible: pass"></td>
             <td class="col depart public phone-hide" data-bind="text: publicDepart"></td>
             <td class="col depart public phone-show" data-bind="text: publicDepart, visible: !pass"></td>

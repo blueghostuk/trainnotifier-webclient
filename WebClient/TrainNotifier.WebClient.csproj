@@ -164,12 +164,14 @@
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
+    <Content Include="Scripts\jquery.cookie.js" />
     <Content Include="Scripts\knockout-2.3.0.debug.js" />
     <Content Include="Scripts\knockout-2.3.0.js" />
     <Content Include="Scripts\moment.js" />
     <Content Include="Scripts\moment.min.js" />
     <TypeScriptCompile Include="Scripts\app\webApi.ts" />
     <Content Include="Scripts\typings\bootstrap\bootstrap.d.ts" />
+    <Content Include="Scripts\typings\jquery.cookie\jquery.cookie.d.ts" />
     <Content Include="Scripts\typings\jquery\jquery.d.ts" />
     <Content Include="Scripts\typings\knockout.mapping\knockout.mapping.d.ts" />
     <Content Include="Scripts\typings\knockout\knockout.amd.d.ts" />

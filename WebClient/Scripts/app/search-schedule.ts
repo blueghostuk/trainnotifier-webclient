@@ -1,3 +1,4 @@
+/// <reference path="../typings/jquery.cookie/jquery.cookie.d.ts" />
 /// <reference path="searchModels.ts" />
 /// <reference path="../typings/knockout.mapping/knockout.mapping.d.ts" />
 /// <reference path="webApi.ts" />
@@ -66,7 +67,18 @@ var thisPage: IPage = {
 TrainNotifier.Common.page = thisPage;
 var webApi: IWebApi;
 
+var advancedMode = false;
+
 $(function () {
+    $("#advancedSwitch").click(function (e) {
+        e.preventDefault();
+        advancedSwitch();
+    });
+    var advancedCookie = $.cookie("advancedMode");
+    if (advancedCookie && advancedCookie == "on") {
+        advancedMode = true;
+        advancedSwitch(false);
+    }
     webApi = new TrainNotifier.WebApi();
     TrainNotifier.Common.webApi = webApi;
 
@@ -79,6 +91,27 @@ $(function () {
 
     loadHashCommand();
 });
+
+function advancedSwitch(change: boolean = true) {
+    if (change) {
+        advancedMode = !advancedMode;
+        $.cookie("advancedMode", advancedMode ? "on" : "off", { expires: 365 });
+    }
+    if (advancedMode) {
+        $("#advancedSwitch").html("Simple Mode");
+        $("#resultsBlock").addClass("span10");
+        $("#resultsBlock").removeClass("span11");
+
+        $(".simple").hide();
+        $(".advanced").show();
+    } else {
+        $("#advancedSwitch").html("Advanced Mode");
+        $("#resultsBlock").addClass("span11");
+        $("#resultsBlock").removeClass("span10");
+        $(".simple").show();
+        $(".advanced").hide();
+    }
+}
 
 function getDateTime(args): Moment {
     if (args.length > 0) {

@@ -14,13 +14,14 @@
     <li class="active"><a>Train</a></li>
     <li><a href="~/ppm">PPM</a></li>
     <li><a href="~/live">Live Feed</a></li>
+    <li><a href="#" id="advancedSwitch" title="Switch Mode">Advanced Mode</a></li>
 }
 @section TopMenuAdditional{
     <a class="btn btn-top btn-disconnect" id="btn_Subscribe" onclick="subTrain();" disabled="disabled" title="Get Live Updates for this train"><i class="icon-refresh"></i></a>
     <a class="btn btn-top" id="status" onclick="tryConnect(); return false;">Connection Status</a>
 }
 <div class="row-fluid">
-    <div class="span2 phone-hide">
+    <div class="span2 phone-hide advanced" style="display: none;">
         <div class="well sidebar-nav">
             <ul class="nav nav-list" id="commandOptions">
                 <li class="nav-header">Commands</li>
@@ -41,7 +42,7 @@
         </div>
     </div>
     <!--/span2-->
-    <div class="span10">
+    <div class="span10" id="resultsBlock">
         <div class="row alert alert-info hide" id="no-results-row">
             <strong>No Results Found</strong>
         </div>
