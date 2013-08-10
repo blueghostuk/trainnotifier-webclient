@@ -380,6 +380,9 @@ else
                     this.from = ko.observable();
                     this.to = ko.observable();
                     this.runs = ko.observable();
+                    this.powerType = ko.observable();
+                    this.categoryType = ko.observable();
+                    this.speed = ko.observable();
                     this.cancellation = ko.observable();
                     this.changeOfOrigin = ko.observable();
                     this.reinstatement = ko.observable();
@@ -418,6 +421,32 @@ else
                         this.from(moment(train.Schedule.StartDate).format(TrainNotifier.DateTimeFormats.dateFormat));
                         this.to(moment(train.Schedule.EndDate).format(TrainNotifier.DateTimeFormats.dateFormat));
                         this.runs(this.getDaysRun(train.Schedule.Schedule));
+
+                        if (train.Schedule.PowerTypeId) {
+                            var power = TrainNotifier.PowerTypeLookup.getPowerType(train.Schedule.PowerTypeId);
+                            if (power) {
+                                this.powerType(power.Description);
+                            } else {
+                                this.powerType(null);
+                            }
+                        } else {
+                            this.powerType(null);
+                        }
+                        if (train.Schedule.CategoryTypeId) {
+                            var category = TrainNotifier.CategoryTypeLookup.getCategoryType(train.Schedule.CategoryTypeId);
+                            if (category) {
+                                this.categoryType(category.Description);
+                            } else {
+                                this.categoryType(null);
+                            }
+                        } else {
+                            this.categoryType(null);
+                        }
+                        if (train.Schedule.Speed && train.Schedule.Speed > 0) {
+                            this.speed(train.Schedule.Speed);
+                        } else {
+                            this.speed(null);
+                        }
                     } else {
                         this.trainUid(null);
                         this.toc(null);
@@ -425,6 +454,10 @@ else
                         this.from(null);
                         this.to(null);
                         this.runs(null);
+
+                        this.powerType(null);
+                        this.categoryType(null);
+                        this.speed(null);
                     }
                     if (!this.scheduleDate() && date) {
                         this.scheduleDate(moment(date).format(TrainNotifier.DateTimeFormats.dateQueryFormat));

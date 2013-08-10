@@ -406,10 +406,13 @@ module TrainNotifier.KnockoutModels.Train {
         public to: KnockoutObservable<string> = ko.observable();
         public runs: KnockoutObservable<string> = ko.observable();
 
+        public powerType: KnockoutObservable<string> = ko.observable();
+        public categoryType: KnockoutObservable<string> = ko.observable();
+        public speed: KnockoutObservable<number> = ko.observable();
+
         public cancellation: KnockoutObservable<string> = ko.observable();
         public changeOfOrigin: KnockoutObservable<string> = ko.observable();
         public reinstatement: KnockoutObservable<string> = ko.observable();
-
 
         public otherSites: ExternalSiteBase[] = [];
 
@@ -450,6 +453,32 @@ module TrainNotifier.KnockoutModels.Train {
                 this.from(moment(train.Schedule.StartDate).format(DateTimeFormats.dateFormat));
                 this.to(moment(train.Schedule.EndDate).format(DateTimeFormats.dateFormat));
                 this.runs(this.getDaysRun(train.Schedule.Schedule));
+
+                if (train.Schedule.PowerTypeId) {
+                    var power = PowerTypeLookup.getPowerType(train.Schedule.PowerTypeId);
+                    if (power) {
+                        this.powerType(power.Description);
+                    } else {
+                        this.powerType(null);
+                    }
+                } else {
+                    this.powerType(null);
+                }
+                if (train.Schedule.CategoryTypeId) {
+                    var category = CategoryTypeLookup.getCategoryType(train.Schedule.CategoryTypeId);
+                    if (category) {
+                        this.categoryType(category.Description);
+                    } else {
+                        this.categoryType(null);
+                    }
+                } else {
+                    this.categoryType(null);
+                }
+                if (train.Schedule.Speed && train.Schedule.Speed > 0) {
+                    this.speed(train.Schedule.Speed);
+                } else {
+                    this.speed(null);
+                }
             } else {
                 this.trainUid(null);
                 this.toc(null);
@@ -457,6 +486,10 @@ module TrainNotifier.KnockoutModels.Train {
                 this.from(null);
                 this.to(null);
                 this.runs(null);
+
+                this.powerType(null);
+                this.categoryType(null);
+                this.speed(null);
             }
             if (!this.scheduleDate() && date) {
                 this.scheduleDate(moment(date).format(DateTimeFormats.dateQueryFormat));

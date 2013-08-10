@@ -4,11 +4,17 @@
     <li><span class="label label-info">Id:</span> <span data-bind="text: id"></span></li>
     <li><span class="label label-info">Live Id:</span> <a onclick="subTrain();" data-bind="text: liveId, attr: { href: '#sub/' + trainUid() + '/' + scheduleDate() }" title="View Live Updates for this train" style="display: inline;"></a></li>
     <li><span class="label label-info">Activated:</span> <span data-bind="text: activated"></span></li>
-    <li data-bind="visible: cancellation" style="display: none;"><span class="label label-important">Cancelled:</span> <span data-bind="text: cancellation"></span></li>
-    <li data-bind="visible: changeOfOrigin" style="display: none;"><span class="label label-important">Will start from:</span> <span data-bind="text: changeOfOrigin"></span></li>
-    <li data-bind="visible: reinstatement" style="display: none;"><span class="label label-important">Reinstated:</span> <span data-bind="text: reinstatement"></span></li>
+    <li data-bind="visible: cancellation" style="display: none;"><span class="label label-important">Cancelled:</span> <span data-bind="    text: cancellation"></span></li>
+    <li data-bind="visible: changeOfOrigin" style="display: none;"><span class="label label-important">Will start from:</span> <span data-bind="    text: changeOfOrigin"></span></li>
+    <li data-bind="visible: reinstatement" style="display: none;"><span class="label label-important">Reinstated:</span> <span data-bind="    text: reinstatement"></span></li>
 </ul>
 <h4>Schedule Details</h4>
+<hr data-bind="visible: powerType || categoryType || speed" />
+<ul>
+    <li data-bind="visible: powerType"><span class="label label-info">Power Type:</span> <span data-bind="text: powerType"></span></li>
+    <li data-bind="visible: categoryType"><span class="label label-info">Category Type:</span> <span data-bind="    text: categoryType"></span></li>
+    <li data-bind="visible: speed"><span class="label label-info">Speed:</span> <span data-bind="text: speed"></span>mph</li>
+</ul>
 <hr />
 <ul>
     <li><span class="label label-info">Operator:</span> <span data-bind="text: toc" style="display: inline;"></span></li>
