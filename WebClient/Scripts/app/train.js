@@ -121,6 +121,11 @@ $(function () {
     } catch (err) {
         console.error("Failed to connect to web socket server: {0}", err);
     }
+
+    window.onhashchange = function () {
+        thisPage.setCommand(document.location.hash.substr(1));
+        thisPage.parseCommand();
+    };
 });
 
 function advancedSwitch(change) {
@@ -468,7 +473,7 @@ function getAssociations(date) {
             return;
 
         for (var i = 0; i < associations.length; i++) {
-            currentTrainDetails.associations.push(new TrainNotifier.KnockoutModels.Train.TrainAssociation(associations[i], _lastTrainData.Movement.Schedule.TrainUid, _lastTrainData.Movement.Actual.OriginDepartTimestamp));
+            currentTrainDetails.associations.push(new TrainNotifier.KnockoutModels.Train.TrainAssociation(associations[i], _lastTrainData.Movement.Schedule.TrainUid, queryDate));
         }
     });
 }

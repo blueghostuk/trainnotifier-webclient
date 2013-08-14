@@ -448,7 +448,11 @@ module TrainNotifier.KnockoutModels.Train {
                     this.id(train.Schedule.Headcode);
                 }
                 this.trainUid(train.Schedule.TrainUid);
-                this.toc(train.Schedule.AtocCode.Name);
+                if (train.Schedule.AtocCode) {
+                    this.toc(train.Schedule.AtocCode.Name);
+                } else {
+                    this.toc("Unknown");
+                }
                 this.type(this.getStpIndicator(train.Schedule.STPIndicatorId));
                 this.from(moment(train.Schedule.StartDate).format(DateTimeFormats.dateFormat));
                 this.to(moment(train.Schedule.EndDate).format(DateTimeFormats.dateFormat));
