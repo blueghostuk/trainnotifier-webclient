@@ -49,11 +49,10 @@ var thisPage = {
             case 'to':
                 getDestination(args[0], convertFromCrs, getDateTime(args.slice(1, 3)), (args.length <= 3 ? null : getDateTime(args.slice(1, 2).concat(args.slice(3, 5)))));
                 return true;
-                break;
+
             case 'at':
                 getStation(args[0], convertFromCrs, getDateTime(args.slice(1, 3)), (args.length <= 3 ? null : getDateTime(args.slice(1, 2).concat(args.slice(3, 5)))));
                 return true;
-                break;
         }
 
         return false;
@@ -132,12 +131,14 @@ function preAjax() {
 
 function getCallingBetween(from, to, convertFromCrs, fromDate, toDate) {
     $("#commandOptions > li#from-to" + (convertFromCrs ? "-crs" : "")).addClass("active");
+    var startDate;
+    var endDate;
     if (toDate) {
-        var startDate = fromDate;
-        var endDate = toDate;
+        startDate = fromDate;
+        endDate = toDate;
     } else {
-        var startDate = moment(fromDate).subtract({ minutes: TrainNotifier.DateTimeFormats.timeFrameMinutesBefore });
-        var endDate = moment(fromDate).add({ hours: TrainNotifier.DateTimeFormats.timeFrameHours });
+        startDate = moment(fromDate).subtract({ minutes: TrainNotifier.DateTimeFormats.timeFrameMinutesBefore });
+        endDate = moment(fromDate).add({ hours: TrainNotifier.DateTimeFormats.timeFrameHours });
     }
     if (endDate.isBefore(startDate)) {
         endDate.add('days', 1);
@@ -165,12 +166,14 @@ function getCallingBetween(from, to, convertFromCrs, fromDate, toDate) {
 
 function getDestination(crs, convertFromCrs, fromDate, toDate) {
     $("#commandOptions > li#to" + (convertFromCrs ? "-crs" : "")).addClass("active");
+    var startDate;
+    var endDate;
     if (toDate) {
-        var startDate = fromDate;
-        var endDate = toDate;
+        startDate = fromDate;
+        endDate = toDate;
     } else {
-        var startDate = moment(fromDate).subtract({ minutes: TrainNotifier.DateTimeFormats.timeFrameMinutesBefore });
-        var endDate = moment(fromDate).add({ hours: TrainNotifier.DateTimeFormats.timeFrameHours });
+        startDate = moment(fromDate).subtract({ minutes: TrainNotifier.DateTimeFormats.timeFrameMinutesBefore });
+        endDate = moment(fromDate).add({ hours: TrainNotifier.DateTimeFormats.timeFrameHours });
     }
     if (endDate.isBefore(startDate)) {
         endDate.add('days', 1);
@@ -195,12 +198,14 @@ function getDestination(crs, convertFromCrs, fromDate, toDate) {
 
 function getOrigin(crs, convertFromCrs, fromDate, toDate) {
     $("#commandOptions > li#from" + (convertFromCrs ? "-crs" : "")).addClass("active");
+    var startDate;
+    var endDate;
     if (toDate) {
-        var startDate = fromDate;
-        var endDate = toDate;
+        startDate = fromDate;
+        endDate = toDate;
     } else {
-        var startDate = moment(fromDate).subtract({ minutes: TrainNotifier.DateTimeFormats.timeFrameMinutesBefore });
-        var endDate = moment(fromDate).add({ hours: TrainNotifier.DateTimeFormats.timeFrameHours });
+        startDate = moment(fromDate).subtract({ minutes: TrainNotifier.DateTimeFormats.timeFrameMinutesBefore });
+        endDate = moment(fromDate).add({ hours: TrainNotifier.DateTimeFormats.timeFrameHours });
     }
     if (endDate.isBefore(startDate)) {
         endDate.add('days', 1);
@@ -224,12 +229,14 @@ function getOrigin(crs, convertFromCrs, fromDate, toDate) {
 
 function getStation(crs, convertFromCrs, fromDate, toDate) {
     $("#commandOptions > li#at" + (convertFromCrs ? "-crs" : "")).addClass("active");
+    var startDate;
+    var endDate;
     if (toDate) {
-        var startDate = fromDate;
-        var endDate = toDate;
+        startDate = fromDate;
+        endDate = toDate;
     } else {
-        var startDate = moment(fromDate).subtract({ minutes: TrainNotifier.DateTimeFormats.timeFrameMinutesBefore });
-        var endDate = moment(fromDate).add({ hours: TrainNotifier.DateTimeFormats.timeFrameHours });
+        startDate = moment(fromDate).subtract({ minutes: TrainNotifier.DateTimeFormats.timeFrameMinutesBefore });
+        endDate = moment(fromDate).add({ hours: TrainNotifier.DateTimeFormats.timeFrameHours });
     }
     if (endDate.isBefore(startDate)) {
         endDate.add('days', 1);
