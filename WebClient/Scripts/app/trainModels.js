@@ -1,4 +1,4 @@
-var __extends = this.__extends || function (d, b) {
+﻿var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
     __.prototype = b.prototype;
@@ -21,7 +21,9 @@ var TrainNotifier;
                     this.publicDepart = null;
                     this.line = null;
                     this.platform = null;
-                    this.allowances = null;
+                    this.eAllowance = null;
+                    this.paAllowance = null;
+                    this.peAllowance = null;
                     this.pass = null;
                     this.associateLiveStop = ko.observable();
                     var tiploc = TrainNotifier.StationTiploc.findStationTiploc(scheduleStop.TiplocStanoxCode, tiplocs);
@@ -46,18 +48,14 @@ var TrainNotifier;
 
                     this.line = scheduleStop.Line;
                     this.platform = scheduleStop.Platform;
-                    var allowances = [];
                     if (scheduleStop.EngineeringAllowance) {
-                        allowances.push("Eng.:" + scheduleStop.EngineeringAllowance);
+                        this.eAllowance = "[" + scheduleStop.EngineeringAllowance + "]";
                     }
                     if (scheduleStop.PathingAllowance) {
-                        allowances.push("Path:" + scheduleStop.EngineeringAllowance);
+                        this.paAllowance = "(" + scheduleStop.PathingAllowance + ")";
                     }
                     if (scheduleStop.PerformanceAllowance) {
-                        allowances.push("Perf.:" + scheduleStop.PerformanceAllowance);
-                    }
-                    if (allowances.length > 0) {
-                        this.allowances = allowances.join(", ");
+                        this.peAllowance = "<" + scheduleStop.PerformanceAllowance + ">";
                     }
 
                     var self = this;

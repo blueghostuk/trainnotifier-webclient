@@ -27,7 +27,11 @@
             <td class="col depart public" data-bind="text: pass ? '' : publicDepart, visible: !pass"></td>
             <td class="col extra line" data-bind="text: line"></td>
             <td class="col extra platform" data-bind="text: platform"></td>
-            <td class="col extra allowances phone-hide" data-bind="text: allowances"></td>
+            <td class="col extra allowances phone-hide">
+                <span data-bind="text: eAllowance, visible: eAllowance" title="Engineering Allowance"></span>
+                <span data-bind="text: paAllowance, visible: paAllowance" title="Pathing Allowance"></span>
+                <span data-bind="text: peAllowance, visible: peAllowance" title="Performance Allowance"></span>
+            </td>
         </tr>
     </tbody>
 </table>

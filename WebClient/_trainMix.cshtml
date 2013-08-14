@@ -38,7 +38,11 @@
             <td class="col depart actual" data-bind="text: actualDeparture"></td>
             <td class="col extra line phone-hide" data-bind="text: line"></td>
             <td class="col extra platform" data-bind="text: platform"></td>
-            <td class="col extra allowances phone-hide" data-bind="text: allowances"></td>
+            <td class="col extra allowances phone-hide">
+                <span data-bind="text: eAllowance, visible: eAllowance" title="Engineering Allowance"></span>
+                <span data-bind="text: paAllowance, visible: paAllowance" title="Pathing Allowance"></span>
+                <span data-bind="text: peAllowance, visible: peAllowance" title="Performance Allowance"></span>
+            </td>
         </tr>
     </tbody>
 </table>

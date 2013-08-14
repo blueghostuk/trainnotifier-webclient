@@ -21,8 +21,11 @@ module TrainNotifier.KnockoutModels.Train {
         public departureDelayCss: KnockoutComputed<string>;
         public line: string = null;
         public platform: string = null;
-        public allowances: string = null;
+        public eAllowance: string = null;
+        public paAllowance: string = null;
+        public peAllowance: string = null;
         public pass: string = null;
+
         private associateLiveStop: KnockoutObservable<LiveStopBase> = ko.observable();
 
         constructor(scheduleStop: IRunningScheduleTrainStop, tiplocs: IStationTiploc[]) {
@@ -48,19 +51,15 @@ module TrainNotifier.KnockoutModels.Train {
 
             this.line = scheduleStop.Line;
             this.platform = scheduleStop.Platform;
-            var allowances = [];
             if (scheduleStop.EngineeringAllowance) {
-                allowances.push("Eng.:" + scheduleStop.EngineeringAllowance);
+                this.eAllowance = "[" + scheduleStop.EngineeringAllowance + "]"
             }
             if (scheduleStop.PathingAllowance) {
-                allowances.push("Path:" + scheduleStop.EngineeringAllowance);
+                this.paAllowance = "(" + scheduleStop.PathingAllowance + ")";
             }
             if (scheduleStop.PerformanceAllowance) {
-                allowances.push("Perf.:" + scheduleStop.PerformanceAllowance);
-            }
-            if (allowances.length > 0) {
-                this.allowances = allowances.join(", ");
-            }
+                this.peAllowance = "<" + scheduleStop.PerformanceAllowance + ">";
+            }            
 
             var self = this;
             this.actualArrival = ko.computed(function () {
