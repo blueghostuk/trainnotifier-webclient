@@ -12,7 +12,7 @@
     <tbody data-bind="foreach: $data">
         <tr data-bind="css: { info: offRoute, pass: berthUpdate }">
             <td class="col station stationName">
-                <a class="pointer" data-bind="text: location, click: function (d, e) { listStation(d.locationStanox); }"></a>
+                <a class="pointer" data-bind="text: location, click: function (d, e) { showStation(d.locationStanox); }"></a>
             </td>
             <td class="col arrive actual">
                 <span data-bind="text: actualArrival, attr: { title: plannedArrival }" class="tooltip-dynamic"></span>&nbsp;

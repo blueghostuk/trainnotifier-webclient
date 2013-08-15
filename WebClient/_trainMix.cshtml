@@ -26,7 +26,7 @@
     </thead>
     <tbody data-bind="foreach: $data">
         <tr data-bind="css: { pass: pass }">
-            <td class="col station stationName"><a class="pointer" data-bind="text: location, click: function (d, e) { listStation(d.locationStanox); }"></a></td>
+            <td class="col station stationName"><a class="pointer" data-bind="text: location, click: function (d, e) { showStation(d.locationStanox); }"></a></td>
             <td class="col arrive wtt phone-hide advanced" data-bind="text: pass ? 'Pass' : wttArrive"></td>
             <td class="col arrive public advanced" data-bind="text: pass ? '' : publicArrive"></td>
             <td class="col arrive public simple" data-bind="text: pass ? 'Pass' : publicArrive"></td>

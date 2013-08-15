@@ -1,4 +1,4 @@
-﻿/// <reference path="../typings/jquery.cookie/jquery.cookie.d.ts" />
+/// <reference path="../typings/jquery.cookie/jquery.cookie.d.ts" />
 /// <reference path="trainModels.ts" />
 /// <reference path="webApi.ts" />
 /// <reference path="websockets.ts" />
@@ -70,23 +70,43 @@ var thisPage = {
     },
     setStatus: function (status) {
         $("#status").html(status);
+    },
+    advancedMode: false,
+    advancedSwitch: function (change) {
+        if (typeof change === "undefined") { change = true; }
+        if (change) {
+            this.advancedMode = !this.advancedMode;
+            $.cookie("advancedMode", this.advancedMode ? "on" : "off", { expires: 365 });
+        }
+        if (this.advancedMode) {
+            $("#advancedSwitch").html("Simple Mode");
+            $("#resultsBlock").addClass("span10");
+            $("#resultsBlock").removeClass("span11");
+
+            $(".simple").hide();
+            $(".advanced").show();
+        } else {
+            $("#advancedSwitch").html("Advanced Mode");
+            $("#resultsBlock").addClass("span11");
+            $("#resultsBlock").removeClass("span10");
+            $(".simple").show();
+            $(".advanced").hide();
+        }
     }
 };
 
 TrainNotifier.Common.page = thisPage;
 var webApi;
 
-var advancedMode = false;
-
 $(function () {
     $("#advancedSwitch").click(function (e) {
         e.preventDefault();
-        advancedSwitch();
+        thisPage.advancedSwitch();
     });
     var advancedCookie = $.cookie("advancedMode");
     if (advancedCookie && advancedCookie == "on") {
-        advancedMode = true;
-        advancedSwitch(false);
+        thisPage.advancedMode = true;
+        thisPage.advancedSwitch(false);
     }
     webApi = new TrainNotifier.WebApi();
     TrainNotifier.Common.webApi = webApi;
@@ -117,7 +137,7 @@ $(function () {
     });
 
     try  {
-        connectWs();
+        connectToWebsocketServer();
     } catch (err) {
         console.error("Failed to connect to web socket server: {0}", err);
     }
@@ -127,28 +147,6 @@ $(function () {
         thisPage.parseCommand();
     };
 });
-
-function advancedSwitch(change) {
-    if (typeof change === "undefined") { change = true; }
-    if (change) {
-        advancedMode = !advancedMode;
-        $.cookie("advancedMode", advancedMode ? "on" : "off", { expires: 365 });
-    }
-    if (advancedMode) {
-        $("#advancedSwitch").html("Simple Mode");
-        $("#resultsBlock").addClass("span10");
-        $("#resultsBlock").removeClass("span11");
-
-        $(".simple").hide();
-        $(".advanced").show();
-    } else {
-        $("#advancedSwitch").html("Advanced Mode");
-        $("#resultsBlock").addClass("span11");
-        $("#resultsBlock").removeClass("span10");
-        $(".simple").show();
-        $(".advanced").hide();
-    }
-}
 
 function reset() {
     scheduleStops.removeAll();
@@ -183,7 +181,7 @@ function loadLiveMap() {
     // need co-ords of stops from schedule
 }
 
-function connectWs() {
+function connectToWebsocketServer() {
     webSockets.connect();
 
     webSockets.onMessageHandler(function (msg) {
@@ -478,7 +476,7 @@ function getAssociations(date) {
     });
 }
 
-function listStation(stanox) {
+function showStation(stanox) {
     var tiploc = TrainNotifier.StationTiploc.findStationTiploc(stanox, currentTiplocs);
     if (tiploc) {
         currentLocation.update(tiploc);

@@ -4,12 +4,14 @@
 /// <reference path="webApi.ts" />
 
 interface IPage {
-    setCommand?(command: string);
-    parseCommand?(): boolean;
-    getCommand?(): string;
+    setCommand? (command: string);
+    parseCommand? (): boolean;
+    getCommand? (): string;
     setStatus? (status: string);
     wsOpenCommand? ();
     pageTitle?: string;
+    advancedMode?: boolean;
+    advancedSwitch? (change?: boolean);
 }
 
 interface IServerSettings {
