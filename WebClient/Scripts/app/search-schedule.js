@@ -1,4 +1,4 @@
-/// <reference path="../typings/jquery.cookie/jquery.cookie.d.ts" />
+﻿/// <reference path="../typings/jquery.cookie/jquery.cookie.d.ts" />
 /// <reference path="searchModels.ts" />
 /// <reference path="../typings/knockout.mapping/knockout.mapping.d.ts" />
 /// <reference path="webApi.ts" />
@@ -90,12 +90,12 @@ var webApi;
 $(function () {
     $("#advancedSwitch").click(function (e) {
         e.preventDefault();
-        this.advancedSwitch();
+        thisPage.advancedSwitch();
     });
     var advancedCookie = $.cookie("advancedMode");
     if (advancedCookie && advancedCookie == "on") {
-        this.advancedMode = true;
-        this.advancedSwitch(false);
+        thisPage.advancedMode = true;
+        thisPage.advancedSwitch(false);
     }
     webApi = new TrainNotifier.WebApi();
     TrainNotifier.Common.webApi = webApi;

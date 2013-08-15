@@ -1,4 +1,4 @@
-/// <reference path="global.ts" />
+﻿/// <reference path="global.ts" />
 /// <reference path="../moment-datepicker.d.ts" />
 /// <reference path="../typings/moment/moment.d.ts" />
 /// <reference path="../typings/bootstrap/bootstrap.d.ts" />

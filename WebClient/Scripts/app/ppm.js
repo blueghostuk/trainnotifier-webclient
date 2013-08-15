@@ -1,4 +1,4 @@
-/// <reference path="webApi.ts" />
+﻿/// <reference path="webApi.ts" />
 /// <reference path="global.ts" />
 /// <reference path="ViewModels.ts" />
 /// <reference path="../typings/jquery/jquery.d.ts" />

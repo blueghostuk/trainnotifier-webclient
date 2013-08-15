@@ -24,13 +24,20 @@ var currentTiplocs: IStationTiploc[] = [];
 var map: L.Map;
 var webSockets = new TrainNotifier.WebSockets();
 
+var settingHash = false;
+
 var thisPage: IPage = {
-    setCommand: function (command) {
+    setCommand: function (command: string) {
+        var original = command;
+        var advancedMode = command.indexOf('/advanced');
+        if (advancedMode != -1) {
+            command = command.substring(0, advancedMode);
+        }
         $("#global-search-box").val(command);
-        document.location.hash = command;
+        document.location.hash = original;
     },
     parseCommand: function () {
-        var cmdString = this.getCommand();
+        var cmdString : string = this.getCommand();
         var idx = cmdString.indexOf("/");
         if (idx == -1)
             return false;
@@ -47,6 +54,10 @@ var thisPage: IPage = {
         } else if (cmd == "get" || cmd == "sub") {
             var subscribe = cmd == "sub";
             var hashIdx = args.indexOf('/');
+            var advancedMode = args.indexOf('/advanced');
+            if (advancedMode != -1) {
+                args = args.substring(0, advancedMode);
+            }
             var date = "";
             var trainUid = "";
             if (hashIdx === -1) {
@@ -63,7 +74,7 @@ var thisPage: IPage = {
 
         return false;
     },
-    getCommand: function () {
+    getCommand: function () : string {
         return $("#global-search-box").val();
     },
     wsOpenCommand: function () {
@@ -85,12 +96,20 @@ var thisPage: IPage = {
 
             $(".simple").hide();
             $(".advanced").show();
+            if (document.location.hash.indexOf("/advanced") == -1) {
+                settingHash = true;
+                document.location.hash = document.location.hash + "/advanced";
+            }
         } else {
             $("#advancedSwitch").html("Advanced Mode");
             $("#resultsBlock").addClass("span11");
             $("#resultsBlock").removeClass("span10");
             $(".simple").show();
             $(".advanced").hide();
+            if (document.location.hash.indexOf("/advanced") != -1) {
+                settingHash = true;
+                document.location.hash = document.location.hash.replace("/advanced", "");
+            }
         }
     }
 };
@@ -104,7 +123,7 @@ $(function () {
         thisPage.advancedSwitch();
     });
     var advancedCookie = $.cookie("advancedMode");
-    if (advancedCookie && advancedCookie == "on") {
+    if ((advancedCookie && advancedCookie == "on") || document.location.hash.indexOf("/advanced") != -1) {
         thisPage.advancedMode = true;
         thisPage.advancedSwitch(false);
     }
@@ -143,8 +162,11 @@ $(function () {
     }
 
     window.onhashchange = function () {
-        thisPage.setCommand(document.location.hash.substr(1));
-        thisPage.parseCommand();
+        if (!settingHash) {
+            thisPage.setCommand(document.location.hash.substr(1));
+            thisPage.parseCommand();
+        }
+        settingHash = false;
     };
 });
 
