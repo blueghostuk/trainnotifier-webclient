@@ -569,7 +569,11 @@ else
                 }
                 RealtimeTrainsExternalSite.prototype.updateFromTrainMovement = function (train, date) {
                     if (train && train.Schedule && (train.Actual || date)) {
-                        this.url(RealtimeTrainsExternalSite.baseUrl + train.Schedule.TrainUid + "/" + moment(train.Actual ? train.Actual.OriginDepartTimestamp : date).format("YYYY/MM/DD"));
+                        var uid = train.Schedule.TrainUid;
+                        if (uid.length == 5) {
+                            uid = "O" + uid;
+                        }
+                        this.url(RealtimeTrainsExternalSite.baseUrl + uid + "/" + moment(train.Actual ? train.Actual.OriginDepartTimestamp : date).format("YYYY/MM/DD"));
                     } else {
                         this.url(null);
                     }

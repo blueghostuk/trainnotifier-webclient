@@ -21,7 +21,7 @@ namespace TrainNotifier.WebClient.App_Start
                 null,
                 new RouteValueDictionary
                 {
-                    {"uid", "[A-Z0-9 ]{6}"},
+                    {"uid", "[A-Z0-9 ]{5,6}"},
                     {"year", "[0-9]{4}"},
                     {"month", "[0-9]{2}"},
                     {"day", "[0-9]{2}"}
