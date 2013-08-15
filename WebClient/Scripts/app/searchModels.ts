@@ -339,7 +339,7 @@ module TrainNotifier.KnockoutModels.Search {
                 var originStop = trainMovement.Schedule.Stops[0];
                 var originTiploc = TrainNotifier.StationTiploc.findStationTiploc(originStop.TiplocStanoxCode, tiplocs);
                 if (originTiploc) {
-                    this.fromStation = fromTiploc.Description.toLowerCase();
+                    this.fromStation = originTiploc.Description.toLowerCase();
                 }
 
                 var destStop = trainMovement.Schedule.Stops[trainMovement.Schedule.Stops.length - 1];
