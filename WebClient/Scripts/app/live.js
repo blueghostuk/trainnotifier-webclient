@@ -1,4 +1,4 @@
-﻿/// <reference path="../typings/moment/moment.d.ts" />
+/// <reference path="../typings/moment/moment.d.ts" />
 /// <reference path="ViewModels.ts" />
 /// <reference path="websockets.ts" />
 /// <reference path="../typings/knockout/knockout.d.ts" />

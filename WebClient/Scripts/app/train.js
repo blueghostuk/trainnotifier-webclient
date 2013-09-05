@@ -1,4 +1,4 @@
-﻿/// <reference path="../typings/jquery.cookie/jquery.cookie.d.ts" />
+/// <reference path="../typings/jquery.cookie/jquery.cookie.d.ts" />
 /// <reference path="trainModels.ts" />
 /// <reference path="webApi.ts" />
 /// <reference path="websockets.ts" />

@@ -174,7 +174,6 @@
     <Content Include="Scripts\typings\jquery.cookie\jquery.cookie.d.ts" />
     <Content Include="Scripts\typings\jquery\jquery.d.ts" />
     <Content Include="Scripts\typings\knockout.mapping\knockout.mapping.d.ts" />
-    <Content Include="Scripts\typings\knockout\knockout.amd.d.ts" />
     <Content Include="Scripts\typings\knockout\knockout.d.ts" />
     <Content Include="Scripts\typings\leaflet\leaflet.d.ts" />
     <Content Include="Scripts\app\webApi.js">

@@ -1,4 +1,4 @@
-﻿/// <reference path="../typings/jquery.cookie/jquery.cookie.d.ts" />
+/// <reference path="../typings/jquery.cookie/jquery.cookie.d.ts" />
 /// <reference path="searchModels.ts" />
 /// <reference path="../typings/knockout.mapping/knockout.mapping.d.ts" />
 /// <reference path="webApi.ts" />
