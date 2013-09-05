@@ -101,6 +101,12 @@ module TrainNotifier.KnockoutModels.Search {
                 }
             }
         }
+
+        public static matchesTiploc(stanoxCode: string, tiplocs: IStationTiploc[]) {
+            return tiplocs.some(function (at) {
+                return at.Stanox == stanoxCode;
+            });
+        }
     }
 
     export class StartingAtTrainMovement extends TrainMovement {
@@ -236,6 +242,10 @@ module TrainNotifier.KnockoutModels.Search {
         constructor(trainMovement: ITrainMovementResult, atTiploc: IStationTiploc, tiplocs: IStationTiploc[], queryStartDate: Moment) {
             super(trainMovement, tiplocs, queryStartDate);
 
+            var atTiplocs = tiplocs.filter(function (t) {
+                return t.CRS == atTiploc.CRS;
+            });
+
             var atStop: IRunningScheduleTrainStop;
             if (trainMovement.Schedule.Stops.length > 0) {
                 var fromStop = trainMovement.Schedule.Stops[0];
@@ -252,7 +262,7 @@ module TrainNotifier.KnockoutModels.Search {
                 // find the at stop
                 var atStops: IRunningScheduleTrainStop[] = trainMovement.Schedule.Stops.filter(
                     function (element: IRunningScheduleTrainStop) {
-                        return element.TiplocStanoxCode == atTiploc.Stanox;
+                        return TrainMovement.matchesTiploc(element.TiplocStanoxCode, atTiplocs);
                     });
 
                 if (atStops.length > 0) {
@@ -290,7 +300,8 @@ module TrainNotifier.KnockoutModels.Search {
                 // find the at stops
                 var atActualStops: IRunningTrainActualStop[] = trainMovement.Actual.Stops.filter(
                     function (element: IRunningTrainActualStop) {
-                        return element.TiplocStanoxCode == atTiploc.Stanox && element.ScheduleStopNumber == atStop.StopNumber;
+                        return TrainMovement.matchesTiploc(element.TiplocStanoxCode, atTiplocs) &&
+                            element.ScheduleStopNumber == atStop.StopNumber;
                     });
 
                 if (atActualStops.length > 0) {
@@ -351,15 +362,21 @@ module TrainNotifier.KnockoutModels.Search {
 
             var fromTiplocStop: IRunningScheduleTrainStop;
             var toTiplocStop: IRunningScheduleTrainStop;
+            var fromTiplocs = tiplocs.filter(function (t) {
+                return t.CRS == fromTiploc.CRS;
+            });
+            var toTiplocs = tiplocs.filter(function (t) {
+                return t.CRS == toTiploc.CRS;
+            });
             if (trainMovement.Schedule && trainMovement.Schedule.Stops) {
                 var fromStops = trainMovement.Schedule.Stops.filter(function (currentStop: IRunningScheduleTrainStop) {
-                    return currentStop.TiplocStanoxCode == fromTiploc.Stanox;
+                    return TrainMovement.matchesTiploc(currentStop.TiplocStanoxCode, fromTiplocs);
                 });
                 if (fromStops.length > 0) {
                     fromTiplocStop = fromStops[0];
                 }
                 var toStops = trainMovement.Schedule.Stops.filter(function (currentStop: IRunningScheduleTrainStop) {
-                    return currentStop.TiplocStanoxCode == toTiploc.Stanox;
+                    return TrainMovement.matchesTiploc(currentStop.TiplocStanoxCode, toTiplocs);
                 });
                 if (toStops.length > 0) {
                     toTiplocStop = toStops[0];
@@ -375,7 +392,7 @@ module TrainNotifier.KnockoutModels.Search {
                     // find the from stops
                     var fromDepartStops: IRunningTrainActualStop[] = trainMovement.Actual.Stops.filter(
                         function (element: IRunningTrainActualStop) {
-                            return element.TiplocStanoxCode == fromTiplocStop.TiplocStanoxCode
+                            return TrainMovement.matchesTiploc(element.TiplocStanoxCode, fromTiplocs)
                                 && element.ScheduleStopNumber == fromTiplocStop.StopNumber
                                 && element.EventType == EventType.Departure;
                         });
@@ -399,7 +416,7 @@ module TrainNotifier.KnockoutModels.Search {
                     // find the from stops
                     var toArriveStops: IRunningTrainActualStop[] = trainMovement.Actual.Stops.filter(
                         function (element: IRunningTrainActualStop) {
-                            return element.TiplocStanoxCode == toTiplocStop.TiplocStanoxCode
+                            return TrainMovement.matchesTiploc(element.TiplocStanoxCode, toTiplocs)
                                 && element.ScheduleStopNumber == toTiplocStop.StopNumber
                                 && element.EventType == EventType.Arrival;
                         });

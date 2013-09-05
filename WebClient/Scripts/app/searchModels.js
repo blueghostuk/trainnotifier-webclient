@@ -100,6 +100,11 @@ var TrainNotifier;
                         }
                     }
                 }
+                TrainMovement.matchesTiploc = function (stanoxCode, tiplocs) {
+                    return tiplocs.some(function (at) {
+                        return at.Stanox == stanoxCode;
+                    });
+                };
                 return TrainMovement;
             })();
             Search.TrainMovement = TrainMovement;
@@ -219,6 +224,10 @@ var TrainNotifier;
                     this.atActualArrival = "";
                     this.pass = false;
 
+                    var atTiplocs = tiplocs.filter(function (t) {
+                        return t.CRS == atTiploc.CRS;
+                    });
+
                     var atStop;
                     if (trainMovement.Schedule.Stops.length > 0) {
                         var fromStop = trainMovement.Schedule.Stops[0];
@@ -234,7 +243,7 @@ var TrainNotifier;
 
                         // find the at stop
                         var atStops = trainMovement.Schedule.Stops.filter(function (element) {
-                            return element.TiplocStanoxCode == atTiploc.Stanox;
+                            return TrainMovement.matchesTiploc(element.TiplocStanoxCode, atTiplocs);
                         });
 
                         if (atStops.length > 0) {
@@ -271,7 +280,7 @@ var TrainNotifier;
                     if (trainMovement.Actual && trainMovement.Actual.Stops.length > 0 && atStop) {
                         // find the at stops
                         var atActualStops = trainMovement.Actual.Stops.filter(function (element) {
-                            return element.TiplocStanoxCode == atTiploc.Stanox && element.ScheduleStopNumber == atStop.StopNumber;
+                            return TrainMovement.matchesTiploc(element.TiplocStanoxCode, atTiplocs) && element.ScheduleStopNumber == atStop.StopNumber;
                         });
 
                         if (atActualStops.length > 0) {
@@ -331,15 +340,21 @@ var TrainNotifier;
 
                     var fromTiplocStop;
                     var toTiplocStop;
+                    var fromTiplocs = tiplocs.filter(function (t) {
+                        return t.CRS == fromTiploc.CRS;
+                    });
+                    var toTiplocs = tiplocs.filter(function (t) {
+                        return t.CRS == toTiploc.CRS;
+                    });
                     if (trainMovement.Schedule && trainMovement.Schedule.Stops) {
                         var fromStops = trainMovement.Schedule.Stops.filter(function (currentStop) {
-                            return currentStop.TiplocStanoxCode == fromTiploc.Stanox;
+                            return TrainMovement.matchesTiploc(currentStop.TiplocStanoxCode, fromTiplocs);
                         });
                         if (fromStops.length > 0) {
                             fromTiplocStop = fromStops[0];
                         }
                         var toStops = trainMovement.Schedule.Stops.filter(function (currentStop) {
-                            return currentStop.TiplocStanoxCode == toTiploc.Stanox;
+                            return TrainMovement.matchesTiploc(currentStop.TiplocStanoxCode, toTiplocs);
                         });
                         if (toStops.length > 0) {
                             toTiplocStop = toStops[0];
@@ -355,7 +370,7 @@ var TrainNotifier;
                         if (trainMovement.Actual && trainMovement.Actual.Stops.length > 0) {
                             // find the from stops
                             var fromDepartStops = trainMovement.Actual.Stops.filter(function (element) {
-                                return element.TiplocStanoxCode == fromTiplocStop.TiplocStanoxCode && element.ScheduleStopNumber == fromTiplocStop.StopNumber && element.EventType == TrainNotifier.EventType.Departure;
+                                return TrainMovement.matchesTiploc(element.TiplocStanoxCode, fromTiplocs) && element.ScheduleStopNumber == fromTiplocStop.StopNumber && element.EventType == TrainNotifier.EventType.Departure;
                             });
 
                             if (fromDepartStops.length > 0) {
@@ -377,7 +392,7 @@ var TrainNotifier;
                         if (trainMovement.Actual && trainMovement.Actual.Stops.length > 0) {
                             // find the from stops
                             var toArriveStops = trainMovement.Actual.Stops.filter(function (element) {
-                                return element.TiplocStanoxCode == toTiplocStop.TiplocStanoxCode && element.ScheduleStopNumber == toTiplocStop.StopNumber && element.EventType == TrainNotifier.EventType.Arrival;
+                                return TrainMovement.matchesTiploc(element.TiplocStanoxCode, toTiplocs) && element.ScheduleStopNumber == toTiplocStop.StopNumber && element.EventType == TrainNotifier.EventType.Arrival;
                             });
 
                             if (toArriveStops.length > 0) {
