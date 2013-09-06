@@ -380,6 +380,18 @@ function getTrainData(trainUid, date, subscribe) {
                     var cooTiploc = TrainNotifier.StationTiploc.findStationTiploc(coo.NewOriginStanoxCode, currentTiplocs);
                     titleModel.from(cooTiploc.Description.toLowerCase());
                     titleModel.start(moment(coo.NewDepartureTime).format(TrainNotifier.DateTimeFormats.shortTimeFormat));
+                    var matchingStops = data.Movement.Schedule.Stops.filter(function (stop) {
+                        return stop.TiplocStanoxCode == cooTiploc.Stanox;
+                    });
+                    if (matchingStops.length > 0) {
+                        var startStopNumber = matchingStops[0].StopNumber;
+                        for (var i = 0; i < scheduleStops().length; i++) {
+                            if (scheduleStops()[i].stopNumber == startStopNumber) {
+                                break;
+                            }
+                            scheduleStops()[i].cancel(true);
+                        }
+                    }
                 } else {
                     var start = data.Movement.Schedule.Stops[0];
                     var startTiploc = TrainNotifier.StationTiploc.findStationTiploc(start.TiplocStanoxCode, currentTiplocs);

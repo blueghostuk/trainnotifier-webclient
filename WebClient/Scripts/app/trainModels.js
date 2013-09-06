@@ -25,8 +25,10 @@ var TrainNotifier;
                     this.paAllowance = null;
                     this.peAllowance = null;
                     this.pass = null;
+                    this.cancel = ko.observable(false);
                     this.associateLiveStop = ko.observable();
                     var tiploc = TrainNotifier.StationTiploc.findStationTiploc(scheduleStop.TiplocStanoxCode, tiplocs);
+                    this.stopNumber = scheduleStop.StopNumber;
                     this.location = tiploc.Description.toLowerCase();
                     this.locationStanox = scheduleStop.TiplocStanoxCode;
 
