@@ -340,7 +340,7 @@ function getById(id) {
         if (data) {
             $("#commandOptions > li.active").removeClass("active");
             $("#commandOptions > li#get").addClass("active");
-            thisPage.setCommand("get/" + data.TrainUid + "/" + moment(data.SchedOriginDeparture).format(TrainNotifier.DateTimeFormats.dateUrlFormat));
+            thisPage.setCommand("get/" + data.TrainUid + "/" + moment(data.SchedOriginDeparture).format(TrainNotifier.DateTimeFormats.dateQueryFormat));
             getTrainData(data.TrainUid, moment(data.SchedOriginDeparture).format(TrainNotifier.DateTimeFormats.dateQueryFormat), false);
         } else {
             $("#no-results-row").show();
