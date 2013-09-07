@@ -84,11 +84,11 @@ platforms[2].sections[3].berth = "BN-0206";
 platforms[3].sections[0].berth = null;
 
 // 4A
-platforms[3].sections[1].berth = null;
+platforms[3].sections[1].berth = "BN-0231";
 
 // BN-0203 -> 4B -> 0231, 0471 (Tunnel)
 // 4B
-platforms[3].sections[2].berth = "BN-0231";
+platforms[3].sections[2].berth = "BN-0204";
 
 // 4C
 platforms[3].sections.push(new Section("4C", "BN-0229"));

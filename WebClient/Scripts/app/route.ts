@@ -140,16 +140,25 @@ var routeXCNorth: Array<RouteRow> =
 
 var routeWvhBhm: Array<RouteRow> =
     [
-        new RouteRow(new Berth("BN", "0259", "WVH P5"), new Berth("WO", "0098", "WVH P5")),
+        new RouteRow(new Berth("WO", "0063", "FROM XBJ"), new Berth("WO", "0024", "TO XBJ")),
+        new RouteRow(new Berth("TD", "WNLS", "FROM BBK"), new Berth("TD", "3703", "TO BBK")),
+
+        new RouteRow(Berth.empty("WVH P1"), new Berth("WO", "0082", "WVH P1")),
+        new RouteRow(new Berth("WO", "0099", "WVH P2"), new Berth("WO", "0078", "WVH P2")),
+        new RouteRow(new Berth("WO", "0097", "WVH P3"), Berth.empty("WVH P3")),
+        new RouteRow(new Berth("WO", "0105", "WVH P4"), Berth.empty("WVH P4")),
+        new RouteRow(new Berth("WO", "0098", "WVH P5"), new Berth("WO", "0098", "WVH P5")),
+
+        new RouteRow(new Berth("WO", "0259"), Berth.empty()),
         new RouteRow(new Berth("WO", "0115"), new Berth("WO", "0112")),
         new RouteRow(new Berth("WO", "0263"), new Berth("WO", "0114")),
         new RouteRow(new Berth("WO", "0275"), new Berth("WO", "0122")),
         new RouteRow(new Berth("WO", "0177"), new Berth("WO", "0276")),
 
-        new RouteRow(new Berth("WO", "0277", "CSY PX"), new Berth("BN", "0182", "CSY PX")),
+        new RouteRow(new Berth("WO", "0277", "CSY PX"), new Berth("WO", "0182", "CSY PX")),
         new RouteRow(new Berth("WO", "0183"), new Berth("WO", "0278")),
 
-        new RouteRow(new Berth("WO", "0187", "TIP PX"), new Berth("BN", "0282", "TIP PX")),
+        new RouteRow(new Berth("WO", "0187", "TIP PX"), new Berth("WO", "0282", "TIP PX")),
         new RouteRow(new Berth("BN", "0366"), new Berth("WO", "0188")),
         new RouteRow(new Berth("BN", "0489"), new Berth("WO", "0194")),
 
@@ -181,32 +190,28 @@ var routeWvhBhm: Array<RouteRow> =
 
 var webApi: IWebApi = new TrainNotifier.WebApi();
 
-var berths: Array<string> = [];
-
 var trainDetails = new TrainNotifier.KnockoutModels.Train.TrainTitleViewModel();
 
 function updateBerthContents() {
-    for (var i = 0; i < berths.length; i++) {
-        (function (berth) {
-            webApi.getBerthContents(berths[i]).done(function (data?: IBerthContents) {
-
-                var object = route.filter(function (r) {
-                    return r.down.uniqueIdentifier == berth || r.up.uniqueIdentifier == berth;
-                }).map(function (r) {
-                        return r.down.uniqueIdentifier == berth ? r.down : r.up;
-                })[0];
-
-                if (object) {
-                    if (data) {
-                        object.setTime(data.m_Item1);
-                        object.contents(data.m_Item2);
-                    } else {
-                        object.timestamp(moment().format(Berth.TsFormat));
-                        object.contents(null);
-                    }
+    for (var i = 0; i < route.length; i++) {
+        var updateData = (function (berth : Berth) {
+            webApi.getBerthContents(berth.uniqueIdentifier).done(function (data?: IBerthContents) {
+                if (data) {
+                    berth.setTime(data.m_Item1);
+                    berth.contents(data.m_Item2);
+                } else {
+                    berth.timestamp(moment().format(Berth.TsFormat));
+                    berth.contents(null);
                 }
             });
-        })(berths[i]);
+        });
+
+        if (route[i].down && route[i].down.uniqueIdentifier) {
+            updateData(route[i].down);
+        }
+        if (route[i].up && route[i].up.uniqueIdentifier) {
+            updateData(route[i].up);
+        }
     }
 }
 
@@ -233,15 +238,6 @@ function switchRoute(routeId: string) {
         default:
             route = routeXCSouth;
             break;
-    }
-    berths = [];
-    for (var i = 0; i < route.length; i++) {
-        if (route[i].down && route[i].down.uniqueIdentifier) {
-            berths.push(route[i].down.uniqueIdentifier);
-        }
-        if (route[i].up && route[i].up.uniqueIdentifier) {
-            berths.push(route[i].up.uniqueIdentifier);
-        }
     }
     routeBinding.removeAll();
     for (var i = 0; i < route.length; i++) {
