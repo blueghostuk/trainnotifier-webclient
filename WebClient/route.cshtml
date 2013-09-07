@@ -23,6 +23,7 @@
         Select Route:
         <select onchange="switchRoute($(this.options[this.selectedIndex]).data('routeid'));">
             <option data-routeid="xcs">XCity South</option>
+            <option data-routeid="xcn">XCity North</option>
             <option data-routeid="wvh">WVH-BHM</option>
         </select>
     </div>
@@ -38,10 +39,14 @@
             </thead>
             <tbody data-bind="foreach: $data">
                 <tr>
+                    <td class="comment down" data-bind="css: { label: down.label }">
+                        <span data-bind="text: down.text"></span><i class="icon-arrow-down pull-left"></i>
+                    </td>
                     <td class="berth down" data-bind="text: down.contents, attr: { title: down.timestamp }, click: function () { showTrain(down); }"></td>
-                    <td class="comment down" data-bind="text: down.text, css: { label: down.label }"></td>
                     <td class="berth up" data-bind="text: up.contents, attr: { title: up.timestamp }, click: function () { showTrain(up); }"></td>
-                    <td class="comment up" data-bind="text: up.text, css: { label: down.label }"></td>
+                    <td class="comment up" data-bind="css: { label: down.label }">
+                        <span data-bind="text: up.text"></span><i class="icon-arrow-up pull-right"></i>
+                    </td>
                 </tr>
             </tbody>
             <tfoot>

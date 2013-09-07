@@ -103,11 +103,11 @@ platforms[6].sections[2].berth = "BN-0193";
 platforms[6].sections[3].berth = "BN-0243";
 
 // -> 8A
-platforms[7].sections[0].berth = null;
+platforms[7].sections[0].berth = "BN-0149";
 // 8A
-platforms[7].sections[1].berth = "BN-0191";
+platforms[7].sections[1].berth = "BN-0167";
 // 0453 (Tunnel) 0243, 0191 -> 8B
-platforms[7].sections[2].berth = "BN-0167";
+platforms[7].sections[2].berth = "BN-0191";
 // 8B -> 0148, 0133, 0132 (XOJ)
 // 8B ->
 platforms[7].sections[3].berth = null;
@@ -133,15 +133,13 @@ platforms[9].sections[2].berth = "BN-0215";
 platforms[9].sections[3].berth = null;
 
 // -> 11A
-platforms[10].sections[0].berth = "BN-0151";
-// BN-0151 (PROOF HJ)
+platforms[10].sections[0].berth = "BN-0148";
 // 11A
-platforms[10].sections[1].berth = "BN-0183";
+platforms[10].sections[1].berth = "BN-0161";
 // 11B
 platforms[10].sections[2].berth = "BN-0214";
-// 11B ->  BN-0452 (Tunnel) 
 // 11B ->
-platforms[10].sections[3].berth = null;
+platforms[10].sections[3].berth = "BN-X214";
 
 // -> 12A -> 0133. 0123 (XOJ)
 platforms[11].sections[0].berth = "BN-0151";
