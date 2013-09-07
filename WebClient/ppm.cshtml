@@ -12,6 +12,7 @@
     <li><a href="~/">Home</a></li>
     <li><a href="~/search-schedule">Search Schedule</a></li>
     <li><a href="~/train">Train</a></li>
+    <li><a href="~/route">Routes</a></li>
     <li class="active"><a>PPM</a></li>
     <li><a href="~/live">Live Feed</a></li>
 }
@@ -27,6 +28,7 @@
             </ul>
         </div>
     </div>
+    <!--/span2-->
     <div class="span10">
         <div class="alert alert-info" id="title">
             Last Updated: <span data-bind="text: ts"></span> <span style="font-size:small;" title="Approx. update time">(Update in &asymp; <span data-bind="text: next"></span>s)</span>
@@ -34,6 +36,6 @@
         @RenderPage("_ppmTable.cshtml")
         @RenderPage("_ppmOperator.cshtml")
     </div>
-    <!--/span12-->
+    <!--/span10-->
 </div>
 <!--/row-fluid-->

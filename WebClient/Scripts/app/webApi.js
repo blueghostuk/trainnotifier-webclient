@@ -116,6 +116,10 @@ var TrainNotifier;
         WebApi.prototype.getPPMSectors = function () {
             return $.getJSON(this.getBaseUrl() + "/PPM/");
         };
+
+        WebApi.prototype.getBerthContents = function (berth) {
+            return $.getJSON(this.getBaseUrl() + "/Td/Berth/" + berth);
+        };
         return WebApi;
     })();
     TrainNotifier.WebApi = WebApi;

@@ -25,6 +25,8 @@ interface IWebApi {
     getPPMSectors(): JQueryPromise<any>;
     getPPMOperatorRegions(operatorCode: string): JQueryPromise<any>;
     getPPMData(operatorCode: string, name: string): JQueryPromise<any>;
+
+    getBerthContents(berth: string): JQueryPromise<any>;
 }
 
 interface IEstimate {
@@ -152,6 +154,10 @@ module TrainNotifier {
         getPPMSectors() {
             return $.getJSON(this.getBaseUrl() + "/PPM/");
         }
+
+        getBerthContents(berth: string) {
+            return $.getJSON(this.getBaseUrl() + "/Td/Berth/" + berth);
+        }
     }
 }
 
@@ -167,6 +173,13 @@ interface IStationTiploc extends ITiploc {
     StationName: string;
     Lat: number;
     Lon: number;
+}
+
+interface IBerthContents {
+    // timestamp
+    m_Item1: string;
+    // contents
+    m_Item2: string;
 }
 
 module TrainNotifier {

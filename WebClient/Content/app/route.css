@@ -1,0 +1,56 @@
+﻿body {
+    padding-top: 60px;
+    padding-bottom: 40px;
+}
+
+table {
+    border-collapse: separate;
+    border-spacing: 5px;
+}
+
+td {
+    padding: 5px;
+    margin-bottom: 5px;
+    width: 4em;
+    text-align: center;
+}
+
+    td.berth {
+        border: solid 1px black;
+        text-decoration: underline;
+        cursor: pointer;
+    }
+
+        td.berth.down {
+            border-bottom-style: dashed;
+        }
+
+        td.berth.up {
+            border-top-style: dashed;
+        }
+
+    td.comment {
+        font-size: small;
+        font-style: italic;
+        text-align: left;
+    }
+
+        td.comment.label {
+            font-weight: bold;
+        }
+
+div#title {
+    margin-top: 5px;
+    font-size: large;
+}
+
+    div#title span.xxl {
+        font-weight: bold;
+        font-size: xx-large;
+        margin-left: 5px;
+    }
+
+    div#title span.xl {
+        font-weight: bold;
+        font-size: x-large;
+    }

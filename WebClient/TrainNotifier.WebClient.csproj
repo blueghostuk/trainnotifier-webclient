@@ -94,6 +94,7 @@
     <Content Include="Content\app\index.css" />
     <Content Include="Content\app\live.css" />
     <Content Include="Content\app\ppm.css" />
+    <Content Include="Content\app\route.css" />
     <Content Include="Content\app\search-schedule.css" />
     <Content Include="Content\app\train.css" />
     <Content Include="Content\bootstrap-responsive.css" />
@@ -139,6 +140,10 @@
       <DependentUpon>ppm.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="Scripts\app\search-schedule.ts" />
+    <TypeScriptCompile Include="Scripts\app\route.ts" />
+    <Content Include="Scripts\app\route.js">
+      <DependentUpon>route.ts</DependentUpon>
+    </Content>
     <Content Include="Scripts\app\search-schedule.js">
       <DependentUpon>search-schedule.ts</DependentUpon>
     </Content>
@@ -161,6 +166,7 @@
     </Content>
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="route.cshtml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
@@ -305,16 +311,19 @@
     <TypeScriptTarget>ES5</TypeScriptTarget>
     <TypeScriptIncludeComments>true</TypeScriptIncludeComments>
     <TypeScriptSourceMap>false</TypeScriptSourceMap>
+	<TypeScriptModuleKind>commonjs</TypeScriptModuleKind>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Release'">
     <TypeScriptTarget>ES5</TypeScriptTarget>
     <TypeScriptIncludeComments>false</TypeScriptIncludeComments>
     <TypeScriptSourceMap>false</TypeScriptSourceMap>
+	<TypeScriptModuleKind>commonjs</TypeScriptModuleKind>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Azure'">
     <TypeScriptTarget>ES5</TypeScriptTarget>
     <TypeScriptIncludeComments>false</TypeScriptIncludeComments>
     <TypeScriptSourceMap>false</TypeScriptSourceMap>
+	<TypeScriptModuleKind>commonjs</TypeScriptModuleKind>
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" />
 </Project>
