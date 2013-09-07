@@ -239,7 +239,7 @@ function connectToWebsocketServer() {
             });
         } else if (data.Command == "subtrainupdate-berth") {
             var berthSteps = data.Response;
-            for (var i = 0; i < stops.length; i++) {
+            for (var i = 0; i < berthSteps.length; i++) {
                 liveStops.push(new TrainNotifier.KnockoutModels.Train.BerthLiveStop(berthSteps[i]));
             }
         }
