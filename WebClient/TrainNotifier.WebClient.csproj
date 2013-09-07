@@ -96,6 +96,7 @@
     <Content Include="Content\app\ppm.css" />
     <Content Include="Content\app\route.css" />
     <Content Include="Content\app\search-schedule.css" />
+    <Content Include="Content\app\station.css" />
     <Content Include="Content\app\train.css" />
     <Content Include="Content\bootstrap-responsive.css" />
     <Content Include="Content\bootstrap-responsive.min.css" />
@@ -149,6 +150,10 @@
     </Content>
     <Content Include="Scripts\app\searchModels.js">
       <DependentUpon>searchModels.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="Scripts\app\station.ts" />
+    <Content Include="Scripts\app\station.js">
+      <DependentUpon>station.ts</DependentUpon>
     </Content>
     <Content Include="Scripts\app\train.js">
       <DependentUpon>train.ts</DependentUpon>
@@ -226,6 +231,7 @@
   <ItemGroup>
     <Content Include="search-schedule.cshtml" />
     <Content Include="Scripts\jquery-1.10.2.min.map" />
+    <Content Include="station.cshtml" />
     <None Include="Web.Azure.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -311,19 +317,19 @@
     <TypeScriptTarget>ES5</TypeScriptTarget>
     <TypeScriptIncludeComments>true</TypeScriptIncludeComments>
     <TypeScriptSourceMap>false</TypeScriptSourceMap>
-	<TypeScriptModuleKind>commonjs</TypeScriptModuleKind>
+    <TypeScriptModuleKind>commonjs</TypeScriptModuleKind>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Release'">
     <TypeScriptTarget>ES5</TypeScriptTarget>
     <TypeScriptIncludeComments>false</TypeScriptIncludeComments>
     <TypeScriptSourceMap>false</TypeScriptSourceMap>
-	<TypeScriptModuleKind>commonjs</TypeScriptModuleKind>
+    <TypeScriptModuleKind>commonjs</TypeScriptModuleKind>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Azure'">
     <TypeScriptTarget>ES5</TypeScriptTarget>
     <TypeScriptIncludeComments>false</TypeScriptIncludeComments>
     <TypeScriptSourceMap>false</TypeScriptSourceMap>
-	<TypeScriptModuleKind>commonjs</TypeScriptModuleKind>
+    <TypeScriptModuleKind>commonjs</TypeScriptModuleKind>
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" />
 </Project>

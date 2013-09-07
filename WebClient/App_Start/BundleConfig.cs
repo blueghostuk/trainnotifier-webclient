@@ -58,6 +58,11 @@ namespace TrainNotifier.WebClient
             bundles.Add(new StyleBundle("~/bundles/css/route").Include(
                 "~/Content/app/route.css"));
 
+            bundles.Add(new ScriptBundle("~/bundles/js/station").Include(
+                "~/Scripts/app/station.js"));
+            bundles.Add(new StyleBundle("~/bundles/css/station").Include(
+                "~/Content/app/station.css"));
+
             bundles.Add(new ScriptBundle("~/bundles/js/search-schedule").Include(
                 "~/Scripts/app/search-schedule.js"));
             bundles.Add(new StyleBundle("~/bundles/css/search-schedule").Include(

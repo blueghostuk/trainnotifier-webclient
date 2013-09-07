@@ -83,3 +83,17 @@ div#title {
         display: block !important;
     }
 }
+
+.text-warning {
+    margin-left: 40px;
+    color: red;
+    font-size: small;
+    font-style: italic;
+}
+
+.text-info {
+    margin-left: 40px;
+    color: green;
+    font-size: small;
+    font-style: italic;
+}

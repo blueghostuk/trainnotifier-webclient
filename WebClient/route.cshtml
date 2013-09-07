@@ -13,6 +13,7 @@
     <li><a href="~/search-schedule">Search Schedule</a></li>
     <li><a href="~/train">Train</a></li>
     <li class="active"><a>Routes</a></li>
+    <li><a href="~/station">Stations</a></li>
     <li><a href="~/ppm">PPM</a></li>
     <li><a href="~/live">Live Feed</a></li>
     <li><a href="#" id="advancedSwitch" title="Switch Mode">Advanced Mode</a></li>
@@ -29,6 +30,12 @@
 <div class="row-fluid">
     <div class="span3">
         <table id="route">
+            <thead>
+                <tr>
+                    <td colspan="2"><i class="icon-arrow-down"></i></td>
+                    <td colspan="2"><i class="icon-arrow-up"></i></td>
+                </tr>
+            </thead>
             <tbody data-bind="foreach: $data">
                 <tr>
                     <td class="berth down" data-bind="text: down.contents, attr: { title: down.timestamp }, click: function () { showTrain(down); }"></td>
@@ -37,6 +44,12 @@
                     <td class="comment up" data-bind="text: up.text, css: { label: down.label }"></td>
                 </tr>
             </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="2"><i class="icon-arrow-down"></i></td>
+                    <td colspan="2"><i class="icon-arrow-up"></i></td>
+                </tr>
+            </tfoot>
         </table>
     </div>
     <!--/span3-->
@@ -54,3 +67,9 @@
     <!--/span9-->
 </div>
 <!--/row-fluid-->
+<div class="row">
+    <p class="text-warning">
+        The above berths are just my guestimation based on running trains. I plan to map this better at some point.<br />
+        The train links do nothing at present.
+    </p>
+</div>
