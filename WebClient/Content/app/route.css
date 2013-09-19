@@ -3,54 +3,54 @@
     padding-bottom: 40px;
 }
 
-table {
+table#route {
     border-collapse: separate;
     border-spacing: 5px;
 }
 
-td {
-    padding: 5px;
-    margin-bottom: 5px;
-    width: 4em;
-    text-align: center;
-}
-
-    td.berth {
-        border: solid 1px black;
-        text-decoration: underline;
-        cursor: pointer;
+    table#route td {
+        padding: 5px;
+        margin-bottom: 5px;
+        width: 4em;
+        text-align: center;
     }
 
-        td.berth.down {
-            border-bottom-style: dashed;
+        table#route td.berth {
+            border: solid 1px black;
+            text-decoration: underline;
+            cursor: pointer;
         }
 
-        td.berth.up {
-            border-top-style: dashed;
+            table#route td.berth.down {
+                border-bottom-style: dashed;
+            }
+
+            table#route td.berth.up {
+                border-top-style: dashed;
+            }
+
+        table#route td.comment {
+            font-size: small;
+            font-style: italic;
+            text-align: left;
+            min-width: 6em;
         }
 
-    td.comment {
-        font-size: small;
-        font-style: italic;
-        text-align: left;
-        min-width: 6em;
-    }
-
-div#title {
-    margin-top: 5px;
-    font-size: large;
+tr.info > td > a {
+    color: white !important;
 }
 
-    div#title span.xxl {
-        font-weight: bold;
-        font-size: xx-large;
-        margin-left: 5px;
-    }
+tr.error > td > a {
+    color: white !important;
+}
 
-    div#title span.xl {
-        font-weight: bold;
-        font-size: x-large;
-    }
+.starts, .terminates {
+    font-weight: normal !important;
+}
+
+.stationName {
+    font-weight: bold;
+}
 
 .text-warning {
     margin-left: 40px;

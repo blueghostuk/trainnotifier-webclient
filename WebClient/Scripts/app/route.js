@@ -11,6 +11,7 @@ var Berth = (function () {
         this.timestamp = ko.observable();
         this.text = null;
         this.label = false;
+        this.fulltimestamp = moment.utc();
         if (text) {
             this.text = text;
             this.label = true;
@@ -35,7 +36,8 @@ var Berth = (function () {
     });
 
     Berth.prototype.setTime = function (timestamp) {
-        var ts = moment.utc(timestamp).local();
+        this.fulltimestamp = moment.utc(timestamp);
+        var ts = this.fulltimestamp.local();
         if (ts && ts.isValid()) {
             this.timestamp(ts.format(Berth.TsFormat));
         }
@@ -168,7 +170,7 @@ var routeWvhBhm = [
 
 var webApi = new TrainNotifier.WebApi();
 
-var trainDetails = new TrainNotifier.KnockoutModels.Train.TrainTitleViewModel();
+var runningTrains = ko.observableArray();
 
 function updateBerthContents() {
     for (var i = 0; i < route.length; i++) {
@@ -194,10 +196,31 @@ function updateBerthContents() {
 }
 
 function showTrain(berth) {
-    if (!berth || !berth.contents()) {
-        trainDetails.id(null);
+    $(".progress").show();
+    $("#error-row").hide();
+    $("#no-results-row").hide();
+    runningTrains.removeAll();
+    if (berth && berth.contents()) {
+        //trainDetails.id(berth.contents())
+        webApi.getTrainMovementsByHeadcode(berth.contents(), berth.fulltimestamp.format(TrainNotifier.DateTimeFormats.dateQueryFormat)).done(function (data) {
+            if (data && data.Movements.length > 0) {
+                var viewModels = data.Movements.map(function (movement) {
+                    return new TrainNotifier.KnockoutModels.Routes.RouteTrainMovement(movement, data.Tiplocs, berth.fulltimestamp);
+                });
+
+                for (var i = 0; i < viewModels.length; i++) {
+                    runningTrains.push(viewModels[i]);
+                }
+            } else {
+                $("#no-results-row").show();
+            }
+        }).always(function () {
+            $(".progress").hide();
+        }).fail(function () {
+            $("#error-row").show();
+        });
     } else {
-        trainDetails.id(berth.contents());
+        $("#no-results-row").show();
     }
 }
 
@@ -226,7 +249,7 @@ function switchRoute(routeId) {
 
 $(function () {
     ko.applyBindings(routeBinding, $("#route").get(0));
-    ko.applyBindings(trainDetails, $("#title").get(0));
+    ko.applyBindings(runningTrains, $("#route-results").get(0));
 
     switchRoute('');
 

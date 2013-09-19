@@ -12,6 +12,7 @@ interface IWebApi {
     getTrainMovementByUid(uid: string, date: string): JQueryPromise<any>;
     getTrainMovementById(id: string): JQueryPromise<any>;
     getTrainMovementAssociations(uid: string, date: string): JQueryPromise<any>;
+    getTrainMovementsByHeadcode(headcode: string, date: string): JQueryPromise<any>;
 
     getTrainMovementsTerminatingAtLocation(stanox: string, startDate: string, endDate: string): JQueryPromise<any>;
     getTrainMovementsTerminatingAtStation(crsCode: string, startDate: string, endDate: string): JQueryPromise<any>;
@@ -21,6 +22,7 @@ interface IWebApi {
     getTrainMovementsCallingAtStation(crsCode: string, startDate: string, endDate: string): JQueryPromise<any>;
     getTrainMovementsBetweenLocations(fromStanox: string, toStanox: string, startDate: string, endDate: string): JQueryPromise<any>;
     getTrainMovementsBetweenStations(fromCrsCode: string, toCrsCode: string, startDate: string, endDate: string): JQueryPromise<any>;
+
 
     getPPMSectors(): JQueryPromise<any>;
     getPPMOperatorRegions(operatorCode: string): JQueryPromise<any>;
@@ -81,6 +83,10 @@ module TrainNotifier {
 
         getTrainMovementAssociations(uid: string, date: string) {
             return $.getJSON(this.getBaseUrl() + "/Association/" + uid + "/" + date);
+        }
+
+        getTrainMovementsByHeadcode(headcode: string, date: string) {
+            return $.getJSON(this.getBaseUrl() + "/TrainMovement/Headcode/" + headcode + "/" + date);
         }
 
         getTrainMovementsTerminatingAtLocation(stanox: string, startDate: string, endDate: string) {

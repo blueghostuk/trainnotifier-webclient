@@ -11,6 +11,7 @@ class Berth {
     public timestamp: KnockoutObservable<string> = ko.observable();
     public text: string = null;
     public label: boolean = false;
+    public fulltimestamp: Moment = moment.utc();
 
     constructor(private area: string, private berth: string, text?: string) {
         if (text) {
@@ -21,7 +22,7 @@ class Berth {
         }
     }
 
-    public static empty(text?:string): Berth {
+    public static empty(text?: string): Berth {
         var b = new Berth(null, null, text);
         return b;
     }
@@ -34,7 +35,8 @@ class Berth {
     }
 
     public setTime(timestamp: string) {
-        var ts = moment.utc(timestamp).local();
+        this.fulltimestamp = moment.utc(timestamp);
+        var ts = this.fulltimestamp.local();
         if (ts && ts.isValid()) {
             this.timestamp(ts.format(Berth.TsFormat));
         }
@@ -45,7 +47,7 @@ class RouteRow {
     constructor(public down: Berth, public up: Berth) { }
 }
 
-var routeXCSouth: Array<RouteRow> = 
+var routeXCSouth: Array<RouteRow> =
     [
         new RouteRow(new Berth("BN", "0215", "BHM P10"), new Berth("BN", "0167", "BHM P8")),
         new RouteRow(new Berth("BN", "0214", "BHM P11"), new Berth("BN", "0187", "BHM P9")),
@@ -120,7 +122,7 @@ var routeXCNorth: Array<RouteRow> =
         new RouteRow(new Berth("AS", "A100"), new Berth("AS", "A101")),
         new RouteRow(new Berth("AS", "0057"), Berth.empty()),
 
-        new RouteRow(new Berth("BN", "0062","AST"), new Berth("BN", "0058", "AST")),
+        new RouteRow(new Berth("BN", "0062", "AST"), new Berth("BN", "0058", "AST")),
         new RouteRow(new Berth("BN", "404"), new Berth("BN", "0068")),
 
         new RouteRow(new Berth("BN", "0075", "DUD"), Berth.empty("DUD")),
@@ -197,11 +199,11 @@ var routeWvhBhm: Array<RouteRow> =
 
 var webApi: IWebApi = new TrainNotifier.WebApi();
 
-var trainDetails = new TrainNotifier.KnockoutModels.Train.TrainTitleViewModel();
+var runningTrains: KnockoutObservableArray<TrainNotifier.KnockoutModels.Routes.RouteTrainMovement> = ko.observableArray();
 
 function updateBerthContents() {
     for (var i = 0; i < route.length; i++) {
-        var updateData = (function (berth : Berth) {
+        var updateData = (function (berth: Berth) {
             webApi.getBerthContents(berth.uniqueIdentifier).done(function (data?: IBerthContents) {
                 if (data) {
                     berth.setTime(data.m_Item1);
@@ -223,10 +225,34 @@ function updateBerthContents() {
 }
 
 function showTrain(berth: Berth) {
-    if (!berth || !berth.contents()) {
-        trainDetails.id(null);
+    $(".progress").show();
+    $("#error-row").hide();
+    $("#no-results-row").hide();
+    runningTrains.removeAll();
+    if (berth && berth.contents()) {
+        //trainDetails.id(berth.contents())
+        webApi.getTrainMovementsByHeadcode(berth.contents(), berth.fulltimestamp.format(TrainNotifier.DateTimeFormats.dateQueryFormat))
+            .done(function (data: ITrainMovementResults) {
+                if (data && data.Movements.length > 0) {
+                    var viewModels: TrainNotifier.KnockoutModels.Routes.RouteTrainMovement[] = data.Movements.map(function (movement: ITrainMovementResult) {
+                        return new TrainNotifier.KnockoutModels.Routes.RouteTrainMovement(movement, data.Tiplocs, berth.fulltimestamp);
+                    });
+
+                    for (var i = 0; i < viewModels.length; i++) {
+                        runningTrains.push(viewModels[i]);
+                    }
+                } else {
+                    $("#no-results-row").show();
+                }
+            })
+            .always(function () {
+                $(".progress").hide();
+            })
+            .fail(function () {
+                $("#error-row").show();
+            });
     } else {
-        trainDetails.id(berth.contents())
+        $("#no-results-row").show();
     }
 }
 
@@ -255,7 +281,7 @@ function switchRoute(routeId: string) {
 
 $(function () {
     ko.applyBindings(routeBinding, $("#route").get(0));
-    ko.applyBindings(trainDetails, $("#title").get(0));
+    ko.applyBindings(runningTrains, $("#route-results").get(0));
 
     switchRoute('');
 

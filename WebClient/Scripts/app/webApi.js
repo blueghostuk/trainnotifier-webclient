@@ -45,6 +45,10 @@ var TrainNotifier;
             return $.getJSON(this.getBaseUrl() + "/Association/" + uid + "/" + date);
         };
 
+        WebApi.prototype.getTrainMovementsByHeadcode = function (headcode, date) {
+            return $.getJSON(this.getBaseUrl() + "/TrainMovement/Headcode/" + headcode + "/" + date);
+        };
+
         WebApi.prototype.getTrainMovementsTerminatingAtLocation = function (stanox, startDate, endDate) {
             return $.getJSON(this.getBaseUrl() + "/TrainMovement/TerminatingAt/Location/" + stanox, {
                 startDate: startDate,
