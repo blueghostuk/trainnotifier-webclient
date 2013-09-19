@@ -98,6 +98,7 @@
     <Content Include="Content\app\search-schedule.css" />
     <Content Include="Content\app\station.css" />
     <Content Include="Content\app\train.css" />
+    <Content Include="Content\bootstrap-datepicker.css" />
     <Content Include="Content\bootstrap-responsive.css" />
     <Content Include="Content\bootstrap-responsive.min.css" />
     <Content Include="Content\bootstrap.css" />
@@ -109,7 +110,6 @@
     <Content Include="Content\images\ios\apple-touch-startup-image-1496x2048.png" />
     <Content Include="Content\images\ios\apple-touch-startup-image-1536x2008.png" />
     <Content Include="Content\images\ios\apple-touch-startup-image-640x1096.png" />
-    <Content Include="Content\moment-datepicker\datepicker.css" />
     <Content Include="Content\spacelab.css" />
     <Content Include="Content\app\style.css" />
     <Content Include="Global.asax" />
@@ -132,6 +132,10 @@
     <TypeScriptCompile Include="Scripts\app\live.ts" />
     <Content Include="Scripts\app\live.js">
       <DependentUpon>live.ts</DependentUpon>
+    </Content>
+    <TypeScriptCompile Include="Scripts\app\routeModels.ts" />
+    <Content Include="Scripts\app\routeModels.js">
+      <DependentUpon>routeModels.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="Scripts\app\websockets.ts" />
     <TypeScriptCompile Include="Scripts\app\ViewModels.ts" />
@@ -169,21 +173,64 @@
     <Content Include="Scripts\app\websockets.js">
       <DependentUpon>websockets.ts</DependentUpon>
     </Content>
+    <Content Include="Scripts\bootstrap-datepicker.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="route.cshtml" />
-    <None Include="Scripts\jquery-1.10.2.intellisense.js" />
-    <Content Include="Scripts\jquery-1.10.2.js" />
-    <Content Include="Scripts\jquery-1.10.2.min.js" />
+    <None Include="Scripts\jquery-2.0.3.intellisense.js" />
+    <Content Include="Scripts\jquery-2.0.3.js" />
+    <Content Include="Scripts\jquery-2.0.3.min.js" />
     <Content Include="Scripts\jquery.cookie.js" />
     <Content Include="Scripts\knockout-2.3.0.debug.js" />
     <Content Include="Scripts\knockout-2.3.0.js" />
+    <TypeScriptCompile Include="Scripts\app\webApi.ts" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.bg.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.ca.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.cs.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.da.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.de.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.el.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.es.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.et.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.fi.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.fr.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.he.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.hr.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.hu.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.id.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.is.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.it.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.ja.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.kr.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.lt.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.lv.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.mk.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.ms.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.nb.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.nl.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.pl.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.pt-BR.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.pt.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.ro.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.rs-latin.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.rs.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.ru.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.sk.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.sl.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.sq.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.sv.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.sw.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.th.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.tr.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.uk.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.zh-CN.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.zh-TW.js" />
+    <Content Include="Scripts\moment+langs.js" />
+    <Content Include="Scripts\moment+langs.min.js" />
     <Content Include="Scripts\moment.js" />
     <Content Include="Scripts\moment.min.js" />
-    <TypeScriptCompile Include="Scripts\app\webApi.ts" />
     <Content Include="Scripts\typings\bootstrap\bootstrap.d.ts" />
     <Content Include="Scripts\typings\jquery.cookie\jquery.cookie.d.ts" />
-    <Content Include="Scripts\typings\jquery\jquery.d.ts" />
     <Content Include="Scripts\typings\knockout.mapping\knockout.mapping.d.ts" />
     <Content Include="Scripts\typings\knockout\knockout.d.ts" />
     <Content Include="Scripts\typings\leaflet\leaflet.d.ts" />
@@ -202,10 +249,6 @@
     <Content Include="Scripts\jquery.color.svg-names-2.1.2.min.js" />
     <Content Include="Scripts\knockout.mapping-latest.debug.js" />
     <Content Include="Scripts\knockout.mapping-latest.js" />
-    <Content Include="Scripts\moment-datepicker-ko.js" />
-    <Content Include="Scripts\moment-datepicker.d.ts" />
-    <Content Include="Scripts\moment-datepicker.js" />
-    <Content Include="Scripts\moment-datepicker.min.js" />
     <Content Include="train.cshtml" />
     <None Include="Properties\PublishProfiles\Azure - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\Azure - Web Deploy.pubxml" />
@@ -219,6 +262,8 @@
     <Content Include="_trainSchedule.cshtml" />
     <Content Include="_trainDetails.cshtml" />
     <Content Include="_trainMap.cshtml" />
+    <TypeScriptCompile Include="Scripts\typings\bootstrap.datepicker\bootstrap.datepicker.d.ts" />
+    <TypeScriptCompile Include="Scripts\typings\jquery\jquery.d.ts" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\BundleConfig.cs" />
@@ -230,8 +275,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="search-schedule.cshtml" />
-    <Content Include="Scripts\jquery-1.10.2.min.map" />
     <Content Include="station.cshtml" />
+    <Content Include="Scripts\jquery-2.0.3.min.map" />
     <None Include="Web.Azure.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
