@@ -21,6 +21,7 @@ var currentEndDate = null;
 var currentMode = null;
 
 var thisPage = {
+    settingHash: false,
     setCommand: function (command) {
         $("#global-search-box").val(command);
     },

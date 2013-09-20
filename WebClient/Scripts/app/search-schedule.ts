@@ -22,6 +22,7 @@ var currentEndDate: Moment = null;
 var currentMode = null;
 
 var thisPage: IPage = {
+    settingHash: false,
     setCommand: function (command) {
         $("#global-search-box").val(command);
     },

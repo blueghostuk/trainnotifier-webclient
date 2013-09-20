@@ -23,10 +23,8 @@ var currentTiplocs: IStationTiploc[] = [];
 
 var map: L.Map;
 var webSockets = new TrainNotifier.WebSockets();
-
-var settingHash = false;
-
 var thisPage: IPage = {
+    settingHash: false,
     setCommand: function (command: string) {
         var original = command;
         var advancedMode = command.indexOf('/advanced');
@@ -97,7 +95,7 @@ var thisPage: IPage = {
             $(".simple").hide();
             $(".advanced").show();
             if (document.location.hash.indexOf("/advanced") == -1) {
-                settingHash = true;
+                thisPage.settingHash = true;
                 document.location.hash = document.location.hash + "/advanced";
             }
         } else {
@@ -107,7 +105,7 @@ var thisPage: IPage = {
             $(".simple").show();
             $(".advanced").hide();
             if (document.location.hash.indexOf("/advanced") != -1) {
-                settingHash = true;
+                thisPage.settingHash = true;
                 document.location.hash = document.location.hash.replace("/advanced", "");
             }
         }
@@ -162,11 +160,11 @@ $(function () {
     }
 
     window.onhashchange = function () {
-        if (!settingHash) {
+        if (!thisPage.settingHash) {
             thisPage.setCommand(document.location.hash.substr(1));
             thisPage.parseCommand();
         }
-        settingHash = false;
+        thisPage.settingHash = false;
     };
 });
 

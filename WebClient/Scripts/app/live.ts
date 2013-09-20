@@ -12,6 +12,7 @@ var _locations;
 var webSockets = new TrainNotifier.WebSockets();
 
 var thisPage: IPage = {
+    settingHash: false,
     setStatus: function (status) {
         $("#status").html(status);
     },

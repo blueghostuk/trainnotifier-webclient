@@ -9,6 +9,7 @@ interface IPage {
     getCommand? (): string;
     setStatus? (status: string);
     wsOpenCommand? ();
+    settingHash: boolean;
     pageTitle?: string;
     advancedMode?: boolean;
     advancedSwitch? (change?: boolean);
