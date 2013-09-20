@@ -693,13 +693,12 @@ module TrainNotifier.KnockoutModels.Train {
         constructor() {
             var self = this;
             this.fullTitle = ko.computed(function () {
-                if (TrainNotifier.Common.page && TrainNotifier.Common.page.pageTitle &&
-                    self.id() && self.from() && self.to() && self.start() && self.end()) {
+                if (self.id() && self.from() && self.to() && self.start() && self.end()) {
                     document.title = self.id() + " "
-                        + self.from()
-                        + " to " + self.to() + " "
-                        + self.start() + " - " + self.end()
-                        + " - " + TrainNotifier.Common.page.pageTitle;
+                    + self.from()
+                    + " to " + self.to() + " "
+                    + self.start() + " - " + self.end()
+                    + " - ";// + TrainNotifier.Common.page.pageTitle;
                 }
                 return "";
             }).extend({ throttle: 500 });

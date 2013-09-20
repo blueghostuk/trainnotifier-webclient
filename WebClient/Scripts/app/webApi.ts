@@ -12,6 +12,7 @@ interface IWebApi {
     getTrainMovementByUid(uid: string, date: string): JQueryPromise<any>;
     getTrainMovementById(id: string): JQueryPromise<any>;
     getTrainMovementAssociations(uid: string, date: string): JQueryPromise<any>;
+    getTrainMovementsByHeadcode(headcode: string, date: string): JQueryPromise<any>;
 
     getTrainMovementsTerminatingAtLocation(stanox: string, startDate: string, endDate: string): JQueryPromise<any>;
     getTrainMovementsTerminatingAtStation(crsCode: string, startDate: string, endDate: string): JQueryPromise<any>;
@@ -22,9 +23,12 @@ interface IWebApi {
     getTrainMovementsBetweenLocations(fromStanox: string, toStanox: string, startDate: string, endDate: string): JQueryPromise<any>;
     getTrainMovementsBetweenStations(fromCrsCode: string, toCrsCode: string, startDate: string, endDate: string): JQueryPromise<any>;
 
+
     getPPMSectors(): JQueryPromise<any>;
     getPPMOperatorRegions(operatorCode: string): JQueryPromise<any>;
     getPPMData(operatorCode: string, name: string): JQueryPromise<any>;
+
+    getBerthContents(berth: string): JQueryPromise<any>;
 }
 
 interface IEstimate {
@@ -79,6 +83,10 @@ module TrainNotifier {
 
         getTrainMovementAssociations(uid: string, date: string) {
             return $.getJSON(this.getBaseUrl() + "/Association/" + uid + "/" + date);
+        }
+
+        getTrainMovementsByHeadcode(headcode: string, date: string) {
+            return $.getJSON(this.getBaseUrl() + "/TrainMovement/Headcode/" + headcode + "/" + date);
         }
 
         getTrainMovementsTerminatingAtLocation(stanox: string, startDate: string, endDate: string) {
@@ -152,6 +160,10 @@ module TrainNotifier {
         getPPMSectors() {
             return $.getJSON(this.getBaseUrl() + "/PPM/");
         }
+
+        getBerthContents(berth: string) {
+            return $.getJSON(this.getBaseUrl() + "/Td/Berth/" + berth);
+        }
     }
 }
 
@@ -167,6 +179,13 @@ interface IStationTiploc extends ITiploc {
     StationName: string;
     Lat: number;
     Lon: number;
+}
+
+interface IBerthContents {
+    // timestamp
+    m_Item1: string;
+    // contents
+    m_Item2: string;
 }
 
 module TrainNotifier {

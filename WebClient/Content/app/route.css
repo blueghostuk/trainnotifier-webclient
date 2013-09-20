@@ -1,0 +1,60 @@
+﻿body {
+    padding-top: 60px;
+    padding-bottom: 40px;
+}
+
+table#route {
+    border-collapse: separate;
+    border-spacing: 5px;
+}
+
+    table#route td {
+        padding: 5px;
+        margin-bottom: 5px;
+        width: 4em;
+        text-align: center;
+    }
+
+        table#route td.berth {
+            border: solid 1px black;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+
+            table#route td.berth.down {
+                border-bottom-style: dashed;
+            }
+
+            table#route td.berth.up {
+                border-top-style: dashed;
+            }
+
+        table#route td.comment {
+            font-size: small;
+            font-style: italic;
+            text-align: left;
+            min-width: 6em;
+        }
+
+tr.info > td > a {
+    color: white !important;
+}
+
+tr.error > td > a {
+    color: white !important;
+}
+
+.starts, .terminates {
+    font-weight: normal !important;
+}
+
+.stationName {
+    font-weight: bold;
+}
+
+.text-warning {
+    margin-left: 40px;
+    color: red;
+    font-size: small;
+    font-style: italic;
+}

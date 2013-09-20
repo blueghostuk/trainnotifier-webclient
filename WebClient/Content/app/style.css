@@ -125,6 +125,11 @@ ul.nav.nav-tabs {
     background-color: #3399f3 !important;
 }
 
+.text-center{
+    /* this is not important in boostrap */
+    text-align: center !important;
+}
+
 /* override spacelab bootstrap */
 .table tbody tr.warning > td {
     background-color: #FFD456;

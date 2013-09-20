@@ -18,3 +18,10 @@ tr.info > td {
 .table tbody tr.info:hover > td {
     background-color: #efefef;
 }
+
+.text-info {
+    margin-left: 40px;
+    color: green;
+    font-size: small;
+    font-style: italic;
+}
