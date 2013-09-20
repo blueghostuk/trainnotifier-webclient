@@ -23,9 +23,15 @@
             <td class="col extra line phone-hide" data-bind="text: line"></td>
             <td class="col extra platform" data-bind="text: platform"></td>
             <td class="col extra notes phone-hide">
-                <span data-bind="visible: nextLocation">Next @@ <span data-bind="text: nextLocation" class="stationName"></span> in <span data-bind="text: nextAt"></span></span>
+                <span data-bind="visible: nextLocation">Next @@ <span data-bind="text: nextLocation" class="stationName"></span>&nbsp;in&nbsp;<span data-bind="text: nextAt"></span></span>
                 <span data-bind="visible: notes, text: notes"></span>
             </td>
         </tr>
     </tbody>
 </table>
+<p class="text-info">
+    This page shows the Current running information. Click the <i class="icon-refresh"></i> icon above to activate live tracking.
+</p>
+<p class="text-warning">
+    Live tracking of berth movements will return movements of trains with the same description as this one (head code) if they are running at the same time.
+</p>

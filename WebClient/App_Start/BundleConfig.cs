@@ -21,8 +21,7 @@ namespace TrainNotifier.WebClient
                 "~/Scripts/bootstrap*"));
 
             bundles.Add(new ScriptBundle("~/bundles/moment").Include(
-                "~/Scripts/moment.js",
-                "~/Scripts/moment-datepicker.js"));
+                "~/Scripts/moment.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/app").Include(
                 "~/Scripts/app/global.js",
@@ -30,6 +29,7 @@ namespace TrainNotifier.WebClient
                 "~/Scripts/app/globalSearch.js",
                 "~/Scripts/app/websockets.js",
                 "~/Scripts/app/searchModels.js",
+                "~/Scripts/app/routeModels.js",
                 "~/Scripts/app/trainModels.js",
                 "~/Scripts/app/ViewModels.js"));
 
@@ -53,6 +53,16 @@ namespace TrainNotifier.WebClient
             bundles.Add(new StyleBundle("~/bundles/css/train").Include(
                 "~/Content/app/train.css"));
 
+            bundles.Add(new ScriptBundle("~/bundles/js/route").Include(
+                "~/Scripts/app/route.js"));
+            bundles.Add(new StyleBundle("~/bundles/css/route").Include(
+                "~/Content/app/route.css"));
+
+            bundles.Add(new ScriptBundle("~/bundles/js/station").Include(
+                "~/Scripts/app/station.js"));
+            bundles.Add(new StyleBundle("~/bundles/css/station").Include(
+                "~/Content/app/station.css"));
+
             bundles.Add(new ScriptBundle("~/bundles/js/search-schedule").Include(
                 "~/Scripts/app/search-schedule.js"));
             bundles.Add(new StyleBundle("~/bundles/css/search-schedule").Include(
@@ -61,7 +71,7 @@ namespace TrainNotifier.WebClient
             bundles.Add(new StyleBundle("~/Content/css").Include(
                 "~/Content/spacelab.css",
                 "~/Content/bootstrap-responsive.css",
-                "~/Content/moment-datepicker/datepicker.css",
+                "~/Content/bootstrap-datepicker.css",
                 "~/Content/app/style.css"));
         }
     }

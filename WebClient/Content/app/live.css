@@ -6,3 +6,10 @@
 tr.info > td > a {
     color: white !important;
 }
+
+.text-info {
+    margin-left: 40px;
+    color: green;
+    font-size: small;
+    font-style: italic;
+}
