@@ -1,4 +1,4 @@
-/// <reference path="global.ts" />
+﻿/// <reference path="global.ts" />
 /// <reference path="../typings/jquery/jquery.d.ts" />
 /// <reference path="../typings/moment/moment.d.ts" />
 var TrainNotifier;
