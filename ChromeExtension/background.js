@@ -15,11 +15,15 @@ function loadWebApi() {
 }
 
 function loadWebSocket() {
-    if (websocket)
+    if (websocket && websocket.readyState == WebSocket.OPEN)
         return false;
-    websocket = new WebSocket("ws://" + settings.wsUrl);
+
+    websocket = new WebSocket("ws://" + settings.wsUrl);    
     return true;
 }
+
+var currentTiplocs;
+var movement;
 
 // Called when the url of a tab changes.
 function checkForValidUrl(tabId, changeInfo, tab) {
@@ -50,6 +54,8 @@ function checkForValidUrl(tabId, changeInfo, tab) {
 
             webApi.getTrainMovementByUid(trainUid, date).done(function (data) {
                 if (data && data.Movement && data.Movement.Actual) {
+                    currentTiplocs = data.Tiplocs;
+                    movement = data.Movement;
                     var ws = loadWebSocket();
                     if (ws) {
                         websocket.onopen = function () {
@@ -60,11 +66,20 @@ function checkForValidUrl(tabId, changeInfo, tab) {
                             if (data.Command == "subtrainupdate") {
                                 var stops = data.Response;
 
-                                //for (var i = 0; i < stops.length; i++) {
-                                //    var added = addStop(stops[i]);
-                                //    // wait for each add to complete
-                                //    while (added.state() === "pending") { }
-                                //}
+                                for (var i = 0; i < stops.length; i++) {
+                                    var stop = stops[i];
+                                    var stopTiploc = TrainNotifier.StationTiploc.findStationTiploc(stop.Stanox, currentTiplocs);
+                                    var nextStopTiploc = TrainNotifier.StationTiploc.findStationTiploc(stop.NextStanox, currentTiplocs);
+
+                                    if (stopTiploc) {
+                                        var notification = webkitNotifications.createNotification(
+                                          'icon-48.png',  // icon url - can be relative
+                                          movement.Schedule.Headcode,  // notification title
+                                          stop.EventType + ' at ' + stopTiploc.StationName + ' @ ' + stop.ActualTimeStamp  // notification body text
+                                        );
+                                        notification.show();
+                                    }
+                                }
 
                             }
                             //else if (data.Command == "subtrainupdate-berth") {
@@ -73,12 +88,6 @@ function checkForValidUrl(tabId, changeInfo, tab) {
                             //        liveStops.push(new TrainNotifier.KnockoutModels.Train.BerthLiveStop(berthSteps[i]));
                             //    }
                             //}
-                            var notification = webkitNotifications.createNotification(
-                              'icon-48.png',  // icon url - can be relative
-                              'Hello!',  // notification title
-                              'Lorem ipsum...'  // notification body text
-                            );
-                            notification.show();
                         };
                     } else {
                         websocket.send("unsubtrain");
@@ -88,6 +97,13 @@ function checkForValidUrl(tabId, changeInfo, tab) {
             });
 
             chrome.pageAction.show(tabId);
+        }
+    } else {
+        if (websocket) {
+            try {
+                websocket.send("unsubtrain");
+                websocket.close();
+            } catch (err) { }
         }
     }
 };
