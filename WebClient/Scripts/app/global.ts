@@ -18,6 +18,7 @@ interface IPage {
 interface IServerSettings {
     apiUrl: string;
     wsUrl: string;
+    apiName: string;
 }
 
 // Module

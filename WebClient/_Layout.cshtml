@@ -111,7 +111,8 @@
     <script type="text/javascript">
         TrainNotifier.Common.serverSettings = {
             apiUrl: "@System.Configuration.ConfigurationManager.AppSettings["apiUrl"]",
-            wsUrl: "@System.Configuration.ConfigurationManager.AppSettings["wsUrl"]"
+            wsUrl: "@System.Configuration.ConfigurationManager.AppSettings["wsUrl"]",
+            apiName: "@System.Configuration.ConfigurationManager.AppSettings["apiName"]"
         };
     </script>
     @RenderSection("FooterJs", required: false)
