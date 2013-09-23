@@ -97,6 +97,7 @@
     <Content Include="Content\app\route.css" />
     <Content Include="Content\app\search-schedule.css" />
     <Content Include="Content\app\station.css" />
+    <Content Include="Content\app\tocs.css" />
     <Content Include="Content\app\train.css" />
     <Content Include="Content\bootstrap-datepicker.css" />
     <Content Include="Content\bootstrap-responsive.css" />
@@ -279,6 +280,7 @@
     <Content Include="Scripts\jquery-2.0.3.min.map" />
     <None Include="Web.Azure.config">
       <DependentUpon>Web.config</DependentUpon>
+      <SubType>Designer</SubType>
     </None>
     <None Include="Web.Debug-Local.config">
       <DependentUpon>Web.config</DependentUpon>

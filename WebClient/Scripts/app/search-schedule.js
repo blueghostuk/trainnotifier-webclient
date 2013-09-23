@@ -73,12 +73,18 @@ var thisPage = {
             $("#resultsBlock").addClass("span10");
             $("#resultsBlock").removeClass("span11");
 
+            $(".toc-ZZ, .cat-EE").show();
+            $(".cat-ee").show();
+
             $(".simple").hide();
             $(".advanced").show();
         } else {
             $("#advancedSwitch").html("Advanced Mode");
             $("#resultsBlock").addClass("span11");
             $("#resultsBlock").removeClass("span10");
+
+            $(".toc-ZZ, .cat-EE").hide();
+
             $(".simple").show();
             $(".advanced").hide();
         }
@@ -297,6 +303,7 @@ function getDestinationByStanox(to, startDate, endDate) {
         }
     }).always(function () {
         $(".progress").hide();
+        thisPage.advancedSwitch(false);
     }).fail(function () {
         $("#error-row").show();
     });
@@ -339,6 +346,7 @@ function getOriginByStanox(from, startDate, endDate) {
         }
     }).always(function () {
         $(".progress").hide();
+        thisPage.advancedSwitch(false);
     }).fail(function () {
         $("#error-row").show();
     });
@@ -382,6 +390,7 @@ function getCallingAtStanox(at, startDate, endDate) {
         }
     }).always(function () {
         $(".progress").hide();
+        thisPage.advancedSwitch(false);
     }).fail(function () {
         $("#error-row").show();
     });
@@ -431,6 +440,7 @@ function getCallingBetweenByStanox(from, to, startDate, endDate) {
         }
     }).always(function () {
         $(".progress").hide();
+        thisPage.advancedSwitch(false);
     }).fail(function () {
         $("#error-row").show();
     });

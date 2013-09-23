@@ -64,7 +64,7 @@ var thisPage: IPage = {
         return $("#global-search-box").val();
     },
     advancedMode: false,
-    advancedSwitch: function(change: boolean = true) {
+    advancedSwitch: function (change: boolean = true) {
         if (change) {
             this.advancedMode = !this.advancedMode;
             $.cookie("advancedMode", this.advancedMode ? "on" : "off", { expires: 365 });
@@ -74,12 +74,18 @@ var thisPage: IPage = {
             $("#resultsBlock").addClass("span10");
             $("#resultsBlock").removeClass("span11");
 
+            $(".toc-ZZ, .cat-EE").show();
+            $(".cat-ee").show();
+
             $(".simple").hide();
             $(".advanced").show();
         } else {
             $("#advancedSwitch").html("Advanced Mode");
             $("#resultsBlock").addClass("span11");
             $("#resultsBlock").removeClass("span10");
+
+            $(".toc-ZZ, .cat-EE").hide();
+
             $(".simple").show();
             $(".advanced").hide();
         }
@@ -304,6 +310,7 @@ function getDestinationByStanox(to: IStationTiploc, startDate: Moment, endDate: 
         }
     }).always(function () {
             $(".progress").hide();
+            thisPage.advancedSwitch(false);
         }).fail(function () {
             $("#error-row").show();
         });
@@ -352,6 +359,7 @@ function getOriginByStanox(from: IStationTiploc, startDate: Moment, endDate: Mom
         }
     }).always(function () {
             $(".progress").hide();
+            thisPage.advancedSwitch(false);
         }).fail(function () {
             $("#error-row").show();
         });
@@ -401,6 +409,7 @@ function getCallingAtStanox(at: IStationTiploc, startDate, endDate) {
         }
     }).always(function () {
             $(".progress").hide();
+            thisPage.advancedSwitch(false);
         }).fail(function () {
             $("#error-row").show();
         });
@@ -458,6 +467,7 @@ function getCallingBetweenByStanox(from: IStationTiploc, to: IStationTiploc, sta
         }
     }).always(function () {
             $(".progress").hide();
+            thisPage.advancedSwitch(false);
         }).fail(function () {
             $("#error-row").show();
         });
