@@ -22,10 +22,10 @@ module TrainNotifier.KnockoutModels.Search {
         public operatorCode: string = "NA";
         public operatorName: string = "Unknown";
         public title: string = null;
-        public cancel: boolean = false;
+        public cancel: KnockoutObservable<boolean> = ko.observable(false);
         public cancelEnRoute: string = null;
-        public reinstate: boolean = false;
-        public changeOfOrigin: boolean = false;
+        public reinstate: KnockoutObservable<boolean> = ko.observable(false);
+        public changeOfOrigin: KnockoutObservable<boolean> = ko.observable(false);
         public changeOfOriginStation: string = null;
 
         public departureDate: string = "";
@@ -36,7 +36,13 @@ module TrainNotifier.KnockoutModels.Search {
         public toStation: string;
         public toStationCss: string = null;
 
+        public computedCss: KnockoutComputed<string>;
+
+        public category: KnockoutObservable<string> = ko.observable("cat-na");
+
         constructor(trainMovement: ITrainMovementResult, tiplocs: IStationTiploc[], queryStartDate: Moment) {
+            var self = this;
+
             this.trainId = trainMovement.Schedule.TrainUid;
             if (trainMovement.Schedule.AtocCode) {
                 this.operatorCode = trainMovement.Schedule.AtocCode.Code;
@@ -68,7 +74,7 @@ module TrainNotifier.KnockoutModels.Search {
                         this.cancelEnRoute = cancelTiploc.Description.toLowerCase();
                     }
 
-                    this.cancel = true;
+                    this.cancel(true);
                     this.title = titleText;
                 }
             }
@@ -82,7 +88,7 @@ module TrainNotifier.KnockoutModels.Search {
                         + " (" + coo.Description + ")";
 
                     this.changeOfOriginStation = cooTiploc.Description.toLocaleLowerCase();
-                    this.changeOfOrigin = true;
+                    this.changeOfOrigin(true);
                     this.title = titleText;
                 }
             }
@@ -93,13 +99,41 @@ module TrainNotifier.KnockoutModels.Search {
                     var titleText = "Reinstated at " + reinstateTiploc.Description.toLowerCase()
                         + " at " + moment(reinstatement.PlannedDepartureTime).format(DateTimeFormats.timeFormat);
 
-                    this.reinstate = true;
+                    this.reinstate(true);
                     this.title = titleText;
 
-                    this.cancel = false;
+                    this.cancel(false);
                     this.cancelEnRoute = null;
                 }
             }
+
+            if (trainMovement.Schedule.CategoryTypeId) {
+                var cat = CategoryTypeLookup.getCategoryType(trainMovement.Schedule.CategoryTypeId);
+                if (cat) {
+                    this.category(cat.Code);
+                }
+            }
+
+            this.computedCss = ko.computed(function () {
+                var css = [];
+                if (self.cancel()) {
+                    css.push("error");
+                }
+                if (self.changeOfOrigin()) {
+                    css.push("info");
+                }
+                if (self.reinstate()) {
+                    css.push("reinstatement");
+                }
+                if (self.operatorCode) {
+                    css.push("toc-" + self.operatorCode);
+                }
+                if (self.category()) {
+                    css.push("cat-" + self.category());
+                }                
+
+                return css.join(" ");
+            });
         }
 
         public static matchesTiploc(stanoxCode: string, tiplocs: IStationTiploc[]) {
@@ -110,7 +144,7 @@ module TrainNotifier.KnockoutModels.Search {
     }
 
     export class StartingAtTrainMovement extends TrainMovement {
-                
+
         public fromPlatform: string;
         public publicDeparture: string = "";
         public wttDeparture: string;
@@ -228,16 +262,16 @@ module TrainNotifier.KnockoutModels.Search {
 
     export class CallingAtTrainMovement extends TrainMovement {
 
-        public atPlatform: string;
+        public atPlatform: string = "";
         public atPublicDeparture: string = "";
-        public atWttDeparture: string;
+        public atWttDeparture: string = "";
         public atActualDeparture: string = "";
-        
+
         public atPublicArrival: string = "";
-        public atWttArrival: string;
+        public atWttArrival: string = "";
         public atActualArrival: string = "";
 
-        public pass = false;
+        public pass: KnockoutObservable < boolean> = ko.observable(false);
 
         constructor(trainMovement: ITrainMovementResult, atTiploc: IStationTiploc, tiplocs: IStationTiploc[], queryStartDate: Moment) {
             super(trainMovement, tiplocs, queryStartDate);
@@ -271,7 +305,7 @@ module TrainNotifier.KnockoutModels.Search {
                     this.atPlatform = atStop.Platform;
 
                     if (atStop.Pass) {
-                        this.pass = true;
+                        this.pass(true);
                         this.atPublicDeparture = "Pass";
                         this.atWttDeparture = DateTimeFormats.formatTimeString(atStop.Pass);
                         this.atPublicArrival = "Pass";
@@ -317,6 +351,31 @@ module TrainNotifier.KnockoutModels.Search {
                     }
                 }
             }
+
+            var self = this;
+            this.computedCss = ko.computed(function () {
+                var css = [];
+                if (self.pass()) {
+                    css.push("pass")
+                }
+                if (self.cancel()) {
+                    css.push("error");
+                }
+                if (self.changeOfOrigin()) {
+                    css.push("info");
+                }
+                if (self.reinstate()) {
+                    css.push("reinstatement");
+                }
+                if (self.operatorCode) {
+                    css.push("toc-" + self.operatorCode);
+                }
+                if (self.category()) {
+                    css.push("cat-" + self.category());
+                }    
+
+                return css.join(" ");
+            });
         }
     }
 

@@ -23,23 +23,55 @@
         <div class="well sidebar-nav">
             <ul class="nav nav-list" id="commandOptions">
                 <li class="nav-header">By CRS Code:</li>
-                <li id="from-crs"><a href="#from/" onclick="thisPage.setCommand('from/');"><strong>Trains Stating From:</strong><br />
-                    &nbsp;&nbsp;from/[CRS]</a></li>
-                <li id="at-crs"><a href="#at/" onclick="thisPage.setCommand('at/');"><strong>Trains Calling At:</strong><br />
-                    &nbsp;&nbsp;at/[CRS]</a></li>
-                <li id="to-crs"><a href="#to/" onclick="thisPage.setCommand('to/');"><strong>Trains Terminating At:</strong><br />
-                    &nbsp;&nbsp;to/[CRS]</a></li>
-                <li id="from-to-crs"><a href="#from/" onclick="thisPage.setCommand('from/');"><strong>Trains going from [A] to [B]:</strong><br />
-                    &nbsp;&nbsp;from/[CRS-A]/to/[CRS-B]</a></li>
+                <li id="from-crs">
+                    <a href="#from/" onclick="thisPage.setCommand('from/');">
+                        <strong>Trains Stating From:</strong><br />
+                        &nbsp;&nbsp;from/[CRS]
+                    </a>
+                </li>
+                <li id="at-crs">
+                    <a href="#at/" onclick="thisPage.setCommand('at/');">
+                        <strong>Trains Calling At:</strong><br />
+                        &nbsp;&nbsp;at/[CRS]
+                    </a>
+                </li>
+                <li id="to-crs">
+                    <a href="#to/" onclick="thisPage.setCommand('to/');">
+                        <strong>Trains Terminating At:</strong><br />
+                        &nbsp;&nbsp;to/[CRS]
+                    </a>
+                </li>
+                <li id="from-to-crs">
+                    <a href="#from/" onclick="thisPage.setCommand('from/');">
+                        <strong>Trains going from [A] to [B]:</strong><br />
+                        &nbsp;&nbsp;from/[CRS-A]/to/[CRS-B]
+                    </a>
+                </li>
                 <li class="nav-header">By Stanox Code:</li>
-                <li id="from"><a href="#from/" onclick="thisPage.setCommand('from/');"><strong>Trains Stating From:</strong><br />
-                    &nbsp;&nbsp;from/[stanox]</a></li>
-                <li id="at"><a href="#at/" onclick="thisPage.setCommand('at/');"><strong>Trains Calling At:</strong><br />
-                    &nbsp;&nbsp;at/[stanox]</a></li>
-                <li id="to"><a href="#to:" onclick="thisPage.setCommand('to/');"><strong>Trains Terminating At:</strong><br />
-                    &nbsp;&nbsp;to/[stanox]</a></li>
-                <li id="from-to"><a href="#from/" onclick="thisPage.setCommand('from');"><strong>Trains going from [A] to [B]:</strong><br />
-                    &nbsp;&nbsp;from/[stanox-A]/to/[stanox-B]</a></li>
+                <li id="from">
+                    <a href="#from/" onclick="thisPage.setCommand('from/');">
+                        <strong>Trains Stating From:</strong><br />
+                        &nbsp;&nbsp;from/[stanox]
+                    </a>
+                </li>
+                <li id="at">
+                    <a href="#at/" onclick="thisPage.setCommand('at/');">
+                        <strong>Trains Calling At:</strong><br />
+                        &nbsp;&nbsp;at/[stanox]
+                    </a>
+                </li>
+                <li id="to">
+                    <a href="#to:" onclick="thisPage.setCommand('to/');">
+                        <strong>Trains Terminating At:</strong><br />
+                        &nbsp;&nbsp;to/[stanox]
+                    </a>
+                </li>
+                <li id="from-to">
+                    <a href="#from/" onclick="thisPage.setCommand('from');">
+                        <strong>Trains going from [A] to [B]:</strong><br />
+                        &nbsp;&nbsp;from/[stanox-A]/to/[stanox-B]
+                    </a>
+                </li>
             </ul>
         </div>
         <div class="well sidebar-nav" id="stationDetails" data-bind="visible: name">
@@ -122,7 +154,7 @@
                     </tr>
                 </thead>
                 <tbody data-bind="foreach: $data">
-                    <tr data-bind="css: { error: cancel, info: changeOfOrigin, reinstatement: reinstate }, attr: { title: title }">
+                    <tr data-bind="css: computedCss, attr: { title: title }">
                         <!-- 1 -->
                         <td><a data-bind="text: headCode, attr: { href: 'trains/' + trainId + '/' + departureDate }"></a></td>
                         <td data-bind="text: operatorCode, attr: { title: operatorName }"></td>
@@ -194,7 +226,7 @@
                     </tr>
                 </thead>
                 <tbody data-bind="foreach: $data">
-                    <tr data-bind="css: { pass: pass, error: cancel, info: changeOfOrigin, reinstatement: reinstate }, attr: { title: title }">
+                    <tr data-bind="css: computedCss, attr: { title: title }">
                         <!-- 1 -->
                         <td><a data-bind="text: headCode, attr: { href: 'trains/' + trainId + '/' + departureDate }"></a></td>
                         <td data-bind="text: operatorCode, attr: { title: operatorName }"></td>
@@ -266,7 +298,7 @@
                     </tr>
                 </thead>
                 <tbody data-bind="foreach: results">
-                    <tr data-bind="css: { error: cancel, info: changeOfOrigin, reinstatement: reinstate }, attr: { title: title }">
+                    <tr data-bind="css: computedCss, attr: { title: title }">
                         <!-- 1 -->
                         <td><a data-bind="text: headCode, attr: { href: 'trains/' + trainId + '/' + departureDate }"></a></td>
                         <td data-bind="text: operatorCode, attr: { title: operatorName }"></td>
@@ -304,3 +336,8 @@
     <!--/span10-->
 </div>
 <!--/row-fluid-->
+<div class="row-fluid">
+    <p class="text-info span12">
+        <i class="icon-info-sign"></i>&nbsp;<span title="Empty Coaching Stock">ECS</span>, <span title="Freight or Other Operator">TOC-ZZ</span> trains will be hidden in Simple Mode (some may show due to old data).
+    </p>
+</div>

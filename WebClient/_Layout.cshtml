@@ -55,7 +55,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </a>
-                <a class="brand" href="#">@System.Configuration.ConfigurationManager.AppSettings["brandingTitle"]</a>
+                <span class="brand">@System.Configuration.ConfigurationManager.AppSettings["brandingTitle"]</span>
                 <div class="nav-collapse collapse">
                     <form class="navbar-search pull-left top-search">
                         <input type="search" id="global-search-box" autocomplete="off" class="span3" placeholder="Enter Command">
@@ -111,7 +111,8 @@
     <script type="text/javascript">
         TrainNotifier.Common.serverSettings = {
             apiUrl: "@System.Configuration.ConfigurationManager.AppSettings["apiUrl"]",
-            wsUrl: "@System.Configuration.ConfigurationManager.AppSettings["wsUrl"]"
+            wsUrl: "@System.Configuration.ConfigurationManager.AppSettings["wsUrl"]",
+            apiName: "@System.Configuration.ConfigurationManager.AppSettings["apiName"]"
         };
     </script>
     @RenderSection("FooterJs", required: false)
