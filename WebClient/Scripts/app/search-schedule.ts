@@ -70,9 +70,9 @@ var thisPage: IPage = {
             $.cookie("advancedMode", this.advancedMode ? "on" : "off", { expires: 365 });
         }
         if (this.advancedMode) {
-            $("#advancedSwitch").html("Simple Mode");
-            $("#resultsBlock").addClass("span10");
-            $("#resultsBlock").removeClass("span11");
+            $("#advancedSwitch").html("Simple");
+            $("#resultsBlock").addClass("col-md-10");
+            $("#resultsBlock").removeClass("col-md-12");
 
             $(".toc-ZZ, .cat-EE").show();
             $(".cat-ee").show();
@@ -80,9 +80,9 @@ var thisPage: IPage = {
             $(".simple").hide();
             $(".advanced").show();
         } else {
-            $("#advancedSwitch").html("Advanced Mode");
-            $("#resultsBlock").addClass("span11");
-            $("#resultsBlock").removeClass("span10");
+            $("#advancedSwitch").html("Advanced");
+            $("#resultsBlock").addClass("col-md-12");
+            $("#resultsBlock").removeClass("col-md-10");
 
             $(".toc-ZZ, .cat-EE").hide();
 
@@ -129,12 +129,6 @@ function getDateTime(args): Moment {
     return moment();
 }
 
-function preAjax() {
-    $(".progress").show();
-    $("#error-row").hide();
-    $("#no-results-row").hide();
-}
-
 function getCallingBetween(from: string, to: string, convertFromCrs: boolean, fromDate: Moment, toDate?: Moment) {
     $("#commandOptions > li#from-to" + (convertFromCrs ? "-crs" : "")).addClass("active");
     var startDate: Moment;
@@ -165,8 +159,8 @@ function getCallingBetween(from: string, to: string, convertFromCrs: boolean, fr
     $.when(fromQuery, toQuery).done(function (from, to) {
         getCallingBetweenByStanox(from[0], to[0], startDate, endDate);
     }).fail(function () {
-            $(".progress").hide();
-            $("#error-row").show();
+            hide($(".progress"));
+            show($("#error-row"));
         });
 }
 
@@ -197,8 +191,8 @@ function getDestination(crs: string, convertFromCrs: boolean, fromDate: Moment, 
     query.done(function (from) {
         getDestinationByStanox(from, startDate, endDate);
     }).fail(function () {
-            $(".progress").hide();
-            $("#error-row").show();
+            hide($(".progress"));
+            show($("#error-row"));
         });
 }
 
@@ -228,8 +222,8 @@ function getOrigin(crs: string, convertFromCrs: boolean, fromDate: Moment, toDat
     query.done(function (from: IStationTiploc) {
         getOriginByStanox(from, startDate, endDate);
     }).fail(function () {
-            $(".progress").hide();
-            $("#error-row").show();
+            hide($(".progress"));
+            show($("#error-row"));
         });
 }
 
@@ -260,8 +254,8 @@ function getStation(crs: string, convertFromCrs: boolean, fromDate: Moment, toDa
     query.done(function (at) {
         getCallingAtStanox(at, startDate, endDate);
     }).fail(function () {
-            $(".progress").hide();
-            $("#error-row").show();
+            hide($(".progress"));
+            show($("#error-row"));
         });
 }
 
@@ -296,7 +290,6 @@ function getDestinationByStanox(to: IStationTiploc, startDate: Moment, endDate: 
 
     query.done(function (data) {
         if (data && data.Movements.length > 0) {
-            $("#no-results-row").hide();
 
             var viewModels: TrainNotifier.KnockoutModels.Search.TerminatingAtTrainMovement[] = data.Movements.map(function (movement: ITrainMovementResult) {
                 return new TrainNotifier.KnockoutModels.Search.TerminatingAtTrainMovement(movement, data.Tiplocs, currentStartDate);
@@ -306,13 +299,14 @@ function getDestinationByStanox(to: IStationTiploc, startDate: Moment, endDate: 
                 startEndSearchResults.push(viewModels[i]);
             }
         } else {
-            $("#no-results-row").show();
+            show($("#no-results-row"));
         }
     }).always(function () {
-            $(".progress").hide();
+            hide($(".progress"));
             thisPage.advancedSwitch(false);
         }).fail(function () {
-            $("#error-row").show();
+            hide($(".progress"));
+            show($("#error-row"));
         });
 }
 
@@ -345,8 +339,6 @@ function getOriginByStanox(from: IStationTiploc, startDate: Moment, endDate: Mom
     }
     query.done(function (data: ITrainMovementResults) {
         if (data && data.Movements.length > 0) {
-            $("#no-results-row").hide();
-
             var viewModels: TrainNotifier.KnockoutModels.Search.StartingAtTrainMovement[] = data.Movements.map(function (movement: ITrainMovementResult) {
                 return new TrainNotifier.KnockoutModels.Search.StartingAtTrainMovement(movement, data.Tiplocs, currentStartDate);
             });
@@ -355,13 +347,14 @@ function getOriginByStanox(from: IStationTiploc, startDate: Moment, endDate: Mom
                 startEndSearchResults.push(viewModels[i]);
             }
         } else {
-            $("#no-results-row").show();
+            show($("#no-results-row"));
         }
     }).always(function () {
-            $(".progress").hide();
+            hide($(".progress"));
             thisPage.advancedSwitch(false);
         }).fail(function () {
-            $("#error-row").show();
+            hide($(".progress"));
+            show($("#error-row"));
         });
 }
 
@@ -395,7 +388,6 @@ function getCallingAtStanox(at: IStationTiploc, startDate, endDate) {
 
     query.done(function (data: ITrainMovementResults) {
         if (data && data.Movements.length > 0) {
-            $("#no-results-row").hide();
 
             var viewModels: TrainNotifier.KnockoutModels.Search.CallingAtTrainMovement[] = data.Movements.map(function (movement: ITrainMovementResult) {
                 return new TrainNotifier.KnockoutModels.Search.CallingAtTrainMovement(movement, currentStanox, data.Tiplocs, currentStartDate);
@@ -405,13 +397,14 @@ function getCallingAtStanox(at: IStationTiploc, startDate, endDate) {
                 callingAtSearchResults.push(viewModels[i]);
             }
         } else {
-            $("#no-results-row").show();
+            show($("#no-results-row"));
         }
     }).always(function () {
-            $(".progress").hide();
+            hide($(".progress"));
             thisPage.advancedSwitch(false);
         }).fail(function () {
-            $("#error-row").show();
+            hide($(".progress"));
+            show($("#error-row"));
         });
 }
 
@@ -469,7 +462,8 @@ function getCallingBetweenByStanox(from: IStationTiploc, to: IStationTiploc, sta
             $(".progress").hide();
             thisPage.advancedSwitch(false);
         }).fail(function () {
-            $("#error-row").show();
+            hide($(".progress"));
+            show($("#error-row"));
         });
 }
 

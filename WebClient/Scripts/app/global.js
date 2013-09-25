@@ -1,7 +1,23 @@
-﻿/// <reference path="../typings/moment/moment.d.ts" />
+/// <reference path="../typings/moment/moment.d.ts" />
 /// <reference path="../typings/jquery/jquery.d.ts" />
 /// <reference path="../typings/bootstrap/bootstrap.d.ts" />
 /// <reference path="webApi.ts" />
+function preAjax() {
+    show($(".progress"));
+    hide($("#error-row"));
+    hide($("#no-results-row"));
+}
+
+function show(element) {
+    $(element).removeClass("hide");
+    $(element).show();
+}
+
+function hide(element) {
+    $(element).hide();
+    $(element).addClass("hide");
+}
+
 // Module
 var TrainNotifier;
 (function (TrainNotifier) {

@@ -71,9 +71,10 @@ namespace TrainNotifier.WebClient
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                 //"~/Content/spacelab.css",
-                "~/Content/bootstrap/*.css"));//,
+                "~/Content/bootstrap/*.css",
                 //"~/Content/bootstrap-datepicker.css",
-                //"~/Content/app/style.css"));
+                "~/Content/app/styles.css",
+                "~/Content/app/tocs.css"));
         }
     }
 }

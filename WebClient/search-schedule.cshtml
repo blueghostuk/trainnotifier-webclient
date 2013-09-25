@@ -10,16 +10,16 @@
 }
 @section TopMenu{
     <li><a href="~/">Home</a></li>
-    <li class="active"><a>Search Schedule</a></li>
+    <li class="active"><a>Schedule</a></li>
     <li><a href="~/train">Train</a></li>
     <li><a href="~/route">Routes</a></li>
     <li><a href="~/station">Stations</a></li>
     <li><a href="~/ppm">PPM</a></li>
-    <li><a href="~/live">Live Feed</a></li>
-    <li><a href="#" id="advancedSwitch" title="Switch Mode">Advanced Mode</a></li>
+    <li><a href="~/live">Live</a></li>
+    <li><a href="#" id="advancedSwitch" title="Switch Mode">Advanced</a></li>
 }
-<div class="row-fluid">
-    <div class="span2 phone-hide advanced" style="display: none;">
+<div class="row">
+    <div class="col-md-2 phone-hide advanced" style="display: none;">
         <div class="well sidebar-nav">
             <ul class="nav nav-list" id="commandOptions">
                 <li class="nav-header">By CRS Code:</li>
@@ -85,7 +85,7 @@
         </div>
     </div>
     <!--/span2-->
-    <div class="span11" id="resultsBlock">
+    <div class="col-md-12" id="resultsBlock">
         <div class="row alert alert-info hide" id="no-results-row">
             <strong>No Results Found</strong>
         </div>
@@ -93,9 +93,9 @@
             <strong>Error fetching data. Please Refresh to try again</strong>
         </div>
         <div class="progress progress-striped active hide">
-            <div class="bar" style="width: 100%"></div>
+            <div class="progress-bar" role="progressbar" style="width: 100%"></div>
         </div>
-        <div class="row pagination" id="title" data-bind="visible: From">
+        <div class="row" id="title" data-bind="visible: From">
             <span data-bind="text: From" class="stationName xl"></span><span data-bind="visible: To">&nbsp;to&nbsp;</span>
             <span data-bind="text: To" class="stationName xl"></span>
             <br />
@@ -338,6 +338,6 @@
 <!--/row-fluid-->
 <div class="row-fluid">
     <p class="text-info span12">
-        <i class="icon-info-sign"></i>&nbsp;<span title="Empty Coaching Stock">ECS</span>, <span title="Freight or Other Operator">TOC-ZZ</span> trains will be hidden in Simple Mode (some may show due to old data).
+        <span class="glyphicon glyphicon-info-sign"></span>&nbsp;<span title="Empty Coaching Stock">ECS</span>, <span title="Freight or Other Operator">TOC-ZZ</span> trains will be hidden in Simple Mode (some may show due to old data).
     </p>
 </div>

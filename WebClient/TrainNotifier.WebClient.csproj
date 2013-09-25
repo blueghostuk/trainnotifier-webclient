@@ -97,6 +97,7 @@
     <Content Include="Content\app\route.css" />
     <Content Include="Content\app\search-schedule.css" />
     <Content Include="Content\app\station.css" />
+    <Content Include="Content\app\styles.css" />
     <Content Include="Content\app\tocs.css" />
     <Content Include="Content\app\train.css" />
     <Content Include="Content\bootstrap-datepicker.css" />

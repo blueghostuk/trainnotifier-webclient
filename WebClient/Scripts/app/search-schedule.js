@@ -69,9 +69,9 @@ var thisPage = {
             $.cookie("advancedMode", this.advancedMode ? "on" : "off", { expires: 365 });
         }
         if (this.advancedMode) {
-            $("#advancedSwitch").html("Simple Mode");
-            $("#resultsBlock").addClass("span10");
-            $("#resultsBlock").removeClass("span11");
+            $("#advancedSwitch").html("Simple");
+            $("#resultsBlock").addClass("col-md-10");
+            $("#resultsBlock").removeClass("col-md-12");
 
             $(".toc-ZZ, .cat-EE").show();
             $(".cat-ee").show();
@@ -79,9 +79,9 @@ var thisPage = {
             $(".simple").hide();
             $(".advanced").show();
         } else {
-            $("#advancedSwitch").html("Advanced Mode");
-            $("#resultsBlock").addClass("span11");
-            $("#resultsBlock").removeClass("span10");
+            $("#advancedSwitch").html("Advanced");
+            $("#resultsBlock").addClass("col-md-12");
+            $("#resultsBlock").removeClass("col-md-10");
 
             $(".toc-ZZ, .cat-EE").hide();
 
@@ -128,12 +128,6 @@ function getDateTime(args) {
     return moment();
 }
 
-function preAjax() {
-    $(".progress").show();
-    $("#error-row").hide();
-    $("#no-results-row").hide();
-}
-
 function getCallingBetween(from, to, convertFromCrs, fromDate, toDate) {
     $("#commandOptions > li#from-to" + (convertFromCrs ? "-crs" : "")).addClass("active");
     var startDate;
@@ -164,8 +158,8 @@ function getCallingBetween(from, to, convertFromCrs, fromDate, toDate) {
     $.when(fromQuery, toQuery).done(function (from, to) {
         getCallingBetweenByStanox(from[0], to[0], startDate, endDate);
     }).fail(function () {
-        $(".progress").hide();
-        $("#error-row").show();
+        hide($(".progress"));
+        show($("#error-row"));
     });
 }
 
@@ -196,8 +190,8 @@ function getDestination(crs, convertFromCrs, fromDate, toDate) {
     query.done(function (from) {
         getDestinationByStanox(from, startDate, endDate);
     }).fail(function () {
-        $(".progress").hide();
-        $("#error-row").show();
+        hide($(".progress"));
+        show($("#error-row"));
     });
 }
 
@@ -227,8 +221,8 @@ function getOrigin(crs, convertFromCrs, fromDate, toDate) {
     query.done(function (from) {
         getOriginByStanox(from, startDate, endDate);
     }).fail(function () {
-        $(".progress").hide();
-        $("#error-row").show();
+        hide($(".progress"));
+        show($("#error-row"));
     });
 }
 
@@ -259,8 +253,8 @@ function getStation(crs, convertFromCrs, fromDate, toDate) {
     query.done(function (at) {
         getCallingAtStanox(at, startDate, endDate);
     }).fail(function () {
-        $(".progress").hide();
-        $("#error-row").show();
+        hide($(".progress"));
+        show($("#error-row"));
     });
 }
 
@@ -289,8 +283,6 @@ function getDestinationByStanox(to, startDate, endDate) {
 
     query.done(function (data) {
         if (data && data.Movements.length > 0) {
-            $("#no-results-row").hide();
-
             var viewModels = data.Movements.map(function (movement) {
                 return new TrainNotifier.KnockoutModels.Search.TerminatingAtTrainMovement(movement, data.Tiplocs, currentStartDate);
             });
@@ -299,13 +291,14 @@ function getDestinationByStanox(to, startDate, endDate) {
                 startEndSearchResults.push(viewModels[i]);
             }
         } else {
-            $("#no-results-row").show();
+            show($("#no-results-row"));
         }
     }).always(function () {
-        $(".progress").hide();
+        hide($(".progress"));
         thisPage.advancedSwitch(false);
     }).fail(function () {
-        $("#error-row").show();
+        hide($(".progress"));
+        show($("#error-row"));
     });
 }
 
@@ -332,8 +325,6 @@ function getOriginByStanox(from, startDate, endDate) {
     }
     query.done(function (data) {
         if (data && data.Movements.length > 0) {
-            $("#no-results-row").hide();
-
             var viewModels = data.Movements.map(function (movement) {
                 return new TrainNotifier.KnockoutModels.Search.StartingAtTrainMovement(movement, data.Tiplocs, currentStartDate);
             });
@@ -342,13 +333,14 @@ function getOriginByStanox(from, startDate, endDate) {
                 startEndSearchResults.push(viewModels[i]);
             }
         } else {
-            $("#no-results-row").show();
+            show($("#no-results-row"));
         }
     }).always(function () {
-        $(".progress").hide();
+        hide($(".progress"));
         thisPage.advancedSwitch(false);
     }).fail(function () {
-        $("#error-row").show();
+        hide($(".progress"));
+        show($("#error-row"));
     });
 }
 
@@ -376,8 +368,6 @@ function getCallingAtStanox(at, startDate, endDate) {
 
     query.done(function (data) {
         if (data && data.Movements.length > 0) {
-            $("#no-results-row").hide();
-
             var viewModels = data.Movements.map(function (movement) {
                 return new TrainNotifier.KnockoutModels.Search.CallingAtTrainMovement(movement, currentStanox, data.Tiplocs, currentStartDate);
             });
@@ -386,13 +376,14 @@ function getCallingAtStanox(at, startDate, endDate) {
                 callingAtSearchResults.push(viewModels[i]);
             }
         } else {
-            $("#no-results-row").show();
+            show($("#no-results-row"));
         }
     }).always(function () {
-        $(".progress").hide();
+        hide($(".progress"));
         thisPage.advancedSwitch(false);
     }).fail(function () {
-        $("#error-row").show();
+        hide($(".progress"));
+        show($("#error-row"));
     });
 }
 
@@ -442,7 +433,8 @@ function getCallingBetweenByStanox(from, to, startDate, endDate) {
         $(".progress").hide();
         thisPage.advancedSwitch(false);
     }).fail(function () {
-        $("#error-row").show();
+        hide($(".progress"));
+        show($("#error-row"));
     });
 }
 

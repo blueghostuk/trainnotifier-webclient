@@ -33,6 +33,9 @@
     <style type="text/css">
         @@import url('//fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,400,700');
     </style>
+    <style type="text/css">
+        @@import url('//fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,400,700');
+    </style>
     <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.5.1/leaflet.css" />
     <!--[if lte IE 8]>
         <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.5.1/leaflet.ie.css" />
@@ -53,25 +56,20 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
                 </button>
                 <a class="navbar-brand" href="#">@System.Configuration.ConfigurationManager.AppSettings["brandingTitle"]</a>
             </div>
             <div class="navbar-collapse collapse">
-                <form class="navbar-form navbar-left">
-                    <div class="form-group">
-                        <input type="search" id="global-search-box" autocomplete="off" class="form-control" placeholder="Enter Command">
-                        @RenderSection("TopMenuAdditional", false)
-                    </div>                    
-                    <!--/.form-group -->
-                </form>
                 <ul class="nav navbar-nav">
                     @RenderSection("TopMenu", true)
                 </ul>
+                <form class="navbar-form navbar-right">
+                    <div class="form-group">
+                        <input type="search" id="global-search-box" autocomplete="off" class="form-control" placeholder="Enter Command">
+                    </div>
+                    @RenderSection("TopMenuAdditional", false)
+                    <!--/.form-group -->
+                </form>
             </div>
             <!--/.navbar-collapse -->
         </div>
@@ -99,7 +97,7 @@
                 </script>
             </div>
         }
-        </div>
+    </div>
     <div class="container">
         <hr />
         <footer>
@@ -122,7 +120,8 @@
     <script type="text/javascript">
         TrainNotifier.Common.serverSettings = {
             apiUrl: "@System.Configuration.ConfigurationManager.AppSettings["apiUrl"]",
-            wsUrl: "@System.Configuration.ConfigurationManager.AppSettings["wsUrl"]"
+            wsUrl: "@System.Configuration.ConfigurationManager.AppSettings["wsUrl"]",
+            apiName: "@System.Configuration.ConfigurationManager.AppSettings["apiName"]"
         };
     </script>
     @RenderSection("FooterJs", required: false)

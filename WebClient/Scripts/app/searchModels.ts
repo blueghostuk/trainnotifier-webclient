@@ -30,10 +30,10 @@ module TrainNotifier.KnockoutModels.Search {
 
         public departureDate: string = "";
 
-        public fromStation: string;
+        public fromStation: string = "";
         public fromStationCss: string = null;
 
-        public toStation: string;
+        public toStation: string = "";
         public toStationCss: string = null;
 
         public computedCss: KnockoutComputed<string>;
@@ -145,14 +145,14 @@ module TrainNotifier.KnockoutModels.Search {
 
     export class StartingAtTrainMovement extends TrainMovement {
 
-        public fromPlatform: string;
+        public fromPlatform: string = "";
         public publicDeparture: string = "";
-        public wttDeparture: string;
+        public wttDeparture: string = "";
         public actualDeparture: string = "";
 
-        public toPlatform: string;
+        public toPlatform: string = "";
         public publicArrival: string = "";
-        public wttArrival: string;
+        public wttArrival: string = "";
         public actualArrival: string = "";
 
         constructor(trainMovement: ITrainMovementResult, tiplocs: IStationTiploc[], queryStartDate: Moment) {
@@ -204,14 +204,14 @@ module TrainNotifier.KnockoutModels.Search {
 
     export class TerminatingAtTrainMovement extends TrainMovement {
 
-        public fromPlatform: string;
+        public fromPlatform: string = "";
         public publicDeparture: string = "";
-        public wttDeparture: string;
+        public wttDeparture: string = "";
         public actualDeparture: string = "";
 
-        public toPlatform: string;
+        public toPlatform: string = "";
         public publicArrival: string = "";
-        public wttArrival: string;
+        public wttArrival: string = "";
         public actualArrival: string = "";
 
         constructor(trainMovement: ITrainMovementResult, tiplocs: IStationTiploc[], queryStartDate: Moment) {
@@ -389,14 +389,14 @@ module TrainNotifier.KnockoutModels.Search {
 
     export class CallingBetweenTrainMovement extends TrainMovement {
 
-        public fromPlatform: string;
+        public fromPlatform: string = "";
         public publicDeparture: string = "";
-        public wttDeparture: string;
+        public wttDeparture: string = "";
         public actualDeparture: string = "";
 
-        public toPlatform: string;
+        public toPlatform: string = "";
         public publicArrival: string = "";
-        public wttArrival: string;
+        public wttArrival: string = "";
         public actualArrival: string = "";
 
         public passDeparture = false;

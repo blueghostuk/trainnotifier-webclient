@@ -88,9 +88,9 @@ var thisPage: IPage = {
             $.cookie("advancedMode", this.advancedMode ? "on" : "off", { expires: 365 });
         }
         if (this.advancedMode) {
-            $("#advancedSwitch").html("Simple Mode");
-            $("#resultsBlock").addClass("span10");
-            $("#resultsBlock").removeClass("span11");
+            $("#advancedSwitch").html("Simple");
+            $("#resultsBlock").addClass("col-md-10");
+            $("#resultsBlock").removeClass("col-md-12");
 
             $(".simple").hide();
             $(".advanced").show();
@@ -99,9 +99,9 @@ var thisPage: IPage = {
                 document.location.hash = document.location.hash + "/advanced";
             }
         } else {
-            $("#advancedSwitch").html("Advanced Mode");
-            $("#resultsBlock").addClass("span11");
-            $("#resultsBlock").removeClass("span10");
+            $("#advancedSwitch").html("Advanced");
+            $("#resultsBlock").addClass("col-md-12");
+            $("#resultsBlock").removeClass("col-md-10");
             $(".simple").show();
             $(".advanced").hide();
             if (document.location.hash.indexOf("/advanced") != -1) {
@@ -338,8 +338,7 @@ function subTrain() {
 }
 
 function getById(id) {
-    $(".progress").show();
-    $("#no-results-row").hide();
+    preAjax();
     webApi.getTrainMovementById(id).done(function (data) {
         if (data) {
             $("#commandOptions > li.active").removeClass("active");
@@ -347,18 +346,17 @@ function getById(id) {
             thisPage.setCommand("get/" + data.TrainUid + "/" + moment(data.SchedOriginDeparture).format(TrainNotifier.DateTimeFormats.dateQueryFormat));
             getTrainData(data.TrainUid, moment(data.SchedOriginDeparture).format(TrainNotifier.DateTimeFormats.dateQueryFormat), false);
         } else {
-            $("#no-results-row").show();
-            $(".progress").hide();
+            show($("#no-results-row"));
         }
     }).fail(function () {
-        $(".progress").hide();
-        $("#error-row").show();
-    });
+            show($("#error-row"));
+        }).always(function () {
+            hide($(".progress"));
+        });
 }
 
 function getTrainData(trainUid, date, subscribe: boolean) {
-    $(".progress").show();
-    $("#no-results-row").hide();
+    preAjax();
     sendWsCommand("unsubtrain:");
     reset();
     webApi.getTrainMovementByUid(trainUid, date).done(function (data: ISingleTrainMovementResult) {
@@ -495,9 +493,9 @@ function getTrainData(trainUid, date, subscribe: boolean) {
             doSubTrain();
         }
     }).fail(function () {
-        $("#error-row").show();
+            show($("#error-row"));
     }).always(function () {
-        $(".progress").hide();
+            hide($(".progress"));
     });
 }
 

@@ -41,7 +41,9 @@ var TrainNotifier;
                     this.changeOfOrigin = ko.observable(false);
                     this.changeOfOriginStation = null;
                     this.departureDate = "";
+                    this.fromStation = "";
                     this.fromStationCss = null;
+                    this.toStation = "";
                     this.toStationCss = null;
                     this.category = ko.observable("cat-na");
                     var self = this;
@@ -144,9 +146,13 @@ var TrainNotifier;
                 __extends(StartingAtTrainMovement, _super);
                 function StartingAtTrainMovement(trainMovement, tiplocs, queryStartDate) {
                     _super.call(this, trainMovement, tiplocs, queryStartDate);
+                    this.fromPlatform = "";
                     this.publicDeparture = "";
+                    this.wttDeparture = "";
                     this.actualDeparture = "";
+                    this.toPlatform = "";
                     this.publicArrival = "";
+                    this.wttArrival = "";
                     this.actualArrival = "";
 
                     var toStop;
@@ -197,9 +203,13 @@ var TrainNotifier;
                 __extends(TerminatingAtTrainMovement, _super);
                 function TerminatingAtTrainMovement(trainMovement, tiplocs, queryStartDate) {
                     _super.call(this, trainMovement, tiplocs, queryStartDate);
+                    this.fromPlatform = "";
                     this.publicDeparture = "";
+                    this.wttDeparture = "";
                     this.actualDeparture = "";
+                    this.toPlatform = "";
                     this.publicArrival = "";
+                    this.wttArrival = "";
                     this.actualArrival = "";
 
                     var toStop;
@@ -376,9 +386,13 @@ var TrainNotifier;
                 __extends(CallingBetweenTrainMovement, _super);
                 function CallingBetweenTrainMovement(trainMovement, fromTiploc, toTiploc, tiplocs, queryStartDate) {
                     _super.call(this, trainMovement, tiplocs, queryStartDate);
+                    this.fromPlatform = "";
                     this.publicDeparture = "";
+                    this.wttDeparture = "";
                     this.actualDeparture = "";
+                    this.toPlatform = "";
                     this.publicArrival = "";
+                    this.wttArrival = "";
                     this.actualArrival = "";
                     this.passDeparture = false;
                     this.passArrival = false;

@@ -88,9 +88,9 @@ var thisPage = {
             $.cookie("advancedMode", this.advancedMode ? "on" : "off", { expires: 365 });
         }
         if (this.advancedMode) {
-            $("#advancedSwitch").html("Simple Mode");
-            $("#resultsBlock").addClass("span10");
-            $("#resultsBlock").removeClass("span11");
+            $("#advancedSwitch").html("Simple");
+            $("#resultsBlock").addClass("col-md-10");
+            $("#resultsBlock").removeClass("col-md-12");
 
             $(".simple").hide();
             $(".advanced").show();
@@ -99,9 +99,9 @@ var thisPage = {
                 document.location.hash = document.location.hash + "/advanced";
             }
         } else {
-            $("#advancedSwitch").html("Advanced Mode");
-            $("#resultsBlock").addClass("span11");
-            $("#resultsBlock").removeClass("span10");
+            $("#advancedSwitch").html("Advanced");
+            $("#resultsBlock").addClass("col-md-12");
+            $("#resultsBlock").removeClass("col-md-10");
             $(".simple").show();
             $(".advanced").hide();
             if (document.location.hash.indexOf("/advanced") != -1) {
@@ -332,8 +332,7 @@ function subTrain() {
 }
 
 function getById(id) {
-    $(".progress").show();
-    $("#no-results-row").hide();
+    preAjax();
     webApi.getTrainMovementById(id).done(function (data) {
         if (data) {
             $("#commandOptions > li.active").removeClass("active");
@@ -351,8 +350,7 @@ function getById(id) {
 }
 
 function getTrainData(trainUid, date, subscribe) {
-    $(".progress").show();
-    $("#no-results-row").hide();
+    preAjax();
     sendWsCommand("unsubtrain:");
     reset();
     webApi.getTrainMovementByUid(trainUid, date).done(function (data) {
