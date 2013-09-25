@@ -1,0 +1,4 @@
+﻿.input-group-addon:first-child {
+    width: 6em !important;
+    text-align: left;
+}

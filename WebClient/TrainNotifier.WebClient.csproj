@@ -99,12 +99,13 @@
     <Content Include="Content\app\station.css" />
     <Content Include="Content\app\train.css" />
     <Content Include="Content\bootstrap-datepicker.css" />
-    <Content Include="Content\bootstrap-responsive.css" />
-    <Content Include="Content\bootstrap-responsive.min.css" />
-    <Content Include="Content\bootstrap.css" />
-    <Content Include="Content\bootstrap.min.css" />
-    <Content Include="Content\images\glyphicons-halflings-white.png" />
-    <Content Include="Content\images\glyphicons-halflings.png" />
+    <Content Include="Content\bootstrap\bootstrap-theme.css" />
+    <Content Include="Content\bootstrap\bootstrap-theme.min.css" />
+    <Content Include="Content\bootstrap\bootstrap.css" />
+    <Content Include="Content\bootstrap\bootstrap.min.css" />
+    <Content Include="Content\bootstrap\overrides.css" />
+    <Content Include="Content\bootstrap\typeahead-fix.css" />
+    <Content Include="Content\fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Content\images\ios\apple-touch-icon-114x114.png" />
     <Content Include="Content\images\ios\apple-touch-icon-144x144.png" />
     <Content Include="Content\images\ios\apple-touch-startup-image-1496x2048.png" />
@@ -174,10 +175,13 @@
       <DependentUpon>websockets.ts</DependentUpon>
     </Content>
     <Content Include="Scripts\bootstrap-datepicker.js" />
+    <Content Include="route.cshtml" />
+    <Content Include="Content\fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="Content\fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="Content\fonts\glyphicons-halflings-regular.eot" />
+    <None Include="Scripts\jquery-2.0.3.intellisense.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
-    <Content Include="route.cshtml" />
-    <None Include="Scripts\jquery-2.0.3.intellisense.js" />
     <Content Include="Scripts\jquery-2.0.3.js" />
     <Content Include="Scripts\jquery-2.0.3.min.js" />
     <Content Include="Scripts\jquery.cookie.js" />
@@ -229,6 +233,8 @@
     <Content Include="Scripts\moment+langs.min.js" />
     <Content Include="Scripts\moment.js" />
     <Content Include="Scripts\moment.min.js" />
+    <Content Include="Scripts\typeahead.js" />
+    <Content Include="Scripts\typeahead.min.js" />
     <Content Include="Scripts\typings\bootstrap\bootstrap.d.ts" />
     <Content Include="Scripts\typings\jquery.cookie\jquery.cookie.d.ts" />
     <Content Include="Scripts\typings\knockout.mapping\knockout.mapping.d.ts" />
@@ -279,6 +285,7 @@
     <Content Include="Scripts\jquery-2.0.3.min.map" />
     <None Include="Web.Azure.config">
       <DependentUpon>Web.config</DependentUpon>
+      <SubType>Designer</SubType>
     </None>
     <None Include="Web.Debug-Local.config">
       <DependentUpon>Web.config</DependentUpon>

@@ -37,7 +37,7 @@ $(function () {
                 commands.push('to/' + stations[i].CRS);
             }
             $("#global-search-box").typeahead({
-                source: commands
+                local: commands
             });
         });
 
