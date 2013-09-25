@@ -340,12 +340,12 @@ function getById(id) {
             thisPage.setCommand("get/" + data.TrainUid + "/" + moment(data.SchedOriginDeparture).format(TrainNotifier.DateTimeFormats.dateQueryFormat));
             getTrainData(data.TrainUid, moment(data.SchedOriginDeparture).format(TrainNotifier.DateTimeFormats.dateQueryFormat), false);
         } else {
-            $("#no-results-row").show();
-            $(".progress").hide();
+            show($("#no-results-row"));
         }
     }).fail(function () {
-        $(".progress").hide();
-        $("#error-row").show();
+        show($("#error-row"));
+    }).always(function () {
+        hide($(".progress"));
     });
 }
 
@@ -481,9 +481,9 @@ function getTrainData(trainUid, date, subscribe) {
             doSubTrain();
         }
     }).fail(function () {
-        $("#error-row").show();
+        show($("#error-row"));
     }).always(function () {
-        $(".progress").hide();
+        hide($(".progress"));
     });
 }
 
