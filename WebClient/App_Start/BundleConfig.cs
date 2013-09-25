@@ -72,7 +72,8 @@ namespace TrainNotifier.WebClient
                 "~/Content/spacelab.css",
                 "~/Content/bootstrap-responsive.css",
                 "~/Content/bootstrap-datepicker.css",
-                "~/Content/app/style.css"));
+                "~/Content/app/style.css",
+                "~/Content/app/tocs.css"));
         }
     }
 }

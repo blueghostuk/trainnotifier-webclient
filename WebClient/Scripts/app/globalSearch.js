@@ -41,6 +41,7 @@ $(function () {
 
 function parseGlobalSearchCommand(command) {
     if (TrainNotifier.Common.page) {
+        TrainNotifier.Common.page.settingHash = true;
         TrainNotifier.Common.page.setCommand(command);
         if (TrainNotifier.Common.page.parseCommand()) {
             return;

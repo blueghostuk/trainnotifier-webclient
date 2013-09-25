@@ -58,7 +58,7 @@ $(function () {
 });
 
 function showLocation() {
-    var fromStation = $("#from-crs").val();
+    var fromStation : string = $("#from-crs").val();
     var fromCrs = null;
     if (fromStation.length > 0)
         fromCrs = fromStation.substr(fromStation.lastIndexOf('(') + 1, 3);

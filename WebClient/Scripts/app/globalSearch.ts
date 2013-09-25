@@ -46,6 +46,7 @@ $(function () {
 function parseGlobalSearchCommand(command: string) {
     // see if have a page object that can handle commands already
     if (TrainNotifier.Common.page) {
+        TrainNotifier.Common.page.settingHash = true;
         TrainNotifier.Common.page.setCommand(command);
         if (TrainNotifier.Common.page.parseCommand()) {
             return;

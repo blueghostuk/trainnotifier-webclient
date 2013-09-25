@@ -42,11 +42,11 @@ div#title {
         font-size: x-large;
     }
 
-.starts, .terminates{
+.starts, .terminates {
     font-weight: normal !important;
 }
 
-.stationName{    
+.stationName {
     font-weight: bold;
 }
 
@@ -64,4 +64,20 @@ div#title {
             font-weight: bold;
             font-size: 14px;
         }
+}
+
+.text-warning {
+    margin-top: 10px;
+    margin-left: 40px !important;
+    color: red;
+    font-size: small;
+    font-style: italic;
+}
+
+.text-info {
+    margin-top: 10px;
+    margin-left: 40px !important;
+    color: green;
+    font-size: small;
+    font-style: italic;
 }

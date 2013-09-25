@@ -54,8 +54,14 @@ module TrainNotifier {
             return "http://" + this.serverSettings.apiUrl;
         }
 
+        private getArgs() {
+            return {
+                apiName: this.serverSettings.apiName
+            };
+        }
+
         getStations() {
-            return $.getJSON(this.getBaseUrl() + "/Station/");
+            return $.getJSON(this.getBaseUrl() + "/Station/", this.getArgs());
         }
 
         getStanox(stanox: string) {
@@ -63,106 +69,108 @@ module TrainNotifier {
         }
 
         getStationByLocation(lat: number, lon: number) {
-            return $.getJSON(this.getBaseUrl() + "/Station/GeoLookup", {
+            return $.getJSON(this.getBaseUrl() + "/Station/GeoLookup", $.extend({}, this.getArgs(), {
                 lat: lat,
                 lon: lon
-            });
+            }));
         }
 
         getStanoxByCrsCode(crsCode: string) {
-            return $.getJSON(this.getBaseUrl() + "/Stanox/?GetByCRS&crsCode=" + crsCode);
+            return $.getJSON(this.getBaseUrl() + "/Stanox/?GetByCRS", $.extend({}, this.getArgs(), {
+                crsCode: crsCode
+            }));
         }
 
         getTrainMovementByUid(uid: string, date: string) {
-            return $.getJSON(this.getBaseUrl() + "/TrainMovement/Uid/" + uid + "/" + date);
+            return $.getJSON(this.getBaseUrl() + "/TrainMovement/Uid/" + uid + "/" + date, this.getArgs());
         }
 
         getTrainMovementById(id: string) {
-            return $.getJSON(this.getBaseUrl() + "/TrainMovement/" + id);
+            return $.getJSON(this.getBaseUrl() + "/TrainMovement/" + id, this.getArgs());
         }
 
         getTrainMovementAssociations(uid: string, date: string) {
-            return $.getJSON(this.getBaseUrl() + "/Association/" + uid + "/" + date);
+            return $.getJSON(this.getBaseUrl() + "/Association/" + uid + "/" + date, this.getArgs());
         }
 
         getTrainMovementsByHeadcode(headcode: string, date: string) {
-            return $.getJSON(this.getBaseUrl() + "/TrainMovement/Headcode/" + headcode + "/" + date);
+            return $.getJSON(this.getBaseUrl() + "/TrainMovement/Headcode/" + headcode + "/" + date, this.getArgs());
         }
 
         getTrainMovementsTerminatingAtLocation(stanox: string, startDate: string, endDate: string) {
-            return $.getJSON(this.getBaseUrl() + "/TrainMovement/TerminatingAt/Location/" + stanox, {
+            return $.getJSON(this.getBaseUrl() + "/TrainMovement/TerminatingAt/Location/" + stanox, $.extend({}, this.getArgs(), {
                 startDate: startDate,
                 endDate: endDate
-            });
+            }));
         }
 
         getTrainMovementsTerminatingAtStation(crsCode: string, startDate: string, endDate: string) {
-            return $.getJSON(this.getBaseUrl() + "/TrainMovement/TerminatingAt/Station/" + crsCode, {
+            return $.getJSON(this.getBaseUrl() + "/TrainMovement/TerminatingAt/Station/" + crsCode, $.extend({}, this.getArgs(), {
                 startDate: startDate,
                 endDate: endDate
-            });
+            }));
         }
 
         getTrainMovementsStartingAtLocation(stanox: string, startDate: string, endDate: string) {
-            return $.getJSON(this.getBaseUrl() + "/TrainMovement/StartingAt/Location/" + stanox, {
+            return $.getJSON(this.getBaseUrl() + "/TrainMovement/StartingAt/Location/" + stanox, $.extend({}, this.getArgs(), {
                 startDate: startDate,
                 endDate: endDate
-            });
+            }));
         }
 
         getTrainMovementsStartingAtStation(crsCode: string, startDate: string, endDate: string) {
-            return $.getJSON(this.getBaseUrl() + "/TrainMovement/StartingAt/Station/" + crsCode, {
+            return $.getJSON(this.getBaseUrl() + "/TrainMovement/StartingAt/Station/" + crsCode, $.extend({}, this.getArgs(), {
                 startDate: startDate,
                 endDate: endDate
-            });
+            }));
         }
 
         getTrainMovementsCallingAtLocation(stanox: string, startDate: string, endDate: string) {
-            return $.getJSON(this.getBaseUrl() + "/TrainMovement/CallingAt/Location/" + stanox, {
+            return $.getJSON(this.getBaseUrl() + "/TrainMovement/CallingAt/Location/" + stanox, $.extend({}, this.getArgs(), {
                 startDate: startDate,
                 endDate: endDate
-            });
+            }));
         }
 
         getTrainMovementsCallingAtStation(crsCode: string, startDate: string, endDate: string) {
-            return $.getJSON(this.getBaseUrl() + "/TrainMovement/CallingAt/Station/" + crsCode, {
+            return $.getJSON(this.getBaseUrl() + "/TrainMovement/CallingAt/Station/" + crsCode, $.extend({}, this.getArgs(), {
                 startDate: startDate,
                 endDate: endDate
-            });
+            }));
         }
 
         getTrainMovementsBetweenLocations(fromStanox: string, toStanox: string, startDate: string, endDate: string) {
-            return $.getJSON(this.getBaseUrl() + "/TrainMovement/Between/Location/" + fromStanox + "/" + toStanox, {
+            return $.getJSON(this.getBaseUrl() + "/TrainMovement/Between/Location/" + fromStanox + "/" + toStanox, $.extend({}, this.getArgs(), {
                 startDate: startDate,
                 endDate: endDate
-            });
+            }));
         }
 
         getTrainMovementsBetweenStations(fromCrsCode: string, toCrsCode: string, startDate: string, endDate: string) {
-            return $.getJSON(this.getBaseUrl() + "/TrainMovement/Between/Station/" + fromCrsCode + "/" + toCrsCode, {
+            return $.getJSON(this.getBaseUrl() + "/TrainMovement/Between/Station/" + fromCrsCode + "/" + toCrsCode, $.extend({}, this.getArgs(), {
                 startDate: startDate,
                 endDate: endDate
-            });
+            }));
         }
 
         getPPMData(operatorCode: string, name: string) {
-            return $.getJSON(this.getBaseUrl() + "/PPM/", {
+            return $.getJSON(this.getBaseUrl() + "/PPM/", $.extend({}, this.getArgs(), {
                 operatorCode: operatorCode,
                 name: name
-            });
+            }));
         }
 
         getPPMOperatorRegions(operatorCode: string) {
             operatorCode = operatorCode || "";
-            return $.getJSON(this.getBaseUrl() + "/PPM/" + operatorCode);
+            return $.getJSON(this.getBaseUrl() + "/PPM/" + operatorCode, this.getArgs());
         }
 
         getPPMSectors() {
-            return $.getJSON(this.getBaseUrl() + "/PPM/");
+            return $.getJSON(this.getBaseUrl() + "/PPM/", this.getArgs());
         }
 
         getBerthContents(berth: string) {
-            return $.getJSON(this.getBaseUrl() + "/Td/Berth/" + berth);
+            return $.getJSON(this.getBaseUrl() + "/Td/Berth/" + berth, this.getArgs());
         }
     }
 }

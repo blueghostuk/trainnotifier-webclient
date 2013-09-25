@@ -35,14 +35,17 @@ var TrainNotifier;
                     this.operatorCode = "NA";
                     this.operatorName = "Unknown";
                     this.title = null;
-                    this.cancel = false;
+                    this.cancel = ko.observable(false);
                     this.cancelEnRoute = null;
-                    this.reinstate = false;
-                    this.changeOfOrigin = false;
+                    this.reinstate = ko.observable(false);
+                    this.changeOfOrigin = ko.observable(false);
                     this.changeOfOriginStation = null;
                     this.departureDate = "";
                     this.fromStationCss = null;
                     this.toStationCss = null;
+                    this.category = ko.observable("cat-na");
+                    var self = this;
+
                     this.trainId = trainMovement.Schedule.TrainUid;
                     if (trainMovement.Schedule.AtocCode) {
                         this.operatorCode = trainMovement.Schedule.AtocCode.Code;
@@ -70,7 +73,7 @@ var TrainNotifier;
                                 this.cancelEnRoute = cancelTiploc.Description.toLowerCase();
                             }
 
-                            this.cancel = true;
+                            this.cancel(true);
                             this.title = titleText;
                         }
                     }
@@ -82,7 +85,7 @@ var TrainNotifier;
                             var titleText = "Will start from " + cooTiploc.Description.toLocaleLowerCase() + " at " + moment(coo.NewDepartureTime).format(TrainNotifier.DateTimeFormats.timeFormat) + " (" + coo.Description + ")";
 
                             this.changeOfOriginStation = cooTiploc.Description.toLocaleLowerCase();
-                            this.changeOfOrigin = true;
+                            this.changeOfOrigin(true);
                             this.title = titleText;
                         }
                     }
@@ -92,13 +95,41 @@ var TrainNotifier;
                         if (reinstateTiploc) {
                             var titleText = "Reinstated at " + reinstateTiploc.Description.toLowerCase() + " at " + moment(reinstatement.PlannedDepartureTime).format(TrainNotifier.DateTimeFormats.timeFormat);
 
-                            this.reinstate = true;
+                            this.reinstate(true);
                             this.title = titleText;
 
-                            this.cancel = false;
+                            this.cancel(false);
                             this.cancelEnRoute = null;
                         }
                     }
+
+                    if (trainMovement.Schedule.CategoryTypeId) {
+                        var cat = TrainNotifier.CategoryTypeLookup.getCategoryType(trainMovement.Schedule.CategoryTypeId);
+                        if (cat) {
+                            this.category(cat.Code);
+                        }
+                    }
+
+                    this.computedCss = ko.computed(function () {
+                        var css = [];
+                        if (self.cancel()) {
+                            css.push("error");
+                        }
+                        if (self.changeOfOrigin()) {
+                            css.push("info");
+                        }
+                        if (self.reinstate()) {
+                            css.push("reinstatement");
+                        }
+                        if (self.operatorCode) {
+                            css.push("toc-" + self.operatorCode);
+                        }
+                        if (self.category()) {
+                            css.push("cat-" + self.category());
+                        }
+
+                        return css.join(" ");
+                    });
                 }
                 TrainMovement.matchesTiploc = function (stanoxCode, tiplocs) {
                     return tiplocs.some(function (at) {
@@ -218,11 +249,14 @@ var TrainNotifier;
                 __extends(CallingAtTrainMovement, _super);
                 function CallingAtTrainMovement(trainMovement, atTiploc, tiplocs, queryStartDate) {
                     _super.call(this, trainMovement, tiplocs, queryStartDate);
+                    this.atPlatform = "";
                     this.atPublicDeparture = "";
+                    this.atWttDeparture = "";
                     this.atActualDeparture = "";
                     this.atPublicArrival = "";
+                    this.atWttArrival = "";
                     this.atActualArrival = "";
-                    this.pass = false;
+                    this.pass = ko.observable(false);
 
                     var atTiplocs = tiplocs.filter(function (t) {
                         return t.CRS == atTiploc.CRS;
@@ -252,7 +286,7 @@ var TrainNotifier;
                             this.atPlatform = atStop.Platform;
 
                             if (atStop.Pass) {
-                                this.pass = true;
+                                this.pass(true);
                                 this.atPublicDeparture = "Pass";
                                 this.atWttDeparture = TrainNotifier.DateTimeFormats.formatTimeString(atStop.Pass);
                                 this.atPublicArrival = "Pass";
@@ -296,6 +330,31 @@ var TrainNotifier;
                             }
                         }
                     }
+
+                    var self = this;
+                    this.computedCss = ko.computed(function () {
+                        var css = [];
+                        if (self.pass()) {
+                            css.push("pass");
+                        }
+                        if (self.cancel()) {
+                            css.push("error");
+                        }
+                        if (self.changeOfOrigin()) {
+                            css.push("info");
+                        }
+                        if (self.reinstate()) {
+                            css.push("reinstatement");
+                        }
+                        if (self.operatorCode) {
+                            css.push("toc-" + self.operatorCode);
+                        }
+                        if (self.category()) {
+                            css.push("cat-" + self.category());
+                        }
+
+                        return css.join(" ");
+                    });
                 }
                 return CallingAtTrainMovement;
             })(TrainMovement);
