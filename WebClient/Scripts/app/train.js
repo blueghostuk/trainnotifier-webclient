@@ -41,9 +41,6 @@ var thisPage = {
         var cmd = cmdString.substring(0, idx);
         var args = cmdString.substring(idx + 1);
 
-        $("#commandOptions > li.active").removeClass("active");
-        $("#commandOptions > li#" + cmd).addClass("active");
-
         if (cmd == "id") {
             getById(args);
             return true;
@@ -283,8 +280,6 @@ function sendWsCommand(command) {
 
 function subTrain() {
     if (_lastTrainData && _lastTrainData.Movement.Actual && webSockets && webSockets.state == WebSocket.OPEN) {
-        $("#commandOptions > li.active").removeClass("active");
-        $("#commandOptions > li#sub").addClass("active");
         thisPage.setCommand("sub/" + _lastTrainData.Movement.Schedule.TrainUid + "/" + moment(_lastTrainData.Movement.Actual.OriginDepartTimestamp).format(TrainNotifier.DateTimeFormats.dateQueryFormat));
         doSubTrain();
     }
@@ -294,8 +289,6 @@ function getById(id) {
     preAjax();
     webApi.getTrainMovementById(id).done(function (data) {
         if (data) {
-            $("#commandOptions > li.active").removeClass("active");
-            $("#commandOptions > li#get").addClass("active");
             thisPage.setCommand("get/" + data.TrainUid + "/" + moment(data.SchedOriginDeparture).format(TrainNotifier.DateTimeFormats.dateQueryFormat));
             getTrainData(data.TrainUid, moment(data.SchedOriginDeparture).format(TrainNotifier.DateTimeFormats.dateQueryFormat), false);
         } else {

@@ -46,21 +46,7 @@ $(function () {
             locations.push(results[i].StationName + ' (' + results[i].CRS + ' - ' + results[i].Tiploc + ')');
         }
         $("#filter-location").typeahead({
-            source: locations,
-            sorter: function (items) {
-                var self = this;
-                return items.sort(function (a, b) {
-                    var aCrs = a.substr(a.lastIndexOf('(') + 1, 3);
-                    var bCrs = b.substr(b.lastIndexOf('(') + 1, 3);
-
-                    if (self.query.toLowerCase() == aCrs.toLowerCase())
-                        return -1;
-else if (self.query.toLowerCase() == bCrs.toLowerCase())
-                        return 1;
-else
-                        return aCrs > bCrs ? 1 : -1;
-                });
-            }
+            local: locations
         });
         $("#filter-location").attr("placeholder", "Filter By Location");
     });

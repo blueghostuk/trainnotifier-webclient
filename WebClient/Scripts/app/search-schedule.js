@@ -33,7 +33,7 @@ var thisPage = {
         var cmd = cmdString.substring(0, idx);
         var args = cmdString.substring(idx + 1).split('/');
 
-        $("#commandOptions > li.active").removeClass("active");
+        $("#commandOptions > a.active").removeClass("active");
         var convertFromCrs = args[0].length == 3;
 
         switch (cmd) {
@@ -117,7 +117,7 @@ function getDateTime(args) {
 }
 
 function getCallingBetween(from, to, convertFromCrs, fromDate, toDate) {
-    $("#commandOptions > li#from-to" + (convertFromCrs ? "-crs" : "")).addClass("active");
+    $("#commandOptions > a#from-to" + (convertFromCrs ? "-crs" : "")).addClass("active");
     var startDate;
     var endDate;
     if (toDate) {
@@ -152,7 +152,7 @@ function getCallingBetween(from, to, convertFromCrs, fromDate, toDate) {
 }
 
 function getDestination(crs, convertFromCrs, fromDate, toDate) {
-    $("#commandOptions > li#to" + (convertFromCrs ? "-crs" : "")).addClass("active");
+    $("#commandOptions > a#to" + (convertFromCrs ? "-crs" : "")).addClass("active");
     var startDate;
     var endDate;
     if (toDate) {
@@ -184,7 +184,7 @@ function getDestination(crs, convertFromCrs, fromDate, toDate) {
 }
 
 function getOrigin(crs, convertFromCrs, fromDate, toDate) {
-    $("#commandOptions > li#from" + (convertFromCrs ? "-crs" : "")).addClass("active");
+    $("#commandOptions > a#from" + (convertFromCrs ? "-crs" : "")).addClass("active");
     var startDate;
     var endDate;
     if (toDate) {
@@ -215,7 +215,7 @@ function getOrigin(crs, convertFromCrs, fromDate, toDate) {
 }
 
 function getStation(crs, convertFromCrs, fromDate, toDate) {
-    $("#commandOptions > li#at" + (convertFromCrs ? "-crs" : "")).addClass("active");
+    $("#commandOptions > a#at" + (convertFromCrs ? "-crs" : "")).addClass("active");
     var startDate;
     var endDate;
     if (toDate) {

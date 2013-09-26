@@ -22,17 +22,17 @@
     </li>
     <li><a href="~/ppm">PPM</a></li>
 }
-<div class="row-fluid">
-    <div class="span12">
-        <div class="btn-group">
-            <div class="input-prepend">
-                <span class="add-on"><i class="icon-filter"></i></span>
-                <input type="text" id="filter-location" class="span9" placeholder="Filter By Location" />
-                <a class="btn btn-connect" onclick="connectWs();" title="Connect to server"><i class="icon-play"></i></a>
-                <a class="btn btn-disconnect" onclick="disconnect();" disabled="disabled" title="Disconnect from server"><i class="icon-stop"></i></a>
-                <a class="btn" href="#" title="Clear table" onclick="clearTable();"><i class="icon-remove"></i></a>
+<div class="row">
+    <div class="col-md-12">
+        <div class="input-group input-group-sm">
+            <span class="input-group-addon"><span class="glyphicon glyphicon-filter"></span></span>
+            <input type="text" class="form-control" id="filter-location" class="span9" placeholder="Filter By Location" />
+            <span class="input-group-addon">
+                <a class="btn btn-connect" onclick="connectWs();" title="Connect to server"><span class="glyphicon glyphicon-play"></span></a>
+                <a class="btn btn-disconnect" onclick="disconnect();" disabled="disabled" title="Disconnect from server"><span class="glyphicon glyphicon-stop"></span></a>
+                <a class="btn" href="#" title="Clear table" onclick="clearTable();"><span class="glyphicon glyphicon-remove"></span></a>
                 <a class="btn" href="#" id="status">Connection Status</a>
-            </div>
+            </span>
         </div>
         <table class="table table-hover table-bordered" id="table-trains">
             <thead>
@@ -54,9 +54,9 @@
 <!--/row-fluid-->
 <div class="row">
     <p class="text-info">
-        <i class="icon-info-sign"></i>&nbsp;
-        This page shows a raw feed from the server. some data may not be parsed correctly and leaving it connected for a long period may crash your browser.
-        <br />
-        Click the <i class="icon-play"></i> to connect, <i class="icon-stop"></i> to disconnect and <i class="icon-remove"></i> to clear the results.
+        <span class="glyphicon glyphicon-info-sign"></span>&nbsp;
+        This page shows a raw feed from the server.<br /><br />
+        Some data may not be parsed correctly and leaving it connected for a long period may crash your browser.<br /><br />
+        Click the<span class="glyphicon glyphicon-play"></span> to connect,<span class="glyphicon glyphicon-stop"></span> to disconnect and<span class="glyphicon glyphicon-remove"></span> to clear the results.
     </p>
 </div>

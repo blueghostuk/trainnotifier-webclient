@@ -34,7 +34,7 @@ var thisPage: IPage = {
         var cmd = cmdString.substring(0, idx);
         var args = cmdString.substring(idx + 1).split('/');
 
-        $("#commandOptions > li.active").removeClass("active");
+        $("#commandOptions > a.active").removeClass("active");
         var convertFromCrs = args[0].length == 3;
 
         switch (cmd) {
@@ -118,7 +118,7 @@ function getDateTime(args): Moment {
 }
 
 function getCallingBetween(from: string, to: string, convertFromCrs: boolean, fromDate: Moment, toDate?: Moment) {
-    $("#commandOptions > li#from-to" + (convertFromCrs ? "-crs" : "")).addClass("active");
+    $("#commandOptions > a#from-to" + (convertFromCrs ? "-crs" : "")).addClass("active");
     var startDate: Moment;
     var endDate: Moment;
     if (toDate) {
@@ -153,7 +153,7 @@ function getCallingBetween(from: string, to: string, convertFromCrs: boolean, fr
 }
 
 function getDestination(crs: string, convertFromCrs: boolean, fromDate: Moment, toDate?: Moment) {
-    $("#commandOptions > li#to" + (convertFromCrs ? "-crs" : "")).addClass("active");
+    $("#commandOptions > a#to" + (convertFromCrs ? "-crs" : "")).addClass("active");
     var startDate: Moment;
     var endDate: Moment;
     if (toDate) {
@@ -185,7 +185,7 @@ function getDestination(crs: string, convertFromCrs: boolean, fromDate: Moment, 
 }
 
 function getOrigin(crs: string, convertFromCrs: boolean, fromDate: Moment, toDate?: Moment) {
-    $("#commandOptions > li#from" + (convertFromCrs ? "-crs" : "")).addClass("active");
+    $("#commandOptions > a#from" + (convertFromCrs ? "-crs" : "")).addClass("active");
     var startDate: Moment;
     var endDate: Moment;
     if (toDate) {
@@ -216,7 +216,7 @@ function getOrigin(crs: string, convertFromCrs: boolean, fromDate: Moment, toDat
 }
 
 function getStation(crs: string, convertFromCrs: boolean, fromDate: Moment, toDate?: Moment) {
-    $("#commandOptions > li#at" + (convertFromCrs ? "-crs" : "")).addClass("active");
+    $("#commandOptions > a#at" + (convertFromCrs ? "-crs" : "")).addClass("active");
     var startDate: Moment;
     var endDate: Moment;
     if (toDate) {
