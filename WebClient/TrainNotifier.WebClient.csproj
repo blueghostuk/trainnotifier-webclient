@@ -91,7 +91,6 @@
     <Content Include="bin\System.Web.WebPages.Deployment.dll" />
     <Content Include="bin\System.Web.WebPages.dll" />
     <Content Include="bin\System.Web.WebPages.Razor.dll" />
-    <Content Include="Content\app\index.css" />
     <Content Include="Content\app\live.css" />
     <Content Include="Content\app\ppm.css" />
     <Content Include="Content\app\route.css" />

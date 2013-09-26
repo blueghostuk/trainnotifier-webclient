@@ -2,9 +2,6 @@
     Layout = "~/_Layout.cshtml";
 }
 @using System.Web.Optimization;
-@section CustomCss{
-    @Styles.Render("~/bundles/css/index")
-}
 @section FooterJs{
     @Scripts.Render("~/bundles/js/index")
 }
@@ -75,7 +72,7 @@
             </div>
             <br />
             <p>
-                <button type="submit" class="btn btn-default">Find</button>
+                <button type="submit" class="btn btn-primary">Find</button>
             </p>
         </form>
     </div>
