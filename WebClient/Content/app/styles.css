@@ -7,10 +7,53 @@
     text-decoration: line-through;
 }
 
+.centerText {
+    text-align: center !important;
+}
+
+.table tbody tr.pass > td {
+    background-color: #F2F2DB;
+    font-style: italic;
+}
+
+.table tbody tr td.pass {
+    background-color: #F2F2DB;
+    font-style: italic;
+}
+
+.table tbody tr.cancel > td {
+    background-color: #f2dede !important;
+}
+
 table.table-header-colour thead th {
     background-color: #CFCFCE;
     color: #333E42;
 }
+
+tr.info > td {
+    background-color: #d9edf7 !important;
+}
+
+    tr.info > td > span.changeOfOrigin {
+        display: block;
+    }
+
+.changeOfDestination {
+    text-decoration: line-through;
+}
+
+tr.error > td > span.changeOfDestination {
+    display: block;
+}
+
+.table tbody tr.reinstatement > td {
+    background-color: #0099dd !important;
+    color: white !important;
+}
+
+    .table tbody tr.reinstatement > td > a {
+        color: white !important;
+    }
 
 .fixed {
     position: fixed;
@@ -20,8 +63,12 @@ table.table-header-colour thead th {
     cursor: pointer;
 }
 
-#global-search-box{
+#global-search-box {
     border-radius: 4px !important;
+}
+
+tr.info > td > span.changeOfOrigin {
+    display: block;
 }
 
 @media (max-width: 979px) {
@@ -30,67 +77,8 @@ table.table-header-colour thead th {
         margin-top: 10px;
     }
 
-    tr.phone-show {
-        display: table-cell !important;
-    }
-
     .time {
         max-width: 3.5ex;
         overflow: hidden;
     }
-}
-/* override bootstrap responsive*/
-@media (max-width: 979px) {
-    .navbar-fixed-top {
-        position: fixed;
-    }
-}
-
-/* override bootstrap responsive*/
-/* only for within navbar*/
-@media (max-width: 767px) {
-    .navbar-inner > .container-fluid {
-        padding-right: 20px;
-        padding-left: 20px;
-    }
-}
-
-/* override bootstrap responsive*/
-/* seems to be issue in chrome dev around this screen size*/
-@media (min-width: 1900px) {
-    .row-fluid .span10 {
-        width: 82.9%;
-    }
-}
-
-@media (max-width: 979px) {
-    body {
-        padding-left: 0px;
-        padding-right: 0px;
-    }
-
-    .container-fluid {
-        padding-left: 0px;
-        padding-right: 0px;
-    }
-
-    .table-bordered {
-        border-radius: 0px;
-    }
-
-        .table-bordered thead:first-child tr:first-child > th:first-child {
-            border-top-left-radius: 0px;
-        }
-
-        .table-bordered thead:first-child tr:first-child > th:last-child {
-            border-top-right-radius: 0px;
-        }
-
-        .table-bordered tbody:last-child tr:last-child > td:first-child {
-            border-bottom-left-radius: 0px;
-        }
-
-        .table-bordered tbody:last-child tr:last-child > td:last-child {
-            border-bottom-right-radius: 0px;
-        }
 }

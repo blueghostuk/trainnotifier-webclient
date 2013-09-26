@@ -24,46 +24,46 @@
     <li><a href="#" id="advancedSwitch" title="Switch Mode">Advanced</a></li>
 }
 <div class="row">
-    <div class="span12">
+    <div class="col-md-4 col-xs-12">
         Select Route:
-        <select onchange="switchRoute($(this.options[this.selectedIndex]).data('routeid'));">
+        <select class="form-control" onchange="switchRoute($(this.options[this.selectedIndex]).data('routeid'));">
             <option data-routeid="xcs">XCity South</option>
             <option data-routeid="xcn">XCity North</option>
             <option data-routeid="wvh">WVH-BHM</option>
         </select>
     </div>
 </div>
-<div class="row-fluid">
-    <div class="span3">
+<div class="row">
+    <div class="col-md-4 col-xs-12">
         <table id="route">
             <thead>
                 <tr>
-                    <td colspan="2"><i class="icon-arrow-down"></i></td>
-                    <td colspan="2"><i class="icon-arrow-up"></i></td>
+                    <td colspan="2"><span class="glyphicon glyphicon-arrow-down"></span></td>
+                    <td colspan="2"><span class="glyphicon glyphicon-arrow-up"></span></td>
                 </tr>
             </thead>
             <tbody data-bind="foreach: $data">
                 <tr>
-                    <td class="comment down" data-bind="css: { label: down.label }">
-                        <span data-bind="text: down.text"></span><i class="icon-arrow-down pull-left"></i>
+                    <td class="comment down label" data-bind="css: { 'label-primary': down.label, 'label-info': !down.label }">
+                        <span data-bind="text: down.text"></span>
                     </td>
                     <td class="berth down" data-bind="text: down.contents, attr: { title: down.timestamp }, click: function () { showTrain(down); }"></td>
                     <td class="berth up" data-bind="text: up.contents, attr: { title: up.timestamp }, click: function () { showTrain(up); }"></td>
-                    <td class="comment up" data-bind="css: { label: down.label }">
-                        <span data-bind="text: up.text"></span><i class="icon-arrow-up pull-right"></i>
+                    <td class="comment up label" data-bind="css: { 'label-primary': down.label, 'label-info': !down.label }">
+                        <span data-bind="text: up.text"></span>
                     </td>
                 </tr>
             </tbody>
             <tfoot>
                 <tr>
-                    <td colspan="2"><i class="icon-arrow-down"></i></td>
-                    <td colspan="2"><i class="icon-arrow-up"></i></td>
+                    <td colspan="2"><span class="glyphicon glyphicon-arrow-down"></span></td>
+                    <td colspan="2"><span class="glyphicon glyphicon-arrow-up"></span></td>
                 </tr>
             </tfoot>
         </table>
     </div>
     <!--/span3-->
-    <div class="span9">
+    <div class="col-md-8 col-xs-6">
         <div class="row alert alert-info hide" id="no-results-row">
             <strong>No Results Found</strong>
         </div>

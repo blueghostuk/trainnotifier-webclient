@@ -116,7 +116,6 @@
     <Content Include="Content\images\ios\apple-touch-startup-image-1496x2048.png" />
     <Content Include="Content\images\ios\apple-touch-startup-image-1536x2008.png" />
     <Content Include="Content\images\ios\apple-touch-startup-image-640x1096.png" />
-    <Content Include="Content\app\style.css" />
     <Content Include="Global.asax" />
     <Content Include="live.cshtml" />
     <Content Include="packages.config" />
