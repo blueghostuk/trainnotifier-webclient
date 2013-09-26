@@ -8,7 +8,9 @@ module TrainNotifier.KnockoutModels.Train {
 
     export class ScheduleStop {
         public location: string;
-        public locationStanox: string;
+        public locationCRS: string;
+        public atLink: string;
+        private locationStanox: string;
         public wttArrive: string = null;
         public publicArrive: string = null;
         public actualArrival: KnockoutComputed<string>;
@@ -34,6 +36,7 @@ module TrainNotifier.KnockoutModels.Train {
             var tiploc = StationTiploc.findStationTiploc(scheduleStop.TiplocStanoxCode, tiplocs);
             this.stopNumber = scheduleStop.StopNumber;
             this.location = tiploc.Description.toLowerCase();
+            this.locationCRS = tiploc.CRS && tiploc.CRS.length > 0 ? tiploc.CRS : null;
             this.locationStanox = scheduleStop.TiplocStanoxCode;
 
             if (scheduleStop.Arrival) {
@@ -100,13 +103,13 @@ module TrainNotifier.KnockoutModels.Train {
 
         private getDelayCss(value: Number) {
             if (value === 0)
-                return "badge-success";
+                return "alert-success";
             if (value < 0)
-                return "badge-info";
+                return "alert-info";
             if (value > 10)
-                return "badge-important";
+                return "alert-important";
             if (value > 0)
-                return "badge-warning";
+                return "alert-warning";
 
             return "hidden";
         }
@@ -164,13 +167,13 @@ module TrainNotifier.KnockoutModels.Train {
 
         private getDelayCss(value: Number) {
             if (value === 0)
-                return "badge-success";
+                return "alert-success";
             if (value < 0)
-                return "badge-info";
+                return "alert-info";
             if (value > 10)
-                return "badge-important";
+                return "alert-important";
             if (value > 0)
-                return "badge-warning";
+                return "alert-warning";
 
             return "hidden";
         }

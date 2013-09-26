@@ -35,7 +35,10 @@
     <tbody data-bind="foreach: $data">
         <tr data-bind="css: { pass: pass, cancel: cancel }">
             @*1. ALL - Location*@
-            <td class="col station stationName"><a class="pointer" data-bind="text: location"></a></td>
+            <td class="col station stationName">
+                <a class="pointer" data-bind="visible: locationCRS, text: location, attr: { href: '/search-schedule#at/' + locationCRS }"></a>
+                <a class="pointer" data-bind="visible: !locationCRS, text: location" onclick="    return false;"></a>
+            </td>
             @*2. Advanced - Pass(Pass)/WTT Expected Arrival*@
             <td class="col arrive wtt hidden-xs hidden-sm visible-md visible-lg" data-bind="text: pass ? 'Pass' : wttArrive"></td>
             @*3. Advanced - Pass(Empty)/Public Expected Arrival*@

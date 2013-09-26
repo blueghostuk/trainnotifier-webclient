@@ -97,3 +97,8 @@ div#title {
     font-size: small;
     font-style: italic;
 }
+
+#map {
+    margin-top: 5px;
+    height: 780px;
+}

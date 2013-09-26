@@ -97,7 +97,7 @@ $(function () {
     if (document.location.hash.length > 0) {
         thisPage.setCommand(document.location.hash.substr(1));
     }
-    $('a[data-toggle="tab"]').on('shown', function (e) {
+    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
         if ($(e.target).attr("href") == "#map" && !map) {
             map = new L.Map('map').setView(new L.LatLng(51.505, -0.09), 13);
             var layer = new L.TileLayer('http://otile{s}.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.png', {

@@ -30,6 +30,7 @@ var TrainNotifier;
                     var tiploc = TrainNotifier.StationTiploc.findStationTiploc(scheduleStop.TiplocStanoxCode, tiplocs);
                     this.stopNumber = scheduleStop.StopNumber;
                     this.location = tiploc.Description.toLowerCase();
+                    this.locationCRS = tiploc.CRS && tiploc.CRS.length > 0 ? tiploc.CRS : null;
                     this.locationStanox = scheduleStop.TiplocStanoxCode;
 
                     if (scheduleStop.Arrival) {
@@ -95,13 +96,13 @@ var TrainNotifier;
                 }
                 ScheduleStop.prototype.getDelayCss = function (value) {
                     if (value === 0)
-                        return "badge-success";
+                        return "alert-success";
                     if (value < 0)
-                        return "badge-info";
+                        return "alert-info";
                     if (value > 10)
-                        return "badge-important";
+                        return "alert-important";
                     if (value > 0)
-                        return "badge-warning";
+                        return "alert-warning";
 
                     return "hidden";
                 };
@@ -155,13 +156,13 @@ var TrainNotifier;
                 }
                 LiveStopBase.prototype.getDelayCss = function (value) {
                     if (value === 0)
-                        return "badge-success";
+                        return "alert-success";
                     if (value < 0)
-                        return "badge-info";
+                        return "alert-info";
                     if (value > 10)
-                        return "badge-important";
+                        return "alert-important";
                     if (value > 0)
-                        return "badge-warning";
+                        return "alert-warning";
 
                     return "hidden";
                 };

@@ -71,12 +71,12 @@ var thisPage: IPage = {
         if (this.advancedMode) {
             $("#advancedSwitch").html("Simple");
 
-            $(".toc-ZZ, .cat-EE").show();
+            $(".toc-ZZ, .cat-EE, .pass").show();
             $(".cat-ee").show();
         } else {
             $("#advancedSwitch").html("Advanced");
 
-            $(".toc-ZZ, .cat-EE").hide();
+            $(".toc-ZZ, .cat-EE, .pass").hide();
         }
     }
 };

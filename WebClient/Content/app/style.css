@@ -70,10 +70,7 @@ tr.error > td > span.changeOfDestination {
         color: white !important;
     }
 
-#map {
-    margin-top: 5px;
-    height: 780px;
-}
+
 
 .top-search {
     margin-right: 5px;
