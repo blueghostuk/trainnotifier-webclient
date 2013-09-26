@@ -35,7 +35,7 @@ module TrainNotifier.KnockoutModels.Train {
         constructor(scheduleStop: IRunningScheduleTrainStop, tiplocs: IStationTiploc[]) {
             var tiploc = StationTiploc.findStationTiploc(scheduleStop.TiplocStanoxCode, tiplocs);
             this.stopNumber = scheduleStop.StopNumber;
-            this.location = tiploc.Description.toLowerCase();
+            this.location = tiploc.Description ? tiploc.Description.toLowerCase() : tiploc.Tiploc;
             this.locationCRS = tiploc.CRS && tiploc.CRS.length > 0 ? tiploc.CRS : null;
             this.locationStanox = scheduleStop.TiplocStanoxCode;
 
@@ -161,7 +161,7 @@ module TrainNotifier.KnockoutModels.Train {
                 return;
 
             var tiploc = StationTiploc.findStationTiploc(location, tiplocs);
-            this.location = tiploc.Description.toLowerCase();
+            this.location = tiploc.Description ? tiploc.Description.toLowerCase() : tiploc.Tiploc;
             this.locationStanox = tiploc.Stanox;
         }
 
@@ -223,7 +223,7 @@ module TrainNotifier.KnockoutModels.Train {
             if (nextStanox) {
                 var nextAtTiploc = StationTiploc.findStationTiploc(nextStanox, tiplocs);
                 if (nextAtTiploc) {
-                    this.nextLocation(nextAtTiploc.Description.toLowerCase());
+                    this.nextLocation(nextAtTiploc.Description ? nextAtTiploc.Description.toLowerCase() : nextAtTiploc.Tiploc);
                 }
                 if (expectedAtNextStanox) {
                     this.nextAt(DateTimeFormats.formatTimeString(expectedAtNextStanox));
@@ -384,7 +384,7 @@ module TrainNotifier.KnockoutModels.Train {
                     this.date = this.date.subtract({ days: 1 });
                     break;
             }
-            this.location = association.Location.Description.toLowerCase();
+            this.location = association.Location.Description ? association.Location.Description.toLowerCase() : association.Location.Tiploc;
         }
 
         get url(): string {
@@ -513,7 +513,7 @@ module TrainNotifier.KnockoutModels.Train {
                 var canTxt = can.Type;
                 if (can.CancelledAtStanoxCode) {
                     var canTiploc = StationTiploc.findStationTiploc(can.CancelledAtStanoxCode, tiplocs);
-                    canTxt += " @ " + canTiploc.Description.toLowerCase();
+                    canTxt += " @ " + canTiploc.Description ? canTiploc.Description.toLowerCase() : canTiploc.Tiploc;
                 }
                 canTxt += " @ " + moment(can.CancelledTimestamp).format(DateTimeFormats.timeFormat)
                     + " - Reason: ";

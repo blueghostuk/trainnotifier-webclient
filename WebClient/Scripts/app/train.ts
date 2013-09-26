@@ -334,7 +334,7 @@ function getTrainData(trainUid, date, subscribe: boolean) {
                 if (data.Movement.ChangeOfOrigins.length > 0) {
                     var coo = data.Movement.ChangeOfOrigins[0];
                     var cooTiploc = TrainNotifier.StationTiploc.findStationTiploc(coo.NewOriginStanoxCode, currentTiplocs);
-                    titleModel.from(cooTiploc.Description.toLowerCase());
+                    titleModel.from(cooTiploc.Description ? cooTiploc.Description.toLowerCase() : cooTiploc.Tiploc);
                     titleModel.start(moment(coo.NewDepartureTime).format(TrainNotifier.DateTimeFormats.shortTimeFormat));
                     var matchingStops = data.Movement.Schedule.Stops.filter(function (stop) {
                         return stop.TiplocStanoxCode == cooTiploc.Stanox;
@@ -352,7 +352,7 @@ function getTrainData(trainUid, date, subscribe: boolean) {
                     var start = data.Movement.Schedule.Stops[0];
                     var startTiploc = TrainNotifier.StationTiploc.findStationTiploc(
                         start.TiplocStanoxCode, currentTiplocs);
-                    titleModel.from(startTiploc.Description.toLowerCase());
+                    titleModel.from(startTiploc.Description ? startTiploc.Description.toLowerCase() : startTiploc.Tiploc);
                     var departureTs = start.PublicDeparture ? start.PublicDeparture : start.Departure;
                     titleModel.start(moment(departureTs, TrainNotifier.DateTimeFormats.timeFormat)
                         .format(TrainNotifier.DateTimeFormats.shortTimeFormat));
@@ -360,13 +360,13 @@ function getTrainData(trainUid, date, subscribe: boolean) {
                 if (data.Movement.Cancellations.length > 0) {
                     var cancel = data.Movement.Cancellations[0];
                     var cancelAtTiploc = TrainNotifier.StationTiploc.findStationTiploc(cancel.CancelledAtStanoxCode, currentTiplocs);
-                    titleModel.to(cancelAtTiploc.Description.toLowerCase());
+                    titleModel.to(cancelAtTiploc.Description ? cancelAtTiploc.Description.toLowerCase() : cancelAtTiploc.Tiploc);
                     titleModel.end(moment(cancel.CancelledTimestamp).format(TrainNotifier.DateTimeFormats.shortTimeFormat));
                 } else if (data.Movement.Schedule.Stops.length > 1) {
                     var end = data.Movement.Schedule.Stops[data.Movement.Schedule.Stops.length - 1];
                     var endTiploc = TrainNotifier.StationTiploc.findStationTiploc(
                         end.TiplocStanoxCode, currentTiplocs);
-                    titleModel.to(endTiploc.Description.toLowerCase());
+                    titleModel.to(endTiploc.Description ? endTiploc.Description.toLowerCase() : endTiploc.Tiploc);
                     var arrivalTs = end.PublicArrival ? end.PublicArrival : end.Arrival;
                     titleModel.end(moment(arrivalTs, TrainNotifier.DateTimeFormats.timeFormat).format(TrainNotifier.DateTimeFormats.shortTimeFormat));
                 }
