@@ -63,11 +63,11 @@
                 <ul class="nav navbar-nav">
                     @RenderSection("TopMenu", true)
                 </ul>
-                <form class="navbar-form navbar-right">
+                @RenderSection("TopMenuAdditional", false)
+                <form class="navbar-form navbar-right visible-md visible-lg">
                     <div class="form-group">
-                        <input type="search" id="global-search-box" autocomplete="off" class="form-control" placeholder="Enter Command">
+                        <input type="text" id="global-search-box" autocomplete="off" class="form-control" placeholder="Enter Command">
                     </div>
-                    @RenderSection("TopMenuAdditional", false)
                     <!--/.form-group -->
                 </form>
             </div>

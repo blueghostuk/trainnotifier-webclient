@@ -12,45 +12,25 @@
     <li><a href="~/">Home</a></li>
     <li><a href="~/search-schedule">Schedule</a></li>
     <li class="active"><a>Train</a></li>
-    <li><a href="~/route">Routes</a></li>
-    <li><a href="~/station">Stations</a></li>
+    <li class="dropdown">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Live <b class="caret"></b></a>
+        <ul class="dropdown-menu">
+            <li><a href="~/route">Routes</a></li>
+            <li><a href="~/station">Stations</a></li>
+            <li><a href="~/route">Live Feed</a></li>
+        </ul>
+    </li>
     <li><a href="~/ppm">PPM</a></li>
-    <li><a href="~/live">Live</a></li>
-    <li><a href="#" id="advancedSwitch" title="Switch Mode">Advanced</a></li>
 }
 @section TopMenuAdditional{
-    <a class="btn btn-primary btn-sm btn-disconnect" id="btn_Subscribe" onclick="subTrain();" disabled="disabled" title="Get Live Updates for this train"><span class="glyphicon glyphicon-refresh"></span></a>
-    <a class="btn btn-primary btn-sm btn-connect" id="status" onclick="tryConnect(); return false;">Connection Status</a>
+    <div class="navbar-form navbar-right">
+        <a class="btn btn-primary btn-sm btn-disconnect" id="btn_Subscribe" onclick="subTrain();" disabled="disabled" title="Get Live Updates for this train">
+            <span class="glyphicon glyphicon-refresh"></span>
+        </a>
+        <a class="btn btn-primary btn-sm btn-connect" id="status" onclick="tryConnect(); return false;">Connection Status</a>
+    </div>
 }
 <div class="row">
-    <div class="col-md-2 phone-hide advanced" style="display: none;">
-        <div class="well sidebar-nav">
-            <ul class="nav nav-list" id="commandOptions">
-                <li class="nav-header">Commands</li>
-                <li id="get">
-                    <a href="#get/" onclick="thisPage.setCommand('get/');">
-                        <strong>Get Train:</strong><br />
-                        &nbsp;&nbsp;get/[train uid]/[date:YYYY-MM-DD]
-                    </a>
-                </li>
-                <li id="sub">
-                    <a href="#sub/" onclick="thisPage.setCommand('sub/');">
-                        <strong>Subscribe to Train:</strong><br />
-                        &nbsp;&nbsp;sub/[train uid]/[date:YYYY-MM-DD]
-                    </a>
-                </li>
-            </ul>
-        </div>
-        <div class="well sidebar-nav station-details">
-            <ul class="nav nav-list">
-                <li class="nav-header" data-bind="text: name">Station Details</li>
-                <li><strong>CRS:</strong><span data-bind="text: crsCode"></span></li>
-                <li><a data-bind="attr: { href: 'search/from/' + url(), onclick: 'setHash(\'from/' + url() + '\');' }" title="View Trains Starting from this station">Trains Starting From</a></li>
-                <li><a data-bind="attr: { href: 'search/at/' + url(), onclick: 'setHash(\'at/' + url() + '\');' }" title="View Trains Calling at this station">Trains Calling At</a></li>
-                <li><a data-bind="attr: { href: 'search/to/' + url(), onclick: 'setHash(\'to/' + url() + '\');' }" title="View Trains Terminating at this station">Trains Terminating At</a></li>
-            </ul>
-        </div>
-    </div>
     <!--/.col-md-2-->
     <div class="col-md-12" id="resultsBlock">
         <div class="row alert alert-info hide" id="no-results-row">

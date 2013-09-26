@@ -35,12 +35,14 @@ $(function () {
             locations.push({
                 value: results[i].StationName,
                 crs: results[i].CRS,
-                tokens: [results[i].CRS, results[i].Tiploc]
+                tokens: [results[i].StationName, results[i].CRS, results[i].Tiploc]
             });
         }
         $(".station-lookup").typeahead({
             name: 'stations-lookup',
-            local: locations
+            local: locations,
+            template: '<p><strong>{{value}}</strong>&nbsp;({{crs}})</p>',
+            engine: Hogan
         });
         $("#from-crs").attr("placeholder", "Type from station name here");
         $("#to-crs").attr("placeholder", "Type to station name here");

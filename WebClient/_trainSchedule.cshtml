@@ -4,8 +4,8 @@
             <th>&nbsp;</th>
             <th colspan="2">Arrive</th>
             <th colspan="2">Depart</th>
-            <th class="phone-hide" colspan="3"></th>
-            <th class="phone-show" colspan="2"></th>
+            <th class="hidden-xs hidden-sm visible-md visible-lg" colspan="3"></th>
+            <th class="visible-xs visible-sm hidden-md hidden-lg" colspan="2"></th>
         </tr>
         <tr>
             <th>Location</th>
@@ -15,7 +15,7 @@
             <th>Depart</th>
             <th>Line</th>
             <th>Platform</th>
-            <th class="phone-hide">Allowances</th>
+            <th class="hidden-xs hidden-sm visible-md visible-lg">Allowances</th>
         </tr>
     </thead>
     <tbody data-bind="foreach: $data">
@@ -27,7 +27,7 @@
             <td class="col depart public" data-bind="text: pass ? '' : publicDepart, visible: !pass"></td>
             <td class="col extra line" data-bind="text: line"></td>
             <td class="col extra platform" data-bind="text: platform"></td>
-            <td class="col extra allowances phone-hide">
+            <td class="col extra allowances hidden-xs hidden-sm visible-md visible-lg">
                 <span data-bind="text: eAllowance, visible: eAllowance" title="Engineering Allowance"></span>
                 <span data-bind="text: paAllowance, visible: paAllowance" title="Pathing Allowance"></span>
                 <span data-bind="text: peAllowance, visible: peAllowance" title="Performance Allowance"></span>

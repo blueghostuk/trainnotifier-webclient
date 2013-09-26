@@ -1,0 +1,96 @@
+﻿
+.stationName {
+    text-transform: capitalize;
+}
+
+.changeOfOrigin {
+    text-decoration: line-through;
+}
+
+table.table-header-colour thead th {
+    background-color: #CFCFCE;
+    color: #333E42;
+}
+
+.fixed {
+    position: fixed;
+}
+
+.pointer {
+    cursor: pointer;
+}
+
+#global-search-box{
+    border-radius: 4px !important;
+}
+
+@media (max-width: 979px) {
+
+    div.tab-pane.active > table {
+        margin-top: 10px;
+    }
+
+    tr.phone-show {
+        display: table-cell !important;
+    }
+
+    .time {
+        max-width: 3.5ex;
+        overflow: hidden;
+    }
+}
+/* override bootstrap responsive*/
+@media (max-width: 979px) {
+    .navbar-fixed-top {
+        position: fixed;
+    }
+}
+
+/* override bootstrap responsive*/
+/* only for within navbar*/
+@media (max-width: 767px) {
+    .navbar-inner > .container-fluid {
+        padding-right: 20px;
+        padding-left: 20px;
+    }
+}
+
+/* override bootstrap responsive*/
+/* seems to be issue in chrome dev around this screen size*/
+@media (min-width: 1900px) {
+    .row-fluid .span10 {
+        width: 82.9%;
+    }
+}
+
+@media (max-width: 979px) {
+    body {
+        padding-left: 0px;
+        padding-right: 0px;
+    }
+
+    .container-fluid {
+        padding-left: 0px;
+        padding-right: 0px;
+    }
+
+    .table-bordered {
+        border-radius: 0px;
+    }
+
+        .table-bordered thead:first-child tr:first-child > th:first-child {
+            border-top-left-radius: 0px;
+        }
+
+        .table-bordered thead:first-child tr:first-child > th:last-child {
+            border-top-right-radius: 0px;
+        }
+
+        .table-bordered tbody:last-child tr:last-child > td:first-child {
+            border-bottom-left-radius: 0px;
+        }
+
+        .table-bordered tbody:last-child tr:last-child > td:last-child {
+            border-bottom-right-radius: 0px;
+        }
+}

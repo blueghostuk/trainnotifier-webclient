@@ -4,15 +4,15 @@
             <th>Location</th>
             <th title="Expected WTT time is tooltip. Delay is shown next to time">Arrive</th>
             <th title="Expected WTT time is tooltip. Delay is shown next to time">Depart</th>
-            <th class="phone-hide">Line</th>
+            <th class="hidden-xs hidden-sm visible-md visible-lg">Line</th>
             <th>Platform</th>
-            <th class="phone-hide">Notes</th>
+            <th class="hidden-xs hidden-sm visible-md visible-lg">Notes</th>
         </tr>
     </thead>
     <tbody data-bind="foreach: $data">
         <tr data-bind="css: { info: offRoute, pass: berthUpdate }">
             <td class="col station stationName">
-                <a class="pointer" data-bind="text: location, click: function (d, e) { showStation(d.locationStanox); }"></a>
+                <a class="pointer" data-bind="text: location"></a>
             </td>
             <td class="col arrive actual">
                 <span data-bind="text: actualArrival, attr: { title: plannedArrival }" class="tooltip-dynamic"></span>&nbsp;
@@ -20,9 +20,9 @@
             <td class="col depart actual">
                 <span data-bind="text: actualDeparture, attr: { title: plannedDeparture }" class="tooltip-dynamic"></span>&nbsp;
                 <span class="badge" data-bind="text: departureDelay, css: departureDelayCss"></span></td>
-            <td class="col extra line phone-hide" data-bind="text: line"></td>
+            <td class="col extra line hidden-xs hidden-sm visible-md visible-lg" data-bind="text: line"></td>
             <td class="col extra platform" data-bind="text: platform"></td>
-            <td class="col extra notes phone-hide">
+            <td class="col extra notes hidden-xs hidden-sm visible-md visible-lg">
                 <span data-bind="visible: nextLocation">Next @@ <span data-bind="text: nextLocation" class="stationName"></span>&nbsp;in&nbsp;<span data-bind="text: nextAt"></span></span>
                 <span data-bind="visible: notes, text: notes"></span>
             </td>
@@ -30,7 +30,7 @@
     </tbody>
 </table>
 <p class="text-info">
-    <span class="glyphicon glyphicon-info-sign"></span>&nbsp;This page shows the Current running information. Click the <i class="icon-refresh"></i> icon above to activate live tracking.
+    <span class="glyphicon glyphicon-info-sign"></span>&nbsp;This page shows the Current running information. Click the <span class="glyphicon glyphicon-refresh"></span> icon above to activate live tracking.
 </p>
 <p class="text-warning">
     <span class="glyphicon glyphicon-info-sign"></span>&nbsp;Live tracking of berth movements will return movements of trains with the same description as this one (head code) if they are running at the same time.

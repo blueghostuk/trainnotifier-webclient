@@ -20,6 +20,8 @@ interface IStationLookup {
 
 var locations: Array<IStationLookup> = [];
 
+declare var Hogan: any;
+
 $(function () {
     webApi = new TrainNotifier.WebApi();
     TrainNotifier.Common.webApi = webApi;
@@ -42,12 +44,14 @@ $(function () {
             locations.push({
                 value: results[i].StationName,
                 crs: results[i].CRS,
-                tokens: [results[i].CRS, results[i].Tiploc]
+                tokens: [results[i].StationName, results[i].CRS, results[i].Tiploc]
             });
         }
         $(".station-lookup").typeahead({
             name: 'stations-lookup',
-            local: locations
+            local: locations,
+            template: '<p><strong>{{value}}</strong>&nbsp;({{crs}})</p>',
+            engine: Hogan
         });
         $("#from-crs").attr("placeholder", "Type from station name here");
         $("#to-crs").attr("placeholder", "Type to station name here");

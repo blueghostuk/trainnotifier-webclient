@@ -12,10 +12,15 @@
     <li><a href="~/">Home</a></li>
     <li><a href="~/search-schedule">Schedule</a></li>
     <li><a href="~/train">Train</a></li>
-    <li><a href="~/route">Routes</a></li>
-    <li class="active"><a>Stations</a></li>
+    <li class="dropdown">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Live <b class="caret"></b></a>
+        <ul class="dropdown-menu">
+            <li><a href="~/route">Routes</a></li>
+            <li><a class="active">Stations</a></li>
+            <li><a href="~/route">Live Feed</a></li>
+        </ul>
+    </li>
     <li><a href="~/ppm">PPM</a></li>
-    <li><a href="~/live">Live</a></li>
     <li><a href="#" id="advancedSwitch" title="Switch Mode">Advanced</a></li>
 }
 <div class="row-fluid">

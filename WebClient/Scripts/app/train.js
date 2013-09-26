@@ -9,7 +9,6 @@
 /// <reference path="../typings/knockout/knockout.d.ts" />
 /// <reference path="../typings/jquery/jquery.d.ts" />
 /// <reference path="../typings/moment/moment.d.ts" />
-var currentLocation = new TrainNotifier.KnockoutModels.CurrentLocation();
 var titleModel = new TrainNotifier.KnockoutModels.Train.TrainTitleViewModel();
 
 var _lastTrainData;
@@ -79,36 +78,6 @@ var thisPage = {
     },
     setStatus: function (status) {
         $("#status").html(status);
-    },
-    advancedMode: false,
-    advancedSwitch: function (change) {
-        if (typeof change === "undefined") { change = true; }
-        if (change) {
-            this.advancedMode = !this.advancedMode;
-            $.cookie("advancedMode", this.advancedMode ? "on" : "off", { expires: 365 });
-        }
-        if (this.advancedMode) {
-            $("#advancedSwitch").html("Simple");
-            $("#resultsBlock").addClass("col-md-10");
-            $("#resultsBlock").removeClass("col-md-12");
-
-            $(".simple").hide();
-            $(".advanced").show();
-            if (document.location.hash.indexOf("/advanced") == -1) {
-                thisPage.settingHash = true;
-                document.location.hash = document.location.hash + "/advanced";
-            }
-        } else {
-            $("#advancedSwitch").html("Advanced");
-            $("#resultsBlock").addClass("col-md-12");
-            $("#resultsBlock").removeClass("col-md-10");
-            $(".simple").show();
-            $(".advanced").hide();
-            if (document.location.hash.indexOf("/advanced") != -1) {
-                thisPage.settingHash = true;
-                document.location.hash = document.location.hash.replace("/advanced", "");
-            }
-        }
     }
 };
 
@@ -116,20 +85,10 @@ TrainNotifier.Common.page = thisPage;
 var webApi;
 
 $(function () {
-    $("#advancedSwitch").click(function (e) {
-        e.preventDefault();
-        thisPage.advancedSwitch();
-    });
-    var advancedCookie = $.cookie("advancedMode");
-    if ((advancedCookie && advancedCookie == "on") || document.location.hash.indexOf("/advanced") != -1) {
-        thisPage.advancedMode = true;
-        thisPage.advancedSwitch(false);
-    }
     webApi = new TrainNotifier.WebApi();
     TrainNotifier.Common.webApi = webApi;
 
     ko.applyBindings(liveStops, $("#trains").get(0));
-    ko.applyBindings(currentLocation, $(".station-details").get(0));
     ko.applyBindings(scheduleStops, $("#schedule").get(0));
     ko.applyBindings(scheduleStops, $("#mix").get(0));
     ko.applyBindings(titleModel, $("#title").get(0));
@@ -504,17 +463,6 @@ function getAssociations(date) {
             currentTrainDetails.associations.push(new TrainNotifier.KnockoutModels.Train.TrainAssociation(associations[i], _lastTrainData.Movement.Schedule.TrainUid, queryDate));
         }
     });
-}
-
-function showStation(stanox) {
-    var tiploc = TrainNotifier.StationTiploc.findStationTiploc(stanox, currentTiplocs);
-    if (tiploc) {
-        currentLocation.update(tiploc);
-    } else {
-        webApi.getStanox(stanox).done(function (data) {
-            currentLocation.update(data);
-        });
-    }
 }
 
 function tryConnect() {

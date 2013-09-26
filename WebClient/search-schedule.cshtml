@@ -12,79 +12,18 @@
     <li><a href="~/">Home</a></li>
     <li class="active"><a>Schedule</a></li>
     <li><a href="~/train">Train</a></li>
-    <li><a href="~/route">Routes</a></li>
-    <li><a href="~/station">Stations</a></li>
+    <li class="dropdown">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Live <b class="caret"></b></a>
+        <ul class="dropdown-menu">
+            <li><a href="~/route">Routes</a></li>
+            <li><a href="~/station">Stations</a></li>
+            <li><a href="~/route">Live Feed</a></li>
+        </ul>
+    </li>
     <li><a href="~/ppm">PPM</a></li>
-    <li><a href="~/live">Live</a></li>
     <li><a href="#" id="advancedSwitch" title="Switch Mode">Advanced</a></li>
 }
 <div class="row">
-    <div class="col-md-2 phone-hide advanced" style="display: none;">
-        <div class="well sidebar-nav">
-            <ul class="nav nav-list" id="commandOptions">
-                <li class="nav-header">By CRS Code:</li>
-                <li id="from-crs">
-                    <a href="#from/" onclick="thisPage.setCommand('from/');">
-                        <strong>Trains Stating From:</strong><br />
-                        &nbsp;&nbsp;from/[CRS]
-                    </a>
-                </li>
-                <li id="at-crs">
-                    <a href="#at/" onclick="thisPage.setCommand('at/');">
-                        <strong>Trains Calling At:</strong><br />
-                        &nbsp;&nbsp;at/[CRS]
-                    </a>
-                </li>
-                <li id="to-crs">
-                    <a href="#to/" onclick="thisPage.setCommand('to/');">
-                        <strong>Trains Terminating At:</strong><br />
-                        &nbsp;&nbsp;to/[CRS]
-                    </a>
-                </li>
-                <li id="from-to-crs">
-                    <a href="#from/" onclick="thisPage.setCommand('from/');">
-                        <strong>Trains going from [A] to [B]:</strong><br />
-                        &nbsp;&nbsp;from/[CRS-A]/to/[CRS-B]
-                    </a>
-                </li>
-                <li class="nav-header">By Stanox Code:</li>
-                <li id="from">
-                    <a href="#from/" onclick="thisPage.setCommand('from/');">
-                        <strong>Trains Stating From:</strong><br />
-                        &nbsp;&nbsp;from/[stanox]
-                    </a>
-                </li>
-                <li id="at">
-                    <a href="#at/" onclick="thisPage.setCommand('at/');">
-                        <strong>Trains Calling At:</strong><br />
-                        &nbsp;&nbsp;at/[stanox]
-                    </a>
-                </li>
-                <li id="to">
-                    <a href="#to:" onclick="thisPage.setCommand('to/');">
-                        <strong>Trains Terminating At:</strong><br />
-                        &nbsp;&nbsp;to/[stanox]
-                    </a>
-                </li>
-                <li id="from-to">
-                    <a href="#from/" onclick="thisPage.setCommand('from');">
-                        <strong>Trains going from [A] to [B]:</strong><br />
-                        &nbsp;&nbsp;from/[stanox-A]/to/[stanox-B]
-                    </a>
-                </li>
-            </ul>
-        </div>
-        <div class="well sidebar-nav" id="stationDetails" data-bind="visible: name">
-            <ul class="nav nav-list">
-                <li class="nav-header" data-bind="text: name">Station Details</li>
-                <li><strong>CRS:</strong><span data-bind="text: crsCode"></span></li>
-                <li><a data-bind="attr: { href: 'search/from/' + url(), onclick: 'setHash(\'from/' + url() + '\');' }" title="View Trains Starting from this station">Trains Starting From</a></li>
-                <li><a data-bind="attr: { href: 'search/at/' + url(), onclick: 'setHash(\'at/' + url() + '\');' }" title="View Trains Calling at this station">Trains Calling At</a></li>
-                <li><a data-bind="attr: { href: 'search/to/' + url(), onclick: 'setHash(\'to/' + url() + '\');' }" title="View Trains Terminating at this station">Trains Terminating At</a></li>
-            </ul>
-        </div>
-    </div>
-    <!--/span2-->
     <div class="col-md-12" id="resultsBlock">
         <div class="row alert alert-info hide" id="no-results-row">
             <strong>No Results Found</strong>
@@ -115,42 +54,40 @@
                         <!-- 2 -->
                         <th colspan="2">From</th>
                         <!-- 3 -->
-                        <th class="phone-hide simple" colspan="2">Departure</th>
-                        <th class="phone-hide advanced" colspan="3">Departure</th>
-                        <th class="phone-show" colspan="2">Dept</th>
+                        <th class="hidden-xs hidden-sm visible-md visible-lg" colspan="3">Departure</th>
+                        <th class="visible-xs visible-sm hidden-md hidden-lg" colspan="2">Dept</th>
                         <!-- 4 -->
                         <th colspan="2">To</th>
                         <!-- 5 -->
-                        <th class="phone-hide simple" colspan="2">Arrival</th>
-                        <th class="phone-hide advanced" colspan="3">Arrival</th>
-                        <th class="phone-show" colspan="2">Arr</th>
+                        <th class="hidden-xs hidden-sm visible-md visible-lg" colspan="3">Arrival</th>
+                        <th class="visible-xs visible-sm hidden-md hidden-lg" colspan="2">Arr</th>
                     </tr>
                     <tr>
                         <!-- 1 -->
-                        <th class="phone-hide">Train ID</th>
-                        <th class="phone-show">ID</th>
-                        <th class="phone-hide">Operator</th>
-                        <th class="phone-show">Op</th>
+                        <th class="hidden-xs hidden-sm visible-md visible-lg">Train ID</th>
+                        <th class="visible-xs visible-sm hidden-md hidden-lg">ID</th>
+                        <th class="hidden-xs hidden-sm visible-md visible-lg">Operator</th>
+                        <th class="visible-xs visible-sm hidden-md hidden-lg">Op</th>
                         <!-- 2 -->
                         <th>Station</th>
-                        <th class="phone-hide">Pfm</th>
-                        <th class="phone-show">P</th>
+                        <th class="hidden-xs hidden-sm visible-md visible-lg">Pfm</th>
+                        <th class="visible-xs visible-sm hidden-md hidden-lg">P</th>
                         <!-- 3 -->
-                        <th class="phone-hide">Public</th>
-                        <th class="phone-show">Ex</th>
-                        <th class="phone-hide advanced">WTT</th>
-                        <th class="phone-hide">Actual</th>
-                        <th class="phone-show">Act</th>
+                        <th class="hidden-xs hidden-sm visible-md visible-lg">Public</th>
+                        <th class="visible-xs visible-sm hidden-md hidden-lg">Ex</th>
+                        <th class="hidden-xs hidden-sm visible-md visible-lg advanced">WTT</th>
+                        <th class="hidden-xs hidden-sm visible-md visible-lg">Actual</th>
+                        <th class="visible-xs visible-sm hidden-md hidden-lg">Act</th>
                         <!-- 4 -->
                         <th>Station</th>
-                        <th class="phone-hide">Pfm</th>
-                        <th class="phone-show">P</th>
+                        <th class="hidden-xs hidden-sm visible-md visible-lg">Pfm</th>
+                        <th class="visible-xs visible-sm hidden-md hidden-lg">P</th>
                         <!-- 5 -->
-                        <th class="phone-hide">Public</th>
-                        <th class="phone-show">Ex</th>
-                        <th class="phone-hide advanced">WTT</th>
-                        <th class="phone-hide">Actual</th>
-                        <th class="phone-show">Act</th>
+                        <th class="hidden-xs hidden-sm visible-md visible-lg">Public</th>
+                        <th class="visible-xs visible-sm hidden-md hidden-lg">Ex</th>
+                        <th class="hidden-xs hidden-sm visible-md visible-lg advanced">WTT</th>
+                        <th class="hidden-xs hidden-sm visible-md visible-lg">Actual</th>
+                        <th class="visible-xs visible-sm hidden-md hidden-lg">Act</th>
                     </tr>
                 </thead>
                 <tbody data-bind="foreach: $data">
@@ -166,7 +103,7 @@
                         <td data-bind="text: fromPlatform"></td>
                         <!-- 3 -->
                         <td class="time" title="Public Departure" data-bind="text: publicDeparture"></td>
-                        <td class="phone-hide advanced" title="WTT Departure" data-bind="text: wttDeparture"></td>
+                        <td class="hidden-xs hidden-sm visible-md visible-lg" title="WTT Departure" data-bind="text: wttDeparture"></td>
                         <td class="time" title="Actual Departure" data-bind="text: actualDeparture"></td>
                         <!-- 4 -->
                         <td class="stationName" data-bind="css: toStationCss">
@@ -176,7 +113,7 @@
                         <td data-bind="text: toPlatform"></td>
                         <!-- 5 -->
                         <td class="time" title="Public Arrival" data-bind="text: publicArrival"></td>
-                        <td class="phone-hide advanced" title="WTT Arrival" data-bind="text: wttArrival"></td>
+                        <td class="hidden-xs hidden-sm visible-md visible-lg" title="WTT Arrival" data-bind="text: wttArrival"></td>
                         <td class="time" title="Actual Arrival" data-bind="text: actualArrival"></td>
                     </tr>
                 </tbody>
@@ -187,42 +124,40 @@
                         <!-- 1 -->
                         <th colspan="2"></th>
                         <!-- 2 -->
-                        <th class="phone-hide advanced" colspan="3">Arrival</th>
-                        <th class="phone-hide simple" colspan="2">Arrival</th>
-                        <th class="phone-show" colspan="2">Arr</th>
+                        <th class="hidden-xs hidden-sm visible-md visible-lg" colspan="3">Arrival</th>
+                        <th class="visible-xs visible-sm hidden-md hidden-lg" colspan="2">Arr</th>
                         <!-- 3 -->
                         <th rowspan="2">From</th>
                         <!-- 4 -->
-                        <th class="phone-hide centerText" rowspan="2">Pfm</th>
-                        <th class="phone-show centerText" rowspan="2">P</th>
+                        <th class="hidden-xs hidden-sm visible-md visible-lg centerText" rowspan="2">Pfm</th>
+                        <th class="visible-xs visible-sm hidden-md hidden-lg centerText" rowspan="2">P</th>
                         <!-- 5 -->
                         <th rowspan="2">To</th>
                         <!-- 6 -->
-                        <th class="phone-hide advanced" colspan="3">Departure</th>
-                        <th class="phone-hide simple" colspan="2">Departure</th>
-                        <th class="phone-show" colspan="2">Dept</th>
+                        <th class="hidden-xs hidden-sm visible-md visible-lg" colspan="3">Departure</th>
+                        <th class="visible-xs visible-sm hidden-md hidden-lg" colspan="2">Dept</th>
                     </tr>
                     <tr>
                         <!-- 1 -->
-                        <th class="phone-hide">Train ID</th>
-                        <th class="phone-show">ID</th>
-                        <th class="phone-hide">Operator</th>
-                        <th class="phone-show">Op</th>
+                        <th class="hidden-xs hidden-sm visible-md visible-lg">Train ID</th>
+                        <th class="visible-xs visible-sm hidden-md hidden-lg">ID</th>
+                        <th class="hidden-xs hidden-sm visible-md visible-lg">Operator</th>
+                        <th class="visible-xs visible-sm hidden-md hidden-lg">Op</th>
                         <!-- 2 -->
-                        <th class="phone-hide">Public</th>
-                        <th class="phone-show">Ex</th>
-                        <th class="phone-hide advanced">WTT</th>
-                        <th class="phone-hide">Actual</th>
-                        <th class="phone-show">Act</th>
+                        <th class="hidden-xs hidden-sm visible-md visible-lg">Public</th>
+                        <th class="visible-xs visible-sm hidden-md hidden-lg">Ex</th>
+                        <th class="hidden-xs hidden-sm visible-md visible-lg advanced">WTT</th>
+                        <th class="hidden-xs hidden-sm visible-md visible-lg">Actual</th>
+                        <th class="visible-xs visible-sm hidden-md hidden-lg">Act</th>
                         <!-- 3 rowspan2 -->
                         <!-- 4 rowspan2 -->
                         <!-- 5 rowspan2 -->
                         <!-- 6 -->
-                        <th class="phone-hide">Public</th>
-                        <th class="phone-show">Ex</th>
-                        <th class="phone-hide advanced">WTT</th>
-                        <th class="phone-hide">Actual</th>
-                        <th class="phone-show">Act</th>
+                        <th class="hidden-xs hidden-sm visible-md visible-lg">Public</th>
+                        <th class="visible-xs visible-sm hidden-md hidden-lg">Ex</th>
+                        <th class="hidden-xs hidden-sm visible-md visible-lg advanced">WTT</th>
+                        <th class="hidden-xs hidden-sm visible-md visible-lg">Actual</th>
+                        <th class="visible-xs visible-sm hidden-md hidden-lg">Act</th>
                     </tr>
                 </thead>
                 <tbody data-bind="foreach: $data">
@@ -232,7 +167,7 @@
                         <td data-bind="text: operatorCode, attr: { title: operatorName }"></td>
                         <!-- 2 -->
                         <td class="time" title="Public Arrival" data-bind="text: atPublicArrival"></td>
-                        <td class="phone-hide advanced" title="WTT Arrival" data-bind="text: atWttArrival"></td>
+                        <td class="hidden-xs hidden-sm visible-md visible-lg" title="WTT Arrival" data-bind="text: atWttArrival"></td>
                         <td class="time" title="Actual Arrival" data-bind="text: atActualArrival"></td>
                         <!-- 3 -->
                         <td class="stationName" data-bind="css : fromStationCss">
@@ -248,7 +183,7 @@
                         </td>
                         <!-- 6 -->
                         <td class="time" title="Public Departure" data-bind="text: atPublicDeparture"></td>
-                        <td class="phone-hide advanced" title="WTT Departure" data-bind="text: atWttDeparture"></td>
+                        <td class="hidden-xs hidden-sm visible-md visible-lg" title="WTT Departure" data-bind="text: atWttDeparture"></td>
                         <td class="time" title="Actual Departure" data-bind="text: atActualDeparture"></td>
                     </tr>
                 </tbody>
@@ -263,38 +198,36 @@
                         <!-- 3 -->
                         <th rowspan="2">To</th>
                         <!-- 4 -->
-                        <th class="phone-hide advanced" colspan="4">Departure from <span class="stationName" data-bind="text: fromStation"></span></th>
-                        <th class="phone-hide simple" colspan="3">Departure from <span class="stationName" data-bind="text: fromStation"></span></th>
-                        <th class="phone-show" colspan="3">Dept. <span class="stationName" data-bind="text: fromShortStation"></span></th>
+                        <th class="hidden-xs hidden-sm visible-md visible-lg" colspan="4">Departure from <span class="stationName" data-bind="text: fromStation"></span></th>
+                        <th class="visible-xs visible-sm hidden-md hidden-lg" colspan="3">Dept. <span class="stationName" data-bind="text: fromShortStation"></span></th>
                         <!-- 5 -->
-                        <th class="phone-hide advanced" colspan="4">Arrival at <span class="stationName" data-bind="text: toStation"></span></th>
-                        <th class="phone-hide simple" colspan="3">Arrival at <span class="stationName" data-bind="text: toStation"></span></th>
-                        <th class="phone-show" colspan="3">Arr. <span class="stationName" data-bind="text: toShortStation"></span></th>
+                        <th class="hidden-xs hidden-sm visible-md visible-lg" colspan="4">Arrival at <span class="stationName" data-bind="text: toStation"></span></th>
+                        <th class="visible-xs visible-sm hidden-md hidden-lg" colspan="3">Arr. <span class="stationName" data-bind="text: toShortStation"></span></th>
                     </tr>
                     <tr>
                         <!-- 1 -->
-                        <th class="phone-hide">Train ID</th>
-                        <th class="phone-show">ID</th>
-                        <th class="phone-hide">Operator</th>
-                        <th class="phone-show">Op</th>
+                        <th class="hidden-xs hidden-sm visible-md visible-lg">Train ID</th>
+                        <th class="visible-xs visible-sm hidden-md hidden-lg">ID</th>
+                        <th class="hidden-xs hidden-sm visible-md visible-lg">Operator</th>
+                        <th class="visible-xs visible-sm hidden-md hidden-lg">Op</th>
                         <!-- 2 rowspan2 -->
                         <!-- 3 rowspan2 -->
                         <!-- 4 -->
-                        <th class="phone-hide">Pfm</th>
-                        <th class="phone-show">P</th>
-                        <th class="phone-hide">Public</th>
-                        <th class="phone-show">Ex</th>
-                        <th class="phone-hide advanced">WTT</th>
-                        <th class="phone-hide">Actual</th>
-                        <th class="phone-show">Act</th>
+                        <th class="hidden-xs hidden-sm visible-md visible-lg">Pfm</th>
+                        <th class="visible-xs visible-sm hidden-md hidden-lg">P</th>
+                        <th class="hidden-xs hidden-sm visible-md visible-lg">Public</th>
+                        <th class="visible-xs visible-sm hidden-md hidden-lg">Ex</th>
+                        <th class="hidden-xs hidden-sm visible-md visible-lg">WTT</th>
+                        <th class="hidden-xs hidden-sm visible-md visible-lg">Actual</th>
+                        <th class="visible-xs visible-sm hidden-md hidden-lg">Act</th>
                         <!-- 5 -->
-                        <th class="phone-hide">Pfm</th>
-                        <th class="phone-show">P</th>
-                        <th class="phone-hide">Public</th>
-                        <th class="phone-show">Ex</th>
-                        <th class="phone-hide advanced">WTT</th>
-                        <th class="phone-hide">Actual</th>
-                        <th class="phone-show">Act</th>
+                        <th class="hidden-xs hidden-sm visible-md visible-lg">Pfm</th>
+                        <th class="visible-xs visible-sm hidden-md hidden-lg">P</th>
+                        <th class="hidden-xs hidden-sm visible-md visible-lg">Public</th>
+                        <th class="visible-xs visible-sm hidden-md hidden-lg">Ex</th>
+                        <th class="hidden-xs hidden-sm visible-md visible-lg">WTT</th>
+                        <th class="hidden-xs hidden-sm visible-md visible-lg">Actual</th>
+                        <th class="visible-xs visible-sm hidden-md hidden-lg">Act</th>
                     </tr>
                 </thead>
                 <tbody data-bind="foreach: results">
@@ -316,13 +249,13 @@
                         <td class="centerText" data-bind="text: fromPlatform, css: { pass: passDeparture }"></td>
                         <td class="pass" data-bind="visible: passDeparture">Pass</td>
                         <td class="time" title="Public Departure" data-bind="text: publicDeparture, visible: !passDeparture"></td>
-                        <td class="phone-hide advanced" title="WTT Departure" data-bind="text: wttDeparture, css: { pass: passDeparture }"></td>
+                        <td class="hidden-xs hidden-sm visible-md visible-lg" title="WTT Departure" data-bind="text: wttDeparture, css: { pass: passDeparture }"></td>
                         <td class="time" title="Actual Departure" data-bind="text: actualDeparture, css: { pass: passDeparture }"></td>
                         <!-- 5 -->
                         <td class="centerText" data-bind="text: toPlatform, css: { pass: passArrival }"></td>
                         <td class="pass" data-bind="visible: passArrival">Pass</td>
                         <td class="time" title="Public Arrival" data-bind="text: publicArrival, visible: !passArrival"></td>
-                        <td class="phone-hide advanced" title="WTT Arrival" data-bind="text: wttArrival, css: { pass: passArrival }"></td>
+                        <td class="hidden-xs hidden-sm visible-md visible-lg" title="WTT Arrival" data-bind="text: wttArrival, css: { pass: passArrival }"></td>
                         <td class="time" title="Actual Arrival" data-bind="text: actualArrival, css: { pass: passArrival }"></td>
                     </tr>
                 </tbody>

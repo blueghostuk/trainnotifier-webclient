@@ -979,6 +979,7 @@
             },
             _handleSelection: function(e) {
                 var byClick = e.type === "suggestionSelected", suggestion = byClick ? e.data : this.dropdownView.getSuggestionUnderCursor();
+                suggestion = suggestion ? suggestion : this.dropdownView.getFirstSuggestion();
                 if (suggestion) {
                     this.inputView.setInputValue(suggestion.value);
                     byClick ? this.inputView.focus() : e.data.preventDefault();

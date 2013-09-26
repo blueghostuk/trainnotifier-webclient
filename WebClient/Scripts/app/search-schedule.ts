@@ -13,7 +13,6 @@ var titleModel = new TitleViewModel();
 var startEndSearchResults = ko.observableArray();
 var callingAtSearchResults = ko.observableArray();
 var callingBetweenSearchResults = new TrainNotifier.KnockoutModels.Search.CallingBetweenResults();
-var currentLocation = new TrainNotifier.KnockoutModels.CurrentLocation();
 
 var currentStanox: IStationTiploc;
 var currentToStanox: IStationTiploc;
@@ -71,23 +70,13 @@ var thisPage: IPage = {
         }
         if (this.advancedMode) {
             $("#advancedSwitch").html("Simple");
-            $("#resultsBlock").addClass("col-md-10");
-            $("#resultsBlock").removeClass("col-md-12");
 
             $(".toc-ZZ, .cat-EE").show();
             $(".cat-ee").show();
-
-            $(".simple").hide();
-            $(".advanced").show();
         } else {
             $("#advancedSwitch").html("Advanced");
-            $("#resultsBlock").addClass("col-md-12");
-            $("#resultsBlock").removeClass("col-md-10");
 
             $(".toc-ZZ, .cat-EE").hide();
-
-            $(".simple").show();
-            $(".advanced").hide();
         }
     }
 };
@@ -108,7 +97,6 @@ $(function () {
     webApi = new TrainNotifier.WebApi();
     TrainNotifier.Common.webApi = webApi;
 
-    ko.applyBindings(currentLocation, $("#stationDetails").get(0));
     ko.applyBindings(titleModel, $("#title").get(0));
 
     ko.applyBindings(startEndSearchResults, $("#start-end-at-search-results").get(0));
@@ -263,7 +251,6 @@ function getDestinationByStanox(to: IStationTiploc, startDate: Moment, endDate: 
     currentMode = TrainNotifier.Search.SearchMode.terminate;
     if (to) {
         currentToStanox = to;
-        listStation(currentToStanox);
     }
     currentStanox = null;
     currentStartDate = startDate;
@@ -314,7 +301,6 @@ function getOriginByStanox(from: IStationTiploc, startDate: Moment, endDate: Mom
     currentMode = TrainNotifier.Search.SearchMode.origin;
     if (from) {
         currentStanox = from;
-        listStation(currentStanox);
     }
     currentToStanox = null;
     currentStartDate = startDate;
@@ -362,7 +348,6 @@ function getCallingAtStanox(at: IStationTiploc, startDate, endDate) {
     currentMode = TrainNotifier.Search.SearchMode.callingAt;
     if (at) {
         currentStanox = at;
-        listStation(currentStanox);
     }
     currentToStanox = null;
     currentStartDate = startDate;
@@ -412,7 +397,6 @@ function getCallingBetweenByStanox(from: IStationTiploc, to: IStationTiploc, sta
     currentMode = TrainNotifier.Search.SearchMode.between;
     if (from) {
         currentStanox = from;
-        listStation(currentStanox);
     }
     if (to) {
         currentToStanox = to;
@@ -581,10 +565,6 @@ function setTimeLinks() {
     $(".plus-hrs").attr("href", "search/" + url + plusStartDate.format("/YYYY/MM/DD/HH-mm"));
 
     setHash(url, moment(currentStartDate).format("YYYY-MM-DD/HH-mm") + moment(currentEndDate).format("/HH-mm"), true);
-}
-
-function listStation(stanox: IStationTiploc) {
-    currentLocation.update(stanox);
 }
 
 function loadHashCommand() {
