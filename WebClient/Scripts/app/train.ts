@@ -96,17 +96,23 @@ $(function () {
         thisPage.setCommand(document.location.hash.substr(1));
     }
     $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-        if ($(e.target).attr("href") == "#map" && !map) {
-            map = new L.Map('map').setView(new L.LatLng(51.505, -0.09), 13);
-            var layer = new L.TileLayer('http://otile{s}.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.png', {
-                subdomains: ["1", "2", "3", "4"],
-                attribution: 'Tiles Courtesy of <a href="http://www.mapquest.com/" target="_blank">MapQuest</a><img src="http://developer.mapquest.com/content/osm/mq_logo.png">. Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>.',
-                maxZoom: 18
-            });
-            layer.addTo(map);
+        if ($(e.target).attr("href") == "#map") {
+            if (!map) {
+                map = new L.Map('map').setView(new L.LatLng(51.505, -0.09), 13);
+                var layer = new L.TileLayer('http://otile{s}.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.png', {
+                    subdomains: ["1", "2", "3", "4"],
+                    attribution: 'Tiles Courtesy of <a href="http://www.mapquest.com/" target="_blank">MapQuest</a><img src="http://developer.mapquest.com/content/osm/mq_logo.png">. Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>.',
+                    maxZoom: 18
+                });
+                layer.addTo(map);
 
-            loadScheduleMap();
-            loadLiveMap();
+                loadScheduleMap();
+                loadLiveMap();
+            } else {
+                $("#map, .leaflet-map-pane, .leaflet-control-container").show();
+            }
+        } else {
+            $("#map, .leaflet-map-pane, .leaflet-control-container").hide();
         }
     });
 
