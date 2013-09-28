@@ -9,7 +9,6 @@
 /// <reference path="../typings/knockout/knockout.d.ts" />
 /// <reference path="../typings/jquery/jquery.d.ts" />
 /// <reference path="../typings/moment/moment.d.ts" />
-var currentLocation = new TrainNotifier.KnockoutModels.CurrentLocation();
 var titleModel = new TrainNotifier.KnockoutModels.Train.TrainTitleViewModel();
 
 var _lastTrainData;
@@ -41,9 +40,6 @@ var thisPage = {
 
         var cmd = cmdString.substring(0, idx);
         var args = cmdString.substring(idx + 1);
-
-        $("#commandOptions > li.active").removeClass("active");
-        $("#commandOptions > li#" + cmd).addClass("active");
 
         if (cmd == "id") {
             getById(args);
@@ -79,36 +75,6 @@ var thisPage = {
     },
     setStatus: function (status) {
         $("#status").html(status);
-    },
-    advancedMode: false,
-    advancedSwitch: function (change) {
-        if (typeof change === "undefined") { change = true; }
-        if (change) {
-            this.advancedMode = !this.advancedMode;
-            $.cookie("advancedMode", this.advancedMode ? "on" : "off", { expires: 365 });
-        }
-        if (this.advancedMode) {
-            $("#advancedSwitch").html("Simple Mode");
-            $("#resultsBlock").addClass("span10");
-            $("#resultsBlock").removeClass("span11");
-
-            $(".simple").hide();
-            $(".advanced").show();
-            if (document.location.hash.indexOf("/advanced") == -1) {
-                thisPage.settingHash = true;
-                document.location.hash = document.location.hash + "/advanced";
-            }
-        } else {
-            $("#advancedSwitch").html("Advanced Mode");
-            $("#resultsBlock").addClass("span11");
-            $("#resultsBlock").removeClass("span10");
-            $(".simple").show();
-            $(".advanced").hide();
-            if (document.location.hash.indexOf("/advanced") != -1) {
-                thisPage.settingHash = true;
-                document.location.hash = document.location.hash.replace("/advanced", "");
-            }
-        }
     }
 };
 
@@ -116,20 +82,10 @@ TrainNotifier.Common.page = thisPage;
 var webApi;
 
 $(function () {
-    $("#advancedSwitch").click(function (e) {
-        e.preventDefault();
-        thisPage.advancedSwitch();
-    });
-    var advancedCookie = $.cookie("advancedMode");
-    if ((advancedCookie && advancedCookie == "on") || document.location.hash.indexOf("/advanced") != -1) {
-        thisPage.advancedMode = true;
-        thisPage.advancedSwitch(false);
-    }
     webApi = new TrainNotifier.WebApi();
     TrainNotifier.Common.webApi = webApi;
 
     ko.applyBindings(liveStops, $("#trains").get(0));
-    ko.applyBindings(currentLocation, $(".station-details").get(0));
     ko.applyBindings(scheduleStops, $("#schedule").get(0));
     ko.applyBindings(scheduleStops, $("#mix").get(0));
     ko.applyBindings(titleModel, $("#title").get(0));
@@ -138,18 +94,24 @@ $(function () {
     if (document.location.hash.length > 0) {
         thisPage.setCommand(document.location.hash.substr(1));
     }
-    $('a[data-toggle="tab"]').on('shown', function (e) {
-        if ($(e.target).attr("href") == "#map" && !map) {
-            map = new L.Map('map').setView(new L.LatLng(51.505, -0.09), 13);
-            var layer = new L.TileLayer('http://otile{s}.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.png', {
-                subdomains: ["1", "2", "3", "4"],
-                attribution: 'Tiles Courtesy of <a href="http://www.mapquest.com/" target="_blank">MapQuest</a><img src="http://developer.mapquest.com/content/osm/mq_logo.png">. Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>.',
-                maxZoom: 18
-            });
-            layer.addTo(map);
+    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+        if ($(e.target).attr("href") == "#map") {
+            if (!map) {
+                map = new L.Map('map').setView(new L.LatLng(51.505, -0.09), 13);
+                var layer = new L.TileLayer('http://otile{s}.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.png', {
+                    subdomains: ["1", "2", "3", "4"],
+                    attribution: 'Tiles Courtesy of <a href="http://www.mapquest.com/" target="_blank">MapQuest</a><img src="http://developer.mapquest.com/content/osm/mq_logo.png">. Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>.',
+                    maxZoom: 18
+                });
+                layer.addTo(map);
 
-            loadScheduleMap();
-            loadLiveMap();
+                loadScheduleMap();
+                loadLiveMap();
+            } else {
+                $("#map, .leaflet-map-pane, .leaflet-control-container").show();
+            }
+        } else {
+            $("#map, .leaflet-map-pane, .leaflet-control-container").hide();
         }
     });
 
@@ -324,35 +286,29 @@ function sendWsCommand(command) {
 
 function subTrain() {
     if (_lastTrainData && _lastTrainData.Movement.Actual && webSockets && webSockets.state == WebSocket.OPEN) {
-        $("#commandOptions > li.active").removeClass("active");
-        $("#commandOptions > li#sub").addClass("active");
         thisPage.setCommand("sub/" + _lastTrainData.Movement.Schedule.TrainUid + "/" + moment(_lastTrainData.Movement.Actual.OriginDepartTimestamp).format(TrainNotifier.DateTimeFormats.dateQueryFormat));
         doSubTrain();
     }
 }
 
 function getById(id) {
-    $(".progress").show();
-    $("#no-results-row").hide();
+    preAjax();
     webApi.getTrainMovementById(id).done(function (data) {
         if (data) {
-            $("#commandOptions > li.active").removeClass("active");
-            $("#commandOptions > li#get").addClass("active");
             thisPage.setCommand("get/" + data.TrainUid + "/" + moment(data.SchedOriginDeparture).format(TrainNotifier.DateTimeFormats.dateQueryFormat));
             getTrainData(data.TrainUid, moment(data.SchedOriginDeparture).format(TrainNotifier.DateTimeFormats.dateQueryFormat), false);
         } else {
-            $("#no-results-row").show();
-            $(".progress").hide();
+            show($("#no-results-row"));
         }
     }).fail(function () {
-        $(".progress").hide();
-        $("#error-row").show();
+        show($("#error-row"));
+    }).always(function () {
+        hide($(".progress"));
     });
 }
 
 function getTrainData(trainUid, date, subscribe) {
-    $(".progress").show();
-    $("#no-results-row").hide();
+    preAjax();
     sendWsCommand("unsubtrain:");
     reset();
     webApi.getTrainMovementByUid(trainUid, date).done(function (data) {
@@ -376,7 +332,7 @@ function getTrainData(trainUid, date, subscribe) {
                 if (data.Movement.ChangeOfOrigins.length > 0) {
                     var coo = data.Movement.ChangeOfOrigins[0];
                     var cooTiploc = TrainNotifier.StationTiploc.findStationTiploc(coo.NewOriginStanoxCode, currentTiplocs);
-                    titleModel.from(cooTiploc.Description.toLowerCase());
+                    titleModel.from(cooTiploc.Description ? cooTiploc.Description.toLowerCase() : cooTiploc.Tiploc);
                     titleModel.start(moment(coo.NewDepartureTime).format(TrainNotifier.DateTimeFormats.shortTimeFormat));
                     var matchingStops = data.Movement.Schedule.Stops.filter(function (stop) {
                         return stop.TiplocStanoxCode == cooTiploc.Stanox;
@@ -393,19 +349,19 @@ function getTrainData(trainUid, date, subscribe) {
                 } else {
                     var start = data.Movement.Schedule.Stops[0];
                     var startTiploc = TrainNotifier.StationTiploc.findStationTiploc(start.TiplocStanoxCode, currentTiplocs);
-                    titleModel.from(startTiploc.Description.toLowerCase());
+                    titleModel.from(startTiploc.Description ? startTiploc.Description.toLowerCase() : startTiploc.Tiploc);
                     var departureTs = start.PublicDeparture ? start.PublicDeparture : start.Departure;
                     titleModel.start(moment(departureTs, TrainNotifier.DateTimeFormats.timeFormat).format(TrainNotifier.DateTimeFormats.shortTimeFormat));
                 }
                 if (data.Movement.Cancellations.length > 0) {
                     var cancel = data.Movement.Cancellations[0];
                     var cancelAtTiploc = TrainNotifier.StationTiploc.findStationTiploc(cancel.CancelledAtStanoxCode, currentTiplocs);
-                    titleModel.to(cancelAtTiploc.Description.toLowerCase());
+                    titleModel.to(cancelAtTiploc.Description ? cancelAtTiploc.Description.toLowerCase() : cancelAtTiploc.Tiploc);
                     titleModel.end(moment(cancel.CancelledTimestamp).format(TrainNotifier.DateTimeFormats.shortTimeFormat));
                 } else if (data.Movement.Schedule.Stops.length > 1) {
                     var end = data.Movement.Schedule.Stops[data.Movement.Schedule.Stops.length - 1];
                     var endTiploc = TrainNotifier.StationTiploc.findStationTiploc(end.TiplocStanoxCode, currentTiplocs);
-                    titleModel.to(endTiploc.Description.toLowerCase());
+                    titleModel.to(endTiploc.Description ? endTiploc.Description.toLowerCase() : endTiploc.Tiploc);
                     var arrivalTs = end.PublicArrival ? end.PublicArrival : end.Arrival;
                     titleModel.end(moment(arrivalTs, TrainNotifier.DateTimeFormats.timeFormat).format(TrainNotifier.DateTimeFormats.shortTimeFormat));
                 }
@@ -483,9 +439,9 @@ function getTrainData(trainUid, date, subscribe) {
             doSubTrain();
         }
     }).fail(function () {
-        $("#error-row").show();
+        show($("#error-row"));
     }).always(function () {
-        $(".progress").hide();
+        hide($(".progress"));
     });
 }
 
@@ -506,17 +462,6 @@ function getAssociations(date) {
             currentTrainDetails.associations.push(new TrainNotifier.KnockoutModels.Train.TrainAssociation(associations[i], _lastTrainData.Movement.Schedule.TrainUid, queryDate));
         }
     });
-}
-
-function showStation(stanox) {
-    var tiploc = TrainNotifier.StationTiploc.findStationTiploc(stanox, currentTiplocs);
-    if (tiploc) {
-        currentLocation.update(tiploc);
-    } else {
-        webApi.getStanox(stanox).done(function (data) {
-            currentLocation.update(data);
-        });
-    }
 }
 
 function tryConnect() {

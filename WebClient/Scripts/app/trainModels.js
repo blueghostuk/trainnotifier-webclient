@@ -29,7 +29,8 @@ var TrainNotifier;
                     this.associateLiveStop = ko.observable();
                     var tiploc = TrainNotifier.StationTiploc.findStationTiploc(scheduleStop.TiplocStanoxCode, tiplocs);
                     this.stopNumber = scheduleStop.StopNumber;
-                    this.location = tiploc.Description.toLowerCase();
+                    this.location = tiploc.Description ? tiploc.Description.toLowerCase() : tiploc.Tiploc;
+                    this.locationCRS = tiploc.CRS && tiploc.CRS.length > 0 ? tiploc.CRS : null;
                     this.locationStanox = scheduleStop.TiplocStanoxCode;
 
                     if (scheduleStop.Arrival) {
@@ -95,13 +96,13 @@ var TrainNotifier;
                 }
                 ScheduleStop.prototype.getDelayCss = function (value) {
                     if (value === 0)
-                        return "badge-success";
+                        return "alert-success";
                     if (value < 0)
-                        return "badge-info";
+                        return "alert-info";
                     if (value > 10)
-                        return "badge-important";
+                        return "alert-important";
                     if (value > 0)
-                        return "badge-warning";
+                        return "alert-warning";
 
                     return "hidden";
                 };
@@ -150,18 +151,18 @@ var TrainNotifier;
                         return;
 
                     var tiploc = TrainNotifier.StationTiploc.findStationTiploc(location, tiplocs);
-                    this.location = tiploc.Description.toLowerCase();
+                    this.location = tiploc.Description ? tiploc.Description.toLowerCase() : tiploc.Tiploc;
                     this.locationStanox = tiploc.Stanox;
                 }
                 LiveStopBase.prototype.getDelayCss = function (value) {
                     if (value === 0)
-                        return "badge-success";
+                        return "alert-success";
                     if (value < 0)
-                        return "badge-info";
+                        return "alert-info";
                     if (value > 10)
-                        return "badge-important";
+                        return "alert-important";
                     if (value > 0)
-                        return "badge-warning";
+                        return "alert-warning";
 
                     return "hidden";
                 };
@@ -211,7 +212,7 @@ var TrainNotifier;
                     if (nextStanox) {
                         var nextAtTiploc = TrainNotifier.StationTiploc.findStationTiploc(nextStanox, tiplocs);
                         if (nextAtTiploc) {
-                            this.nextLocation(nextAtTiploc.Description.toLowerCase());
+                            this.nextLocation(nextAtTiploc.Description ? nextAtTiploc.Description.toLowerCase() : nextAtTiploc.Tiploc);
                         }
                         if (expectedAtNextStanox) {
                             this.nextAt(TrainNotifier.DateTimeFormats.formatTimeString(expectedAtNextStanox));
@@ -347,7 +348,7 @@ else
                             this.date = this.date.subtract({ days: 1 });
                             break;
                     }
-                    this.location = association.Location.Description.toLowerCase();
+                    this.location = association.Location.Description ? association.Location.Description.toLowerCase() : association.Location.Tiploc;
                 }
                 Object.defineProperty(TrainAssociation.prototype, "url", {
                     get: function () {
@@ -476,7 +477,7 @@ else
                         var canTxt = can.Type;
                         if (can.CancelledAtStanoxCode) {
                             var canTiploc = TrainNotifier.StationTiploc.findStationTiploc(can.CancelledAtStanoxCode, tiplocs);
-                            canTxt += " @ " + canTiploc.Description.toLowerCase();
+                            canTxt += " @ " + canTiploc.Description ? canTiploc.Description.toLowerCase() : canTiploc.Tiploc;
                         }
                         canTxt += " @ " + moment(can.CancelledTimestamp).format(TrainNotifier.DateTimeFormats.timeFormat) + " - Reason: ";
                         if (can.Description) {

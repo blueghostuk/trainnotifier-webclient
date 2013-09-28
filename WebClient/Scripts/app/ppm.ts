@@ -157,8 +157,8 @@ function updateRegionModel(sectorData) {
 }
 
 function showAll() {
-    $("#commandOptions > li.active").removeClass("active");
-    $("#commandOptions > li:nth-child(2)").addClass("active");
+    $("#commandOptions > a.active").removeClass("active");
+    $("#commandOptions > a:nth-child(2)").addClass("active");
 
     $("#ppmTable").show();
     $("#ppmOperator").hide();
@@ -199,8 +199,8 @@ function updateOperatorPage() {
         opId = _currentOperator().Parent.Id();
         hash = _currentOperator().Parent.Id() + "/" + hash;
     }
-    $("#commandOptions > li.active").removeClass("active");
-    $("#commandOptions > li#op-" + opId).addClass("active");
+    $("#commandOptions > a.active").removeClass("active");
+    $("#commandOptions > a#op-" + opId).addClass("active");
 
     $("#ppmOperator").show();
     $("#ppmTable").hide();

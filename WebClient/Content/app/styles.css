@@ -1,0 +1,84 @@
+﻿
+.stationName {
+    text-transform: capitalize;
+}
+
+.changeOfOrigin {
+    text-decoration: line-through;
+}
+
+.centerText {
+    text-align: center !important;
+}
+
+.table tbody tr.pass > td {
+    background-color: #F2F2DB;
+    font-style: italic;
+}
+
+.table tbody tr td.pass {
+    background-color: #F2F2DB;
+    font-style: italic;
+}
+
+.table tbody tr.cancel > td {
+    background-color: #f2dede !important;
+}
+
+table.table-header-colour thead th {
+    background-color: #CFCFCE;
+    color: #333E42;
+}
+
+tr.info > td {
+    background-color: #d9edf7 !important;
+}
+
+    tr.info > td > span.changeOfOrigin {
+        display: block;
+    }
+
+.changeOfDestination {
+    text-decoration: line-through;
+}
+
+tr.error > td > span.changeOfDestination {
+    display: block;
+}
+
+.table tbody tr.reinstatement > td {
+    background-color: #0099dd !important;
+    color: white !important;
+}
+
+    .table tbody tr.reinstatement > td > a {
+        color: white !important;
+    }
+
+.fixed {
+    position: fixed;
+}
+
+.pointer {
+    cursor: pointer;
+}
+
+#global-search-box {
+    border-radius: 4px !important;
+}
+
+tr.info > td > span.changeOfOrigin {
+    display: block;
+}
+
+@media (max-width: 979px) {
+
+    div.tab-pane.active > table {
+        margin-top: 10px;
+    }
+
+    .time {
+        max-width: 3.5ex;
+        overflow: hidden;
+    }
+}

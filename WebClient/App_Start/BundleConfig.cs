@@ -18,7 +18,9 @@ namespace TrainNotifier.WebClient
                 "~/Scripts/knockout.mapping-latest.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
-                "~/Scripts/bootstrap*"));
+                "~/Scripts/hogan*",
+                "~/Scripts/bootstrap*",
+                "~/Scripts/typeahead*"));
 
             bundles.Add(new ScriptBundle("~/bundles/moment").Include(
                 "~/Scripts/moment.js"));
@@ -35,8 +37,6 @@ namespace TrainNotifier.WebClient
 
             bundles.Add(new ScriptBundle("~/bundles/js/index").Include(
                 "~/Scripts/app/index.js"));
-            bundles.Add(new StyleBundle("~/bundles/css/index").Include(
-                "~/Content/app/index.css"));
 
             bundles.Add(new ScriptBundle("~/bundles/js/live").Include(
                 "~/Scripts/app/live.js"));
@@ -69,10 +69,9 @@ namespace TrainNotifier.WebClient
                 "~/Content/app/search-schedule.css"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
-                "~/Content/spacelab.css",
-                "~/Content/bootstrap-responsive.css",
+                "~/Content/bootstrap/*.css",
                 "~/Content/bootstrap-datepicker.css",
-                "~/Content/app/style.css",
+                "~/Content/app/styles.css",
                 "~/Content/app/tocs.css"));
         }
     }
