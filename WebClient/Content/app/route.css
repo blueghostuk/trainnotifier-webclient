@@ -19,6 +19,7 @@ table#route {
             border: solid 1px black;
             text-decoration: underline;
             cursor: pointer;
+            height: 25px;
         }
 
             table#route td.berth.down {
@@ -37,11 +38,11 @@ table#route {
         }
 
 tr.info > td > a {
-    color: white !important;
+    color: black !important;
 }
 
 tr.error > td > a {
-    color: white !important;
+    color: black !important;
 }
 
 .starts, .terminates {

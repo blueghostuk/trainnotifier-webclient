@@ -1,4 +1,4 @@
-﻿<table class="table table-hover table-bordered hide" id="ppmTable">
+﻿<table class="table table-hover table-bordered" id="ppmTable">
     <thead>
         <tr>
             <th>Area</th>
@@ -14,7 +14,7 @@
             <td><a data-bind="text: Operator, attr: { href: '#' + Id(), onclick: 'viewOperator(\'' + Id() + '\'); return false;' }"></a></td>
             <td><span data-bind="visible: LatestPPM(), text: LatestPPM().OnTime"></span></td>
             <td><span data-bind="visible: LatestPPM(), text: LatestPPM().Late"></span></td>
-            <td><span data-bind="visible: LatestPPM(), text: LatestPPM().CancelVeryLate"></td>
+            <td><span data-bind="visible: LatestPPM(), text: LatestPPM().CancelVeryLate"></span></td>
             <td><span data-bind="visible: LatestPPM(), text: LatestPPM().Total"></span></td>
             <td><span data-bind="visible: LatestPPM(), text: LatestPPM().PPM"></span></td>
         </tr>

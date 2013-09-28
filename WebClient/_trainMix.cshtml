@@ -2,64 +2,65 @@
     <thead>
         <tr>
             <th>&nbsp;</th>
-            <th class="phone-hide advanced" colspan="3">Arrive</th>
-            <th class="phone-hide simple" colspan="2">Arrive</th>
-            <th class="phone-show" colspan="2">Arrive</th>
-            <th class="phone-hide advanced" colspan="3">Depart</th>
-            <th class="phone-hide simple" colspan="2">Depart</th>
-            <th class="phone-show" colspan="2">Depart</th>
-            <th class="phone-hide" colspan="3"></th>
-            <th class="phone-show"></th>
+            <th class="hidden-xs hidden-sm visible-md visible-lg" colspan="3">Arrive</th>
+            <th class="visible-xs visible-sm hidden-md hidden-lg" colspan="2">Arr</th>
+            <th class="hidden-xs hidden-sm visible-md visible-lg" colspan="3">Depart</th>
+            <th class="visible-xs visible-sm hidden-md hidden-lg" colspan="2">Dept</th>
+            <th class="hidden-xs hidden-sm visible-md visible-lg" colspan="4"></th>
+            <th class="visible-xs visible-sm hidden-md hidden-lg"></th>
         </tr>
         <tr>
             @*1*@
             <th>Location</th>
             @*2*@
-            <th class="phone-hide advanced">WTT</th>
+            <th class="hidden-xs hidden-sm visible-md visible-lg">WTT</th>
             @*3*@
-            <th>Expected</th>
+            <th class="hidden-xs hidden-sm visible-md visible-lg">Expected</th>
+            <th class="visible-xs visible-sm hidden-md hidden-lg">Ex.</th>
             @*4*@
-            <th>Actual</th>
+            <th class="hidden-xs hidden-sm visible-md visible-lg">Actual</th>
+            <th class="visible-xs visible-sm hidden-md hidden-lg">Act</th>
             @*5*@
-            <th class="phone-hide advanced">WTT</th>
+            <th class="hidden-xs hidden-sm visible-md visible-lg">WTT</th>
             @*6*@
-            <th>Expected</th>
+            <th class="hidden-xs hidden-sm visible-md visible-lg">Expected</th>
+            <th class="visible-xs visible-sm hidden-md hidden-lg">Exp</th>
             @*7*@
-            <th>Actual</th>
+            <th class="hidden-xs hidden-sm visible-md visible-lg">Actual</th>
+            <th class="visible-xs visible-sm hidden-md hidden-lg">Act</th>
             @*8*@
-            <th class="phone-hide">Line</th>
+            <th class="hidden-xs hidden-sm visible-md visible-lg">Line</th>
             @*9*@
-            <th>Pfm</th>
+            <th title="Platform">Pfm</th>
             @*10*@
-            <th class="phone-hide">Allowances</th>
+            <th class="hidden-xs hidden-sm visible-md visible-lg">Allowances</th>
         </tr>
     </thead>
     <tbody data-bind="foreach: $data">
         <tr data-bind="css: { pass: pass, cancel: cancel }">
             @*1. ALL - Location*@
-            <td class="col station stationName"><a class="pointer" data-bind="text: location, click: function (d, e) { showStation(d.locationStanox); }"></a></td>
+            <td class="col station stationName">
+                <a class="pointer" data-bind="visible: locationCRS, text: location, attr: { href: '/search-schedule#at/' + locationCRS }"></a>
+                <a class="pointer" data-bind="visible: !locationCRS, text: location" onclick="    return false;"></a>
+            </td>
             @*2. Advanced - Pass(Pass)/WTT Expected Arrival*@
-            <td class="col arrive wtt phone-hide advanced" data-bind="text: pass ? 'Pass' : wttArrive"></td>
+            <td class="col arrive wtt hidden-xs hidden-sm visible-md visible-lg" data-bind="text: pass ? 'Pass' : wttArrive"></td>
             @*3. Advanced - Pass(Empty)/Public Expected Arrival*@
-            <td class="col arrive public advanced" data-bind="text: pass ? '' : publicArrive"></td>
-            @*3. Simple - Pass(Pass)/Public Expected Arrival*@
-            <td class="col arrive public simple" data-bind="text: pass ? 'Pass' : publicArrive"></td>
+            <td class="col arrive public" data-bind="text: pass ? '' : publicArrive"></td>
             @*4. ALL - Actual Arrival*@
             <td class="col arrive actual" data-bind="text: pass ? '' : actualArrival"></td>
             @*5. Advanced - Pass/WTT Expected Departure*@
-            <td class="col depart wtt phone-hide advanced" data-bind="text: pass ? pass : wttDepart"></td>
+            <td class="col depart wtt hidden-xs hidden-sm visible-md visible-lg" data-bind="text: pass ? pass : wttDepart"></td>
             @*6. Advanced - Pass(Empty)/Public Expected Departure*@
             <td class="col depart public advanced" data-bind="text: pass ? '' : publicDepart"></td>
-            @*6. Simple - Pass/Public Expected Departure*@
-            <td class="col depart public simple" data-bind="text: pass ? pass : publicDepart"></td>
             @*7. ALL - Actual Departure*@
             <td class="col depart actual" data-bind="text: actualDeparture"></td>
             @*8. ALL - Line*@
-            <td class="col extra line phone-hide" data-bind="text: line"></td>
+            <td class="col extra line hidden-xs hidden-sm visible-md visible-lg" data-bind="text: line"></td>
             @*9. ALL - Platform*@
             <td class="col extra platform" data-bind="text: platform"></td>
             @*10. ALL - Allowances*@
-            <td class="col extra allowances phone-hide">
+            <td class="col extra allowances hidden-xs hidden-sm visible-md visible-lg">
                 <span data-bind="text: eAllowance, visible: eAllowance" title="Engineering Allowance"></span>
                 <span data-bind="text: paAllowance, visible: paAllowance" title="Pathing Allowance"></span>
                 <span data-bind="text: peAllowance, visible: peAllowance" title="Performance Allowance"></span>
@@ -68,5 +69,5 @@
     </tbody>
 </table>
 <p class="text-info">
-    <i class="icon-info-sign"></i>&nbsp;This page shows the Schedule with current running information. Click the <i class="icon-refresh"></i> icon above to activate live tracking.
+    <span class="glyphicon glyphicon-info-sign"></span>&nbsp;This page shows the Schedule with current running information. Click the <span class="glyphicon glyphicon-refresh"></span> icon above to activate live tracking.
 </p>

@@ -21,6 +21,22 @@ interface IServerSettings {
     apiName: string;
 }
 
+function preAjax() {
+    show($(".progress"));
+    hide($("#error-row"));
+    hide($("#no-results-row"));
+}
+
+function show(element) {
+    $(element).removeClass("hide");
+    $(element).show();
+}
+
+function hide(element) {
+    $(element).hide();
+    $(element).addClass("hide");
+}
+
 // Module
 module TrainNotifier {
 

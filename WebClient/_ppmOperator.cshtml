@@ -1,7 +1,7 @@
-﻿<div class="hide" id="ppmOperator">
+﻿<div id="ppmOperator">
     <ul class="breadcrumb">
         <li><a href="#all" onclick="showAll(); return false;">All</a> <span class="divider">/</span></li>
-        <li data-bind="visible: $data.IsRegion"><a data-bind="    text: $data.Parent.Operator, attr: { href: '#' + $data.Parent.Id(), onclick: 'viewOperator(\'' + $data.Parent.Id() + '\'); return false' }"></a> <span class="divider">/</span></li>
+        <li data-bind="visible: $data.IsRegion"><a data-bind="text: $data.Parent.Operator, attr: { href: '#' + $data.Parent.Id(), onclick: 'viewOperator(\'' + $data.Parent.Id() + '\'); return false' }"></a> <span class="divider">/</span></li>
         <li class="active"><span data-bind="    text: $data.Operator"></span> <span class="divider">/</span></li>
         <li class="dropdown" data-bind="visible: $data.Regions().length > 0">
             <a class="dropdown-toggle" id="sub" data-toggle="dropdown" href="#">Sub-Regions</a>

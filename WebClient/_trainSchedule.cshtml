@@ -4,30 +4,35 @@
             <th>&nbsp;</th>
             <th colspan="2">Arrive</th>
             <th colspan="2">Depart</th>
-            <th class="phone-hide" colspan="3"></th>
-            <th class="phone-show" colspan="2"></th>
+            <th class="hidden-xs hidden-sm visible-md visible-lg" colspan="3"></th>
+            <th class="visible-xs visible-sm hidden-md hidden-lg" colspan="2"></th>
         </tr>
         <tr>
             <th>Location</th>
             <th>WTT</th>
-            <th>Public</th>
+            <th class="hidden-xs hidden-sm visible-md visible-lg">Public</th>
+            <th class="visible-xs visible-sm hidden-md hidden-lg">Pub</th>
             <th>WTT</th>
-            <th>Depart</th>
-            <th>Line</th>
-            <th>Platform</th>
-            <th class="phone-hide">Allowances</th>
+            <th class="hidden-xs hidden-sm visible-md visible-lg">Depart</th>
+            <th class="visible-xs visible-sm hidden-md hidden-lg">Dept</th>
+            <th class="hidden-xs hidden-sm visible-md visible-lg">Line</th>
+            <th title="Platform">Pfm</th>
+            <th class="hidden-xs hidden-sm visible-md visible-lg">Allowances</th>
         </tr>
     </thead>
     <tbody data-bind="foreach: $data">
         <tr data-bind="css: { pass: pass }">
-            <td class="col station stationName"><a class="pointer" data-bind="text: location, click: function (d, e) { listStation(d.locationStanox); }"></a></td>
+            <td class="col station stationName">
+                <a class="pointer" data-bind="visible: locationCRS, text: location, attr: { href: '/search-schedule#at/' + locationCRS }"></a>
+                <a class="pointer" data-bind="visible: !locationCRS, text: location" onclick="    return false;"></a>
+            </td>
             <td class="col arrive wtt" data-bind="text: pass ? 'Pass' : wttArrive, attr: { colspan: pass ? 2 : 1 }"></td>
             <td class="col arrive public" data-bind="text: publicArrive, visible: !pass"></td>
             <td class="col depart wtt" data-bind="text: pass ? pass : wttDepart, attr: { colspan: pass ? 2 : 1 }"></td>
             <td class="col depart public" data-bind="text: pass ? '' : publicDepart, visible: !pass"></td>
-            <td class="col extra line" data-bind="text: line"></td>
+            <td class="col extra line hidden-xs hidden-sm visible-md visible-lg" data-bind="text: line"></td>
             <td class="col extra platform" data-bind="text: platform"></td>
-            <td class="col extra allowances phone-hide">
+            <td class="col extra allowances hidden-xs hidden-sm visible-md visible-lg">
                 <span data-bind="text: eAllowance, visible: eAllowance" title="Engineering Allowance"></span>
                 <span data-bind="text: paAllowance, visible: paAllowance" title="Pathing Allowance"></span>
                 <span data-bind="text: peAllowance, visible: peAllowance" title="Performance Allowance"></span>
@@ -36,5 +41,5 @@
     </tbody>
 </table>
 <p class="text-info">
-    <i class="icon-info-sign"></i>&nbsp;This page shows the original Schedule.
+    <span class="glyphicon glyphicon-info-sign"></span>&nbsp;This page shows the original Schedule.
 </p>

@@ -1,8 +1,3 @@
-/// <reference path="../typings/moment/moment.d.ts" />
-/// <reference path="global.ts" />
-/// <reference path="../typings/bootstrap/bootstrap.d.ts" />
-/// <reference path="../typings/jquery/jquery.d.ts" />
-/// <reference path="webApi.ts" />
 $(function () {
     TrainNotifier.Common.webApi = new TrainNotifier.WebApi();
 
@@ -16,25 +11,29 @@ $(function () {
 
     TrainNotifier.Common.webApi.getStations().done(function (stations) {
         var commands = [];
-        commands.push('get/');
-        commands.push('sub/');
-        commands.push('from/');
         for (var i in stations) {
-            commands.push('from/' + stations[i].Name);
-            commands.push('from/' + stations[i].CRS);
-        }
-        commands.push('at/');
-        for (var i in stations) {
-            commands.push('at/' + stations[i].Name);
-            commands.push('at/' + stations[i].CRS);
-        }
-        commands.push('to/');
-        for (var i in stations) {
-            commands.push('to/' + stations[i].Name);
-            commands.push('to/' + stations[i].CRS);
+            var tokens = [stations[i].StationName, stations[i].CRS, stations[i].Tiploc];
+            commands.push({
+                value: 'at/' + stations[i].CRS,
+                title: 'Trains calling at ' + stations[i].StationName,
+                tokens: tokens
+            });
+            commands.push({
+                value: 'from/' + stations[i].CRS,
+                title: 'Trains starting from ' + stations[i].StationName,
+                tokens: tokens
+            });
+            commands.push({
+                value: 'to/' + stations[i].CRS,
+                title: 'Trains terminating at ' + stations[i].StationName,
+                tokens: tokens
+            });
         }
         $("#global-search-box").typeahead({
-            source: commands
+            name: 'global-lookup',
+            local: commands,
+            template: '<p title="{{title}}">{{value}}</p>',
+            engine: Hogan
         });
     });
 });

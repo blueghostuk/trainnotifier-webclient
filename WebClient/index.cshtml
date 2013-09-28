@@ -2,90 +2,87 @@
     Layout = "~/_Layout.cshtml";
 }
 @using System.Web.Optimization;
-@section CustomCss{
-    @Styles.Render("~/bundles/css/index")
-}
 @section FooterJs{
     @Scripts.Render("~/bundles/js/index")
 }
 @section TopMenu{
     <li class="active"><a>Home</a></li>
-    <li><a href="~/search-schedule">Search Schedule</a></li>
-    <li><a href="~/train">Train</a></li>
-    <li><a href="~/route">Routes</a></li>
-    <li><a href="~/station">Stations</a></li>
+    <li class="dropdown">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Live <b class="caret"></b></a>
+        <ul class="dropdown-menu">
+            <li><a href="~/route">Routes</a></li>
+            <li><a href="~/station">Stations</a></li>
+            <li><a href="~/live">Live Feed</a></li>
+        </ul>
+    </li>
     <li><a href="~/ppm">PPM</a></li>
-    <li><a href="~/live">Live Feed</a></li>
 }
-<div class="container">
-    <div class="hero-unit">
-        <h1>@System.Configuration.ConfigurationManager.AppSettings["brandingTitle"]</h1>
+<div class="row">
+    <div class="col-md-6 col-xs-12 col-sm-12" style="margin-top: 65px;">
         <form>
-            <div class="row btn-group" style="margin-top: 30px;">
-                <div class="input-prepend input-append">
-                    <span class="add-on">From:<i class="icon-search"></i>
-                    </span>
-                    <input type="text" class="station-lookup" id="from-crs" autocomplete="off" placeholder="Type from station name here" />
-                    <span class="add-on dropdown">
-                        <a class="dropdown-toggle" id="from-local-link" data-toggle="dropdown" onclick="lookupLocalFrom(); return false;" href="#">Local</a>
-                        <ul class="dropdown-menu" role="menu" id="from-local" aria-labelledby="from-local-link" data-bind="foreach: $data">
-                            <li><a data-bind="text: $data, attr: { onclick: '$(\'#from-crs\').val(\'' + $data + '\'); return false;' }" href="#"></a></li>
-                        </ul>
-                        <i class="icon-map-marker"></i>
-                    </span>
-                </div>
-                <br />
-                <div class="input-prepend input-append">
-                    <span class="add-on">To:<i class="icon-search"></i>
-                    </span>
-                    <input type="text" class="station-lookup" id="to-crs" autocomplete="off" placeholder="Type to station name here" />
-                    <span class="add-on dropdown">
-                        <a class="dropdown-toggle" id="to-local-link" data-toggle="dropdown" onclick="lookupLocalTo(); return false;" href="#">Local</a>
-                        <ul class="dropdown-menu" role="menu" id="to-local" aria-labelledby="to-local-link" data-bind="foreach: $data">
-                            <li><a data-bind="text: $data, attr: { onclick: '$(\'#to-crs\').val(\'' + $data + '\'); return false;' }" href="#"></a></li>
-                        </ul>
-                        <i class="icon-map-marker"></i>
-                    </span>
-                </div>
-                <br />
-                <div class="input-prepend input-append">
-                    <span class="add-on">At:<i class="icon-search"></i>
-                    </span>
-                    <input type="text" class="station-lookup" id="at-crs" autocomplete="off" placeholder="Type calling at station name here" />
-                    <span class="add-on dropdown">
-                        <a class="dropdown-toggle" id="at-local-link" data-toggle="dropdown" onclick="lookupLocalAt(); return false;" href="#">Local</a>
-                        <ul class="dropdown-menu" role="menu" id="at-local" aria-labelledby="at-local-link" data-bind="foreach: $data">
-                            <li><a data-bind="text: $data, attr: { onclick: '$(\'#at-crs\').val(\'' + $data + '\'); return false;' }" href="#"></a></li>
-                        </ul>
-                        <i class="icon-map-marker"></i>
-                    </span>
-                </div>
-                <br />
-                <div class="input-prepend">
-                    <span class="add-on">On:<i class="icon-calendar"></i>
-                    </span>
-                    <input type="text" class="datepicker" placeholder="Date as DD/MM/YYYY (default to today)" id="date-picker" />
-                </div>
-                <br />
-                <div class="input-prepend">
-                    <span class="add-on">At:<i class="icon-time"></i>
-                    </span>
-                    <input type="text" placeholder="Time as HH:mm (default to around now)" id="time-picker" />
-                </div>
-                <br />
-                <p>
-                    <button type="submit" class="btn btn-primary">Find</button>
-                </p>
+            <div class="input-group input-group-sm">
+                <span class="input-group-addon">From:&nbsp;<span class="glyphicon glyphicon-search"></span></span>
+                <input type="text" class="form-control station-lookup" id="from-crs" autocomplete="off" placeholder="Type from station name here" />
+                <span class="input-group-addon">
+                    <a class="dropdown-toggle" id="from-local-link" data-toggle="dropdown" onclick="lookupLocalFrom(); return false;" href="#">Local</a>
+                    <ul class="dropdown-menu" role="menu" id="from-local" aria-labelledby="from-local-link" data-bind="foreach: $data">
+                        <li><a data-bind="text: $data, attr: { onclick: '$(\'#from-crs\').val(\'' + $data + '\'); return false;' }" href="#"></a></li>
+                    </ul>
+                    &nbsp;
+                    <span class="glyphicon glyphicon-map-marker"></span>
+                </span>
             </div>
+            <br />
+            <div class="input-group input-group-sm">
+                <span class="input-group-addon">To:&nbsp;<span class="glyphicon glyphicon-search"></span></span>
+                <input type="text" class="form-control station-lookup" id="to-crs" autocomplete="off" placeholder="Type to station name here" />
+                <span class="input-group-addon">
+                    <a class="dropdown-toggle" id="to-local-link" data-toggle="dropdown" onclick="lookupLocalTo(); return false;" href="#">Local</a>
+                    <ul class="dropdown-menu" role="menu" id="to-local" aria-labelledby="to-local-link" data-bind="foreach: $data">
+                        <li><a data-bind="text: $data, attr: { onclick: '$(\'#to-crs\').val(\'' + $data + '\'); return false;' }" href="#"></a></li>
+                    </ul>
+                    &nbsp;
+                    <span class="glyphicon glyphicon-map-marker"></span>
+                </span>
+            </div>
+            <br />
+            <div class="input-group input-group-sm">
+                <span class="input-group-addon">At:&nbsp;<span class="glyphicon glyphicon-search"></span></span>
+                <input type="text" class="form-control station-lookup" id="at-crs" autocomplete="off" placeholder="Type calling at station name here" />
+                <span class="input-group-addon">
+                    <a class="dropdown-toggle" id="at-local-link" data-toggle="dropdown" onclick="lookupLocalAt(); return false;" href="#">Local</a>
+                    <ul class="dropdown-menu" role="menu" id="at-local" aria-labelledby="at-local-link" data-bind="foreach: $data">
+                        <li><a data-bind="text: $data, attr: { onclick: '$(\'#at-crs\').val(\'' + $data + '\'); return false;' }" href="#"></a></li>
+                    </ul>
+                    &nbsp;
+                    <span class="glyphicon glyphicon-map-marker"></span>
+                </span>
+            </div>
+            <br />
+            <div class="input-group input-group-sm" style="width:100%;">
+                <span class="input-group-addon">On:&nbsp;<span class="glyphicon glyphicon-calendar"></span></span>
+                <input type="text" class="form-control datepicker" placeholder="Date as DD/MM/YYYY (default to today)" id="date-picker" />
+            </div>
+            <br />
+            <div class="input-group input-group-sm" style="width:100%;">
+                <span class="input-group-addon">At:&nbsp;<span class="glyphicon glyphicon-time"></span></span>
+                <input type="text" class="form-control" placeholder="Time as HH:mm (default to around now)" id="time-picker" />
+            </div>
+            <br />
+            <p>
+                <button type="submit" class="btn btn-primary">Find</button>
+            </p>
         </form>
-        <div class="row">
-            Search For Trains:
-            <ul>
-                <li>Starting From: a location</li>
-                <li>Calling From: a location, To: a location (Direct Services Only)</li>
-                <li>To: a location (terminate at location)</li>
-                <li>At: a location (call at location en route)</li>
-            </ul>
-        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-12">
+        Search For Trains:
+        <ul>
+            <li>Starting From: a location</li>
+            <li>Calling From: a location, To: a location (Direct Services Only)</li>
+            <li>To: a location (terminate at location)</li>
+            <li>At: a location (call at location en route)</li>
+        </ul>
     </div>
 </div>

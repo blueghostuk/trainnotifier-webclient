@@ -9,27 +9,30 @@
     <meta name="format-detection" content="telephone=no">
     <!-- iPhone 5 -->
     <link href="content/images/ios/apple-touch-icon-114x114.png"
-        sizes="114x114"
-        rel="apple-touch-icon">
+          sizes="114x114"
+          rel="apple-touch-icon">
     <link href="content/images/ios/apple-touch-startup-image-640x1096.png"
-        media="(device-width: 320px) and (device-height: 568px)
+          media="(device-width: 320px) and (device-height: 568px)
                  and (-webkit-device-pixel-ratio: 2)"
-        rel="apple-touch-startup-image">
+          rel="apple-touch-startup-image">
     <!-- iPad (Retina) -->
     <link href="content/images/ios/apple-touch-icon-144x144.png"
-        sizes="144x144"
-        rel="apple-touch-icon">
+          sizes="144x144"
+          rel="apple-touch-icon">
     <link href="content/images/ios/apple-touch-startup-image-1536x2008.png"
-        media="(device-width: 768px) and (device-height: 1024px)
+          media="(device-width: 768px) and (device-height: 1024px)
                  and (orientation: portrait)
                  and (-webkit-device-pixel-ratio: 2)"
-        rel="apple-touch-startup-image">
+          rel="apple-touch-startup-image">
     <link href="content/images/ios/apple-touch-startup-image-1496x2048.png"
-        media="(device-width: 768px) and (device-height: 1024px)
+          media="(device-width: 768px) and (device-height: 1024px)
                  and (orientation: landscape)
                  and (-webkit-device-pixel-ratio: 2)"
-        rel="apple-touch-startup-image">
+          rel="apple-touch-startup-image">
     <title>@System.Configuration.ConfigurationManager.AppSettings["brandingTitle"]</title>
+    <style type="text/css">
+        @@import url('//fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,400,700');
+    </style>
     <style type="text/css">
         @@import url('//fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,400,700');
     </style>
@@ -46,30 +49,33 @@
     @RenderSection("HeaderJs", false)
 </head>
 <body>
-    <div class="navbar navbar-fixed-top">
-        <div class="navbar-inner">
-            <div class="container-fluid">
-                <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+    <div class="navbar navbar-default navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </a>
-                <span class="brand">@System.Configuration.ConfigurationManager.AppSettings["brandingTitle"]</span>
-                <div class="nav-collapse collapse">
-                    <form class="navbar-search pull-left top-search">
-                        <input type="search" id="global-search-box" autocomplete="off" class="span3" placeholder="Enter Command">
-                        @RenderSection("TopMenuAdditional", false)
-                    </form>
-                    <ul class="nav">
-                        @RenderSection("TopMenu", true)
-                    </ul>
-                </div>
-                <!--/.nav-collapse -->
+                </button>
+                <a class="navbar-brand" href="#">@System.Configuration.ConfigurationManager.AppSettings["brandingTitle"]</a>
             </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    @RenderSection("TopMenu", true)
+                </ul>
+                @RenderSection("TopMenuAdditional", false)
+                <form class="navbar-form navbar-right visible-md visible-lg">
+                    <div class="form-group">
+                        <input type="text" id="global-search-box" autocomplete="off" class="form-control" placeholder="Enter Command">
+                    </div>
+                    <!--/.form-group -->
+                </form>
+            </div>
+            <!--/.navbar-collapse -->
         </div>
+        <!--/.container -->
     </div>
-    <div class="container-fluid">
+    <div class="container">
         @RenderBody()
         @{
             var adClient = System.Configuration.ConfigurationManager.AppSettings["ad_client"];
@@ -77,19 +83,23 @@
         }
         @if (!string.IsNullOrWhiteSpace(adClient) && !string.IsNullOrWhiteSpace(adSlot))
         {
-            <div style="text-align: center">
-                <script type="text/javascript"><!--
-                    google_ad_client = "@adClient";
-                    /* TrainNotifier */
-                    google_ad_slot = "@adSlot";
-                    google_ad_width = 728;
-                    google_ad_height = 90;
-                    //-->
-                </script>
-                <script type="text/javascript" src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
-                </script>
-            </div>
+            <style>
+				.trainnotifier-responsive { width: 320px; height: 50px; }
+				@@media(min-width: 500px) { .trainnotifier-responsive { width: 468px; height: 60px; } }
+				@@media(min-width: 800px) { .trainnotifier-responsive { width: 728px; height: 90px; } }
+			</style>
+			<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+			<!-- trainnotifier-responsive -->
+			<ins class="adsbygoogle trainnotifier-responsive"
+				 style="display:inline-block"
+				 data-ad-client="@adClient"
+				 data-ad-slot="@adSlot"></ins>
+			<script>
+			    (adsbygoogle = window.adsbygoogle || []).push({});
+			</script>
         }
+    </div>
+    <div class="container">
         <hr />
         <footer>
             <p>
@@ -107,7 +117,7 @@
     @Scripts.Render("~/bundles/knockout")
     @Scripts.Render("~/bundles/bootstrap")
     @Scripts.Render("~/bundles/moment")
-    @Scripts.Render("~/bundles/app")    
+    @Scripts.Render("~/bundles/app")
     <script type="text/javascript">
         TrainNotifier.Common.serverSettings = {
             apiUrl: "@System.Configuration.ConfigurationManager.AppSettings["apiUrl"]",
