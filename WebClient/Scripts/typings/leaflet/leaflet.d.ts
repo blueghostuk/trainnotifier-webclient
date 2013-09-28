@@ -1449,7 +1449,7 @@ declare module L {
 
     }
 
-    export class FeatureGroup implements ILayer, IEventPowered {
+    export class FeatureGroup extends LayerGroup implements ILayer, IEventPowered {
         /**
           * Create a layer group, optionally given an initial set of layers.
           */
@@ -1906,6 +1906,19 @@ declare module L {
           */
         constructor(options: IconOptions);
 
+        /**
+          * Default properties for newly constructed icons.
+          */
+        public static Default : IconDefault;
+    }
+
+    export class IconDefault extends Icon {
+        /**
+          * Creates an icon instance with default options.
+          */
+        constructor();
+
+        imagePath: string;
     }
 
     export interface DivIconOptions {
@@ -2928,7 +2941,7 @@ declare module L {
       * This method restores the L global variale to the original value it had
       * before Leaflet inclusion, and returns the real Leaflet namespace.
       */
-    //export var noConflict: () => L;
+    export var noConflict: () => typeof L;
 
     /**
       * A constant that represents the Leaflet version in use.
