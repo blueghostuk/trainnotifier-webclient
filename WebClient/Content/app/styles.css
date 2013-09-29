@@ -22,7 +22,7 @@
 }
 
 .table tbody tr.cancel > td {
-    background-color: #f2dede !important;
+    background-color: #ff0000 !important;
 }
 
 table.table-header-colour thead th {

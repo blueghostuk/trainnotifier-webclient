@@ -117,7 +117,7 @@ module TrainNotifier.KnockoutModels.Search {
             this.computedCss = ko.computed(function () {
                 var css = [];
                 if (self.cancel()) {
-                    css.push("error");
+                    css.push("cancel");
                 }
                 if (self.changeOfOrigin()) {
                     css.push("info");
@@ -359,7 +359,7 @@ module TrainNotifier.KnockoutModels.Search {
                     css.push("pass")
                 }
                 if (self.cancel()) {
-                    css.push("error");
+                    css.push("cancel");
                 }
                 if (self.changeOfOrigin()) {
                     css.push("info");
