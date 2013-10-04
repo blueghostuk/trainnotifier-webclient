@@ -84,19 +84,34 @@
         @if (!string.IsNullOrWhiteSpace(adClient) && !string.IsNullOrWhiteSpace(adSlot))
         {
             <style>
-				.trainnotifier-responsive { width: 320px; height: 50px; }
-				@@media(min-width: 500px) { .trainnotifier-responsive { width: 468px; height: 60px; } }
-				@@media(min-width: 800px) { .trainnotifier-responsive { width: 728px; height: 90px; } }
-			</style>
-			<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+                .trainnotifier-responsive {
+                    width: 320px;
+                    height: 50px;
+                }
+
+                @@media(min-width: 500px) {
+                    .trainnotifier-responsive {
+                        width: 468px;
+                        height: 60px;
+                    }
+                }
+
+                @@media(min-width: 800px) {
+                    .trainnotifier-responsive {
+                        width: 728px;
+                        height: 90px;
+                    }
+                }
+            </style>
+            <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 			<!-- trainnotifier-responsive -->
-			<ins class="adsbygoogle trainnotifier-responsive"
-				 style="display:inline-block"
-				 data-ad-client="@adClient"
-				 data-ad-slot="@adSlot"></ins>
-			<script>
+            <ins class="adsbygoogle trainnotifier-responsive"
+                 style="display:inline-block"
+                 data-ad-client="@adClient"
+                 data-ad-slot="@adSlot"></ins>
+            <script>
 			    (adsbygoogle = window.adsbygoogle || []).push({});
-			</script>
+            </script>
         }
     </div>
     <div class="container">

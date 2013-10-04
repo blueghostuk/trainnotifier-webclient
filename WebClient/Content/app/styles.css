@@ -76,9 +76,4 @@ tr.info > td > span.changeOfOrigin {
     div.tab-pane.active > table {
         margin-top: 10px;
     }
-
-    .time {
-        max-width: 3.5ex;
-        overflow: hidden;
-    }
 }
