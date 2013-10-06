@@ -103,12 +103,12 @@
                             <span style="font-weight: bold;" data-bind="text: actualDeparture"></span>
                             <!-- /ko -->
                             <!-- ko if: !actualDeparture -->
-                                <!-- ko if: publicDeparture -->
-                                <span style="font-style: italic;" data-bind="text: publicDeparture"></span>
-                                <!-- /ko -->
-                                <!-- ko if: !publicDeparture -->
-                                <span style="font-style: italic;" data-bind="text: wttDeparture"></span>
-                                <!-- /ko -->
+                            <!-- ko if: publicDeparture -->
+                            <span style="font-style: italic;" data-bind="text: publicDeparture"></span>
+                            <!-- /ko -->
+                            <!-- ko if: !publicDeparture -->
+                            <span style="font-style: italic;" data-bind="text: wttDeparture"></span>
+                            <!-- /ko -->
                             <!-- /ko -->
                         </td>
                         <!-- 4 -->
@@ -126,12 +126,12 @@
                             <span style="font-weight: bold;" data-bind="text: actualArrival"></span>
                             <!-- /ko -->
                             <!-- ko if: !actualArrival -->
-                                <!-- ko if: publicArrival -->
-                                <span style="font-style: italic;" data-bind="text: publicArrival"></span>
-                                <!-- /ko -->
-                                <!-- ko if: !publicArrival -->
-                                <span style="font-style: italic;" data-bind="text: wttArrival"></span>
-                                <!-- /ko -->
+                            <!-- ko if: publicArrival -->
+                            <span style="font-style: italic;" data-bind="text: publicArrival"></span>
+                            <!-- /ko -->
+                            <!-- ko if: !publicArrival -->
+                            <span style="font-style: italic;" data-bind="text: wttArrival"></span>
+                            <!-- /ko -->
                             <!-- /ko -->
                         </td>
                     </tr>
@@ -188,12 +188,15 @@
                             <span style="font-weight: bold;" data-bind="text: atActualArrival"></span>
                             <!-- /ko -->
                             <!-- ko if: !atActualArrival -->
-                                <!-- ko if: atPublicArrival -->
-                                <span style="font-style: italic;" data-bind="text: atPublicArrival"></span>
-                                <!-- /ko -->
-                                <!-- ko if: !atPublicArrival -->
-                                <span style="font-style: italic;" data-bind="text: atWttArrival"></span>
-                                <!-- /ko -->
+                            <!-- ko if: atPublicArrival && atPublicArrival == "Pass" -->
+                            <span style="font-style: italic;" data-bind="text: atWttArrival"></span>
+                            <!-- /ko -->
+                            <!-- ko if: atPublicArrival && atPublicArrival != "Pass" -->
+                            <span style="font-style: italic;" data-bind="text: atPublicArrival"></span>
+                            <!-- /ko -->
+                            <!-- ko if: !atPublicArrival -->
+                            <span style="font-style: italic;" data-bind="text: atWttArrival"></span>
+                            <!-- /ko -->
                             <!-- /ko -->
                         </td>
                         <!-- 3 -->
@@ -217,12 +220,15 @@
                             <span style="font-weight: bold;" data-bind="text: atActualDeparture"></span>
                             <!-- /ko -->
                             <!-- ko if: !atActualDeparture -->
-                                <!-- ko if: atPublicDeparture -->
-                                <span style="font-style: italic;" data-bind="text: atPublicDeparture"></span>
-                                <!-- /ko -->
-                                <!-- ko if: !atPublicDeparture -->
-                                <span style="font-style: italic;" data-bind="text: atWttDeparture"></span>
-                                <!-- /ko -->
+                            <!-- ko if: atPublicDeparture && atPublicDeparture == "Pass" -->
+                            <span style="font-style: italic;" data-bind="text: atWttDeparture"></span>
+                            <!-- /ko -->
+                            <!-- ko if: atPublicDeparture && atPublicDeparture != "Pass" -->
+                            <span style="font-style: italic;" data-bind="text: atPublicDeparture"></span>
+                            <!-- /ko -->
+                            <!-- ko if: !atPublicDeparture -->
+                            <span style="font-style: italic;" data-bind="text: atWttDeparture"></span>
+                            <!-- /ko -->
                             <!-- /ko -->
                         </td>
                     </tr>
@@ -252,19 +258,17 @@
                         <!-- 2 rowspan2 -->
                         <!-- 3 rowspan2 -->
                         <!-- 4 -->
-                        <th class="hidden-xs hidden-sm visible-md visible-lg">Pfm</th>
-                        <th class="visible-xs visible-sm hidden-md hidden-lg">P</th>
+                        <th>Pfm</th>
                         <th class="hidden-xs hidden-sm visible-md visible-lg">Public</th>
-                        <th class="visible-xs visible-sm hidden-md hidden-lg" colspan="2"></th>
                         <th class="hidden-xs hidden-sm visible-md visible-lg">WTT</th>
                         <th class="hidden-xs hidden-sm visible-md visible-lg">Actual</th>
+                        <th class="visible-xs visible-sm hidden-md hidden-lg" colspan="2">At</th>
                         <!-- 5 -->
-                        <th class="hidden-xs hidden-sm visible-md visible-lg">Pfm</th>
-                        <th class="visible-xs visible-sm hidden-md hidden-lg">P</th>
+                        <th>Pfm</th>
                         <th class="hidden-xs hidden-sm visible-md visible-lg">Public</th>
-                        <th class="visible-xs visible-sm hidden-md hidden-lg" colspan="2"></th>
                         <th class="hidden-xs hidden-sm visible-md visible-lg">WTT</th>
                         <th class="hidden-xs hidden-sm visible-md visible-lg">Actual</th>
+                        <th class="visible-xs visible-sm hidden-md hidden-lg" colspan="2"></th>
                     </tr>
                 </thead>
                 <tbody data-bind="foreach: results">
@@ -283,14 +287,21 @@
                             <span data-bind="text: cancelEnRoute"></span>
                         </td>
                         <!-- 4 -->
-                        <td class="centerText" data-bind="text: fromPlatform, css: { pass: passDeparture }"></td>
-                        <td class="pass" data-bind="visible: passDeparture">Pass</td>
-                        <td class="hidden-xs hidden-sm visible-md visible-lg time" title="Public Departure" data-bind="text: publicDeparture, visible: !passDeparture"></td>
-                        <td class="hidden-xs hidden-sm visible-md visible-lg" title="WTT Departure" data-bind="text: wttDeparture, css: { pass: passDeparture }"></td>
-                        <td class="hidden-xs hidden-sm visible-md visible-lg time" title="Actual Departure" data-bind="text: actualDeparture, css: { pass: passDeparture }"></td>
-                        <td class="visible-xs visible-sm hidden-md hidden-lg time" colspan="2" data-bind="css: { pass: passDeparture }">
+                        <!-- ko if: passDeparture -->
+                        <td class="hidden-xs hidden-sm visible-md visible-lg pass" colspan="2">Pass</td>
+                        <td class="visible-xs visible-sm hidden-md hidden-lg pass">Pass</td>
+                        <td class="hidden-xs hidden-sm visible-md visible-lg pass time" title="WTT Departure" data-bind="text: wttDeparture"></td>
+                        <td class="hidden-xs hidden-sm visible-md visible-lg pass time" title="Actual Departure" data-bind="text: actualDeparture"></td>
+                        <!-- /ko -->
+                        <!-- ko if: !passDeparture -->
+                        <td class="centerText" data-bind="text: fromPlatform"></td>
+                        <td class="hidden-xs hidden-sm visible-md visible-lg time" title="Public Departure" data-bind="text: publicDeparture"></td>
+                        <td class="hidden-xs hidden-sm visible-md visible-lg" title="WTT Departure" data-bind="text: wttDeparture"></td>
+                        <td class="hidden-xs hidden-sm visible-md visible-lg time" title="Actual Departure" data-bind="text: actualDeparture"></td>
+                        <!-- /ko -->
+                        <td class="visible-xs visible-sm hidden-md hidden-lg time" data-bind="css: { pass: passDeparture }" colspan="2">
                             <!-- ko if: actualDeparture -->
-                            <span style=" font-weight bold;" data-bind="text: actualDeparture">
+                            <span style=" font-weight: bold;" data-bind="text: actualDeparture">
                             </span>
                             <!-- /ko -->
                             <!-- ko if: !actualDeparture -->
@@ -303,23 +314,30 @@
                             <!-- /ko -->
                         </td>
                         <!-- 5 -->
-                        <td class="centerText" data-bind="text: toPlatform, css: { pass: passArrival }"></td>
-                        <td class="pass" data-bind="visible: passArrival">Pass</td>
-                        <td class="hidden-xs hidden-sm visible-md visible-lg time" title="Public Arrival" data-bind="text: publicArrival, visible: !passArrival"></td>
-                        <td class="hidden-xs hidden-sm visible-md visible-lg" title="WTT Arrival" data-bind="text: wttArrival, css: { pass: passArrival }"></td>
-                        <td class="hidden-xs hidden-sm visible-md visible-lg time" title="Actual Arrival" data-bind="text: actualArrival, css: { pass: passArrival }"></td>
-                        <td class="visible-xs visible-sm hidden-md hidden-lg time" colspan="2" data-bind="css: { pass: passArrival }">
+                        <!-- ko if: passArrival -->
+                        <td class="hidden-xs hidden-sm visible-md visible-lg pass" colspan="2">Pass</td>
+                        <td class="visible-xs visible-sm hidden-md hidden-lg pass">Pass</td>
+                        <td class="hidden-xs hidden-sm visible-md visible-lg pass" title="WTT Arrival" data-bind="text: wttArrival"></td>
+                        <td class="hidden-xs hidden-sm visible-md visible-lg pass time" title="Actual Arrival" data-bind="text: actualArrival"></td>
+                        <!-- /ko -->
+                        <!-- ko if: !passArrival -->
+                        <td class="centerText" data-bind="text: toPlatform"></td>
+                        <td class="hidden-xs hidden-sm visible-md visible-lg time" title="Public Arrival" data-bind="text: publicArrival"></td>
+                        <td class="hidden-xs hidden-sm visible-md visible-lg" title="WTT Arrival" data-bind="text: wttArrival"></td>
+                        <td class="hidden-xs hidden-sm visible-md visible-lg time" title="Actual Arrival" data-bind="text: actualArrival"></td>
+                        <!-- /ko -->
+                        <td class="visible-xs visible-sm hidden-md hidden-lg time" data-bind="css: { pass: passArrival }" colspan="2">
                             <!-- ko if: actualArrival -->
-                            <span style=" font-weight bold;" data-bind="text: actualArrival">
+                            <span style=" font-weight: bold;" data-bind="text: actualArrival">
                             </span>
                             <!-- /ko -->
                             <!-- ko if: !actualArrival -->
-                                <!-- ko if: publicArrival -->
-                                <span style="font-style: italic;" data-bind="text: publicArrival"></span>
-                                <!-- /ko -->
-                                <!-- ko if: !publicArrival -->
-                                <span style="font-style: italic;" data-bind="text: wttArrival"></span>
-                                <!-- /ko -->
+                            <!-- ko if: publicArrival -->
+                            <span style="font-style: italic;" data-bind="text: publicArrival"></span>
+                            <!-- /ko -->
+                            <!-- ko if: !publicArrival -->
+                            <span style="font-style: italic;" data-bind="text: wttArrival"></span>
+                            <!-- /ko -->
                             <!-- /ko -->
                         </td>
                     </tr>
