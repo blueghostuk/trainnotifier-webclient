@@ -1,15 +1,15 @@
 ﻿<div id="ppmOperator">
-    <ul class="breadcrumb">
-        <li><a href="#all" onclick="showAll(); return false;">All</a> <span class="divider">/</span></li>
-        <li data-bind="visible: $data.IsRegion"><a data-bind="text: $data.Parent.Operator, attr: { href: '#' + $data.Parent.Id(), onclick: 'viewOperator(\'' + $data.Parent.Id() + '\'); return false' }"></a> <span class="divider">/</span></li>
-        <li class="active"><span data-bind="    text: $data.Operator"></span> <span class="divider">/</span></li>
+    <ol class="breadcrumb">
+        <li><a href="#all" onclick="showAll(); return false;">All</a></li>
+        <li data-bind="visible: $data.IsRegion"><a data-bind="text: $data.Parent.Operator, attr: { href: '#' + $data.Parent.Id(), onclick: 'viewOperator(\'' + $data.Parent.Id() + '\'); return false' }"></a></li>
+        <li class="active"><span data-bind="text: $data.Operator"></span></li>
         <li class="dropdown" data-bind="visible: $data.Regions().length > 0">
             <a class="dropdown-toggle" id="sub" data-toggle="dropdown" href="#">Sub-Regions</a>
             <ul class="dropdown-menu" role="menu" aria-labelledby="sub" data-bind="foreach: $data.Regions()">
                 <li><a data-bind="text: Operator, attr: { href: '#' + $parent.Id() + '/' + Id(), onclick: 'viewSubRegion(\'' + $parent.Id() + '\', \'' + Id() + '\'); return false;' }"></a></li>
             </ul>
         </li>
-    </ul>
+    </ol>
     <hr style="margin: 5px 0px;" />
     <table class="table table-hover table-bordered">
         <thead>

@@ -16,18 +16,6 @@ div.pagination {
     margin-bottom: 0px;
 }
 
-ul.pager {
-    margin: 0px 0px 5px !important;
-}
-
-    ul.pager li:first-child {
-        float: left;
-    }
-
-    ul.pager li:last-child {
-        float: right;
-    }
-
 div#title {
     margin-top: 5px;
     font-size: large;
