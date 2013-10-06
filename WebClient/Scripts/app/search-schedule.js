@@ -70,12 +70,12 @@ var thisPage = {
         if (this.advancedMode) {
             $("#advancedSwitch").html("Simple");
 
-            $(".toc-ZZ, .cat-EE, .pass").show();
+            $(".toc-ZZ, .cat-EE, .passing").show();
             $(".cat-ee").show();
         } else {
             $("#advancedSwitch").html("Advanced");
 
-            $(".toc-ZZ, .cat-EE, .pass").hide();
+            $(".toc-ZZ, .cat-EE, .passing").hide();
         }
     }
 };

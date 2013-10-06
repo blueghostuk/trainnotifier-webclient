@@ -345,7 +345,7 @@ var TrainNotifier;
                     this.computedCss = ko.computed(function () {
                         var css = [];
                         if (self.pass()) {
-                            css.push("pass");
+                            css.push("passing");
                         }
                         if (self.cancel()) {
                             css.push("cancel");
@@ -477,6 +477,31 @@ var TrainNotifier;
                             this.wttArrival = TrainNotifier.DateTimeFormats.formatTimeString(toTiplocStop.Pass);
                         }
                     }
+
+                    var self = this;
+                    this.computedCss = ko.computed(function () {
+                        var css = [];
+                        if (self.cancel()) {
+                            css.push("cancel");
+                        }
+                        if (self.changeOfOrigin()) {
+                            css.push("info");
+                        }
+                        if (self.reinstate()) {
+                            css.push("reinstatement");
+                        }
+                        if (self.operatorCode) {
+                            css.push("toc-" + self.operatorCode);
+                        }
+                        if (self.category()) {
+                            css.push("cat-" + self.category());
+                        }
+                        if (self.passArrival || self.passDeparture) {
+                            css.push("passing");
+                        }
+
+                        return css.join(" ");
+                    });
                 }
                 return CallingBetweenTrainMovement;
             })(TrainMovement);
