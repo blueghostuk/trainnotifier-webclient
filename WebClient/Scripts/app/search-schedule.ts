@@ -26,7 +26,8 @@ var thisPage: IPage = {
         $("#global-search-box").val(command);
     },
     parseCommand: function () {
-        var cmdString = this.getCommand();
+        var cmdString = thisPage.getCommand();
+        cmdString = cmdString.replace("!", "");
         var idx = cmdString.indexOf("/");
         if (idx == -1)
             return false;

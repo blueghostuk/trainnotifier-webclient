@@ -1,6 +1,17 @@
 ﻿@{
+    if (TrainNotifier.WebClient.Handlers.AtHandler.IsGoogleRequest(Request.Url) &&
+        TrainNotifier.WebClient.Handlers.AtHandler.IsAtRequest(Request.Url))
+    {
+        var handler = new TrainNotifier.WebClient.Handlers.AtHandler(Response);
+        handler.ProcessRequest(Request.Url);
+        return;
+    }
+    
+}
+@{
     Layout = "~/_Layout.cshtml";
 }
+
 @using System.Web.Optimization;
 @section CustomCss{
     @Styles.Render("~/bundles/css/search-schedule")

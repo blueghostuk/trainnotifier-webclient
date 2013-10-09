@@ -34,7 +34,8 @@ var thisPage: IPage = {
         document.location.hash = original;
     },
     parseCommand: function () {
-        var cmdString : string = this.getCommand();
+        var cmdString = thisPage.getCommand();
+        cmdString = cmdString.replace("!", "");
         var idx = cmdString.indexOf("/");
         if (idx == -1)
             return false;

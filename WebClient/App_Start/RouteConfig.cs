@@ -17,7 +17,7 @@ namespace TrainNotifier.WebClient.App_Start
                 },
                 new TrainByIdRouteHandler()));
 
-            routes.Add(new Route("trains/{uid}/{year}/{month}/{day}", 
+            routes.Add(new Route("trains/{uid}/{year}/{month}/{day}",
                 null,
                 new RouteValueDictionary
                 {
@@ -194,7 +194,7 @@ namespace TrainNotifier.WebClient.App_Start
 
             public void ProcessRequest(HttpContext context)
             {
-                RedirectToUrl(context, string.Format("~/train#get/{0}/{1:yyyy-MM-dd}", _trainUid, _date));
+                RedirectToUrl(context, string.Format("~/train#!get/{0}/{1:yyyy-MM-dd}", _trainUid, _date));
             }
         }
     }
@@ -223,7 +223,7 @@ namespace TrainNotifier.WebClient.App_Start
 
             public void ProcessRequest(HttpContext context)
             {
-                RedirectToUrl(context, string.Format("~/train#id/{0}", _trainId));
+                RedirectToUrl(context, string.Format("~/train#!id/{0}", _trainId));
             }
         }
     }
@@ -298,16 +298,16 @@ namespace TrainNotifier.WebClient.App_Start
                 switch (_method)
                 {
                     case SearchMethod.From:
-                        url = string.Format("~/search-schedule#from/{0}/{1:yyyy-MM-dd}{2}", _crsA, _date, _time);
+                        url = string.Format("~/search-schedule#!from/{0}/{1:yyyy-MM-dd}{2}", _crsA, _date, _time);
                         break;
                     case SearchMethod.To:
-                        url = string.Format("~/search-schedule#to/{0}/{1:yyyy-MM-dd}{2}", _crsA, _date, _time);
+                        url = string.Format("~/search-schedule#!to/{0}/{1:yyyy-MM-dd}{2}", _crsA, _date, _time);
                         break;
                     case SearchMethod.At:
-                        url = string.Format("~/search-schedule#at/{0}/{1:yyyy-MM-dd}{2}", _crsA, _date, _time);
+                        url = string.Format("~/search-schedule#!at/{0}/{1:yyyy-MM-dd}{2}", _crsA, _date, _time);
                         break;
                     case SearchMethod.Between:
-                        url = string.Format("~/search-schedule#from/{0}/to/{1}/{2:yyyy-MM-dd}{3}", _crsA, _crsB, _date, _time);
+                        url = string.Format("~/search-schedule#!from/{0}/to/{1}/{2:yyyy-MM-dd}{3}", _crsA, _crsB, _date, _time);
                         break;
                 }
                 RedirectToUrl(context, url);
