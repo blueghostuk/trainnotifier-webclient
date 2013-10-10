@@ -29,12 +29,11 @@ var thisPage = {
         if (advancedMode != -1) {
             command = command.substring(0, advancedMode);
         }
-        $("#global-search-box").val(command);
+        $("#global-search-box").val(command.replace("!", ""));
         document.location.hash = original;
     },
     parseCommand: function () {
         var cmdString = thisPage.getCommand();
-        cmdString = cmdString.replace("!", "");
         var idx = cmdString.indexOf("/");
         if (idx == -1)
             return false;

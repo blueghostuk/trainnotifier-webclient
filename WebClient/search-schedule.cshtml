@@ -6,7 +6,7 @@
         handler.ProcessRequest(Request.Url);
         return;
     }
-    
+
 }
 @{
     Layout = "~/_Layout.cshtml";
@@ -41,7 +41,7 @@
         <div class="row alert alert-error hide" id="error-row">
             <strong>Error fetching data. Please Refresh to try again</strong>
         </div>
-        <div class="progress progress-striped active hide">
+        <div class="progress progress-striped active">
             <div class="progress-bar" role="progressbar" style="width: 100%"></div>
         </div>
         <div class="row" id="title" data-bind="visible: From">
@@ -55,305 +55,311 @@
                 <li class="previous"><a href="#" onclick="previousDate(); return false;" class="neg-hrs">&lt; Earlier</a></li>
                 <li class="next"><a href="#" onclick="nextDate(); return false;" class="plus-hrs">Later &gt;</a></li>
             </ul>
-            <table class="table table-hover table-bordered table-header-colour" id="start-end-at-search-results" data-bind="visible: $data.length > 0">
-                <thead class="header">
-                    <tr>
-                        <!-- 1 -->
-                        <th class="hidden-xs hidden-sm visible-md visible-lg" colspan="2"></th>
-                        <th class="visible-xs visible-sm hidden-md hidden-lg" rowspan="2">ID</th>
-                        <!-- 2 -->
-                        <th colspan="2">From</th>
-                        <!-- 3 -->
-                        <th class="hidden-xs hidden-sm visible-md visible-lg" colspan="3">Departure</th>
-                        <th class="visible-xs visible-sm hidden-md hidden-lg" rowspan="2">Dept</th>
-                        <!-- 4 -->
-                        <th colspan="2">To</th>
-                        <!-- 5 -->
-                        <th class="hidden-xs hidden-sm visible-md visible-lg" colspan="3">Arrival</th>
-                        <th class="visible-xs visible-sm hidden-md hidden-lg" rowspan="2">Arr</th>
-                    </tr>
-                    <tr>
-                        <!-- 1 -->
-                        <th class="hidden-xs hidden-sm visible-md visible-lg">Train ID</th>
-                        <th class="hidden-xs hidden-sm visible-md visible-lg">Operator</th>
-                        <!-- 2 -->
-                        <th>Station</th>
-                        <th class="hidden-xs hidden-sm visible-md visible-lg">Pfm</th>
-                        <th class="visible-xs visible-sm hidden-md hidden-lg">P</th>
-                        <!-- 3 -->
-                        <th class="hidden-xs hidden-sm visible-md visible-lg">Public</th>
-                        <th class="hidden-xs hidden-sm visible-md visible-lg advanced">WTT</th>
-                        <th class="hidden-xs hidden-sm visible-md visible-lg">Actual</th>
-                        <!-- 4 -->
-                        <th>Station</th>
-                        <th class="hidden-xs hidden-sm visible-md visible-lg">Pfm</th>
-                        <th class="visible-xs visible-sm hidden-md hidden-lg">P</th>
-                        <!-- 5 -->
-                        <th class="hidden-xs hidden-sm visible-md visible-lg">Public</th>
-                        <th class="hidden-xs hidden-sm visible-md visible-lg advanced">WTT</th>
-                        <th class="hidden-xs hidden-sm visible-md visible-lg">Actual</th>
-                    </tr>
-                </thead>
-                <tbody data-bind="foreach: $data">
-                    <tr data-bind="css: computedCss, attr: { title: title }">
-                        <!-- 1 -->
-                        <td><a data-bind="text: headCode, attr: { href: 'trains/' + trainId + '/' + departureDate }"></a></td>
-                        <td class="hidden-xs hidden-sm visible-md visible-lg" data-bind="text: operatorCode, attr: { title: operatorName }"></td>
-                        <!-- 2 -->
-                        <td class="stationName" data-bind="css: fromStationCss">
-                            <span data-bind="text: fromStation, css: { changeOfOrigin: changeOfOriginStation }"></span>
-                            <span data-bind="text: changeOfOriginStation"></span>
-                        </td>
-                        <td data-bind="text: fromPlatform"></td>
-                        <!-- 3 -->
-                        <td class="hidden-xs hidden-sm visible-md visible-lg time" title="Public Departure" data-bind="text: publicDeparture"></td>
-                        <td class="hidden-xs hidden-sm visible-md visible-lg" title="WTT Departure" data-bind="text: wttDeparture"></td>
-                        <td class="hidden-xs hidden-sm visible-md visible-lg time" title="Actual Departure" data-bind="text: actualDeparture"></td>
-                        <td class="visible-xs visible-sm hidden-md hidden-lg time">
-                            <!-- ko if: actualDeparture -->
-                            <span style="font-weight: bold;" data-bind="text: actualDeparture"></span>
+            <div id="start-end-at-search-results" data-bind="visible: $data.length > 0">
+                <table class="table table-hover table-bordered table-header-colour">
+                    <thead class="header">
+                        <tr>
+                            <!-- 1 -->
+                            <th class="hidden-xs hidden-sm visible-md visible-lg" colspan="2"></th>
+                            <th class="visible-xs visible-sm hidden-md hidden-lg" rowspan="2">ID</th>
+                            <!-- 2 -->
+                            <th colspan="2">From</th>
+                            <!-- 3 -->
+                            <th class="hidden-xs hidden-sm visible-md visible-lg" colspan="3">Departure</th>
+                            <th class="visible-xs visible-sm hidden-md hidden-lg" rowspan="2">Dept</th>
+                            <!-- 4 -->
+                            <th colspan="2">To</th>
+                            <!-- 5 -->
+                            <th class="hidden-xs hidden-sm visible-md visible-lg" colspan="3">Arrival</th>
+                            <th class="visible-xs visible-sm hidden-md hidden-lg" rowspan="2">Arr</th>
+                        </tr>
+                        <tr>
+                            <!-- 1 -->
+                            <th class="hidden-xs hidden-sm visible-md visible-lg">Train ID</th>
+                            <th class="hidden-xs hidden-sm visible-md visible-lg">Operator</th>
+                            <!-- 2 -->
+                            <th>Station</th>
+                            <th class="hidden-xs hidden-sm visible-md visible-lg">Pfm</th>
+                            <th class="visible-xs visible-sm hidden-md hidden-lg">P</th>
+                            <!-- 3 -->
+                            <th class="hidden-xs hidden-sm visible-md visible-lg">Public</th>
+                            <th class="hidden-xs hidden-sm visible-md visible-lg advanced">WTT</th>
+                            <th class="hidden-xs hidden-sm visible-md visible-lg">Actual</th>
+                            <!-- 4 -->
+                            <th>Station</th>
+                            <th class="hidden-xs hidden-sm visible-md visible-lg">Pfm</th>
+                            <th class="visible-xs visible-sm hidden-md hidden-lg">P</th>
+                            <!-- 5 -->
+                            <th class="hidden-xs hidden-sm visible-md visible-lg">Public</th>
+                            <th class="hidden-xs hidden-sm visible-md visible-lg advanced">WTT</th>
+                            <th class="hidden-xs hidden-sm visible-md visible-lg">Actual</th>
+                        </tr>
+                    </thead>
+                    <tbody data-bind="foreach: $data">
+                        <tr data-bind="css: computedCss, attr: { title: title }">
+                            <!-- 1 -->
+                            <td><a data-bind="text: headCode, attr: { href: 'trains/' + trainId + '/' + departureDate }"></a></td>
+                            <td class="hidden-xs hidden-sm visible-md visible-lg" data-bind="text: operatorCode, attr: { title: operatorName }"></td>
+                            <!-- 2 -->
+                            <td class="stationName" data-bind="css: fromStationCss">
+                                <span data-bind="text: fromStation, css: { changeOfOrigin: changeOfOriginStation }"></span>
+                                <span data-bind="text: changeOfOriginStation"></span>
+                            </td>
+                            <td data-bind="text: fromPlatform"></td>
+                            <!-- 3 -->
+                            <td class="hidden-xs hidden-sm visible-md visible-lg time" title="Public Departure" data-bind="text: publicDeparture"></td>
+                            <td class="hidden-xs hidden-sm visible-md visible-lg" title="WTT Departure" data-bind="text: wttDeparture"></td>
+                            <td class="hidden-xs hidden-sm visible-md visible-lg time" title="Actual Departure" data-bind="text: actualDeparture"></td>
+                            <td class="visible-xs visible-sm hidden-md hidden-lg time">
+                                <!-- ko if: actualDeparture -->
+                                <span style="font-weight: bold;" data-bind="text: actualDeparture"></span>
+                                <!-- /ko -->
+                                <!-- ko if: !actualDeparture -->
+                                <!-- ko if: publicDeparture -->
+                                <span style="font-style: italic;" data-bind="text: publicDeparture"></span>
+                                <!-- /ko -->
+                                <!-- ko if: !publicDeparture -->
+                                <span style="font-style: italic;" data-bind="text: wttDeparture"></span>
+                                <!-- /ko -->
+                                <!-- /ko -->
+                            </td>
+                            <!-- 4 -->
+                            <td class="stationName" data-bind="css: toStationCss">
+                                <span data-bind="text: toStation, css: { changeOfDestination: cancelEnRoute }"></span>
+                                <span data-bind="text: cancelEnRoute"></span>
+                            </td>
+                            <td data-bind="text: toPlatform"></td>
+                            <!-- 5 -->
+                            <td class="hidden-xs hidden-sm visible-md visible-lg time" title="Public Arrival" data-bind="text: publicArrival"></td>
+                            <td class="hidden-xs hidden-sm visible-md visible-lg" title="WTT Arrival" data-bind="text: wttArrival"></td>
+                            <td class="hidden-xs hidden-sm visible-md visible-lg time" title="Actual Arrival" data-bind="text: actualArrival"></td>
+                            <td class="visible-xs visible-sm hidden-md hidden-lg time">
+                                <!-- ko if: actualArrival -->
+                                <span style="font-weight: bold;" data-bind="text: actualArrival"></span>
+                                <!-- /ko -->
+                                <!-- ko if: !actualArrival -->
+                                <!-- ko if: publicArrival -->
+                                <span style="font-style: italic;" data-bind="text: publicArrival"></span>
+                                <!-- /ko -->
+                                <!-- ko if: !publicArrival -->
+                                <span style="font-style: italic;" data-bind="text: wttArrival"></span>
+                                <!-- /ko -->
+                                <!-- /ko -->
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div id="calling-at-search-results" data-bind="visible: $data.length > 0">
+                <table class="table table-hover table-bordered table-header-colour">
+                    <thead class="header">
+                        <tr>
+                            <!-- 1 -->
+                            <th class="hidden-xs hidden-sm visible-md visible-lg" colspan="2"></th>
+                            <th class="visible-xs visible-sm hidden-md hidden-lg" rowspan="2">ID</th>
+                            <!-- 2 -->
+                            <th class="hidden-xs hidden-sm visible-md visible-lg" colspan="3">Arrival</th>
+                            <th class="visible-xs visible-sm hidden-md hidden-lg" rowspan="2">Arr</th>
+                            <!-- 3 -->
+                            <th rowspan="2">From</th>
+                            <!-- 4 -->
+                            <th class="hidden-xs hidden-sm visible-md visible-lg centerText" rowspan="2">Pfm</th>
+                            <th class="visible-xs visible-sm hidden-md hidden-lg centerText" rowspan="2">P</th>
+                            <!-- 5 -->
+                            <th rowspan="2">To</th>
+                            <!-- 6 -->
+                            <th class="hidden-xs hidden-sm visible-md visible-lg" colspan="3">Departure</th>
+                            <th class="visible-xs visible-sm hidden-md hidden-lg" rowspan="2">Dept</th>
+                        </tr>
+                        <tr>
+                            <!-- 1 -->
+                            <th class="hidden-xs hidden-sm visible-md visible-lg">ID</th>
+                            <th class="hidden-xs hidden-sm visible-md visible-lg">Operator</th>
+                            <!-- 2 -->
+                            <th class="hidden-xs hidden-sm visible-md visible-lg">Public</th>
+                            <th class="hidden-xs hidden-sm visible-md visible-lg advanced">WTT</th>
+                            <th class="hidden-xs hidden-sm visible-md visible-lg">Actual</th>
+                            <!-- 3 rowspan2 -->
+                            <!-- 4 rowspan2 -->
+                            <!-- 5 rowspan2 -->
+                            <!-- 6 -->
+                            <th class="hidden-xs hidden-sm visible-md visible-lg">Public</th>
+                            <th class="hidden-xs hidden-sm visible-md visible-lg advanced">WTT</th>
+                            <th class="hidden-xs hidden-sm visible-md visible-lg">Actual</th>
+                        </tr>
+                    </thead>
+                    <tbody data-bind="foreach: $data">
+                        <tr data-bind="css: computedCss, attr: { title: title }">
+                            <!-- 1 -->
+                            <td><a data-bind="text: headCode, attr: { href: 'trains/' + trainId + '/' + departureDate }"></a></td>
+                            <td class="hidden-xs hidden-sm visible-md visible-lg" data-bind="text: operatorCode, attr: { title: operatorName }"></td>
+                            <!-- 2 -->
+                            <td class="hidden-xs hidden-sm visible-md visible-lg time" title="Public Arrival" data-bind="text: atPublicArrival"></td>
+                            <td class="hidden-xs hidden-sm visible-md visible-lg" title="WTT Arrival" data-bind="text: atWttArrival"></td>
+                            <td class="hidden-xs hidden-sm visible-md visible-lg time" title="Actual Arrival" data-bind="text: atActualArrival"></td>
+                            <td class="visible-xs visible-sm hidden-md hidden-lg time">
+                                <!-- ko if: atActualArrival -->
+                                <span style="font-weight: bold;" data-bind="text: atActualArrival"></span>
+                                <!-- /ko -->
+                                <!-- ko if: !atActualArrival -->
+                                <!-- ko if: atPublicArrival && atPublicArrival == "Pass" -->
+                                <span style="font-style: italic;" data-bind="text: atWttArrival"></span>
+                                <!-- /ko -->
+                                <!-- ko if: atPublicArrival && atPublicArrival != "Pass" -->
+                                <span style="font-style: italic;" data-bind="text: atPublicArrival"></span>
+                                <!-- /ko -->
+                                <!-- ko if: !atPublicArrival -->
+                                <span style="font-style: italic;" data-bind="text: atWttArrival"></span>
+                                <!-- /ko -->
+                                <!-- /ko -->
+                            </td>
+                            <!-- 3 -->
+                            <td class="stationName" data-bind="css : fromStationCss">
+                                <span data-bind="text: fromStation, css: { changeOfOrigin: changeOfOriginStation }"></span>
+                                <span data-bind="text: changeOfOriginStation"></span>
+                            </td>
+                            <!-- 4 -->
+                            <td class="centerText" data-bind="text: atPlatform"></td>
+                            <!-- 5 -->
+                            <td class="stationName" data-bind="css: toStationCss">
+                                <span data-bind="text: toStation, css: { changeOfDestination: cancelEnRoute }"></span>
+                                <span data-bind="text: cancelEnRoute"></span>
+                            </td>
+                            <!-- 6 -->
+                            <td class="hidden-xs hidden-sm visible-md visible-lg time" title="Public Departure" data-bind="text: atPublicDeparture"></td>
+                            <td class="hidden-xs hidden-sm visible-md visible-lg" title="WTT Departure" data-bind="text: atWttDeparture"></td>
+                            <td class="hidden-xs hidden-sm visible-md visible-lg time" title="Actual Departure" data-bind="text: atActualDeparture"></td>
+                            <td class="visible-xs visible-sm hidden-md hidden-lg time">
+                                <!-- ko if: atActualDeparture -->
+                                <span style="font-weight: bold;" data-bind="text: atActualDeparture"></span>
+                                <!-- /ko -->
+                                <!-- ko if: !atActualDeparture -->
+                                <!-- ko if: atPublicDeparture && atPublicDeparture == "Pass" -->
+                                <span style="font-style: italic;" data-bind="text: atWttDeparture"></span>
+                                <!-- /ko -->
+                                <!-- ko if: atPublicDeparture && atPublicDeparture != "Pass" -->
+                                <span style="font-style: italic;" data-bind="text: atPublicDeparture"></span>
+                                <!-- /ko -->
+                                <!-- ko if: !atPublicDeparture -->
+                                <span style="font-style: italic;" data-bind="text: atWttDeparture"></span>
+                                <!-- /ko -->
+                                <!-- /ko -->
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div id="calling-between-search-results" data-bind="visible: results().length > 0">
+                <table class="table table-hover table-bordered table-header-colour">
+                    <thead class="header">
+                        <tr>
+                            <!-- 1 -->
+                            <th class="hidden-xs hidden-sm visible-md visible-lg" colspan="2"></th>
+                            <th class="visible-xs visible-sm hidden-md hidden-lg" rowspan="2">ID</th>
+                            <!-- 2 -->
+                            <th rowspan="2">From</th>
+                            <!-- 3 -->
+                            <th rowspan="2">To</th>
+                            <!-- 4 -->
+                            <th class="hidden-xs hidden-sm visible-md visible-lg" colspan="4">Departure from <span class="stationName" data-bind="text: fromStation"></span></th>
+                            <th class="visible-xs visible-sm hidden-md hidden-lg" colspan="3">Dept. <span class="stationName" data-bind="text: fromShortStation"></span></th>
+                            <!-- 5 -->
+                            <th class="hidden-xs hidden-sm visible-md visible-lg" colspan="4">Arrival at <span class="stationName" data-bind="text: toStation"></span></th>
+                            <th class="visible-xs visible-sm hidden-md hidden-lg" colspan="3">Arr. <span class="stationName" data-bind="text: toShortStation"></span></th>
+                        </tr>
+                        <tr>
+                            <!-- 1 -->
+                            <th class="hidden-xs hidden-sm visible-md visible-lg">ID</th>
+                            <th class="hidden-xs hidden-sm visible-md visible-lg">Operator</th>
+                            <!-- 2 rowspan2 -->
+                            <!-- 3 rowspan2 -->
+                            <!-- 4 -->
+                            <th>Pfm</th>
+                            <th class="hidden-xs hidden-sm visible-md visible-lg">Public</th>
+                            <th class="hidden-xs hidden-sm visible-md visible-lg">WTT</th>
+                            <th class="hidden-xs hidden-sm visible-md visible-lg">Actual</th>
+                            <th class="visible-xs visible-sm hidden-md hidden-lg" colspan="2">At</th>
+                            <!-- 5 -->
+                            <th>Pfm</th>
+                            <th class="hidden-xs hidden-sm visible-md visible-lg">Public</th>
+                            <th class="hidden-xs hidden-sm visible-md visible-lg">WTT</th>
+                            <th class="hidden-xs hidden-sm visible-md visible-lg">Actual</th>
+                            <th class="visible-xs visible-sm hidden-md hidden-lg" colspan="2"></th>
+                        </tr>
+                    </thead>
+                    <tbody data-bind="foreach: results">
+                        <tr data-bind="css: computedCss, attr: { title: title }">
+                            <!-- 1 -->
+                            <td><a data-bind="text: headCode, attr: { href: 'trains/' + trainId + '/' + departureDate }"></a></td>
+                            <td class="hidden-xs hidden-sm visible-md visible-lg" data-bind="text: operatorCode, attr: { title: operatorName }"></td>
+                            <!-- 2 -->
+                            <td class="stationName" data-bind="css: fromStationCss">
+                                <span data-bind="text: fromStation, css: { changeOfOrigin: changeOfOriginStation }"></span>
+                                <span data-bind="text: changeOfOriginStation"></span>
+                            </td>
+                            <!-- 3 -->
+                            <td class="stationName" data-bind="css: toStationCss">
+                                <span data-bind="text: toStation, css: { changeOfDestination: cancelEnRoute }"></span>
+                                <span data-bind="text: cancelEnRoute"></span>
+                            </td>
+                            <!-- 4 -->
+                            <!-- ko if: passDeparture -->
+                            <td class="hidden-xs hidden-sm visible-md visible-lg pass" colspan="2">Pass</td>
+                            <td class="visible-xs visible-sm hidden-md hidden-lg pass">Pass</td>
+                            <td class="hidden-xs hidden-sm visible-md visible-lg pass time" title="WTT Departure" data-bind="text: wttDeparture"></td>
+                            <td class="hidden-xs hidden-sm visible-md visible-lg pass time" title="Actual Departure" data-bind="text: actualDeparture"></td>
                             <!-- /ko -->
-                            <!-- ko if: !actualDeparture -->
-                            <!-- ko if: publicDeparture -->
-                            <span style="font-style: italic;" data-bind="text: publicDeparture"></span>
+                            <!-- ko if: !passDeparture -->
+                            <td class="centerText" data-bind="text: fromPlatform"></td>
+                            <td class="hidden-xs hidden-sm visible-md visible-lg time" title="Public Departure" data-bind="text: publicDeparture"></td>
+                            <td class="hidden-xs hidden-sm visible-md visible-lg" title="WTT Departure" data-bind="text: wttDeparture"></td>
+                            <td class="hidden-xs hidden-sm visible-md visible-lg time" title="Actual Departure" data-bind="text: actualDeparture"></td>
                             <!-- /ko -->
-                            <!-- ko if: !publicDeparture -->
-                            <span style="font-style: italic;" data-bind="text: wttDeparture"></span>
+                            <td class="visible-xs visible-sm hidden-md hidden-lg time" data-bind="css: { pass: passDeparture }" colspan="2">
+                                <!-- ko if: actualDeparture -->
+                                <span style=" font-weight: bold;" data-bind="text: actualDeparture">
+                                </span>
+                                <!-- /ko -->
+                                <!-- ko if: !actualDeparture -->
+                                <!-- ko if: publicDeparture -->
+                                <span style="font-style: italic;" data-bind="text: publicDeparture"></span>
+                                <!-- /ko -->
+                                <!-- ko if: !publicDeparture -->
+                                <span style="font-style: italic;" data-bind="text: wttDeparture"></span>
+                                <!-- /ko -->
+                                <!-- /ko -->
+                            </td>
+                            <!-- 5 -->
+                            <!-- ko if: passArrival -->
+                            <td class="hidden-xs hidden-sm visible-md visible-lg pass" colspan="2">Pass</td>
+                            <td class="visible-xs visible-sm hidden-md hidden-lg pass">Pass</td>
+                            <td class="hidden-xs hidden-sm visible-md visible-lg pass" title="WTT Arrival" data-bind="text: wttArrival"></td>
+                            <td class="hidden-xs hidden-sm visible-md visible-lg pass time" title="Actual Arrival" data-bind="text: actualArrival"></td>
                             <!-- /ko -->
+                            <!-- ko if: !passArrival -->
+                            <td class="centerText" data-bind="text: toPlatform"></td>
+                            <td class="hidden-xs hidden-sm visible-md visible-lg time" title="Public Arrival" data-bind="text: publicArrival"></td>
+                            <td class="hidden-xs hidden-sm visible-md visible-lg" title="WTT Arrival" data-bind="text: wttArrival"></td>
+                            <td class="hidden-xs hidden-sm visible-md visible-lg time" title="Actual Arrival" data-bind="text: actualArrival"></td>
                             <!-- /ko -->
-                        </td>
-                        <!-- 4 -->
-                        <td class="stationName" data-bind="css: toStationCss">
-                            <span data-bind="text: toStation, css: { changeOfDestination: cancelEnRoute }"></span>
-                            <span data-bind="text: cancelEnRoute"></span>
-                        </td>
-                        <td data-bind="text: toPlatform"></td>
-                        <!-- 5 -->
-                        <td class="hidden-xs hidden-sm visible-md visible-lg time" title="Public Arrival" data-bind="text: publicArrival"></td>
-                        <td class="hidden-xs hidden-sm visible-md visible-lg" title="WTT Arrival" data-bind="text: wttArrival"></td>
-                        <td class="hidden-xs hidden-sm visible-md visible-lg time" title="Actual Arrival" data-bind="text: actualArrival"></td>
-                        <td class="visible-xs visible-sm hidden-md hidden-lg time">
-                            <!-- ko if: actualArrival -->
-                            <span style="font-weight: bold;" data-bind="text: actualArrival"></span>
-                            <!-- /ko -->
-                            <!-- ko if: !actualArrival -->
-                            <!-- ko if: publicArrival -->
-                            <span style="font-style: italic;" data-bind="text: publicArrival"></span>
-                            <!-- /ko -->
-                            <!-- ko if: !publicArrival -->
-                            <span style="font-style: italic;" data-bind="text: wttArrival"></span>
-                            <!-- /ko -->
-                            <!-- /ko -->
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <table class="table table-hover table-bordered table-header-colour" id="calling-at-search-results" data-bind="visible: $data.length > 0">
-                <thead class="header">
-                    <tr>
-                        <!-- 1 -->
-                        <th class="hidden-xs hidden-sm visible-md visible-lg" colspan="2"></th>
-                        <th class="visible-xs visible-sm hidden-md hidden-lg" rowspan="2">ID</th>
-                        <!-- 2 -->
-                        <th class="hidden-xs hidden-sm visible-md visible-lg" colspan="3">Arrival</th>
-                        <th class="visible-xs visible-sm hidden-md hidden-lg" rowspan="2">Arr</th>
-                        <!-- 3 -->
-                        <th rowspan="2">From</th>
-                        <!-- 4 -->
-                        <th class="hidden-xs hidden-sm visible-md visible-lg centerText" rowspan="2">Pfm</th>
-                        <th class="visible-xs visible-sm hidden-md hidden-lg centerText" rowspan="2">P</th>
-                        <!-- 5 -->
-                        <th rowspan="2">To</th>
-                        <!-- 6 -->
-                        <th class="hidden-xs hidden-sm visible-md visible-lg" colspan="3">Departure</th>
-                        <th class="visible-xs visible-sm hidden-md hidden-lg" rowspan="2">Dept</th>
-                    </tr>
-                    <tr>
-                        <!-- 1 -->
-                        <th class="hidden-xs hidden-sm visible-md visible-lg">ID</th>
-                        <th class="hidden-xs hidden-sm visible-md visible-lg">Operator</th>
-                        <!-- 2 -->
-                        <th class="hidden-xs hidden-sm visible-md visible-lg">Public</th>
-                        <th class="hidden-xs hidden-sm visible-md visible-lg advanced">WTT</th>
-                        <th class="hidden-xs hidden-sm visible-md visible-lg">Actual</th>
-                        <!-- 3 rowspan2 -->
-                        <!-- 4 rowspan2 -->
-                        <!-- 5 rowspan2 -->
-                        <!-- 6 -->
-                        <th class="hidden-xs hidden-sm visible-md visible-lg">Public</th>
-                        <th class="hidden-xs hidden-sm visible-md visible-lg advanced">WTT</th>
-                        <th class="hidden-xs hidden-sm visible-md visible-lg">Actual</th>
-                    </tr>
-                </thead>
-                <tbody data-bind="foreach: $data">
-                    <tr data-bind="css: computedCss, attr: { title: title }">
-                        <!-- 1 -->
-                        <td><a data-bind="text: headCode, attr: { href: 'trains/' + trainId + '/' + departureDate }"></a></td>
-                        <td class="hidden-xs hidden-sm visible-md visible-lg" data-bind="text: operatorCode, attr: { title: operatorName }"></td>
-                        <!-- 2 -->
-                        <td class="hidden-xs hidden-sm visible-md visible-lg time" title="Public Arrival" data-bind="text: atPublicArrival"></td>
-                        <td class="hidden-xs hidden-sm visible-md visible-lg" title="WTT Arrival" data-bind="text: atWttArrival"></td>
-                        <td class="hidden-xs hidden-sm visible-md visible-lg time" title="Actual Arrival" data-bind="text: atActualArrival"></td>
-                        <td class="visible-xs visible-sm hidden-md hidden-lg time">
-                            <!-- ko if: atActualArrival -->
-                            <span style="font-weight: bold;" data-bind="text: atActualArrival"></span>
-                            <!-- /ko -->
-                            <!-- ko if: !atActualArrival -->
-                            <!-- ko if: atPublicArrival && atPublicArrival == "Pass" -->
-                            <span style="font-style: italic;" data-bind="text: atWttArrival"></span>
-                            <!-- /ko -->
-                            <!-- ko if: atPublicArrival && atPublicArrival != "Pass" -->
-                            <span style="font-style: italic;" data-bind="text: atPublicArrival"></span>
-                            <!-- /ko -->
-                            <!-- ko if: !atPublicArrival -->
-                            <span style="font-style: italic;" data-bind="text: atWttArrival"></span>
-                            <!-- /ko -->
-                            <!-- /ko -->
-                        </td>
-                        <!-- 3 -->
-                        <td class="stationName" data-bind="css : fromStationCss">
-                            <span data-bind="text: fromStation, css: { changeOfOrigin: changeOfOriginStation }"></span>
-                            <span data-bind="text: changeOfOriginStation"></span>
-                        </td>
-                        <!-- 4 -->
-                        <td class="centerText" data-bind="text: atPlatform"></td>
-                        <!-- 5 -->
-                        <td class="stationName" data-bind="css: toStationCss">
-                            <span data-bind="text: toStation, css: { changeOfDestination: cancelEnRoute }"></span>
-                            <span data-bind="text: cancelEnRoute"></span>
-                        </td>
-                        <!-- 6 -->
-                        <td class="hidden-xs hidden-sm visible-md visible-lg time" title="Public Departure" data-bind="text: atPublicDeparture"></td>
-                        <td class="hidden-xs hidden-sm visible-md visible-lg" title="WTT Departure" data-bind="text: atWttDeparture"></td>
-                        <td class="hidden-xs hidden-sm visible-md visible-lg time" title="Actual Departure" data-bind="text: atActualDeparture"></td>
-                        <td class="visible-xs visible-sm hidden-md hidden-lg time">
-                            <!-- ko if: atActualDeparture -->
-                            <span style="font-weight: bold;" data-bind="text: atActualDeparture"></span>
-                            <!-- /ko -->
-                            <!-- ko if: !atActualDeparture -->
-                            <!-- ko if: atPublicDeparture && atPublicDeparture == "Pass" -->
-                            <span style="font-style: italic;" data-bind="text: atWttDeparture"></span>
-                            <!-- /ko -->
-                            <!-- ko if: atPublicDeparture && atPublicDeparture != "Pass" -->
-                            <span style="font-style: italic;" data-bind="text: atPublicDeparture"></span>
-                            <!-- /ko -->
-                            <!-- ko if: !atPublicDeparture -->
-                            <span style="font-style: italic;" data-bind="text: atWttDeparture"></span>
-                            <!-- /ko -->
-                            <!-- /ko -->
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <table class="table table-hover table-bordered table-header-colour" id="calling-between-search-results" data-bind="visible: results().length > 0">
-                <thead class="header">
-                    <tr>
-                        <!-- 1 -->
-                        <th class="hidden-xs hidden-sm visible-md visible-lg" colspan="2"></th>
-                        <th class="visible-xs visible-sm hidden-md hidden-lg" rowspan="2">ID</th>
-                        <!-- 2 -->
-                        <th rowspan="2">From</th>
-                        <!-- 3 -->
-                        <th rowspan="2">To</th>
-                        <!-- 4 -->
-                        <th class="hidden-xs hidden-sm visible-md visible-lg" colspan="4">Departure from <span class="stationName" data-bind="text: fromStation"></span></th>
-                        <th class="visible-xs visible-sm hidden-md hidden-lg" colspan="3">Dept. <span class="stationName" data-bind="text: fromShortStation"></span></th>
-                        <!-- 5 -->
-                        <th class="hidden-xs hidden-sm visible-md visible-lg" colspan="4">Arrival at <span class="stationName" data-bind="text: toStation"></span></th>
-                        <th class="visible-xs visible-sm hidden-md hidden-lg" colspan="3">Arr. <span class="stationName" data-bind="text: toShortStation"></span></th>
-                    </tr>
-                    <tr>
-                        <!-- 1 -->
-                        <th class="hidden-xs hidden-sm visible-md visible-lg">ID</th>
-                        <th class="hidden-xs hidden-sm visible-md visible-lg">Operator</th>
-                        <!-- 2 rowspan2 -->
-                        <!-- 3 rowspan2 -->
-                        <!-- 4 -->
-                        <th>Pfm</th>
-                        <th class="hidden-xs hidden-sm visible-md visible-lg">Public</th>
-                        <th class="hidden-xs hidden-sm visible-md visible-lg">WTT</th>
-                        <th class="hidden-xs hidden-sm visible-md visible-lg">Actual</th>
-                        <th class="visible-xs visible-sm hidden-md hidden-lg" colspan="2">At</th>
-                        <!-- 5 -->
-                        <th>Pfm</th>
-                        <th class="hidden-xs hidden-sm visible-md visible-lg">Public</th>
-                        <th class="hidden-xs hidden-sm visible-md visible-lg">WTT</th>
-                        <th class="hidden-xs hidden-sm visible-md visible-lg">Actual</th>
-                        <th class="visible-xs visible-sm hidden-md hidden-lg" colspan="2"></th>
-                    </tr>
-                </thead>
-                <tbody data-bind="foreach: results">
-                    <tr data-bind="css: computedCss, attr: { title: title }">
-                        <!-- 1 -->
-                        <td><a data-bind="text: headCode, attr: { href: 'trains/' + trainId + '/' + departureDate }"></a></td>
-                        <td class="hidden-xs hidden-sm visible-md visible-lg" data-bind="text: operatorCode, attr: { title: operatorName }"></td>
-                        <!-- 2 -->
-                        <td class="stationName" data-bind="css: fromStationCss">
-                            <span data-bind="text: fromStation, css: { changeOfOrigin: changeOfOriginStation }"></span>
-                            <span data-bind="text: changeOfOriginStation"></span>
-                        </td>
-                        <!-- 3 -->
-                        <td class="stationName" data-bind="css: toStationCss">
-                            <span data-bind="text: toStation, css: { changeOfDestination: cancelEnRoute }"></span>
-                            <span data-bind="text: cancelEnRoute"></span>
-                        </td>
-                        <!-- 4 -->
-                        <!-- ko if: passDeparture -->
-                        <td class="hidden-xs hidden-sm visible-md visible-lg pass" colspan="2">Pass</td>
-                        <td class="visible-xs visible-sm hidden-md hidden-lg pass">Pass</td>
-                        <td class="hidden-xs hidden-sm visible-md visible-lg pass time" title="WTT Departure" data-bind="text: wttDeparture"></td>
-                        <td class="hidden-xs hidden-sm visible-md visible-lg pass time" title="Actual Departure" data-bind="text: actualDeparture"></td>
-                        <!-- /ko -->
-                        <!-- ko if: !passDeparture -->
-                        <td class="centerText" data-bind="text: fromPlatform"></td>
-                        <td class="hidden-xs hidden-sm visible-md visible-lg time" title="Public Departure" data-bind="text: publicDeparture"></td>
-                        <td class="hidden-xs hidden-sm visible-md visible-lg" title="WTT Departure" data-bind="text: wttDeparture"></td>
-                        <td class="hidden-xs hidden-sm visible-md visible-lg time" title="Actual Departure" data-bind="text: actualDeparture"></td>
-                        <!-- /ko -->
-                        <td class="visible-xs visible-sm hidden-md hidden-lg time" data-bind="css: { pass: passDeparture }" colspan="2">
-                            <!-- ko if: actualDeparture -->
-                            <span style=" font-weight: bold;" data-bind="text: actualDeparture">
-                            </span>
-                            <!-- /ko -->
-                            <!-- ko if: !actualDeparture -->
-                            <!-- ko if: publicDeparture -->
-                            <span style="font-style: italic;" data-bind="text: publicDeparture"></span>
-                            <!-- /ko -->
-                            <!-- ko if: !publicDeparture -->
-                            <span style="font-style: italic;" data-bind="text: wttDeparture"></span>
-                            <!-- /ko -->
-                            <!-- /ko -->
-                        </td>
-                        <!-- 5 -->
-                        <!-- ko if: passArrival -->
-                        <td class="hidden-xs hidden-sm visible-md visible-lg pass" colspan="2">Pass</td>
-                        <td class="visible-xs visible-sm hidden-md hidden-lg pass">Pass</td>
-                        <td class="hidden-xs hidden-sm visible-md visible-lg pass" title="WTT Arrival" data-bind="text: wttArrival"></td>
-                        <td class="hidden-xs hidden-sm visible-md visible-lg pass time" title="Actual Arrival" data-bind="text: actualArrival"></td>
-                        <!-- /ko -->
-                        <!-- ko if: !passArrival -->
-                        <td class="centerText" data-bind="text: toPlatform"></td>
-                        <td class="hidden-xs hidden-sm visible-md visible-lg time" title="Public Arrival" data-bind="text: publicArrival"></td>
-                        <td class="hidden-xs hidden-sm visible-md visible-lg" title="WTT Arrival" data-bind="text: wttArrival"></td>
-                        <td class="hidden-xs hidden-sm visible-md visible-lg time" title="Actual Arrival" data-bind="text: actualArrival"></td>
-                        <!-- /ko -->
-                        <td class="visible-xs visible-sm hidden-md hidden-lg time" data-bind="css: { pass: passArrival }" colspan="2">
-                            <!-- ko if: actualArrival -->
-                            <span style=" font-weight: bold;" data-bind="text: actualArrival">
-                            </span>
-                            <!-- /ko -->
-                            <!-- ko if: !actualArrival -->
-                            <!-- ko if: publicArrival -->
-                            <span style="font-style: italic;" data-bind="text: publicArrival"></span>
-                            <!-- /ko -->
-                            <!-- ko if: !publicArrival -->
-                            <span style="font-style: italic;" data-bind="text: wttArrival"></span>
-                            <!-- /ko -->
-                            <!-- /ko -->
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+                            <td class="visible-xs visible-sm hidden-md hidden-lg time" data-bind="css: { pass: passArrival }" colspan="2">
+                                <!-- ko if: actualArrival -->
+                                <span style=" font-weight: bold;" data-bind="text: actualArrival">
+                                </span>
+                                <!-- /ko -->
+                                <!-- ko if: !actualArrival -->
+                                <!-- ko if: publicArrival -->
+                                <span style="font-style: italic;" data-bind="text: publicArrival"></span>
+                                <!-- /ko -->
+                                <!-- ko if: !publicArrival -->
+                                <span style="font-style: italic;" data-bind="text: wttArrival"></span>
+                                <!-- /ko -->
+                                <!-- /ko -->
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
             <ul class="pager">
                 <li class="previous"><a href="#" onclick="previousDate(); return false;" class="neg-hrs">&lt; Earlier</a></li>
                 <li class="next"><a href="#" onclick="nextDate(); return false;" class="plus-hrs">Later &gt;</a></li>
