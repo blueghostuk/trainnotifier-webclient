@@ -1,5 +1,5 @@
 ﻿@{
-    if (TrainNotifier.WebClient.Handlers.AtHandler.IsGoogleRequest(Request.Url) &&
+    if (TrainNotifier.WebClient.Handlers.HandlerHelper.IsGoogleRequest(Request.Url) &&
         TrainNotifier.WebClient.Handlers.AtHandler.IsAtRequest(Request.Url))
     {
         var handler = new TrainNotifier.WebClient.Handlers.AtHandler(Response);

@@ -47,5 +47,11 @@ namespace TrainNotifier.WebClient.App_Code
         {
             return tiplocs.FirstOrDefault(t => t.Stanox == tiplocStanoxCode);
         }
+
+        public SingleTrainMovementResult GetTrainMovement(string uid, DateTime date)
+        {
+            return JsonConvert.DeserializeObject<SingleTrainMovementResult>(GetRequest(string.Format("/TrainMovement/Uid/{0}/{1:yyyy-MM-dd}",
+                uid, date)));
+        }
     }
 }
