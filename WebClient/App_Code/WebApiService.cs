@@ -43,6 +43,18 @@ namespace TrainNotifier.WebClient.App_Code
                 crsCode, startDate, endDate)));
         }
 
+        public TrainMovementResults StartingAtStation(string crsCode, DateTime startDate, DateTime endDate)
+        {
+            return JsonConvert.DeserializeObject<TrainMovementResults>(GetRequest(string.Format("/TrainMovement/StartingAt/Station/{0}?startDate={1}&endDate={2}",
+                crsCode, startDate, endDate)));
+        }
+
+        public TrainMovementResults TerminatingAtStation(string crsCode, DateTime startDate, DateTime endDate)
+        {
+            return JsonConvert.DeserializeObject<TrainMovementResults>(GetRequest(string.Format("/TrainMovement/TerminatingAt/Station/{0}?startDate={1}&endDate={2}",
+                crsCode, startDate, endDate)));
+        }
+
         public StationTiploc GetTiplocCode(IEnumerable<StationTiploc> tiplocs, string tiplocStanoxCode)
         {
             return tiplocs.FirstOrDefault(t => t.Stanox == tiplocStanoxCode);
