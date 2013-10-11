@@ -53,7 +53,7 @@ namespace TrainNotifier.WebClient.Handlers
             TrainMovementResults results = _webApiService.CallingAtStation(atCrsCode, startTime, endTime);
 
             _response.Write("<p>");
-            if (results.Movements != null && results.Movements.Any())
+            if (results != null && results.Movements != null && results.Movements.Any())
             {
                 foreach (var movement in results.Movements)
                 {
