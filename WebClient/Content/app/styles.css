@@ -77,3 +77,24 @@ tr.info > td > span.changeOfOrigin {
         margin-top: 10px;
     }
 }
+
+@media (max-width: 768px) {
+    div#title {
+        font-size: 14px !important;
+        padding-left: 10px;
+    }
+
+        div#title span.xxl {
+            font-weight: bold;
+            font-size: 14px !important;
+        }
+
+        div#title span.xl {
+            font-weight: bold;
+            font-size: 14px !important;
+        }
+
+    .pager {
+        margin: 0px !important;
+    }
+}
