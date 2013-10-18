@@ -51,20 +51,27 @@ namespace TrainNotifier.WebClient.Handlers
 
             TrainMovementResults results = _webApiService.StartingAtStation(atCrsCode, startTime, endTime);
 
-            _response.Write("<p>");
-            foreach (var movement in results.Movements)
+            _response.Write("<p>"); 
+            if (results != null && results.Movements != null && results.Movements.Any())
             {
-                if (movement.Schedule == null || !movement.Schedule.Stops.Any())
-                    continue;
-                var schedule = movement.Schedule;
-                var stops = schedule.Stops.OrderBy(s => s.StopNumber);
-                string link = string.Format(_linkUrlFormat, schedule.TrainUid, today);
-                _response.Write(string.Format("<a href=\"{0}\">{1}</a> {2} Departure from {3} to {4}<br />",
-                    link,
-                    schedule.Headcode ?? schedule.TrainUid,
-                    schedule.DepartureTime,
-                    _webApiService.GetTiplocCode(results.Tiplocs, stops.First().TiplocStanoxCode).StationName,
-                    _webApiService.GetTiplocCode(results.Tiplocs, stops.Last().TiplocStanoxCode).StationName));
+                foreach (var movement in results.Movements)
+                {
+                    if (movement.Schedule == null || !movement.Schedule.Stops.Any())
+                        continue;
+                    var schedule = movement.Schedule;
+                    var stops = schedule.Stops.OrderBy(s => s.StopNumber);
+                    string link = string.Format(_linkUrlFormat, schedule.TrainUid, today);
+                    _response.Write(string.Format("<a href=\"{0}\">{1}</a> {2} Departure from {3} to {4}<br />",
+                        link,
+                        schedule.Headcode ?? schedule.TrainUid,
+                        schedule.DepartureTime,
+                        _webApiService.GetTiplocCode(results.Tiplocs, stops.First().TiplocStanoxCode).StationName,
+                        _webApiService.GetTiplocCode(results.Tiplocs, stops.Last().TiplocStanoxCode).StationName));
+                }
+            }
+            else
+            {
+                _response.Write("No train movements");
             }
             _response.Write("</p>");
             _response.Write("</body></html>");

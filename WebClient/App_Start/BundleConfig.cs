@@ -69,7 +69,7 @@ namespace TrainNotifier.WebClient
                 "~/Content/app/search-schedule.css"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
-                "~/Content/bootstrap/bootstrap.css",
+                //"~/Content/bootstrap/bootstrap.css",
                 "~/Content/bootstrap/spacelab.css",
                 "~/Content/bootstrap/overrides.css",
                 "~/Content/bootstrap/typeahead-fix.css",
