@@ -23,6 +23,7 @@ interface IWebApi {
     getTrainMovementsBetweenLocations(fromStanox: string, toStanox: string, startDate: string, endDate: string): JQueryPromise<any>;
     getTrainMovementsBetweenStations(fromCrsCode: string, toCrsCode: string, startDate: string, endDate: string): JQueryPromise<any>;
 
+    getTrainMovementsNearLocation(lat: number, lon: number, limit: number): JQueryPromise<any>;
 
     getPPMSectors(): JQueryPromise<any>;
     getPPMOperatorRegions(operatorCode: string): JQueryPromise<any>;
@@ -111,10 +112,11 @@ module TrainNotifier {
             }));
         }
 
-        getTrainMovementsStartingAtLocation(stanox: string, startDate: string, endDate: string) {
-            return $.getJSON(this.getBaseUrl() + "/TrainMovement/StartingAt/Location/" + stanox, $.extend({}, this.getArgs(), {
-                startDate: startDate,
-                endDate: endDate
+        getTrainMovementsNearLocation(lat: number, lon: number, limit: number = 10) {
+            return $.getJSON(this.getBaseUrl() + "/TrainMovement/Nearest/", $.extend({}, this.getArgs(), {
+                lat: lat,
+                lon: lon,
+                limit: limit
             }));
         }
 
@@ -148,6 +150,13 @@ module TrainNotifier {
 
         getTrainMovementsBetweenStations(fromCrsCode: string, toCrsCode: string, startDate: string, endDate: string) {
             return $.getJSON(this.getBaseUrl() + "/TrainMovement/Between/Station/" + fromCrsCode + "/" + toCrsCode, $.extend({}, this.getArgs(), {
+                startDate: startDate,
+                endDate: endDate
+            }));
+        }
+
+        getTrainMovementsStartingAtLocation(stanox: string, startDate: string, endDate: string) {
+            return $.getJSON(this.getBaseUrl() + "/TrainMovement/StartingAt/Location/" + stanox, $.extend({}, this.getArgs(), {
                 startDate: startDate,
                 endDate: endDate
             }));

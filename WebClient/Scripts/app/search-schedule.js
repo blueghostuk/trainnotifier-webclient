@@ -1,17 +1,18 @@
 /// <reference path="../typings/jquery.cookie/jquery.cookie.d.ts" />
-/// <reference path="searchModels.ts" />
 /// <reference path="../typings/knockout.mapping/knockout.mapping.d.ts" />
-/// <reference path="webApi.ts" />
-/// <reference path="global.ts" />
-/// <reference path="ViewModels.ts" />
 /// <reference path="../typings/moment/moment.d.ts" />
 /// <reference path="../typings/knockout/knockout.d.ts" />
 /// <reference path="../typings/jquery/jquery.d.ts" />
+/// <reference path="searchModels.ts" />
+/// <reference path="webApi.ts" />
+/// <reference path="global.ts" />
+/// <reference path="ViewModels.ts" />
 var titleModel = new TitleViewModel();
 
 var startEndSearchResults = ko.observableArray();
 var callingAtSearchResults = ko.observableArray();
 var callingBetweenSearchResults = new TrainNotifier.KnockoutModels.Search.CallingBetweenResults();
+var nearestSearchResults = ko.observableArray();
 
 var currentStanox;
 var currentToStanox;
@@ -53,6 +54,10 @@ var thisPage = {
 
             case 'at':
                 getStation(args[0], convertFromCrs, getDateTime(args.slice(1, 3)), (args.length <= 3 ? null : getDateTime(args.slice(1, 2).concat(args.slice(3, 5)))));
+                return true;
+
+            case 'nearest':
+                getNearest(+args[0], +args[1]);
                 return true;
         }
 
@@ -102,6 +107,7 @@ $(function () {
     ko.applyBindings(startEndSearchResults, $("#start-end-at-search-results").get(0));
     ko.applyBindings(callingAtSearchResults, $("#calling-at-search-results").get(0));
     ko.applyBindings(callingBetweenSearchResults, $("#calling-between-search-results").get(0));
+    ko.applyBindings(nearestSearchResults, $("#nearest-search-results").get(0));
 
     loadHashCommand();
 });
@@ -115,6 +121,40 @@ function getDateTime(args) {
         }
     }
     return moment();
+}
+
+function getNearest(lat, lon) {
+    preAjax();
+
+    clear();
+    $(".pager").hide();
+    setTitle("Nearest Trains");
+
+    webApi.getTrainMovementsNearLocation(lat, lon, 10).done(function (data) {
+        if (data && data.Movements.length > 0) {
+            $("#no-results-row").hide();
+
+            var viewModels = data.Movements.map(function (movement) {
+                var actualStops = movement.Actual.Stops.filter(function (element) {
+                    return element.ActualTimestamp != null;
+                });
+                var lastStanox = actualStops[actualStops.length - 1].TiplocStanoxCode;
+                var lastTiploc = TrainNotifier.StationTiploc.findStationTiploc(lastStanox, data.Tiplocs);
+                return new TrainNotifier.KnockoutModels.Search.NearestTrainMovement(movement, lastTiploc, data.Tiplocs, currentStartDate);
+            });
+
+            for (var i = 0; i < viewModels.length; i++) {
+                nearestSearchResults.push(viewModels[i]);
+            }
+        } else {
+            $("#no-results-row").show();
+        }
+    }).always(function () {
+        hide($(".progress"));
+        thisPage.advancedSwitch(false);
+    }).fail(function () {
+        show($("#error-row"));
+    });
 }
 
 function getCallingBetween(from, to, convertFromCrs, fromDate, toDate) {
@@ -285,7 +325,6 @@ function getDestinationByStanox(to, startDate, endDate) {
         hide($(".progress"));
         thisPage.advancedSwitch(false);
     }).fail(function () {
-        hide($(".progress"));
         show($("#error-row"));
     });
 }
@@ -326,7 +365,6 @@ function getOriginByStanox(from, startDate, endDate) {
         hide($(".progress"));
         thisPage.advancedSwitch(false);
     }).fail(function () {
-        hide($(".progress"));
         show($("#error-row"));
     });
 }
@@ -368,7 +406,6 @@ function getCallingAtStanox(at, startDate, endDate) {
         hide($(".progress"));
         thisPage.advancedSwitch(false);
     }).fail(function () {
-        hide($(".progress"));
         show($("#error-row"));
     });
 }
@@ -415,7 +452,7 @@ function getCallingBetweenByStanox(from, to, startDate, endDate) {
             $("#no-results-row").show();
         }
     }).always(function () {
-        $(".progress").hide();
+        hide($(".progress"));
         thisPage.advancedSwitch(false);
     }).fail(function () {
         hide($(".progress"));
@@ -467,6 +504,7 @@ function clear() {
     startEndSearchResults.removeAll();
     callingAtSearchResults.removeAll();
     callingBetweenSearchResults.results.removeAll();
+    nearestSearchResults.removeAll();
 }
 
 function setTitle(start) {
@@ -489,10 +527,12 @@ function setTitle(start) {
         }
         title += currentToStanox.Description.toLowerCase();
     }
-    title += " on ";
-    var date = currentStartDate.format(TrainNotifier.DateTimeFormats.dateTitleFormat) + " " + currentStartDate.format(TrainNotifier.DateTimeFormats.shortTimeFormat) + " - " + currentEndDate.format(TrainNotifier.DateTimeFormats.shortTimeFormat);
-    title += date;
-    titleModel.DateRange(date);
+    if (currentStartDate && currentEndDate) {
+        title += " on ";
+        var date = currentStartDate.format(TrainNotifier.DateTimeFormats.dateTitleFormat) + " " + currentStartDate.format(TrainNotifier.DateTimeFormats.shortTimeFormat) + " - " + currentEndDate.format(TrainNotifier.DateTimeFormats.shortTimeFormat);
+        title += date;
+        titleModel.DateRange(date);
+    }
     titleModel.setTitle(title);
 }
 

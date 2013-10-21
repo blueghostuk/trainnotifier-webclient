@@ -35,6 +35,11 @@ $(function () {
         return showLocation();
     });
     $(".station-lookup").attr("placeholder", "Loading stations ...");
+    $("#nearest").click(function () {
+        navigator.geolocation.getCurrentPosition(function (position) {
+            document.location.href = "search-schedule#!nearest/" + position.coords.latitude + "/" + position.coords.longitude;
+        });
+    });
     ko.applyBindings(fromLocal, $("#from-local").get(0));
     ko.applyBindings(toLocal, $("#to-local").get(0));
     ko.applyBindings(atLocal, $("#at-local").get(0));

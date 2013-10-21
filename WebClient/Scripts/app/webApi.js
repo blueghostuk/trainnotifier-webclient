@@ -71,10 +71,12 @@ var TrainNotifier;
             }));
         };
 
-        WebApi.prototype.getTrainMovementsStartingAtLocation = function (stanox, startDate, endDate) {
-            return $.getJSON(this.getBaseUrl() + "/TrainMovement/StartingAt/Location/" + stanox, $.extend({}, this.getArgs(), {
-                startDate: startDate,
-                endDate: endDate
+        WebApi.prototype.getTrainMovementsNearLocation = function (lat, lon, limit) {
+            if (typeof limit === "undefined") { limit = 10; }
+            return $.getJSON(this.getBaseUrl() + "/TrainMovement/Nearest/", $.extend({}, this.getArgs(), {
+                lat: lat,
+                lon: lon,
+                limit: limit
             }));
         };
 
@@ -108,6 +110,13 @@ var TrainNotifier;
 
         WebApi.prototype.getTrainMovementsBetweenStations = function (fromCrsCode, toCrsCode, startDate, endDate) {
             return $.getJSON(this.getBaseUrl() + "/TrainMovement/Between/Station/" + fromCrsCode + "/" + toCrsCode, $.extend({}, this.getArgs(), {
+                startDate: startDate,
+                endDate: endDate
+            }));
+        };
+
+        WebApi.prototype.getTrainMovementsStartingAtLocation = function (stanox, startDate, endDate) {
+            return $.getJSON(this.getBaseUrl() + "/TrainMovement/StartingAt/Location/" + stanox, $.extend({}, this.getArgs(), {
                 startDate: startDate,
                 endDate: endDate
             }));

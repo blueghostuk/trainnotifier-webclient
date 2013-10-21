@@ -1,6 +1,6 @@
-/// <reference path="global.ts" />
 /// <reference path="../typings/moment/moment.d.ts" />
 /// <reference path="../typings/knockout/knockout.d.ts" />
+/// <reference path="global.ts" />
 /// <reference path="webApi.ts" />
 
 module TrainNotifier.Search {
@@ -514,6 +514,17 @@ module TrainNotifier.KnockoutModels.Search {
 
                 return css.join(" ");
             });
+        }
+    }
+
+    export class NearestTrainMovement extends CallingBetweenTrainMovement {
+
+        public atStation: string = "";
+
+        constructor(trainMovement: ITrainMovementResult, atTiploc: IStationTiploc, tiplocs: IStationTiploc[], queryStartDate: Moment) {
+            super(trainMovement, atTiploc, atTiploc, tiplocs, queryStartDate);
+
+            this.atStation = atTiploc.Description.toLowerCase();
         }
     }
 }

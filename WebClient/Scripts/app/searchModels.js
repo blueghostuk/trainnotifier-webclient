@@ -6,9 +6,9 @@ var __extends = this.__extends || function (d, b) {
 };
 var TrainNotifier;
 (function (TrainNotifier) {
-    /// <reference path="global.ts" />
     /// <reference path="../typings/moment/moment.d.ts" />
     /// <reference path="../typings/knockout/knockout.d.ts" />
+    /// <reference path="global.ts" />
     /// <reference path="webApi.ts" />
     (function (Search) {
         var SearchMode = (function () {
@@ -506,6 +506,18 @@ var TrainNotifier;
                 return CallingBetweenTrainMovement;
             })(TrainMovement);
             Search.CallingBetweenTrainMovement = CallingBetweenTrainMovement;
+
+            var NearestTrainMovement = (function (_super) {
+                __extends(NearestTrainMovement, _super);
+                function NearestTrainMovement(trainMovement, atTiploc, tiplocs, queryStartDate) {
+                    _super.call(this, trainMovement, atTiploc, atTiploc, tiplocs, queryStartDate);
+                    this.atStation = "";
+
+                    this.atStation = atTiploc.Description.toLowerCase();
+                }
+                return NearestTrainMovement;
+            })(CallingBetweenTrainMovement);
+            Search.NearestTrainMovement = NearestTrainMovement;
         })(KnockoutModels.Search || (KnockoutModels.Search = {}));
         var Search = KnockoutModels.Search;
     })(TrainNotifier.KnockoutModels || (TrainNotifier.KnockoutModels = {}));
