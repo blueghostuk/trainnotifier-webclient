@@ -30,84 +30,103 @@ module TrainNotifier.KnockoutModels {
             }
         }
     }
-}
 
-function PPMViewModel(ppmModel?: any, parent?: any) {
-    var self = this;
+    export class PPMRecord {
+        public OnTime = ko.observable<number>();
+        public Late = ko.observable<number>();
+        public CancelVeryLate = ko.observable<number>();
+        public Total = ko.observable<number>();
+        public Timestamp = ko.observable<string>();
+        public PPM: KnockoutComputed<number>;
 
-    self.Operator = ko.observable(ppmModel ? ppmModel.Description : null);
-    self.Sector = ko.observable(ppmModel ? ppmModel.SectorCode : null);
-    self.Code = ko.observable(ppmModel ? ppmModel.OperatorCode : null);
-    self.PPMData = ko.observableArray();
-    self.Regions = ko.observableArray();
-    self.Parent = (parent ? parent : ppmModel ? new PPMViewModel() : null);
-    self.IsRegion = (parent ? true : false);
+        constructor(stats: IPPMData) {
+            this.OnTime(stats.OnTime);
+            this.Late(stats.Late);
+            this.CancelVeryLate(stats.CancelVeryLate);
+            this.Total(stats.Total);
+            this.Timestamp(moment(stats.Timestamp).format(DateTimeFormats.timeFormat));
 
-    self.LatestPPM = ko.computed(function () {
-        if (self.PPMData().length > 0)
-            return self.PPMData()[self.PPMData().length - 1];
+            var self = this;
+            this.PPM = ko.computed(function () {
+                if (self.OnTime() && self.Total()) {
+                    return Math.round((self.OnTime() / self.Total()) * 100);
+                } else {
+                    return null;
+                }
+            });
+        }
+    }
 
-        return {};
-    });
+    export class PPMViewModel {
+        public Operator = ko.observable<string>();
+        public Sector = ko.observable<string>();
+        public Code = ko.observable<string>();
+        public PPMData = ko.observableArray<PPMRecord>();
+        public Regions = ko.observableArray<PPMViewModel>();
+        public Parent: PPMViewModel;
+        public IsRegion: boolean;
+        public LatestPPM: KnockoutComputed<any>;
+        public Id: KnockoutComputed<string>;
 
-    self.Id = ko.computed(function () {
-        var id = "";
-        if (!self.Code()) {
-            id += "national-";
-            if (self.Sector()) {
-                id += self.Sector();
-            } else {
-                id += "all";
+        constructor(ppmModel?: IPPMRegion, parent?: PPMViewModel, createParent : boolean = true) {
+            if (ppmModel) {
+                this.Operator(ppmModel.Description);
+                this.Sector(ppmModel.SectorCode);
+                this.Code(ppmModel.OperatorCode);
             }
-        } else {
-            id += self.Code() + "-";
-            if (self.Sector()) {
-                id += self.Sector() + "-";
-            } else {
-                id += "all-";
+            if (parent) {
+                this.Parent = parent;
+            } else if (createParent){
+                this.Parent = new PPMViewModel(null, null, false);
             }
-            id += self.Operator().toLowerCase().replace(/[^\w\s]|_/g, "").replace(/\s+/g, "");
+            this.IsRegion = parent != null;
+
+            var self = this;
+            this.LatestPPM = ko.computed(function () {
+                if (self.PPMData().length > 0)
+                    return self.PPMData()[self.PPMData().length - 1];
+
+                return {};
+            });
+            this.Id = ko.computed(function () {
+                var id = "";
+                if (!self.Code()) {
+                    id += "national-";
+                    if (self.Sector()) {
+                        id += self.Sector();
+                    } else {
+                        id += "all";
+                    }
+                } else {
+                    id += self.Code() + "-";
+                    if (self.Sector()) {
+                        id += self.Sector() + "-";
+                    } else {
+                        id += "all-";
+                    }
+                    id += self.Operator().toLowerCase().replace(/[^\w\s]|_/g, "").replace(/\s+/g, "");
+                }
+
+                return id;
+            });
         }
 
-        return id;
-    });
-
-    self.updateStats = function (stats) {
-        self.PPMData.push(new PPMRecord(stats));
-    };
-}
-
-function PPMRecord(stats) {
-    var self = this;
-
-    self.OnTime = ko.observable(stats.OnTime);
-    self.Late = ko.observable(stats.Late);
-    self.CancelVeryLate = ko.observable(stats.CancelVeryLate);
-    self.Total = ko.observable(stats.Total);
-    self.Timestamp = ko.observable(moment(stats.Timestamp).format("HH:mm:ss"));
-
-    self.PPM = ko.computed(function () {
-        if (self.OnTime() && self.Total()) {
-            return Math.round((self.OnTime() / self.Total()) * 100);
-        } else {
-            return null;
+        updateStats(stats: IPPMData) {
+            this.PPMData.push(new PPMRecord(stats));
         }
-    });
-}
+    }
 
-function TitleViewModel() {
-    var self = this;
+    export class TitleViewModel {
+        public From = ko.observable<string>();
+        public To = ko.observable<string>();
+        public DateRange = ko.observable<string>();
+        public Text = ko.observable<string>();
 
-    self.From = ko.observable();
-    self.To = ko.observable();
-    self.DateRange = ko.observable();
-
-    self.Text = ko.observable();
-
-    self.setTitle = function (title) {
-        self.Text(title);
-        if (TrainNotifier.Common.page && TrainNotifier.Common.page.pageTitle) {
-            document.title = title + " - " + TrainNotifier.Common.page.pageTitle;
+        setTitle(title: string) {
+            this.Text(title);
+            if (TrainNotifier.Common.page && TrainNotifier.Common.page.pageTitle) {
+                document.title = title + " - " + TrainNotifier.Common.page.pageTitle;
+            }
         }
-    };
+    }
 }

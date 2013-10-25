@@ -7,7 +7,7 @@
 /// <reference path="webApi.ts" />
 /// <reference path="global.ts" />
 /// <reference path="ViewModels.ts" />
-var titleModel = new TitleViewModel();
+var titleModel = new TrainNotifier.KnockoutModels.TitleViewModel();
 
 var startEndSearchResults = ko.observableArray();
 var callingAtSearchResults = ko.observableArray();

@@ -5,7 +5,7 @@
 /// <reference path="../typings/knockout/knockout.d.ts" />
 /// <reference path="../typings/moment/moment.d.ts" />
 
-var data = ko.observableArray();
+var data = ko.observableArray<TrainNotifier.KnockoutModels.PPMViewModel>();
 var title = {
     ts: ko.observable(),
     next: ko.observable(65)
@@ -61,44 +61,44 @@ function updatePPMData() {
         webApi.getPPMData(model.Code(), model.Operator()).done(function (sectorData) {
             return updateModel(sectorData);
         }).then(function (sectorData) {
-            var model = getModel(sectorData);
-            if (model) {
-                for (var j = 0; j < model.Regions().length; j++) {
-                    webApi.getPPMData(model.Regions()[j].Code(), model.Regions()[j].Operator()).done(function (sectorData) {
-                        updateRegionModel(sectorData);
-                    });
+                var model = getModel(sectorData);
+                if (model) {
+                    for (var j = 0; j < model.Regions().length; j++) {
+                        webApi.getPPMData(model.Regions()[j].Code(), model.Regions()[j].Operator()).done(function (sectorData) {
+                            updateRegionModel(sectorData);
+                        });
+                    }
                 }
-            }
-        });
+            });
     }
 }
 
 function getPPMSectors() {
     return webApi.getPPMSectors().done(function (ppmSectors) {
-            if (ppmSectors && ppmSectors.length > 0) {
-                for (var i in ppmSectors) {
-                    var model = new PPMViewModel(ppmSectors[i]);
-                    data.push(model);
-                    webApi.getPPMOperatorRegions(model.Code()).done(function (regions) {
-                        updateRegions(regions);
-                    }).done(function () {
+        if (ppmSectors && ppmSectors.length > 0) {
+            for (var i in ppmSectors) {
+                var model = new TrainNotifier.KnockoutModels.PPMViewModel(ppmSectors[i]);
+                data.push(model);
+                webApi.getPPMOperatorRegions(model.Code()).done(function (regions) {
+                    updateRegions(regions);
+                }).done(function () {
                         parseHashCommand();
                     });
-                }
             }
-        }).done(function () {
+        }
+    }).done(function () {
             updatePPMData();
         });
 }
 
-function updateRegions(regions) {
+function updateRegions(regions : Array<IPPMRegion>) {
     if (!regions || regions.length == 0)
         return;
     for (var i = 0; i < data().length; i++) {
         var el = data()[i];
         if (el.Code() == regions[0].OperatorCode) {
             for (var j = 0; j < regions.length; j++) {
-                el.Regions.push(new PPMViewModel(regions[j], el));
+                el.Regions.push(new TrainNotifier.KnockoutModels.PPMViewModel(regions[j], el));
             }
             break;
         }

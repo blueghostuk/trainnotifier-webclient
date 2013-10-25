@@ -874,3 +874,20 @@ interface IAssociation {
     STPIndicator: number;
     Location: ITiploc;
 }
+
+interface IPPMRegion {
+    Description: string;
+    OperatorCode?: string;
+    SectorCode?: string;
+}
+
+interface IPPMData {
+    CancelVeryLate: number;
+    Code: string;
+    Late: number;
+    Name: string;
+    OnTime: number;
+    Timestamp: string;
+    Total: number;
+    Trend: number;
+}

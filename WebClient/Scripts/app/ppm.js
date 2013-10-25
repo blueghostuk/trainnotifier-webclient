@@ -76,7 +76,7 @@ function getPPMSectors() {
     return webApi.getPPMSectors().done(function (ppmSectors) {
         if (ppmSectors && ppmSectors.length > 0) {
             for (var i in ppmSectors) {
-                var model = new PPMViewModel(ppmSectors[i]);
+                var model = new TrainNotifier.KnockoutModels.PPMViewModel(ppmSectors[i]);
                 data.push(model);
                 webApi.getPPMOperatorRegions(model.Code()).done(function (regions) {
                     updateRegions(regions);
@@ -97,7 +97,7 @@ function updateRegions(regions) {
         var el = data()[i];
         if (el.Code() == regions[0].OperatorCode) {
             for (var j = 0; j < regions.length; j++) {
-                el.Regions.push(new PPMViewModel(regions[j], el));
+                el.Regions.push(new TrainNotifier.KnockoutModels.PPMViewModel(regions[j], el));
             }
             break;
         }
