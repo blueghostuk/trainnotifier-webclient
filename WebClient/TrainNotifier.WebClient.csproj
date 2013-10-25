@@ -246,9 +246,7 @@
     <Content Include="Scripts\moment.min.js" />
     <Content Include="Scripts\typeahead.js" />
     <Content Include="Scripts\typeahead.min.js" />
-    <Content Include="Scripts\typings\bootstrap\bootstrap.d.ts" />
     <Content Include="Scripts\typings\jquery.cookie\jquery.cookie.d.ts" />
-    <Content Include="Scripts\typings\knockout.mapping\knockout.mapping.d.ts" />
     <Content Include="Scripts\typings\leaflet\leaflet.d.ts" />
     <Content Include="Scripts\app\webApi.js">
       <DependentUpon>webApi.ts</DependentUpon>
@@ -262,8 +260,6 @@
     <Content Include="Scripts\jquery.color-2.1.2.min.js" />
     <Content Include="Scripts\jquery.color.svg-names-2.1.2.js" />
     <Content Include="Scripts\jquery.color.svg-names-2.1.2.min.js" />
-    <Content Include="Scripts\knockout.mapping-latest.debug.js" />
-    <Content Include="Scripts\knockout.mapping-latest.js" />
     <Content Include="train.cshtml" />
     <None Include="Properties\PublishProfiles\Azure - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\Azure - Web Deploy.pubxml" />
@@ -278,6 +274,7 @@
     <Content Include="_trainDetails.cshtml" />
     <Content Include="_trainMap.cshtml" />
     <TypeScriptCompile Include="Scripts\typings\bootstrap.datepicker\bootstrap.datepicker.d.ts" />
+    <TypeScriptCompile Include="Scripts\typings\bootstrap\bootstrap.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\jquery\jquery.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\knockout\knockout.amd.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\knockout\knockout.d.ts" />

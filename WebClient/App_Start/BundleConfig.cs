@@ -14,8 +14,7 @@ namespace TrainNotifier.WebClient
                 "~/Scripts/jquery.ba-hashchange.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/knockout").Include(
-                "~/Scripts/knockout-{version}.js",
-                "~/Scripts/knockout.mapping-latest.js"));
+                "~/Scripts/knockout-{version}.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
                 "~/Scripts/hogan*",

@@ -1,5 +1,4 @@
 /// <reference path="../typings/jquery.cookie/jquery.cookie.d.ts" />
-/// <reference path="../typings/knockout.mapping/knockout.mapping.d.ts" />
 /// <reference path="../typings/moment/moment.d.ts" />
 /// <reference path="../typings/knockout/knockout.d.ts" />
 /// <reference path="../typings/jquery/jquery.d.ts" />
