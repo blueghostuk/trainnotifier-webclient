@@ -69,8 +69,8 @@ namespace TrainNotifier.WebClient
                 "~/Content/app/search-schedule.css"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
-                //"~/Content/bootstrap/bootstrap.css",
-                "~/Content/bootstrap/spacelab.css",
+                // minification fucks this up so include seperately in _Layout.cshtml
+                //"~/Content/bootstrap/spacelab.css",
                 "~/Content/bootstrap/overrides.css",
                 "~/Content/bootstrap/typeahead-fix.css",
                 "~/Content/bootstrap-datepicker.css",
