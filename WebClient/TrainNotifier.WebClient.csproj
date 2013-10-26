@@ -108,10 +108,10 @@
     <Content Include="Content\app\tocs.css" />
     <Content Include="Content\app\train.css" />
     <Content Include="Content\bootstrap-datepicker.css" />
-    <Content Include="Content\bootstrap\bootstrap-theme.css" />
-    <Content Include="Content\bootstrap\bootstrap-theme.min.css" />
-    <Content Include="Content\bootstrap\bootstrap.css" />
-    <Content Include="Content\bootstrap\bootstrap.min.css" />
+    <None Include="Content\bootstrap\bootstrap-theme.css" />
+    <None Include="Content\bootstrap\bootstrap-theme.min.css" />
+    <None Include="Content\bootstrap\bootstrap.css" />
+    <None Include="Content\bootstrap\bootstrap.min.css" />
     <Content Include="Content\bootstrap\overrides.css" />
     <Content Include="Content\bootstrap\spacelab.css" />
     <Content Include="Content\bootstrap\spacelab.min.css" />
@@ -246,8 +246,8 @@
     <Content Include="Scripts\moment.min.js" />
     <Content Include="Scripts\typeahead.js" />
     <Content Include="Scripts\typeahead.min.js" />
-    <Content Include="Scripts\typings\jquery.cookie\jquery.cookie.d.ts" />
-    <Content Include="Scripts\typings\leaflet\leaflet.d.ts" />
+    <TypeScriptCompile Include="Scripts\typings\jquery.cookie\jquery.cookie.d.ts" />
+    <TypeScriptCompile Include="Scripts\typings\leaflet\leaflet.d.ts" />
     <Content Include="Scripts\app\webApi.js">
       <DependentUpon>webApi.ts</DependentUpon>
     </Content>
