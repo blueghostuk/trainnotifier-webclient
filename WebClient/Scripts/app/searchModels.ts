@@ -15,6 +15,20 @@ module TrainNotifier.Search {
 
 module TrainNotifier.KnockoutModels.Search {
 
+    export class TitleViewModel {
+        public From = ko.observable<string>();
+        public To = ko.observable<string>();
+        public DateRange = ko.observable<string>();
+        public Text = ko.observable<string>();
+
+        setTitle(title: string) {
+            this.Text(title);
+            if (TrainNotifier.Common.page && TrainNotifier.Common.page.pageTitle) {
+                document.title = title + " - " + TrainNotifier.Common.page.pageTitle;
+            }
+        }
+    }
+
     // base class
     export class TrainMovement {
         public trainId: string;
@@ -22,10 +36,10 @@ module TrainNotifier.KnockoutModels.Search {
         public operatorCode: string = "NA";
         public operatorName: string = "Unknown";
         public title: string = null;
-        public cancel: KnockoutObservable<boolean> = ko.observable(false);
+        public cancel = ko.observable<boolean>(false);
         public cancelEnRoute: string = null;
-        public reinstate: KnockoutObservable<boolean> = ko.observable(false);
-        public changeOfOrigin: KnockoutObservable<boolean> = ko.observable(false);
+        public reinstate = ko.observable<boolean>(false);
+        public changeOfOrigin = ko.observable<boolean>(false);
         public changeOfOriginStation: string = null;
 
         public departureDate: string = "";
@@ -38,7 +52,7 @@ module TrainNotifier.KnockoutModels.Search {
 
         public computedCss: KnockoutComputed<string>;
 
-        public category: KnockoutObservable<string> = ko.observable("cat-na");
+        public category = ko.observable<string>("cat-na");
 
         constructor(trainMovement: ITrainMovementResult, tiplocs: IStationTiploc[], queryStartDate: Moment) {
             var self = this;
@@ -130,7 +144,7 @@ module TrainNotifier.KnockoutModels.Search {
                 }
                 if (self.category()) {
                     css.push("cat-" + self.category());
-                }                
+                }
 
                 return css.join(" ");
             });
@@ -271,7 +285,7 @@ module TrainNotifier.KnockoutModels.Search {
         public atWttArrival: string = "";
         public atActualArrival: string = "";
 
-        public pass: KnockoutObservable < boolean> = ko.observable(false);
+        public pass = ko.observable<boolean>(false);
 
         constructor(trainMovement: ITrainMovementResult, atTiploc: IStationTiploc, tiplocs: IStationTiploc[], queryStartDate: Moment) {
             super(trainMovement, tiplocs, queryStartDate);
@@ -372,7 +386,7 @@ module TrainNotifier.KnockoutModels.Search {
                 }
                 if (self.category()) {
                     css.push("cat-" + self.category());
-                }    
+                }
 
                 return css.join(" ");
             });
@@ -380,11 +394,11 @@ module TrainNotifier.KnockoutModels.Search {
     }
 
     export class CallingBetweenResults {
-        public fromStation = ko.observable();
-        public fromShortStation = ko.observable();
-        public toStation = ko.observable();
-        public toShortStation = ko.observable();
-        public results = ko.observableArray();
+        public fromStation = ko.observable<string>();
+        public fromShortStation = ko.observable<string>();
+        public toStation = ko.observable<string>();
+        public toShortStation = ko.observable<string>();
+        public results = ko.observableArray<CallingBetweenTrainMovement>();
     }
 
     export class CallingBetweenTrainMovement extends TrainMovement {

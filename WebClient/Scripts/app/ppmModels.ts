@@ -2,34 +2,7 @@
 /// <reference path="../typings/knockout/knockout.d.ts" />
 /// <reference path="../typings/moment/moment.d.ts" />
 
-module TrainNotifier.KnockoutModels {
-
-    export class CurrentLocation {
-        public name = ko.observable();
-        public crsCode = ko.observable();
-        public stanox = ko.observable();
-        public url: KnockoutComputed<string>;
-
-        constructor(location?: IStationTiploc) {
-            var self = this;
-            this.update(location);
-            this.url = ko.computed(function () {
-                return self.crsCode() ? self.crsCode() : self.stanox() ? self.stanox() : "";
-            });
-        }
-
-        update(location?: IStationTiploc) {
-            if (location) {
-                this.name(location.Description);
-                this.crsCode(location.CRS);
-                this.stanox(location.Stanox);
-            } else {
-                this.name(null);
-                this.crsCode(null);
-                this.stanox(null);
-            }
-        }
-    }
+module TrainNotifier.KnockoutModels.PPM {
 
     export class PPMRecord {
         public OnTime = ko.observable<number>();
@@ -68,7 +41,7 @@ module TrainNotifier.KnockoutModels {
         public LatestPPM: KnockoutComputed<any>;
         public Id: KnockoutComputed<string>;
 
-        constructor(ppmModel?: IPPMRegion, parent?: PPMViewModel, createParent : boolean = true) {
+        constructor(ppmModel?: IPPMRegion, parent?: PPMViewModel, createParent: boolean = true) {
             if (ppmModel) {
                 this.Operator(ppmModel.Description);
                 this.Sector(ppmModel.SectorCode);
@@ -76,7 +49,7 @@ module TrainNotifier.KnockoutModels {
             }
             if (parent) {
                 this.Parent = parent;
-            } else if (createParent){
+            } else if (createParent) {
                 this.Parent = new PPMViewModel(null, null, false);
             }
             this.IsRegion = parent != null;
@@ -113,20 +86,6 @@ module TrainNotifier.KnockoutModels {
 
         updateStats(stats: IPPMData) {
             this.PPMData.push(new PPMRecord(stats));
-        }
-    }
-
-    export class TitleViewModel {
-        public From = ko.observable<string>();
-        public To = ko.observable<string>();
-        public DateRange = ko.observable<string>();
-        public Text = ko.observable<string>();
-
-        setTitle(title: string) {
-            this.Text(title);
-            if (TrainNotifier.Common.page && TrainNotifier.Common.page.pageTitle) {
-                document.title = title + " - " + TrainNotifier.Common.page.pageTitle;
-            }
         }
     }
 }

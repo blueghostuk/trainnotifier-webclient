@@ -29,6 +29,23 @@ var TrainNotifier;
 (function (TrainNotifier) {
     (function (KnockoutModels) {
         (function (Search) {
+            var TitleViewModel = (function () {
+                function TitleViewModel() {
+                    this.From = ko.observable();
+                    this.To = ko.observable();
+                    this.DateRange = ko.observable();
+                    this.Text = ko.observable();
+                }
+                TitleViewModel.prototype.setTitle = function (title) {
+                    this.Text(title);
+                    if (TrainNotifier.Common.page && TrainNotifier.Common.page.pageTitle) {
+                        document.title = title + " - " + TrainNotifier.Common.page.pageTitle;
+                    }
+                };
+                return TitleViewModel;
+            })();
+            Search.TitleViewModel = TitleViewModel;
+
             // base class
             var TrainMovement = (function () {
                 function TrainMovement(trainMovement, tiplocs, queryStartDate) {

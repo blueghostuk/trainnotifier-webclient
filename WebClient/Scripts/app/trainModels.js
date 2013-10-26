@@ -141,10 +141,10 @@ var TrainNotifier;
                     this.timeStamp = 0;
                     var self = this;
                     this.arrivalDelayCss = ko.computed(function () {
-                        return self.getDelayCss(self.arrivalDelay());
+                        return LiveStopBase.getDelayCss(self.arrivalDelay());
                     });
                     this.departureDelayCss = ko.computed(function () {
-                        return self.getDelayCss(self.departureDelay());
+                        return LiveStopBase.getDelayCss(self.departureDelay());
                     });
 
                     if (!location || !tiplocs || tiplocs.length == 0)
@@ -154,7 +154,7 @@ var TrainNotifier;
                     this.location = tiploc.Description ? tiploc.Description.toLowerCase() : tiploc.Tiploc;
                     this.locationStanox = tiploc.Stanox;
                 }
-                LiveStopBase.prototype.getDelayCss = function (value) {
+                LiveStopBase.getDelayCss = function (value) {
                     if (value === 0)
                         return "alert-success";
                     if (value < 0)
@@ -422,10 +422,10 @@ else
                         } else {
                             this.toc("Unknown");
                         }
-                        this.type(this.getStpIndicator(train.Schedule.STPIndicatorId));
+                        this.type(TrainDetails.getStpIndicator(train.Schedule.STPIndicatorId));
                         this.from(moment(train.Schedule.StartDate).format(TrainNotifier.DateTimeFormats.dateFormat));
                         this.to(moment(train.Schedule.EndDate).format(TrainNotifier.DateTimeFormats.dateFormat));
-                        this.runs(this.getDaysRun(train.Schedule.Schedule));
+                        this.runs(TrainDetails.getDaysRun(train.Schedule.Schedule));
 
                         if (train.Schedule.PowerTypeId) {
                             var power = TrainNotifier.PowerTypeLookup.getPowerType(train.Schedule.PowerTypeId);
@@ -510,7 +510,7 @@ else
                     }
                 };
 
-                TrainDetails.prototype.getStpIndicator = function (stpIndicatorId) {
+                TrainDetails.getStpIndicator = function (stpIndicatorId) {
                     switch (stpIndicatorId) {
                         case 1:
                             return "Cancellation";
@@ -525,7 +525,7 @@ else
                     return null;
                 };
 
-                TrainDetails.prototype.getDaysRun = function (schedule) {
+                TrainDetails.getDaysRun = function (schedule) {
                     var days = [];
                     if (schedule.Monday) {
                         days.push("M");
@@ -652,6 +652,16 @@ else
                         return "";
                     }).extend({ throttle: 500 });
                 }
+                TrainTitleViewModel.prototype.clear = function (clearId) {
+                    if (typeof clearId === "undefined") { clearId = true; }
+                    if (clearId) {
+                        this.id(null);
+                    }
+                    this.from(null);
+                    this.to(null);
+                    this.start(null);
+                    this.end(null);
+                };
                 return TrainTitleViewModel;
             })();
             Train.TrainTitleViewModel = TrainTitleViewModel;

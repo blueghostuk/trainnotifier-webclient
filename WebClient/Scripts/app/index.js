@@ -29,6 +29,8 @@ $(function () {
     $("#nearest").click(function () {
         navigator.geolocation.getCurrentPosition(function (position) {
             document.location.href = "search-schedule#!nearest/" + position.coords.latitude + "/" + position.coords.longitude;
+        }, function (err) {
+            alert("Could not determine current location: " + err.message);
         });
     });
     ko.applyBindings(fromLocal, $("#from-local").get(0));
@@ -160,6 +162,8 @@ function lookupLocalFrom() {
                 }
             }
         });
+    }, function (err) {
+        alert("Could not determine current location: " + err.message);
     });
 }
 
@@ -177,6 +181,8 @@ function lookupLocalTo() {
                 }
             }
         });
+    }, function (err) {
+        alert("Could not determine current location: " + err.message);
     });
 }
 function lookupLocalAt() {
@@ -193,5 +199,7 @@ function lookupLocalAt() {
                 }
             }
         });
+    }, function (err) {
+        alert("Could not determine current location: " + err.message);
     });
 }

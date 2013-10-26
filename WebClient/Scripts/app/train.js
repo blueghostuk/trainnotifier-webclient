@@ -4,7 +4,6 @@
 /// <reference path="websockets.ts" />
 /// <reference path="../typings/leaflet/leaflet.d.ts" />
 /// <reference path="global.ts" />
-/// <reference path="ViewModels.ts" />
 /// <reference path="../typings/knockout/knockout.d.ts" />
 /// <reference path="../typings/jquery/jquery.d.ts" />
 /// <reference path="../typings/moment/moment.d.ts" />
@@ -203,8 +202,10 @@ function connectToWebsocketServer() {
             }
         }
     });
-    setTimeout(function () {
-        if (webSockets.state !== WebSocket.OPEN) {
+
+    // try to keep websockets open
+    setInterval(function () {
+        if (webSockets.state == WebSocket.CLOSED) {
             thisPage.wsOpenCommand();
         }
     }, 2000);
@@ -321,7 +322,11 @@ function getTrainData(trainUid, date, subscribe) {
 
         if (data.Movement) {
             if (data.Movement.Schedule) {
-                titleModel.id(data.Movement.Schedule.Headcode);
+                if (data.Movement.Schedule.Headcode) {
+                    titleModel.id(data.Movement.Schedule.Headcode);
+                } else {
+                    titleModel.id("");
+                }
             }
             if (data.Movement.Schedule && data.Movement.Schedule.Stops.length > 0) {
                 for (var i = 0; i < data.Movement.Schedule.Stops.length; i++) {
@@ -365,10 +370,7 @@ function getTrainData(trainUid, date, subscribe) {
                     titleModel.end(moment(arrivalTs, TrainNotifier.DateTimeFormats.timeFormat).format(TrainNotifier.DateTimeFormats.shortTimeFormat));
                 }
             } else {
-                titleModel.to(null);
-                titleModel.from(null);
-                titleModel.start(null);
-                titleModel.end(null);
+                titleModel.clear(false);
             }
             if (data.Movement.Actual) {
                 titleModel.id(data.Movement.Actual.HeadCode);

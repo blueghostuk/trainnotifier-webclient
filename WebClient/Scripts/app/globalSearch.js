@@ -2,7 +2,6 @@ $(function () {
     TrainNotifier.Common.webApi = new TrainNotifier.WebApi();
 
     $("#global-search-box").keypress(function (e) {
-        console.log(e.keyCode);
         if (e.keyCode == 13) {
             parseGlobalSearchCommand($(this).val());
             return false;

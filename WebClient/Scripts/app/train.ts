@@ -4,7 +4,6 @@
 /// <reference path="websockets.ts" />
 /// <reference path="../typings/leaflet/leaflet.d.ts" />
 /// <reference path="global.ts" />
-/// <reference path="ViewModels.ts" />
 /// <reference path="../typings/knockout/knockout.d.ts" />
 /// <reference path="../typings/jquery/jquery.d.ts" />
 /// <reference path="../typings/moment/moment.d.ts" />
@@ -67,7 +66,7 @@ var thisPage: IPage = {
 
         return false;
     },
-    getCommand: function () : string {
+    getCommand: function (): string {
         return $("#global-search-box").val();
     },
     wsOpenCommand: function () {
@@ -187,19 +186,19 @@ function connectToWebsocketServer() {
             }, 1000);
             // highlight last element and last update
             $("#tableView tr:last, #lastUpdate").animate(
-            {
-                // essentially bootstrap success class
-                backgroundColor: '#dff0d8'
-            },
-            {
-                duration: 30000,
-                complete: function () {
-                    $(this).animate({
-                        // white
-                        backgroundColor: '#FFF'
-                    });
-                }
-            });
+                {
+                    // essentially bootstrap success class
+                    backgroundColor: '#dff0d8'
+                },
+                {
+                    duration: 30000,
+                    complete: function () {
+                        $(this).animate({
+                            // white
+                            backgroundColor: '#FFF'
+                        });
+                    }
+                });
         } else if (data.Command == "subtrainupdate-berth") {
             var berthSteps: IWebSocketBerthStep[] = data.Response;
             for (var i = 0; i < berthSteps.length; i++) {
@@ -207,8 +206,9 @@ function connectToWebsocketServer() {
             }
         }
     });
-    setTimeout(function () {
-        if (webSockets.state !== WebSocket.OPEN) {
+    // try to keep websockets open
+    setInterval(function () {
+        if (webSockets.state == WebSocket.CLOSED) {
             thisPage.wsOpenCommand();
         }
     }, 2000);
@@ -238,48 +238,48 @@ function addStop(stop: IWebSocketTrainMovement) {
         if (tiplocB && tiplocB.Stanox)
             currentTiplocs.push(tiplocB)
     }).done(function () {
-        var mixedIn = false;
-        for (var i = 0; i < liveStops().length; i++) {
-            var liveStop: TrainNotifier.KnockoutModels.Train.LiveStopBase = liveStops()[i];
-            switch (stop.EventType) {
-                case TrainNotifier.WebSocketCommands.Arrival:
-                    if (liveStop.validArrival(stop.Stanox, currentTiplocs)) {
-                        liveStop.updateWebSocketArrival(stop, currentTiplocs);
-                        mixedIn = true;
-                    }
-                    break;
-                case TrainNotifier.WebSocketCommands.Departure:
-                    if (liveStop.validDeparture(stop.Stanox, currentTiplocs)) {
-                        liveStop.updateWebSocketDeparture(stop, currentTiplocs);
-                        mixedIn = true;
-                    }
-                    break;
-            }
-            if (mixedIn)
-                break;
-        }
-        if (!mixedIn) {
-            var arrivalStop: IWebSocketTrainMovement;
-            var departureStop: IWebSocketTrainMovement;
-            switch (stop.EventType) {
-                case TrainNotifier.WebSocketCommands.Arrival:
-                    arrivalStop = stop;
-                    break;
-                case TrainNotifier.WebSocketCommands.Departure:
-                    departureStop = stop;
+            var mixedIn = false;
+            for (var i = 0; i < liveStops().length; i++) {
+                var liveStop: TrainNotifier.KnockoutModels.Train.LiveStopBase = liveStops()[i];
+                switch (stop.EventType) {
+                    case TrainNotifier.WebSocketCommands.Arrival:
+                        if (liveStop.validArrival(stop.Stanox, currentTiplocs)) {
+                            liveStop.updateWebSocketArrival(stop, currentTiplocs);
+                            mixedIn = true;
+                        }
+                        break;
+                    case TrainNotifier.WebSocketCommands.Departure:
+                        if (liveStop.validDeparture(stop.Stanox, currentTiplocs)) {
+                            liveStop.updateWebSocketDeparture(stop, currentTiplocs);
+                            mixedIn = true;
+                        }
+                        break;
+                }
+                if (mixedIn)
                     break;
             }
-            var newStop = new TrainNotifier.KnockoutModels.Train.NewLiveStop(currentTiplocs, arrivalStop, departureStop);
-            liveStops.push(newStop);
-            for (var i = 0; i < scheduleStops().length; i++) {
-                var scheduleStop = scheduleStops()[i];
-                if (scheduleStop.validateAssociation(newStop)) {
-                    scheduleStop.associateWithLiveStop(newStop);
-                    break;
+            if (!mixedIn) {
+                var arrivalStop: IWebSocketTrainMovement;
+                var departureStop: IWebSocketTrainMovement;
+                switch (stop.EventType) {
+                    case TrainNotifier.WebSocketCommands.Arrival:
+                        arrivalStop = stop;
+                        break;
+                    case TrainNotifier.WebSocketCommands.Departure:
+                        departureStop = stop;
+                        break;
+                }
+                var newStop = new TrainNotifier.KnockoutModels.Train.NewLiveStop(currentTiplocs, arrivalStop, departureStop);
+                liveStops.push(newStop);
+                for (var i = 0; i < scheduleStops().length; i++) {
+                    var scheduleStop = scheduleStops()[i];
+                    if (scheduleStop.validateAssociation(newStop)) {
+                        scheduleStop.associateWithLiveStop(newStop);
+                        break;
+                    }
                 }
             }
-        }
-    });
+        });
 }
 
 function sendWsCommand(command) {
@@ -328,7 +328,11 @@ function getTrainData(trainUid, date, subscribe: boolean) {
 
         if (data.Movement) {
             if (data.Movement.Schedule) {
-                titleModel.id(data.Movement.Schedule.Headcode);
+                if (data.Movement.Schedule.Headcode) {
+                    titleModel.id(data.Movement.Schedule.Headcode);
+                } else {
+                    titleModel.id("");
+                }
             }
             if (data.Movement.Schedule && data.Movement.Schedule.Stops.length > 0) {
                 for (var i = 0; i < data.Movement.Schedule.Stops.length; i++) {
@@ -376,10 +380,7 @@ function getTrainData(trainUid, date, subscribe: boolean) {
                     titleModel.end(moment(arrivalTs, TrainNotifier.DateTimeFormats.timeFormat).format(TrainNotifier.DateTimeFormats.shortTimeFormat));
                 }
             } else {
-                titleModel.to(null);
-                titleModel.from(null);
-                titleModel.start(null);
-                titleModel.end(null);
+                titleModel.clear(false);
             }
             if (data.Movement.Actual) {
                 titleModel.id(data.Movement.Actual.HeadCode);
@@ -445,16 +446,16 @@ function getTrainData(trainUid, date, subscribe: boolean) {
         }
         $(".tooltip-dynamic").tooltip();
     }).then(function () {
-        return getAssociations(date);
-    }).then(function () {
-        if (subscribe) {
-            doSubTrain();
-        }
-    }).fail(function () {
+            return getAssociations(date);
+        }).then(function () {
+            if (subscribe) {
+                doSubTrain();
+            }
+        }).fail(function () {
             show($("#error-row"));
-    }).always(function () {
+        }).always(function () {
             hide($(".progress"));
-    });
+        });
 }
 
 function doSubTrain() {
@@ -469,11 +470,11 @@ function getAssociations(date?: string) {
     return webApi.getTrainMovementAssociations(
         _lastTrainData.Movement.Schedule.TrainUid,
         moment(queryDate).format(TrainNotifier.DateTimeFormats.dateQueryFormat))
-        .done(function (associations : IAssociation[]) {
+        .done(function (associations: IAssociation[]) {
             if (associations.length == 0)
                 return;
 
-            for(var i = 0; i < associations.length; i++){
+            for (var i = 0; i < associations.length; i++) {
                 currentTrainDetails.associations.push(new TrainNotifier.KnockoutModels.Train.TrainAssociation(
                     associations[i], _lastTrainData.Movement.Schedule.TrainUid, queryDate));
             }

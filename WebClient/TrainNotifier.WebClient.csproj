@@ -146,12 +146,15 @@
     <Content Include="Scripts\app\live.js">
       <DependentUpon>live.ts</DependentUpon>
     </Content>
+    <TypeScriptCompile Include="Scripts\app\ppmModels.ts" />
+    <Content Include="Scripts\app\ppmModels.js">
+      <DependentUpon>ppmModels.ts</DependentUpon>
+    </Content>
     <TypeScriptCompile Include="Scripts\app\routeModels.ts" />
     <Content Include="Scripts\app\routeModels.js">
       <DependentUpon>routeModels.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="Scripts\app\websockets.ts" />
-    <TypeScriptCompile Include="Scripts\app\ViewModels.ts" />
     <TypeScriptCompile Include="Scripts\app\train.ts" />
     <TypeScriptCompile Include="Scripts\app\ppm.ts" />
     <Content Include="Scripts\app\ppm.js">
@@ -179,9 +182,6 @@
     <TypeScriptCompile Include="Scripts\app\trainModels.ts" />
     <Content Include="Scripts\app\trainModels.js">
       <DependentUpon>trainModels.ts</DependentUpon>
-    </Content>
-    <Content Include="Scripts\app\ViewModels.js">
-      <DependentUpon>ViewModels.ts</DependentUpon>
     </Content>
     <Content Include="Scripts\app\websockets.js">
       <DependentUpon>websockets.ts</DependentUpon>

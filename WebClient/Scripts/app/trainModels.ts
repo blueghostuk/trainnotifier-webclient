@@ -27,7 +27,7 @@ module TrainNotifier.KnockoutModels.Train {
         public paAllowance: string = null;
         public peAllowance: string = null;
         public pass: string = null;
-        public cancel: KnockoutObservable<boolean> = ko.observable(false);
+        public cancel = ko.observable<boolean>(false);
         public stopNumber: number;
 
         private associateLiveStop: KnockoutObservable<LiveStopBase> = ko.observable();
@@ -129,21 +129,21 @@ module TrainNotifier.KnockoutModels.Train {
     export class LiveStopBase {
         public location: string;
         public locationStanox: string;
-        public plannedArrival: KnockoutObservable<string> = ko.observable();
-        public actualArrival: KnockoutObservable<string> = ko.observable();
-        public arrivalDelay: KnockoutObservable<number> = ko.observable();
+        public plannedArrival = ko.observable<string>();
+        public actualArrival = ko.observable<string>();
+        public arrivalDelay = ko.observable<number>();
         public arrivalDelayCss: KnockoutComputed<string>;
-        public plannedDeparture: KnockoutObservable<string> = ko.observable();
-        public actualDeparture: KnockoutObservable<string> = ko.observable();
-        public departureDelay: KnockoutObservable<number> = ko.observable();
+        public plannedDeparture = ko.observable<string>();
+        public actualDeparture = ko.observable<string>();
+        public departureDelay = ko.observable<number>();
         public departureDelayCss: KnockoutComputed<string>;
-        public line: KnockoutObservable<string> = ko.observable();
-        public platform: KnockoutObservable<string> = ko.observable();
-        public nextLocation: KnockoutObservable<string> = ko.observable();
-        public nextAt: KnockoutObservable<string> = ko.observable();
+        public line = ko.observable<string>();
+        public platform = ko.observable<string>();
+        public nextLocation = ko.observable<string>();
+        public nextAt = ko.observable<string>();
         public berthUpdate = false;
-        public offRoute: KnockoutObservable<boolean> = ko.observable(false);
-        public notes: KnockoutObservable<string> = ko.observable();
+        public offRoute = ko.observable<boolean>(false);
+        public notes = ko.observable<string>();
         private departureSet = false;
         private arrivalSet = false;
         private timeStamp: Number = 0;
@@ -151,10 +151,10 @@ module TrainNotifier.KnockoutModels.Train {
         constructor(location?: string, tiplocs?: IStationTiploc[]) {
             var self = this;
             this.arrivalDelayCss = ko.computed(function () {
-                return self.getDelayCss(self.arrivalDelay());
+                return LiveStopBase.getDelayCss(self.arrivalDelay());
             });
             this.departureDelayCss = ko.computed(function () {
-                return self.getDelayCss(self.departureDelay());
+                return LiveStopBase.getDelayCss(self.departureDelay());
             });
 
             if (!location || !tiplocs || tiplocs.length == 0)
@@ -165,7 +165,7 @@ module TrainNotifier.KnockoutModels.Train {
             this.locationStanox = tiploc.Stanox;
         }
 
-        private getDelayCss(value: Number) {
+        private static getDelayCss(value: Number) {
             if (value === 0)
                 return "alert-success";
             if (value < 0)
@@ -399,29 +399,29 @@ module TrainNotifier.KnockoutModels.Train {
 
     export class TrainDetails {
 
-        public id: KnockoutObservable<string> = ko.observable();
-        public trainUid: KnockoutObservable<string> = ko.observable();
-        public scheduleDate: KnockoutObservable<string> = ko.observable();
-        public liveId: KnockoutObservable<string> = ko.observable();
-        public activated: KnockoutObservable<string> = ko.observable();
+        public id = ko.observable<string>();
+        public trainUid = ko.observable<string>();
+        public scheduleDate = ko.observable<string>();
+        public liveId = ko.observable<string>();
+        public activated = ko.observable<string>();
 
-        public toc: KnockoutObservable<string> = ko.observable();
-        public type: KnockoutObservable<string> = ko.observable();
-        public from: KnockoutObservable<string> = ko.observable();
-        public to: KnockoutObservable<string> = ko.observable();
-        public runs: KnockoutObservable<string> = ko.observable();
+        public toc = ko.observable<string>();
+        public type = ko.observable<string>();
+        public from = ko.observable<string>();
+        public to = ko.observable<string>();
+        public runs = ko.observable<string>();
 
-        public powerType: KnockoutObservable<string> = ko.observable();
-        public categoryType: KnockoutObservable<string> = ko.observable();
-        public speed: KnockoutObservable<number> = ko.observable();
+        public powerType = ko.observable<string>();
+        public categoryType = ko.observable<string>();
+        public speed = ko.observable<number>();
 
-        public cancellation: KnockoutObservable<string> = ko.observable();
-        public changeOfOrigin: KnockoutObservable<string> = ko.observable();
-        public reinstatement: KnockoutObservable<string> = ko.observable();
+        public cancellation = ko.observable<string>();
+        public changeOfOrigin = ko.observable<string>();
+        public reinstatement = ko.observable<string>();
 
-        public otherSites: ExternalSiteBase[] = [];
+        public otherSites: IExternalSite[] = [];
 
-        public associations: KnockoutObservableArray<TrainAssociation> = ko.observableArray();
+        public associations = ko.observableArray<TrainAssociation>();
 
         constructor() {
             this.otherSites.push(new RealtimeTrainsExternalSite());
@@ -458,10 +458,10 @@ module TrainNotifier.KnockoutModels.Train {
                 } else {
                     this.toc("Unknown");
                 }
-                this.type(this.getStpIndicator(train.Schedule.STPIndicatorId));
+                this.type(TrainDetails.getStpIndicator(train.Schedule.STPIndicatorId));
                 this.from(moment(train.Schedule.StartDate).format(DateTimeFormats.dateFormat));
                 this.to(moment(train.Schedule.EndDate).format(DateTimeFormats.dateFormat));
-                this.runs(this.getDaysRun(train.Schedule.Schedule));
+                this.runs(TrainDetails.getDaysRun(train.Schedule.Schedule));
 
                 if (train.Schedule.PowerTypeId) {
                     var power = PowerTypeLookup.getPowerType(train.Schedule.PowerTypeId);
@@ -549,7 +549,7 @@ module TrainNotifier.KnockoutModels.Train {
             }
         }
 
-        private getStpIndicator(stpIndicatorId: number) {
+        private static getStpIndicator(stpIndicatorId: number) {
             switch (stpIndicatorId) {
                 case 1:
                     return "Cancellation";
@@ -564,7 +564,7 @@ module TrainNotifier.KnockoutModels.Train {
             return null;
         }
 
-        private getDaysRun(schedule: ISchedule) {
+        private static getDaysRun(schedule: ISchedule) {
             var days: string[] = [];
             if (schedule.Monday) {
                 days.push("M");
@@ -591,10 +591,10 @@ module TrainNotifier.KnockoutModels.Train {
         }
     }
 
-    export class ExternalSiteBase {
+    export class ExternalSiteBase implements IExternalSite {
 
         public text: string;
-        public url: KnockoutObservable<string> = ko.observable();
+        public url = ko.observable<string>();
 
         constructor(name: string) {
             this.text = name;
@@ -686,11 +686,11 @@ module TrainNotifier.KnockoutModels.Train {
 
     export class TrainTitleViewModel {
 
-        public id = ko.observable();
-        public from = ko.observable();
-        public to = ko.observable();
-        public start = ko.observable();
-        public end = ko.observable();
+        public id = ko.observable<string>();
+        public from = ko.observable<string>();
+        public to = ko.observable<string>();
+        public start = ko.observable<string>();
+        public end = ko.observable<string>();
         public fullTitle: KnockoutComputed<string>;
 
         constructor() {
@@ -706,6 +706,23 @@ module TrainNotifier.KnockoutModels.Train {
                 return "";
             }).extend({ throttle: 500 });
         }
+
+        clear(clearId: boolean = true) {
+            if (clearId) {
+                this.id(null);
+            }
+            this.from(null);
+            this.to(null);
+            this.start(null);
+            this.end(null);
+        }
     }
 
+}
+
+interface IExternalSite {
+    text: string;
+    url: KnockoutObservable<string>;
+
+    updateFromTrainMovement(train: ITrainMovementResult, date?: string);
 }

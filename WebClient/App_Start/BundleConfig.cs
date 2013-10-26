@@ -28,11 +28,7 @@ namespace TrainNotifier.WebClient
                 "~/Scripts/app/global.js",
                 "~/Scripts/app/webApi.js",
                 "~/Scripts/app/globalSearch.js",
-                "~/Scripts/app/websockets.js",
-                "~/Scripts/app/searchModels.js",
-                "~/Scripts/app/routeModels.js",
-                "~/Scripts/app/trainModels.js",
-                "~/Scripts/app/ViewModels.js"));
+                "~/Scripts/app/websockets.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/js/index").Include(
                 "~/Scripts/app/index.js"));
@@ -43,16 +39,21 @@ namespace TrainNotifier.WebClient
                 "~/Content/app/live.css"));
 
             bundles.Add(new ScriptBundle("~/bundles/js/ppm").Include(
+                "~/Scripts/app/ppmModels.js",
                 "~/Scripts/app/ppm.js"));
             bundles.Add(new StyleBundle("~/bundles/css/ppm").Include(
                 "~/Content/app/ppm.css"));
 
             bundles.Add(new ScriptBundle("~/bundles/js/train").Include(
+                "~/Scripts/app/trainModels.js",
                 "~/Scripts/app/train.js"));
             bundles.Add(new StyleBundle("~/bundles/css/train").Include(
                 "~/Content/app/train.css"));
 
             bundles.Add(new ScriptBundle("~/bundles/js/route").Include(
+                "~/Scripts/app/trainModels.js",
+                "~/Scripts/app/searchModels.js",
+                "~/Scripts/app/routeModels.js",
                 "~/Scripts/app/route.js"));
             bundles.Add(new StyleBundle("~/bundles/css/route").Include(
                 "~/Content/app/route.css"));
@@ -63,6 +64,8 @@ namespace TrainNotifier.WebClient
                 "~/Content/app/station.css"));
 
             bundles.Add(new ScriptBundle("~/bundles/js/search-schedule").Include(
+                "~/Scripts/app/trainModels.js",
+                "~/Scripts/app/searchModels.js",
                 "~/Scripts/app/search-schedule.js"));
             bundles.Add(new StyleBundle("~/bundles/css/search-schedule").Include(
                 "~/Content/app/search-schedule.css"));

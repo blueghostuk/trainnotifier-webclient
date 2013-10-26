@@ -29,16 +29,20 @@ $(function () {
     $('.datepicker').datepicker({
         format: 'dd/mm/yyyy'
     }).on("changeDate", function () {
-        $(this).datepicker('hide');
-    });
+            $(this).datepicker('hide');
+        });
     $("form").submit(function () {
         return showLocation();
     });
     $(".station-lookup").attr("placeholder", "Loading stations ...");
     $("#nearest").click(function () {
-        navigator.geolocation.getCurrentPosition(function (position) {
-            document.location.href = "search-schedule#!nearest/" + position.coords.latitude + "/" + position.coords.longitude;
-        });
+        navigator.geolocation.getCurrentPosition(
+            function (position) {
+                document.location.href = "search-schedule#!nearest/" + position.coords.latitude + "/" + position.coords.longitude;
+            },
+            function (err) {
+                alert("Could not determine current location: " + err.message);
+            });
     });
     ko.applyBindings(fromLocal, $("#from-local").get(0));
     ko.applyBindings(toLocal, $("#to-local").get(0));
@@ -72,8 +76,8 @@ function findStation(value: string): IStationLookup {
 }
 
 function showLocation() {
-    var fromStation : string = $("#from-crs").val();
-    var fromCrs : any = findStation(fromStation);
+    var fromStation: string = $("#from-crs").val();
+    var fromCrs: any = findStation(fromStation);
     if (fromCrs) {
         fromCrs = fromCrs.crs;
     } else {
@@ -88,7 +92,7 @@ function showLocation() {
         if (toStation.length > 0)
             toCrs = toStation.substring(0, 4);
     }
-    var atStation : string = $("#at-crs").val();
+    var atStation: string = $("#at-crs").val();
     var atCrs: any = findStation(atStation);
     if (atCrs) {
         atCrs = atCrs.crs;
@@ -156,51 +160,63 @@ function getTime(timeVal) {
 }
 
 function lookupLocalFrom() {
-    navigator.geolocation.getCurrentPosition(function (position) {
-        webApi.getStationByLocation(position.coords.latitude, position.coords.longitude).done(function (stations : IStationTiploc[]) {
-            fromLocal.removeAll();
-            if (stations && stations.length > 0) {
-                for (var i = 0; i < stations.length; i++) {
-                    fromLocal.push(stations[i].StationName);
-                    locations.push({
-                        value: stations[i].StationName,
-                        crs: stations[i].CRS
-                    });
+    navigator.geolocation.getCurrentPosition(
+        function (position) {
+            webApi.getStationByLocation(position.coords.latitude, position.coords.longitude).done(function (stations: IStationTiploc[]) {
+                fromLocal.removeAll();
+                if (stations && stations.length > 0) {
+                    for (var i = 0; i < stations.length; i++) {
+                        fromLocal.push(stations[i].StationName);
+                        locations.push({
+                            value: stations[i].StationName,
+                            crs: stations[i].CRS
+                        });
+                    }
                 }
-            }
+            });
+        },
+        function (err) {
+            alert("Could not determine current location: " + err.message);
         });
-    });
 }
 
 function lookupLocalTo() {
-    navigator.geolocation.getCurrentPosition(function (position) {
-        webApi.getStationByLocation(position.coords.latitude, position.coords.longitude).done(function (stations: IStationTiploc[]) {
-            toLocal.removeAll();
-            if (stations && stations.length > 0) {
-                for (var i = 0; i < stations.length; i++) {
-                    toLocal.push(stations[i].StationName);
-                    locations.push({
-                        value: stations[i].StationName,
-                        crs: stations[i].CRS
-                    });
+    navigator.geolocation.getCurrentPosition(
+        function (position) {
+            webApi.getStationByLocation(position.coords.latitude, position.coords.longitude).done(function (stations: IStationTiploc[]) {
+                toLocal.removeAll();
+                if (stations && stations.length > 0) {
+                    for (var i = 0; i < stations.length; i++) {
+                        toLocal.push(stations[i].StationName);
+                        locations.push({
+                            value: stations[i].StationName,
+                            crs: stations[i].CRS
+                        });
+                    }
                 }
-            }
+            });
+        },
+        function (err) {
+            alert("Could not determine current location: " + err.message);
         });
-    });
 }
 function lookupLocalAt() {
-    navigator.geolocation.getCurrentPosition(function (position) {
-        webApi.getStationByLocation(position.coords.latitude, position.coords.longitude).done(function (stations: IStationTiploc[]) {
-            atLocal.removeAll();
-            if (stations && stations.length > 0) {
-                for (var i = 0; i < stations.length; i++) {
-                    atLocal.push(stations[i].StationName);
-                    locations.push({
-                        value: stations[i].StationName,
-                        crs: stations[i].CRS
-                    });
+    navigator.geolocation.getCurrentPosition(
+        function (position) {
+            webApi.getStationByLocation(position.coords.latitude, position.coords.longitude).done(function (stations: IStationTiploc[]) {
+                atLocal.removeAll();
+                if (stations && stations.length > 0) {
+                    for (var i = 0; i < stations.length; i++) {
+                        atLocal.push(stations[i].StationName);
+                        locations.push({
+                            value: stations[i].StationName,
+                            crs: stations[i].CRS
+                        });
+                    }
                 }
-            }
+            });
+        },
+        function (err) {
+            alert("Could not determine current location: " + err.message);
         });
-    });
 }
