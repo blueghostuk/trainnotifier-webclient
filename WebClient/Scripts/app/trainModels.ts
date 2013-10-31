@@ -691,7 +691,7 @@ module TrainNotifier.KnockoutModels.Train {
         public to = ko.observable<string>();
         public start = ko.observable<string>();
         public end = ko.observable<string>();
-        public fullTitle: KnockoutComputed<string>;
+        public fullTitle: KnockoutSubscribable<string>;
 
         constructor() {
             var self = this;
