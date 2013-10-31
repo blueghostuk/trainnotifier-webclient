@@ -510,18 +510,42 @@ function setTitle(start) {
     if (currentStanox) {
         var from = currentStanox.Description.toLowerCase();
         title += from;
-        titleModel.From(from);
+        titleModel.from(from);
+        switch (currentMode) {
+            case TrainNotifier.Search.SearchMode.callingAt:
+                titleModel.link("search/at/" + currentStanox.CRS);
+                titleModel.title("Use this as a permanent link for trains calling at this location around the current time");
+                break;
+
+            case TrainNotifier.Search.SearchMode.origin:
+                titleModel.link("search/from/" + currentStanox.CRS);
+                titleModel.title("Use this as a permanent link for trains starting from this location around the current time");
+                break;
+        }
     } else {
-        titleModel.From(null);
+        titleModel.from(null);
+        titleModel.link(null);
+        titleModel.title(null);
     }
     if (currentToStanox) {
         var to = currentToStanox.Description.toLowerCase();
         if (currentStanox) {
             title += " to ";
-            titleModel.To(to);
+            titleModel.to(to);
         } else {
-            titleModel.From(to);
-            titleModel.To(null);
+            titleModel.from(to);
+            titleModel.to(null);
+        }
+        switch (currentMode) {
+            case TrainNotifier.Search.SearchMode.between:
+                titleModel.link("search/from/" + currentStanox.CRS + "/to/" + currentToStanox.CRS);
+                titleModel.title("Use this as a permanent link for trains calling at this location around the current time");
+                break;
+
+            case TrainNotifier.Search.SearchMode.terminate:
+                titleModel.link("search/to/" + currentToStanox.CRS);
+                titleModel.title("Use this as a permanent link for trains terminating at this location around the current time");
+                break;
         }
         title += currentToStanox.Description.toLowerCase();
     }

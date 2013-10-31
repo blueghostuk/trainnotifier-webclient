@@ -11,16 +11,13 @@ var TrainNotifier;
     /// <reference path="global.ts" />
     /// <reference path="webApi.ts" />
     (function (Search) {
-        var SearchMode = (function () {
-            function SearchMode() {
-            }
-            SearchMode.terminate = 1;
-            SearchMode.origin = 2;
-            SearchMode.callingAt = 3;
-            SearchMode.between = 4;
-            return SearchMode;
-        })();
-        Search.SearchMode = SearchMode;
+        (function (SearchMode) {
+            SearchMode[SearchMode["terminate"] = 1] = "terminate";
+            SearchMode[SearchMode["origin"] = 2] = "origin";
+            SearchMode[SearchMode["callingAt"] = 3] = "callingAt";
+            SearchMode[SearchMode["between"] = 4] = "between";
+        })(Search.SearchMode || (Search.SearchMode = {}));
+        var SearchMode = Search.SearchMode;
     })(TrainNotifier.Search || (TrainNotifier.Search = {}));
     var Search = TrainNotifier.Search;
 })(TrainNotifier || (TrainNotifier = {}));
@@ -31,8 +28,10 @@ var TrainNotifier;
         (function (Search) {
             var TitleViewModel = (function () {
                 function TitleViewModel() {
-                    this.From = ko.observable();
-                    this.To = ko.observable();
+                    this.from = ko.observable();
+                    this.link = ko.observable();
+                    this.title = ko.observable();
+                    this.to = ko.observable();
                     this.DateRange = ko.observable();
                     this.Text = ko.observable();
                 }

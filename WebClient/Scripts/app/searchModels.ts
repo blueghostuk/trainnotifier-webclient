@@ -5,19 +5,21 @@
 
 module TrainNotifier.Search {
 
-    export class SearchMode {
-        public static terminate = 1;
-        public static origin = 2;
-        public static callingAt = 3;
-        public static between = 4;
+    export enum SearchMode {
+        terminate = 1,
+        origin = 2,
+        callingAt = 3,
+        between = 4
     }
 }
 
 module TrainNotifier.KnockoutModels.Search {
 
     export class TitleViewModel {
-        public From = ko.observable<string>();
-        public To = ko.observable<string>();
+        public from = ko.observable<string>();
+        public link = ko.observable<string>();
+        public title = ko.observable<string>();
+        public to = ko.observable<string>();
         public DateRange = ko.observable<string>();
         public Text = ko.observable<string>();
 

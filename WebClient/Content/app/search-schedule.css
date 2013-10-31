@@ -25,6 +25,9 @@ div#title {
         font-weight: bold;
         font-size: x-large;
     }
+    div#title a {
+        color: #666;
+    }
 
 .starts, .terminates {
     font-weight: normal !important;

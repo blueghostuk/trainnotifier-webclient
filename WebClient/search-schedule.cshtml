@@ -58,8 +58,8 @@
         <div class="progress progress-striped active">
             <div class="progress-bar" role="progressbar" style="width: 100%"></div>
         </div>
-        <div class="row" id="title" data-bind="visible: From">
-            <span data-bind="text: From" class="stationName xl"></span><span data-bind="visible: To">&nbsp;to&nbsp;</span><span data-bind="text: To" class="stationName xl"></span>
+        <div class="row" id="title" data-bind="visible: from">
+            <a data-bind="attr: { href: link, title: title }"><span data-bind="text: from" class="stationName xl"></span><span data-bind="visible: to">&nbsp;to&nbsp;</span><span data-bind="text: to" class="stationName xl"></span></a>
             <br />
             <span data-bind="text: DateRange"></span>
             <hr style="margin: 5px 0px;" />
