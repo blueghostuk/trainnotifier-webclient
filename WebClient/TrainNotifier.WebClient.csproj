@@ -151,6 +151,9 @@
       <DependentUpon>routeModels.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="Scripts\app\tocs.ts" />
+    <Content Include="Scripts\app\tocs.js">
+      <DependentUpon>tocs.ts</DependentUpon>
+    </Content>
     <TypeScriptCompile Include="Scripts\app\websockets.ts" />
     <TypeScriptCompile Include="Scripts\app\train.ts" />
     <TypeScriptCompile Include="Scripts\app\ppm.ts" />
