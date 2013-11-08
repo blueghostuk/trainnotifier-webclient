@@ -70,6 +70,13 @@
                 <input type="text" class="form-control" placeholder="Time as HH:mm (default to around now)" id="time-picker" />
             </div>
             <br />
+            <div class="input-group input-group-sm" style="width:100%;">
+                <span class="input-group-addon">Operator:&nbsp;<span class="glyphicon glyphicon-transfer"></span></span>
+                <select class="form-control" id="tocs" data-bind="foreach: $data">
+                    <option data-bind="text: name, attr: { value: code }"></option>
+                </select>
+            </div>
+            <br />
             <p>
                 <button type="submit" class="btn btn-primary">Search</button>
                 <button type="submit" id="nearest" class="btn btn-info">Find Nearest Train</button>
@@ -85,6 +92,7 @@
             <li>Calling From: a location, To: a location (Direct Services Only)</li>
             <li>To: a location (terminate at location)</li>
             <li>At: a location (call at location en route)</li>
+            <li>By: A Specific Operator or Freight only</li>
         </ul>
         Find Nearest Train:
         <ul>

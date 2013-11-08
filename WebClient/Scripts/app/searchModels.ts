@@ -52,7 +52,7 @@ module TrainNotifier.KnockoutModels.Search {
         public toStation: string = "";
         public toStationCss: string = null;
 
-        public computedCss: KnockoutComputed<string>;
+        public computedCss: string;
 
         public category = ko.observable<string>("cat-na");
 
@@ -130,26 +130,27 @@ module TrainNotifier.KnockoutModels.Search {
                 }
             }
 
-            this.computedCss = ko.computed(function () {
-                var css = [];
-                if (self.cancel()) {
-                    css.push("cancel");
-                }
-                if (self.changeOfOrigin()) {
-                    css.push("info");
-                }
-                if (self.reinstate()) {
-                    css.push("reinstatement");
-                }
-                if (self.operatorCode) {
-                    css.push("toc-" + self.operatorCode);
-                }
-                if (self.category()) {
-                    css.push("cat-" + self.category());
-                }
+            var css = [];
+            if (this.cancel()) {
+                css.push("cancel");
+            }
+            if (this.changeOfOrigin()) {
+                css.push("info");
+            }
+            if (this.reinstate()) {
+                css.push("reinstatement");
+            }
+            if (this.operatorCode) {
+                css.push("toc-" + self.operatorCode);
+            }
+            if (this.category()) {
+                css.push("cat-" + self.category());
+            }
+            if (!trainMovement.Actual || !trainMovement.Actual.Activated) {
+                css.push("unactivated");
+            }
 
-                return css.join(" ");
-            });
+            this.computedCss = css.join(" ");
         }
 
         public static matchesTiploc(stanoxCode: string, tiplocs: IStationTiploc[]) {
@@ -368,30 +369,31 @@ module TrainNotifier.KnockoutModels.Search {
                 }
             }
 
-            var self = this;
-            this.computedCss = ko.computed(function () {
-                var css = [];
-                if (self.pass()) {
-                    css.push("passing")
-                }
-                if (self.cancel()) {
-                    css.push("cancel");
-                }
-                if (self.changeOfOrigin()) {
-                    css.push("info");
-                }
-                if (self.reinstate()) {
-                    css.push("reinstatement");
-                }
-                if (self.operatorCode) {
-                    css.push("toc-" + self.operatorCode);
-                }
-                if (self.category()) {
-                    css.push("cat-" + self.category());
-                }
 
-                return css.join(" ");
-            });
+            var css = [];
+            if (this.pass()) {
+                css.push("passing")
+                }
+            if (this.cancel()) {
+                css.push("cancel");
+            }
+            if (this.changeOfOrigin()) {
+                css.push("info");
+            }
+            if (this.reinstate()) {
+                css.push("reinstatement");
+            }
+            if (this.operatorCode) {
+                css.push("toc-" + this.operatorCode);
+            }
+            if (this.category()) {
+                css.push("cat-" + this.category());
+            }
+            if (!trainMovement.Actual || !trainMovement.Actual.Activated) {
+                css.push("unactivated");
+            }
+
+            this.computedCss = css.join(" ");
         }
     }
 
@@ -506,30 +508,31 @@ module TrainNotifier.KnockoutModels.Search {
                 }
             }
 
-            var self = this;
-            this.computedCss = ko.computed(function () {
-                var css = [];
-                if (self.cancel()) {
-                    css.push("cancel");
-                }
-                if (self.changeOfOrigin()) {
-                    css.push("info");
-                }
-                if (self.reinstate()) {
-                    css.push("reinstatement");
-                }
-                if (self.operatorCode) {
-                    css.push("toc-" + self.operatorCode);
-                }
-                if (self.category()) {
-                    css.push("cat-" + self.category());
-                }
-                if (self.passArrival || self.passDeparture) {
-                    css.push("passing");
-                }
 
-                return css.join(" ");
-            });
+            var css = [];
+            if (this.cancel()) {
+                css.push("cancel");
+            }
+            if (this.changeOfOrigin()) {
+                css.push("info");
+            }
+            if (this.reinstate()) {
+                css.push("reinstatement");
+            }
+            if (this.operatorCode) {
+                css.push("toc-" + this.operatorCode);
+            }
+            if (this.category()) {
+                css.push("cat-" + this.category());
+            }
+            if (this.passArrival || this.passDeparture) {
+                css.push("passing");
+            }
+            if (!trainMovement.Actual || !trainMovement.Actual.Activated) {
+                css.push("unactivated");
+            }
+
+            this.computedCss = css.join(" ");
         }
     }
 

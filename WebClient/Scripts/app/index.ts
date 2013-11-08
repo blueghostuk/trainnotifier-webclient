@@ -1,10 +1,11 @@
+/// <reference path="tocs.ts" />
 /// <reference path="global.ts" />
+/// <reference path="webApi.ts" />
 /// <reference path="../typings/bootstrap.datepicker/bootstrap.datepicker.d.ts" />
 /// <reference path="../typings/moment/moment.d.ts" />
 /// <reference path="../typings/bootstrap/bootstrap.d.ts" />
 /// <reference path="../typings/knockout/knockout.d.ts" />
 /// <reference path="../typings/jquery/jquery.d.ts" />
-/// <reference path="webApi.ts" />
 
 var fromLocal = ko.observableArray();
 var toLocal = ko.observableArray();
@@ -48,6 +49,8 @@ $(function () {
     ko.applyBindings(toLocal, $("#to-local").get(0));
     ko.applyBindings(atLocal, $("#at-local").get(0));
 
+    ko.applyBindings(tocs, $("#tocs").get(0));
+
     webApi.getStations().done(function (results: IStationTiploc[]) {
         for (var i = 0; i < results.length; i++) {
             locations.push({
@@ -76,6 +79,13 @@ function findStation(value: string): IStationLookup {
 }
 
 function showLocation() {
+    var toc = "";
+    var tocVal: string = $("#tocs").val();
+    if (tocVal && tocVal.length > 0) {
+        tocVal = "?toc=" + tocVal;
+    }
+
+
     var fromStation: string = $("#from-crs").val();
     var fromCrs: any = findStation(fromStation);
     if (fromCrs) {
@@ -123,14 +133,14 @@ function showLocation() {
 
     if (fromCrs) {
         if (toCrs) {
-            document.location.href = "search/from/" + fromCrs.toUpperCase() + "/to/" + toCrs.toUpperCase() + date + time;
+            document.location.href = "search/from/" + fromCrs.toUpperCase() + "/to/" + toCrs.toUpperCase() + date + time + tocVal;
         } else {
-            document.location.href = "search/from/" + fromCrs.toUpperCase() + date + time;
+            document.location.href = "search/from/" + fromCrs.toUpperCase() + date + time + tocVal;
         }
     } else if (toCrs) {
-        document.location.href = "search/to/" + toCrs.toUpperCase() + date + time;
+        document.location.href = "search/to/" + toCrs.toUpperCase() + date + time + tocVal;
     } else if (atCrs) {
-        document.location.href = "search/at/" + atCrs.toUpperCase() + date + time;
+        document.location.href = "search/at/" + atCrs.toUpperCase() + date + time + tocVal;
     }
 
     return false;

@@ -128,26 +128,27 @@ var TrainNotifier;
                         }
                     }
 
-                    this.computedCss = ko.computed(function () {
-                        var css = [];
-                        if (self.cancel()) {
-                            css.push("cancel");
-                        }
-                        if (self.changeOfOrigin()) {
-                            css.push("info");
-                        }
-                        if (self.reinstate()) {
-                            css.push("reinstatement");
-                        }
-                        if (self.operatorCode) {
-                            css.push("toc-" + self.operatorCode);
-                        }
-                        if (self.category()) {
-                            css.push("cat-" + self.category());
-                        }
+                    var css = [];
+                    if (this.cancel()) {
+                        css.push("cancel");
+                    }
+                    if (this.changeOfOrigin()) {
+                        css.push("info");
+                    }
+                    if (this.reinstate()) {
+                        css.push("reinstatement");
+                    }
+                    if (this.operatorCode) {
+                        css.push("toc-" + self.operatorCode);
+                    }
+                    if (this.category()) {
+                        css.push("cat-" + self.category());
+                    }
+                    if (!trainMovement.Actual || !trainMovement.Actual.Activated) {
+                        css.push("unactivated");
+                    }
 
-                        return css.join(" ");
-                    });
+                    this.computedCss = css.join(" ");
                 }
                 TrainMovement.matchesTiploc = function (stanoxCode, tiplocs) {
                     return tiplocs.some(function (at) {
@@ -357,30 +358,30 @@ var TrainNotifier;
                         }
                     }
 
-                    var self = this;
-                    this.computedCss = ko.computed(function () {
-                        var css = [];
-                        if (self.pass()) {
-                            css.push("passing");
-                        }
-                        if (self.cancel()) {
-                            css.push("cancel");
-                        }
-                        if (self.changeOfOrigin()) {
-                            css.push("info");
-                        }
-                        if (self.reinstate()) {
-                            css.push("reinstatement");
-                        }
-                        if (self.operatorCode) {
-                            css.push("toc-" + self.operatorCode);
-                        }
-                        if (self.category()) {
-                            css.push("cat-" + self.category());
-                        }
+                    var css = [];
+                    if (this.pass()) {
+                        css.push("passing");
+                    }
+                    if (this.cancel()) {
+                        css.push("cancel");
+                    }
+                    if (this.changeOfOrigin()) {
+                        css.push("info");
+                    }
+                    if (this.reinstate()) {
+                        css.push("reinstatement");
+                    }
+                    if (this.operatorCode) {
+                        css.push("toc-" + this.operatorCode);
+                    }
+                    if (this.category()) {
+                        css.push("cat-" + this.category());
+                    }
+                    if (!trainMovement.Actual || !trainMovement.Actual.Activated) {
+                        css.push("unactivated");
+                    }
 
-                        return css.join(" ");
-                    });
+                    this.computedCss = css.join(" ");
                 }
                 return CallingAtTrainMovement;
             })(TrainMovement);
@@ -494,30 +495,30 @@ var TrainNotifier;
                         }
                     }
 
-                    var self = this;
-                    this.computedCss = ko.computed(function () {
-                        var css = [];
-                        if (self.cancel()) {
-                            css.push("cancel");
-                        }
-                        if (self.changeOfOrigin()) {
-                            css.push("info");
-                        }
-                        if (self.reinstate()) {
-                            css.push("reinstatement");
-                        }
-                        if (self.operatorCode) {
-                            css.push("toc-" + self.operatorCode);
-                        }
-                        if (self.category()) {
-                            css.push("cat-" + self.category());
-                        }
-                        if (self.passArrival || self.passDeparture) {
-                            css.push("passing");
-                        }
+                    var css = [];
+                    if (this.cancel()) {
+                        css.push("cancel");
+                    }
+                    if (this.changeOfOrigin()) {
+                        css.push("info");
+                    }
+                    if (this.reinstate()) {
+                        css.push("reinstatement");
+                    }
+                    if (this.operatorCode) {
+                        css.push("toc-" + this.operatorCode);
+                    }
+                    if (this.category()) {
+                        css.push("cat-" + this.category());
+                    }
+                    if (this.passArrival || this.passDeparture) {
+                        css.push("passing");
+                    }
+                    if (!trainMovement.Actual || !trainMovement.Actual.Activated) {
+                        css.push("unactivated");
+                    }
 
-                        return css.join(" ");
-                    });
+                    this.computedCss = css.join(" ");
                 }
                 return CallingBetweenTrainMovement;
             })(TrainMovement);

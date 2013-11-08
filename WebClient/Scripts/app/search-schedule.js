@@ -86,8 +86,25 @@ var thisPage = {
 
 TrainNotifier.Common.page = thisPage;
 var webApi;
+var toc;
 
 $(function () {
+    // based on http://stackoverflow.com/a/2880929
+    (window.onpopstate = function () {
+        var match, pl = /\+/g, search = /([^&=]+)=?([^&]*)/g, decode = function (s) {
+            return decodeURIComponent(s.replace(pl, " "));
+        }, query = window.location.hash.substring(1);
+
+        while (match = search.exec(query)) {
+            if (match[2].length > 0) {
+                toc = match[2];
+                if (toc == "ZZ") {
+                    thisPage.advancedMode = true;
+                    thisPage.advancedSwitch(false);
+                }
+            }
+        }
+    })();
     $("#advancedSwitch").click(function (e) {
         e.preventDefault();
         thisPage.advancedSwitch();
@@ -302,9 +319,9 @@ function getDestinationByStanox(to, startDate, endDate) {
     var startDateQuery = currentStartDate.format(TrainNotifier.DateTimeFormats.dateTimeApiFormat);
     var endDateQuery = currentEndDate.format(TrainNotifier.DateTimeFormats.dateTimeApiFormat);
     if (currentToStanox.CRS && currentToStanox.CRS.length == 3) {
-        query = webApi.getTrainMovementsTerminatingAtStation(currentToStanox.CRS, startDateQuery, endDateQuery);
+        query = webApi.getTrainMovementsTerminatingAtStation(currentToStanox.CRS, startDateQuery, endDateQuery, toc);
     } else {
-        query = webApi.getTrainMovementsTerminatingAtLocation(currentToStanox.Stanox, startDateQuery, endDateQuery);
+        query = webApi.getTrainMovementsTerminatingAtLocation(currentToStanox.Stanox, startDateQuery, endDateQuery, toc);
     }
 
     query.done(function (data) {
@@ -343,9 +360,9 @@ function getOriginByStanox(from, startDate, endDate) {
     var startDateQuery = currentStartDate.format(TrainNotifier.DateTimeFormats.dateTimeApiFormat);
     var endDateQuery = currentEndDate.format(TrainNotifier.DateTimeFormats.dateTimeApiFormat);
     if (currentStanox.CRS && currentStanox.CRS.length == 3) {
-        query = webApi.getTrainMovementsStartingAtStation(currentStanox.CRS, startDateQuery, endDateQuery);
+        query = webApi.getTrainMovementsStartingAtStation(currentStanox.CRS, startDateQuery, endDateQuery, toc);
     } else {
-        query = webApi.getTrainMovementsStartingAtLocation(currentStanox.Stanox, startDateQuery, endDateQuery);
+        query = webApi.getTrainMovementsStartingAtLocation(currentStanox.Stanox, startDateQuery, endDateQuery, toc);
     }
     query.done(function (data) {
         if (data && data.Movements.length > 0) {
@@ -383,9 +400,9 @@ function getCallingAtStanox(at, startDate, endDate) {
     var startDateQuery = currentStartDate.format(TrainNotifier.DateTimeFormats.dateTimeApiFormat);
     var endDateQuery = currentEndDate.format(TrainNotifier.DateTimeFormats.dateTimeApiFormat);
     if (currentStanox.CRS && currentStanox.CRS.length == 3) {
-        query = webApi.getTrainMovementsCallingAtStation(currentStanox.CRS, startDateQuery, endDateQuery);
+        query = webApi.getTrainMovementsCallingAtStation(currentStanox.CRS, startDateQuery, endDateQuery, toc);
     } else {
-        query = webApi.getTrainMovementsCallingAtLocation(currentStanox.Stanox, startDateQuery, endDateQuery);
+        query = webApi.getTrainMovementsCallingAtLocation(currentStanox.Stanox, startDateQuery, endDateQuery, toc);
     }
 
     query.done(function (data) {
@@ -430,9 +447,9 @@ function getCallingBetweenByStanox(from, to, startDate, endDate) {
     var startDateQuery = currentStartDate.format(TrainNotifier.DateTimeFormats.dateTimeApiFormat);
     var endDateQuery = currentEndDate.format(TrainNotifier.DateTimeFormats.dateTimeApiFormat);
     if (currentStanox.CRS && currentStanox.CRS.length == 3 && currentToStanox.CRS && currentToStanox.CRS.length == 3) {
-        query = webApi.getTrainMovementsBetweenStations(currentStanox.CRS, currentToStanox.CRS, startDateQuery, endDateQuery);
+        query = webApi.getTrainMovementsBetweenStations(currentStanox.CRS, currentToStanox.CRS, startDateQuery, endDateQuery, toc);
     } else {
-        query = webApi.getTrainMovementsBetweenLocations(currentStanox.Stanox, currentToStanox.Stanox, startDateQuery, endDateQuery);
+        query = webApi.getTrainMovementsBetweenLocations(currentStanox.Stanox, currentToStanox.Stanox, startDateQuery, endDateQuery, toc);
     }
 
     query.done(function (data) {

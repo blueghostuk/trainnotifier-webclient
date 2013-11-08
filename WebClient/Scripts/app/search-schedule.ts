@@ -87,8 +87,27 @@ var thisPage: IPage = {
 
 TrainNotifier.Common.page = thisPage;
 var webApi: IWebApi;
+var toc: string;
 
 $(function () {
+    // based on http://stackoverflow.com/a/2880929
+    (window.onpopstate = function () {
+        var match,
+            pl = /\+/g,  // Regex for replacing addition symbol with a space
+            search = /([^&=]+)=?([^&]*)/g,
+            decode = function (s) { return decodeURIComponent(s.replace(pl, " ")); },
+            query = window.location.hash.substring(1);
+
+        while (match = search.exec(query)) {
+            if (match[2].length > 0) {
+                toc = match[2];
+                if (toc == "ZZ") {
+                    thisPage.advancedMode = true;
+                    thisPage.advancedSwitch(false);
+                }
+            }
+        }
+    })();
     $("#advancedSwitch").click(function (e) {
         e.preventDefault();
         thisPage.advancedSwitch();
@@ -306,12 +325,14 @@ function getDestinationByStanox(to: IStationTiploc, startDate: Moment, endDate: 
         query = webApi.getTrainMovementsTerminatingAtStation(
             currentToStanox.CRS,
             startDateQuery,
-            endDateQuery);
+            endDateQuery,
+            toc);
     } else {
         query = webApi.getTrainMovementsTerminatingAtLocation(
             currentToStanox.Stanox,
             startDateQuery,
-            endDateQuery);
+            endDateQuery,
+            toc);
     }
 
     query.done(function (data) {
@@ -354,12 +375,14 @@ function getOriginByStanox(from: IStationTiploc, startDate: Moment, endDate: Mom
         query = webApi.getTrainMovementsStartingAtStation(
             currentStanox.CRS,
             startDateQuery,
-            endDateQuery);
+            endDateQuery,
+            toc);
     } else {
         query = webApi.getTrainMovementsStartingAtLocation(
             currentStanox.Stanox,
             startDateQuery,
-            endDateQuery);
+            endDateQuery,
+            toc);
     }
     query.done(function (data: ITrainMovementResults) {
         if (data && data.Movements.length > 0) {
@@ -400,12 +423,14 @@ function getCallingAtStanox(at: IStationTiploc, startDate, endDate) {
         query = webApi.getTrainMovementsCallingAtStation(
             currentStanox.CRS,
             startDateQuery,
-            endDateQuery);
+            endDateQuery,
+            toc);
     } else {
         query = webApi.getTrainMovementsCallingAtLocation(
             currentStanox.Stanox,
             startDateQuery,
-            endDateQuery);
+            endDateQuery,
+            toc);
     }
 
     query.done(function (data: ITrainMovementResults) {
@@ -455,13 +480,15 @@ function getCallingBetweenByStanox(from: IStationTiploc, to: IStationTiploc, sta
             currentStanox.CRS,
             currentToStanox.CRS,
             startDateQuery,
-            endDateQuery);
+            endDateQuery,
+            toc);
     } else {
         query = webApi.getTrainMovementsBetweenLocations(
             currentStanox.Stanox,
             currentToStanox.Stanox,
             startDateQuery,
-            endDateQuery);
+            endDateQuery,
+            toc);
     }
 
     query.done(function (data: ITrainMovementResults) {

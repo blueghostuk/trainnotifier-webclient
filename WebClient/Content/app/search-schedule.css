@@ -25,6 +25,7 @@ div#title {
         font-weight: bold;
         font-size: x-large;
     }
+
     div#title a {
         color: #666;
     }
@@ -66,5 +67,9 @@ div#title {
     margin-left: 40px !important;
     color: green;
     font-size: small;
+    font-style: italic;
+}
+
+.unactivated {
     font-style: italic;
 }
