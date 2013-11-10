@@ -108,4 +108,7 @@ WebClient/bin/bin/*.*
 
 #web deploy files
 *.pubxml
-PublishProfiles/*
+PublishProfiles/*.*
+PublishProfiles/azure-vm.pubxml
+webdeployment/*.*
+WebClient/webdeployment/*.*
