@@ -259,7 +259,7 @@ function showTrain(berth: Berth) {
 var route = routeXCSouth;
 var routeBinding: KnockoutObservableArray<RouteRow> = ko.observableArray();
 
-function switchRoute(routeId: string) {
+function switchRoute(routeId: string, updateSelector: boolean = false) {
     switch (routeId) {
         case "wvh":
             route = routeWvhBhm;
@@ -269,9 +269,14 @@ function switchRoute(routeId: string) {
             break;
         case "xcs":
         default:
+            routeId = "xcs";
             route = routeXCSouth;
             break;
     }
+    if (updateSelector) {
+        $("#route-selector").val(routeId);
+    }
+    document.location.hash = "!" + routeId;
     routeBinding.removeAll();
     for (var i = 0; i < route.length; i++) {
         routeBinding.push(route[i]);
@@ -283,10 +288,19 @@ $(function () {
     ko.applyBindings(routeBinding, $("#route").get(0));
     ko.applyBindings(runningTrains, $("#route-results").get(0));
 
-    switchRoute('');
+    var routeId = "";
+    if (document.location.hash.length > 0) {
+        routeId = document.location.hash.substring(2);
+    }
+
+    switchRoute(routeId, true);
+
+    $("#route-selector").change(function () {
+        switchRoute($(this.options[this.selectedIndex]).data('routeid'));
+    });
 
     updateBerthContents();
     setInterval(function () {
         updateBerthContents();
-    }, 10000);
+    }, 5000);
 });

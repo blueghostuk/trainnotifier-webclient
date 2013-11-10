@@ -24,10 +24,10 @@
 <div class="row">
     <div class="col-md-4 col-xs-12">
         Select Route:
-        <select class="form-control" onchange="switchRoute($(this.options[this.selectedIndex]).data('routeid'));">
-            <option data-routeid="xcs">XCity South</option>
-            <option data-routeid="xcn">XCity North</option>
-            <option data-routeid="wvh">WVH-BHM</option>
+        <select class="form-control" id="route-selector">
+            <option data-routeid="xcs" value="xcs">XCity South</option>
+            <option data-routeid="xcn" value="xcn">XCity North</option>
+            <option data-routeid="wvh" value="wvh">WVH-BHM</option>
         </select>
     </div>
 </div>
@@ -113,6 +113,7 @@
 <div class="row">
     <p class="text-warning">
         <i class="icon-info-sign"></i>&nbsp;The above berths are just my guestimation based on running trains. I plan to map this better at some point.<br />
-        Click on a train to view matched headcodes
+        Click on a train to view matched headcodes<br />
+        <i class="icon-info-sign"></i>&nbsp;Data is updated every 5 seconds
     </p>
 </div>
