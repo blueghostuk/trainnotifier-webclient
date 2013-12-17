@@ -1,8 +1,3 @@
-/// <reference path="webApi.ts" />
-/// <reference path="trainModels.ts" />
-/// <reference path="../typings/knockout/knockout.d.ts" />
-/// <reference path="../typings/jquery/jquery.d.ts" />
-/// <reference path="../typings/moment/moment.d.ts" />
 var Berth = (function () {
     function Berth(area, berth, text) {
         this.area = area;
@@ -201,7 +196,6 @@ function showTrain(berth) {
     $("#no-results-row").hide();
     runningTrains.removeAll();
     if (berth && berth.contents()) {
-        //trainDetails.id(berth.contents())
         webApi.getTrainMovementsByHeadcode(berth.contents(), berth.fulltimestamp.format(TrainNotifier.DateTimeFormats.dateQueryFormat)).done(function (data) {
             if (data && data.Movements.length > 0) {
                 var viewModels = data.Movements.map(function (movement) {

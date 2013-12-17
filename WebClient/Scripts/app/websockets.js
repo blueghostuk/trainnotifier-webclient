@@ -1,5 +1,4 @@
-/// <reference path="global.ts" />
-/// <reference path="webApi.ts" />
+
 var TrainNotifier;
 (function (TrainNotifier) {
     var WebSocketCommands = (function () {

@@ -2,8 +2,8 @@
 class Section {
     public static TsFormat = "HH:mm:ss";
 
-    public text: KnockoutObservable<string> = ko.observable();
-    public timestamp: KnockoutObservable<string> = ko.observable();
+    public text = ko.observable<string>();
+    public timestamp = ko.observable<string>();
 
     constructor(public name: string, public berth: string = null) { }
 

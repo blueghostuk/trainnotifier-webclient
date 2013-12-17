@@ -1,7 +1,4 @@
-﻿/// <reference path="../typings/moment/moment.d.ts" />
-/// <reference path="../typings/jquery/jquery.d.ts" />
-/// <reference path="../typings/bootstrap/bootstrap.d.ts" />
-/// <reference path="webApi.ts" />
+﻿
 function preAjax() {
     show($(".progress"));
     hide($("#error-row"));
@@ -18,10 +15,8 @@ function hide(element) {
     $(element).addClass("hide");
 }
 
-// Module
 var TrainNotifier;
 (function (TrainNotifier) {
-    // Class
     var Common = (function () {
         function Common() {
         }

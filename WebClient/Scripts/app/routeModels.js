@@ -7,11 +7,6 @@ var __extends = this.__extends || function (d, b) {
 var TrainNotifier;
 (function (TrainNotifier) {
     (function (KnockoutModels) {
-        /// <reference path="global.ts" />
-        /// <reference path="../typings/moment/moment.d.ts" />
-        /// <reference path="../typings/knockout/knockout.d.ts" />
-        /// <reference path="webApi.ts" />
-        /// <reference path="searchModels.ts" />
         (function (Routes) {
             var RouteTrainMovement = (function (_super) {
                 __extends(RouteTrainMovement, _super);

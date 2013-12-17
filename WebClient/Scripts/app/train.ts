@@ -8,12 +8,12 @@
 /// <reference path="../typings/jquery/jquery.d.ts" />
 /// <reference path="../typings/moment/moment.d.ts" />
 
-var titleModel = new TrainNotifier.KnockoutModels.Train.TrainTitleViewModel();
+var trainTitleModel = new TrainNotifier.KnockoutModels.Train.TrainTitleViewModel();
 
 var _lastTrainData: ISingleTrainMovementResult;
 
-var scheduleStops: KnockoutObservableArray<TrainNotifier.KnockoutModels.Train.ScheduleStop> = ko.observableArray();
-var liveStops: KnockoutObservableArray<TrainNotifier.KnockoutModels.Train.LiveStopBase> = ko.observableArray();
+var scheduleStops = ko.observableArray<TrainNotifier.KnockoutModels.Train.ScheduleStop>();
+var liveStops = ko.observableArray<TrainNotifier.KnockoutModels.Train.LiveStopBase>();
 var currentTrainDetails = new TrainNotifier.KnockoutModels.Train.TrainDetails();
 
 var currentTiplocs: IStationTiploc[] = [];
@@ -87,7 +87,7 @@ $(function () {
     ko.applyBindings(liveStops, $("#trains").get(0));
     ko.applyBindings(scheduleStops, $("#schedule").get(0));
     ko.applyBindings(scheduleStops, $("#mix").get(0));
-    ko.applyBindings(titleModel, $("#title").get(0));
+    ko.applyBindings(trainTitleModel, $("#title").get(0));
     ko.applyBindings(currentTrainDetails, $("#details").get(0));
 
     if (document.location.hash.length > 0) {
@@ -329,9 +329,9 @@ function getTrainData(trainUid, date, subscribe: boolean) {
         if (data.Movement) {
             if (data.Movement.Schedule) {
                 if (data.Movement.Schedule.Headcode) {
-                    titleModel.id(data.Movement.Schedule.Headcode);
+                    trainTitleModel.id(data.Movement.Schedule.Headcode);
                 } else {
-                    titleModel.id("");
+                    trainTitleModel.id("");
                 }
             }
             if (data.Movement.Schedule && data.Movement.Schedule.Stops.length > 0) {
@@ -343,8 +343,8 @@ function getTrainData(trainUid, date, subscribe: boolean) {
                 if (data.Movement.ChangeOfOrigins.length > 0) {
                     var coo = data.Movement.ChangeOfOrigins[0];
                     var cooTiploc = TrainNotifier.StationTiploc.findStationTiploc(coo.NewOriginStanoxCode, currentTiplocs);
-                    titleModel.from(cooTiploc.Description ? cooTiploc.Description.toLowerCase() : cooTiploc.Tiploc);
-                    titleModel.start(moment(coo.NewDepartureTime).format(TrainNotifier.DateTimeFormats.shortTimeFormat));
+                    trainTitleModel.from(cooTiploc.Description ? cooTiploc.Description.toLowerCase() : cooTiploc.Tiploc);
+                    trainTitleModel.start(moment(coo.NewDepartureTime).format(TrainNotifier.DateTimeFormats.shortTimeFormat));
                     var matchingStops = data.Movement.Schedule.Stops.filter(function (stop) {
                         return stop.TiplocStanoxCode == cooTiploc.Stanox;
                     });
@@ -361,29 +361,29 @@ function getTrainData(trainUid, date, subscribe: boolean) {
                     var start = data.Movement.Schedule.Stops[0];
                     var startTiploc = TrainNotifier.StationTiploc.findStationTiploc(
                         start.TiplocStanoxCode, currentTiplocs);
-                    titleModel.from(startTiploc.Description ? startTiploc.Description.toLowerCase() : startTiploc.Tiploc);
+                    trainTitleModel.from(startTiploc.Description ? startTiploc.Description.toLowerCase() : startTiploc.Tiploc);
                     var departureTs = start.PublicDeparture ? start.PublicDeparture : start.Departure;
-                    titleModel.start(moment(departureTs, TrainNotifier.DateTimeFormats.timeFormat)
+                    trainTitleModel.start(moment(departureTs, TrainNotifier.DateTimeFormats.timeFormat)
                         .format(TrainNotifier.DateTimeFormats.shortTimeFormat));
                 }
                 if (data.Movement.Cancellations.length > 0) {
                     var cancel = data.Movement.Cancellations[0];
                     var cancelAtTiploc = TrainNotifier.StationTiploc.findStationTiploc(cancel.CancelledAtStanoxCode, currentTiplocs);
-                    titleModel.to(cancelAtTiploc.Description ? cancelAtTiploc.Description.toLowerCase() : cancelAtTiploc.Tiploc);
-                    titleModel.end(moment(cancel.CancelledTimestamp).format(TrainNotifier.DateTimeFormats.shortTimeFormat));
+                    trainTitleModel.to(cancelAtTiploc.Description ? cancelAtTiploc.Description.toLowerCase() : cancelAtTiploc.Tiploc);
+                    trainTitleModel.end(moment(cancel.CancelledTimestamp).format(TrainNotifier.DateTimeFormats.shortTimeFormat));
                 } else if (data.Movement.Schedule.Stops.length > 1) {
                     var end = data.Movement.Schedule.Stops[data.Movement.Schedule.Stops.length - 1];
                     var endTiploc = TrainNotifier.StationTiploc.findStationTiploc(
                         end.TiplocStanoxCode, currentTiplocs);
-                    titleModel.to(endTiploc.Description ? endTiploc.Description.toLowerCase() : endTiploc.Tiploc);
+                    trainTitleModel.to(endTiploc.Description ? endTiploc.Description.toLowerCase() : endTiploc.Tiploc);
                     var arrivalTs = end.PublicArrival ? end.PublicArrival : end.Arrival;
-                    titleModel.end(moment(arrivalTs, TrainNotifier.DateTimeFormats.timeFormat).format(TrainNotifier.DateTimeFormats.shortTimeFormat));
+                    trainTitleModel.end(moment(arrivalTs, TrainNotifier.DateTimeFormats.timeFormat).format(TrainNotifier.DateTimeFormats.shortTimeFormat));
                 }
             } else {
-                titleModel.clear(false);
+                trainTitleModel.clear(false);
             }
             if (data.Movement.Actual) {
-                titleModel.id(data.Movement.Actual.HeadCode);
+                trainTitleModel.id(data.Movement.Actual.HeadCode);
                 if (data.Movement.Actual.Stops.length > 0) {
                     var arrivals = data.Movement.Actual.Stops.filter(function (stop: IRunningTrainActualStop) {
                         return stop.EventType === TrainNotifier.EventType.Arrival;

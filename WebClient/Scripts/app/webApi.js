@@ -1,6 +1,4 @@
-﻿/// <reference path="global.ts" />
-/// <reference path="../typings/jquery/jquery.d.ts" />
-/// <reference path="../typings/moment/moment.d.ts" />
+﻿
 var TrainNotifier;
 (function (TrainNotifier) {
     var WebApi = (function () {
@@ -430,86 +428,86 @@ var TrainNotifier;
                 return null;
 
             switch (powerType) {
-                case PowerTypeId.D:
+                case 1 /* D */:
                     return this._d;
 
-                case PowerTypeId.DEM:
+                case 2 /* DEM */:
                     return this._dem;
 
-                case PowerTypeId.DMU:
+                case 3 /* DMU */:
                     return this._dmu;
 
-                case PowerTypeId.E:
+                case 4 /* E */:
                     return this._e;
 
-                case PowerTypeId.ED:
+                case 5 /* ED */:
                     return this._ed;
 
-                case PowerTypeId.EML:
+                case 6 /* EML */:
                     return this._eml;
 
-                case PowerTypeId.EMU:
+                case 7 /* EMU */:
                     return this._emu;
 
-                case PowerTypeId.EPU:
+                case 8 /* EPU */:
                     return this._epu;
 
-                case PowerTypeId.HST:
+                case 9 /* HST */:
                     return this._hst;
 
-                case PowerTypeId.LDS:
+                case 10 /* LDS */:
                     return this._lds;
             }
 
             return null;
         };
         PowerTypeLookup._d = {
-            PowerTypeId: PowerTypeId.D,
+            PowerTypeId: 1 /* D */,
             Code: "D",
             Description: "Diesel Electric Multiple Unit"
         };
         PowerTypeLookup._dem = {
-            PowerTypeId: PowerTypeId.DEM,
+            PowerTypeId: 2 /* DEM */,
             Code: "DEM",
             Description: "Diesel Electric Multiple Unit"
         };
         PowerTypeLookup._dmu = {
-            PowerTypeId: PowerTypeId.DMU,
+            PowerTypeId: 3 /* DMU */,
             Code: "DMU",
             Description: "Diesel Mechanical Multiple Unit"
         };
         PowerTypeLookup._e = {
-            PowerTypeId: PowerTypeId.E,
+            PowerTypeId: 4 /* E */,
             Code: "E",
             Description: "Electric"
         };
         PowerTypeLookup._ed = {
-            PowerTypeId: PowerTypeId.ED,
+            PowerTypeId: 5 /* ED */,
             Code: "ED",
             Description: "Electro-Diesel"
         };
         PowerTypeLookup._eml = {
-            PowerTypeId: PowerTypeId.EML,
+            PowerTypeId: 6 /* EML */,
             Code: "EML",
             Description: "EMU plus D, E, ED locomotive"
         };
         PowerTypeLookup._emu = {
-            PowerTypeId: PowerTypeId.EMU,
+            PowerTypeId: 7 /* EMU */,
             Code: "EMU",
             Description: "Electric Multiple Unit"
         };
         PowerTypeLookup._epu = {
-            PowerTypeId: PowerTypeId.EPU,
+            PowerTypeId: 8 /* EPU */,
             Code: "EPU",
             Description: "Electric Parcels Unit"
         };
         PowerTypeLookup._hst = {
-            PowerTypeId: PowerTypeId.HST,
+            PowerTypeId: 9 /* HST */,
             Code: "HST",
             Description: "High Speed Train"
         };
         PowerTypeLookup._lds = {
-            PowerTypeId: PowerTypeId.LDS,
+            PowerTypeId: 10 /* LDS */,
             Code: "LDS",
             Description: "Diesel Shunting Locomotive"
         };
@@ -582,169 +580,169 @@ var TrainNotifier;
                 return null;
 
             switch (categoryType) {
-                case CategoryTypeId.OL:
+                case 1 /* OL */:
                     return this._ol;
-                case CategoryTypeId.OU:
+                case 2 /* OU */:
                     return this._ou;
-                case CategoryTypeId.OO:
+                case 3 /* OO */:
                     return this._oo;
-                case CategoryTypeId.OS:
+                case 4 /* OS */:
                     return this._os;
-                case CategoryTypeId.OW:
+                case 5 /* OW */:
                     return this._ow;
-                case CategoryTypeId.XC:
+                case 6 /* XC */:
                     return this._xc;
-                case CategoryTypeId.XD:
+                case 7 /* XD */:
                     return this._xd;
-                case CategoryTypeId.XI:
+                case 8 /* XI */:
                     return this._xi;
-                case CategoryTypeId.XR:
+                case 9 /* XR */:
                     return this._xr;
-                case CategoryTypeId.XU:
+                case 10 /* XU */:
                     return this._xu;
-                case CategoryTypeId.XX:
+                case 11 /* XX */:
                     return this._xx;
-                case CategoryTypeId.XZ:
+                case 12 /* XZ */:
                     return this._xz;
-                case CategoryTypeId.BR:
+                case 13 /* BR */:
                     return this._br;
-                case CategoryTypeId.BS:
+                case 14 /* BS */:
                     return this._bs;
-                case CategoryTypeId.EE:
+                case 15 /* EE */:
                     return this._ee;
-                case CategoryTypeId.EL:
+                case 16 /* EL */:
                     return this._el;
-                case CategoryTypeId.ES:
+                case 17 /* ES */:
                     return this._es;
-                case CategoryTypeId.JJ:
+                case 18 /* JJ */:
                     return this._jj;
-                case CategoryTypeId.PM:
+                case 19 /* PM */:
                     return this._pm;
-                case CategoryTypeId.PP:
+                case 20 /* PP */:
                     return this._pp;
-                case CategoryTypeId.PV:
+                case 21 /* PV */:
                     return this._pv;
-                case CategoryTypeId.DD:
+                case 22 /* DD */:
                     return this._dd;
-                case CategoryTypeId.DH:
+                case 23 /* DH */:
                     return this._dh;
-                case CategoryTypeId.DI:
+                case 24 /* DI */:
                     return this._di;
-                case CategoryTypeId.DQ:
+                case 25 /* DQ */:
                     return this._dq;
-                case CategoryTypeId.DT:
+                case 26 /* DT */:
                     return this._dt;
-                case CategoryTypeId.DY:
+                case 27 /* DY */:
                     return this._dy;
-                case CategoryTypeId.ZB:
+                case 28 /* ZB */:
                     return this._zb;
-                case CategoryTypeId.ZZ:
+                case 29 /* ZZ */:
                     return this._zz;
-                case CategoryTypeId.J2:
+                case 30 /* J2 */:
                     return this._j2;
-                case CategoryTypeId.H2:
+                case 31 /* H2 */:
                     return this._h2;
-                case CategoryTypeId.J3:
+                case 32 /* J3 */:
                     return this._j3;
-                case CategoryTypeId.J4:
+                case 33 /* J4 */:
                     return this._j4;
-                case CategoryTypeId.J5:
+                case 34 /* J5 */:
                     return this._j5;
-                case CategoryTypeId.J6:
+                case 35 /* J6 */:
                     return this._j6;
-                case CategoryTypeId.J8:
+                case 36 /* J8 */:
                     return this._j8;
-                case CategoryTypeId.H8:
+                case 37 /* H8 */:
                     return this._h8;
-                case CategoryTypeId.J9:
+                case 38 /* J9 */:
                     return this._j9;
-                case CategoryTypeId.H9:
+                case 39 /* H9 */:
                     return this._h9;
-                case CategoryTypeId.A0:
+                case 40 /* A0 */:
                     return this._a0;
-                case CategoryTypeId.E0:
+                case 41 /* E0 */:
                     return this._e0;
-                case CategoryTypeId.B0:
+                case 42 /* B0 */:
                     return this._b0;
-                case CategoryTypeId.B1:
+                case 43 /* B1 */:
                     return this._b1;
-                case CategoryTypeId.B4:
+                case 44 /* B4 */:
                     return this._b4;
-                case CategoryTypeId.B5:
+                case 45 /* B5 */:
                     return this._b5;
-                case CategoryTypeId.B6:
+                case 46 /* B6 */:
                     return this._b6;
-                case CategoryTypeId.B7:
+                case 47 /* B7 */:
                     return this._b7;
-                case CategoryTypeId.H0:
+                case 48 /* H0 */:
                     return this._h0;
-                case CategoryTypeId.H1:
+                case 49 /* H1 */:
                     return this._h1;
-                case CategoryTypeId.H3:
+                case 50 /* H3 */:
                     return this._h3;
-                case CategoryTypeId.H4:
+                case 51 /* H4 */:
                     return this._h4;
-                case CategoryTypeId.H5:
+                case 52 /* H5 */:
                     return this._h5;
-                case CategoryTypeId.H6:
+                case 53 /* H6 */:
                     return this._h6;
             }
 
             return null;
         };
-        CategoryTypeLookup._ol = { CategoryTypeId: CategoryTypeId.OL, Code: "OL", Description: "London Underground/Metro Service" };
-        CategoryTypeLookup._ou = { CategoryTypeId: CategoryTypeId.OU, Code: "OU", Description: "Unadvertised Ordinary Passenger" };
-        CategoryTypeLookup._oo = { CategoryTypeId: CategoryTypeId.OO, Code: "OO", Description: "Ordinary Passenger" };
-        CategoryTypeLookup._os = { CategoryTypeId: CategoryTypeId.OS, Code: "OS", Description: "Staff Train" };
-        CategoryTypeLookup._ow = { CategoryTypeId: CategoryTypeId.OW, Code: "OW", Description: "Mixed" };
-        CategoryTypeLookup._xc = { CategoryTypeId: CategoryTypeId.XC, Code: "XC", Description: "Channel Tunnel" };
-        CategoryTypeLookup._xd = { CategoryTypeId: CategoryTypeId.XD, Code: "XD", Description: "Sleeper (Europe Night Services)" };
-        CategoryTypeLookup._xi = { CategoryTypeId: CategoryTypeId.XI, Code: "XI", Description: "International" };
-        CategoryTypeLookup._xr = { CategoryTypeId: CategoryTypeId.XR, Code: "XR", Description: "Motorail" };
-        CategoryTypeLookup._xu = { CategoryTypeId: CategoryTypeId.XU, Code: "XU", Description: "Unadvertised Express" };
-        CategoryTypeLookup._xx = { CategoryTypeId: CategoryTypeId.XX, Code: "XX", Description: "Express Passenger" };
-        CategoryTypeLookup._xz = { CategoryTypeId: CategoryTypeId.XZ, Code: "XZ", Description: "Sleeper (Domestic)" };
-        CategoryTypeLookup._br = { CategoryTypeId: CategoryTypeId.BR, Code: "BR", Description: "Bus � Replacement due to engineering work" };
-        CategoryTypeLookup._bs = { CategoryTypeId: CategoryTypeId.BS, Code: "BS", Description: "Bus � WTT Service" };
-        CategoryTypeLookup._ee = { CategoryTypeId: CategoryTypeId.EE, Code: "EE", Description: "Empty Coaching Stock (ECS)" };
-        CategoryTypeLookup._el = { CategoryTypeId: CategoryTypeId.EL, Code: "EL", Description: "ECS, London Underground/Metro Service" };
-        CategoryTypeLookup._es = { CategoryTypeId: CategoryTypeId.ES, Code: "ES", Description: "ECS & Staff" };
-        CategoryTypeLookup._jj = { CategoryTypeId: CategoryTypeId.JJ, Code: "JJ", Description: "Postal" };
-        CategoryTypeLookup._pm = { CategoryTypeId: CategoryTypeId.PM, Code: "PM", Description: "Post Office Controlled Parcels" };
-        CategoryTypeLookup._pp = { CategoryTypeId: CategoryTypeId.PP, Code: "PP", Description: "Parcels" };
-        CategoryTypeLookup._pv = { CategoryTypeId: CategoryTypeId.PV, Code: "PV", Description: "Empty NPCCS" };
-        CategoryTypeLookup._dd = { CategoryTypeId: CategoryTypeId.DD, Code: "DD", Description: "Departmental" };
-        CategoryTypeLookup._dh = { CategoryTypeId: CategoryTypeId.DH, Code: "DH", Description: "Civil Engineer" };
-        CategoryTypeLookup._di = { CategoryTypeId: CategoryTypeId.DI, Code: "DI", Description: "Mechanical & Electrical Engineer" };
-        CategoryTypeLookup._dq = { CategoryTypeId: CategoryTypeId.DQ, Code: "DQ", Description: "Stores" };
-        CategoryTypeLookup._dt = { CategoryTypeId: CategoryTypeId.DT, Code: "DT", Description: "Test" };
-        CategoryTypeLookup._dy = { CategoryTypeId: CategoryTypeId.DY, Code: "DY", Description: "Signal & Telecommunications Engineer" };
-        CategoryTypeLookup._zb = { CategoryTypeId: CategoryTypeId.ZB, Code: "ZB", Description: "Locomotive & Brake Van" };
-        CategoryTypeLookup._zz = { CategoryTypeId: CategoryTypeId.ZZ, Code: "ZZ", Description: "Light Locomotive" };
-        CategoryTypeLookup._j2 = { CategoryTypeId: CategoryTypeId.J2, Code: "J2", Description: "RfD Automotive (Components)" };
-        CategoryTypeLookup._h2 = { CategoryTypeId: CategoryTypeId.H2, Code: "H2", Description: "RfD Automotive (Vehicles)" };
-        CategoryTypeLookup._j3 = { CategoryTypeId: CategoryTypeId.J3, Code: "J3", Description: "RfD Edible Products (UK Contracts)" };
-        CategoryTypeLookup._j4 = { CategoryTypeId: CategoryTypeId.J4, Code: "J4", Description: "RfD Industrial Minerals (UK Contracts)" };
-        CategoryTypeLookup._j5 = { CategoryTypeId: CategoryTypeId.J5, Code: "J5", Description: "RfD Chemicals (UK Contracts)" };
-        CategoryTypeLookup._j6 = { CategoryTypeId: CategoryTypeId.J6, Code: "J6", Description: "RfD Building Materials (UK Contracts)" };
-        CategoryTypeLookup._j8 = { CategoryTypeId: CategoryTypeId.J8, Code: "J8", Description: "RfD General Merchandise (UK Contracts)" };
-        CategoryTypeLookup._h8 = { CategoryTypeId: CategoryTypeId.H8, Code: "H8", Description: "RfD European" };
-        CategoryTypeLookup._j9 = { CategoryTypeId: CategoryTypeId.J9, Code: "J9", Description: "RfD Freightliner (Contracts)" };
-        CategoryTypeLookup._h9 = { CategoryTypeId: CategoryTypeId.H9, Code: "H9", Description: "RfD Freightliner (Other)" };
-        CategoryTypeLookup._a0 = { CategoryTypeId: CategoryTypeId.A0, Code: "A0", Description: "Coal (Distributive)" };
-        CategoryTypeLookup._e0 = { CategoryTypeId: CategoryTypeId.E0, Code: "E0", Description: "Coal (Electricity) MGR" };
-        CategoryTypeLookup._b0 = { CategoryTypeId: CategoryTypeId.B0, Code: "B0", Description: "Coal (Other) and Nuclear" };
-        CategoryTypeLookup._b1 = { CategoryTypeId: CategoryTypeId.B1, Code: "B1", Description: "Metals" };
-        CategoryTypeLookup._b4 = { CategoryTypeId: CategoryTypeId.B4, Code: "B4", Description: "Aggregates" };
-        CategoryTypeLookup._b5 = { CategoryTypeId: CategoryTypeId.B5, Code: "B5", Description: "Domestic and Industrial Waste" };
-        CategoryTypeLookup._b6 = { CategoryTypeId: CategoryTypeId.B6, Code: "B6", Description: "Building Materials (TLF)" };
-        CategoryTypeLookup._b7 = { CategoryTypeId: CategoryTypeId.B7, Code: "B7", Description: "Petroleum Products" };
-        CategoryTypeLookup._h0 = { CategoryTypeId: CategoryTypeId.H0, Code: "H0", Description: "RfD European Channel Tunnel (Mixed Business)" };
-        CategoryTypeLookup._h1 = { CategoryTypeId: CategoryTypeId.H1, Code: "H1", Description: "RfD European Channel Tunnel Intermodal" };
-        CategoryTypeLookup._h3 = { CategoryTypeId: CategoryTypeId.H3, Code: "H3", Description: "RfD European Channel Tunnel Automotive" };
-        CategoryTypeLookup._h4 = { CategoryTypeId: CategoryTypeId.H4, Code: "H4", Description: "RfD European Channel Tunnel Contract Services" };
-        CategoryTypeLookup._h5 = { CategoryTypeId: CategoryTypeId.H5, Code: "H5", Description: "RfD European Channel Tunnel Haulmark" };
-        CategoryTypeLookup._h6 = { CategoryTypeId: CategoryTypeId.H6, Code: "H6", Description: "RfD European Channel Tunnel Joint Venture" };
+        CategoryTypeLookup._ol = { CategoryTypeId: 1 /* OL */, Code: "OL", Description: "London Underground/Metro Service" };
+        CategoryTypeLookup._ou = { CategoryTypeId: 2 /* OU */, Code: "OU", Description: "Unadvertised Ordinary Passenger" };
+        CategoryTypeLookup._oo = { CategoryTypeId: 3 /* OO */, Code: "OO", Description: "Ordinary Passenger" };
+        CategoryTypeLookup._os = { CategoryTypeId: 4 /* OS */, Code: "OS", Description: "Staff Train" };
+        CategoryTypeLookup._ow = { CategoryTypeId: 5 /* OW */, Code: "OW", Description: "Mixed" };
+        CategoryTypeLookup._xc = { CategoryTypeId: 6 /* XC */, Code: "XC", Description: "Channel Tunnel" };
+        CategoryTypeLookup._xd = { CategoryTypeId: 7 /* XD */, Code: "XD", Description: "Sleeper (Europe Night Services)" };
+        CategoryTypeLookup._xi = { CategoryTypeId: 8 /* XI */, Code: "XI", Description: "International" };
+        CategoryTypeLookup._xr = { CategoryTypeId: 9 /* XR */, Code: "XR", Description: "Motorail" };
+        CategoryTypeLookup._xu = { CategoryTypeId: 10 /* XU */, Code: "XU", Description: "Unadvertised Express" };
+        CategoryTypeLookup._xx = { CategoryTypeId: 11 /* XX */, Code: "XX", Description: "Express Passenger" };
+        CategoryTypeLookup._xz = { CategoryTypeId: 12 /* XZ */, Code: "XZ", Description: "Sleeper (Domestic)" };
+        CategoryTypeLookup._br = { CategoryTypeId: 13 /* BR */, Code: "BR", Description: "Bus � Replacement due to engineering work" };
+        CategoryTypeLookup._bs = { CategoryTypeId: 14 /* BS */, Code: "BS", Description: "Bus � WTT Service" };
+        CategoryTypeLookup._ee = { CategoryTypeId: 15 /* EE */, Code: "EE", Description: "Empty Coaching Stock (ECS)" };
+        CategoryTypeLookup._el = { CategoryTypeId: 16 /* EL */, Code: "EL", Description: "ECS, London Underground/Metro Service" };
+        CategoryTypeLookup._es = { CategoryTypeId: 17 /* ES */, Code: "ES", Description: "ECS & Staff" };
+        CategoryTypeLookup._jj = { CategoryTypeId: 18 /* JJ */, Code: "JJ", Description: "Postal" };
+        CategoryTypeLookup._pm = { CategoryTypeId: 19 /* PM */, Code: "PM", Description: "Post Office Controlled Parcels" };
+        CategoryTypeLookup._pp = { CategoryTypeId: 20 /* PP */, Code: "PP", Description: "Parcels" };
+        CategoryTypeLookup._pv = { CategoryTypeId: 21 /* PV */, Code: "PV", Description: "Empty NPCCS" };
+        CategoryTypeLookup._dd = { CategoryTypeId: 22 /* DD */, Code: "DD", Description: "Departmental" };
+        CategoryTypeLookup._dh = { CategoryTypeId: 23 /* DH */, Code: "DH", Description: "Civil Engineer" };
+        CategoryTypeLookup._di = { CategoryTypeId: 24 /* DI */, Code: "DI", Description: "Mechanical & Electrical Engineer" };
+        CategoryTypeLookup._dq = { CategoryTypeId: 25 /* DQ */, Code: "DQ", Description: "Stores" };
+        CategoryTypeLookup._dt = { CategoryTypeId: 26 /* DT */, Code: "DT", Description: "Test" };
+        CategoryTypeLookup._dy = { CategoryTypeId: 27 /* DY */, Code: "DY", Description: "Signal & Telecommunications Engineer" };
+        CategoryTypeLookup._zb = { CategoryTypeId: 28 /* ZB */, Code: "ZB", Description: "Locomotive & Brake Van" };
+        CategoryTypeLookup._zz = { CategoryTypeId: 29 /* ZZ */, Code: "ZZ", Description: "Light Locomotive" };
+        CategoryTypeLookup._j2 = { CategoryTypeId: 30 /* J2 */, Code: "J2", Description: "RfD Automotive (Components)" };
+        CategoryTypeLookup._h2 = { CategoryTypeId: 31 /* H2 */, Code: "H2", Description: "RfD Automotive (Vehicles)" };
+        CategoryTypeLookup._j3 = { CategoryTypeId: 32 /* J3 */, Code: "J3", Description: "RfD Edible Products (UK Contracts)" };
+        CategoryTypeLookup._j4 = { CategoryTypeId: 33 /* J4 */, Code: "J4", Description: "RfD Industrial Minerals (UK Contracts)" };
+        CategoryTypeLookup._j5 = { CategoryTypeId: 34 /* J5 */, Code: "J5", Description: "RfD Chemicals (UK Contracts)" };
+        CategoryTypeLookup._j6 = { CategoryTypeId: 35 /* J6 */, Code: "J6", Description: "RfD Building Materials (UK Contracts)" };
+        CategoryTypeLookup._j8 = { CategoryTypeId: 36 /* J8 */, Code: "J8", Description: "RfD General Merchandise (UK Contracts)" };
+        CategoryTypeLookup._h8 = { CategoryTypeId: 37 /* H8 */, Code: "H8", Description: "RfD European" };
+        CategoryTypeLookup._j9 = { CategoryTypeId: 38 /* J9 */, Code: "J9", Description: "RfD Freightliner (Contracts)" };
+        CategoryTypeLookup._h9 = { CategoryTypeId: 39 /* H9 */, Code: "H9", Description: "RfD Freightliner (Other)" };
+        CategoryTypeLookup._a0 = { CategoryTypeId: 40 /* A0 */, Code: "A0", Description: "Coal (Distributive)" };
+        CategoryTypeLookup._e0 = { CategoryTypeId: 41 /* E0 */, Code: "E0", Description: "Coal (Electricity) MGR" };
+        CategoryTypeLookup._b0 = { CategoryTypeId: 42 /* B0 */, Code: "B0", Description: "Coal (Other) and Nuclear" };
+        CategoryTypeLookup._b1 = { CategoryTypeId: 43 /* B1 */, Code: "B1", Description: "Metals" };
+        CategoryTypeLookup._b4 = { CategoryTypeId: 44 /* B4 */, Code: "B4", Description: "Aggregates" };
+        CategoryTypeLookup._b5 = { CategoryTypeId: 45 /* B5 */, Code: "B5", Description: "Domestic and Industrial Waste" };
+        CategoryTypeLookup._b6 = { CategoryTypeId: 46 /* B6 */, Code: "B6", Description: "Building Materials (TLF)" };
+        CategoryTypeLookup._b7 = { CategoryTypeId: 47 /* B7 */, Code: "B7", Description: "Petroleum Products" };
+        CategoryTypeLookup._h0 = { CategoryTypeId: 48 /* H0 */, Code: "H0", Description: "RfD European Channel Tunnel (Mixed Business)" };
+        CategoryTypeLookup._h1 = { CategoryTypeId: 49 /* H1 */, Code: "H1", Description: "RfD European Channel Tunnel Intermodal" };
+        CategoryTypeLookup._h3 = { CategoryTypeId: 50 /* H3 */, Code: "H3", Description: "RfD European Channel Tunnel Automotive" };
+        CategoryTypeLookup._h4 = { CategoryTypeId: 51 /* H4 */, Code: "H4", Description: "RfD European Channel Tunnel Contract Services" };
+        CategoryTypeLookup._h5 = { CategoryTypeId: 52 /* H5 */, Code: "H5", Description: "RfD European Channel Tunnel Haulmark" };
+        CategoryTypeLookup._h6 = { CategoryTypeId: 53 /* H6 */, Code: "H6", Description: "RfD European Channel Tunnel Joint Venture" };
         return CategoryTypeLookup;
     })();
     TrainNotifier.CategoryTypeLookup = CategoryTypeLookup;

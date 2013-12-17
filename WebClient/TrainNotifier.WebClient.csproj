@@ -107,6 +107,7 @@
     <Content Include="Content\app\tocs.css" />
     <Content Include="Content\app\train.css" />
     <Content Include="Content\bootstrap-datepicker.css" />
+    <Content Include="Content\bootstrap-datepicker3.css" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
@@ -208,13 +209,16 @@
     <Content Include="Scripts\locales\bootstrap-datepicker.bg.js" />
     <Content Include="Scripts\locales\bootstrap-datepicker.ca.js" />
     <Content Include="Scripts\locales\bootstrap-datepicker.cs.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.cy.js" />
     <Content Include="Scripts\locales\bootstrap-datepicker.da.js" />
     <Content Include="Scripts\locales\bootstrap-datepicker.de.js" />
     <Content Include="Scripts\locales\bootstrap-datepicker.el.js" />
     <Content Include="Scripts\locales\bootstrap-datepicker.es.js" />
     <Content Include="Scripts\locales\bootstrap-datepicker.et.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.fa.js" />
     <Content Include="Scripts\locales\bootstrap-datepicker.fi.js" />
     <Content Include="Scripts\locales\bootstrap-datepicker.fr.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.gl.js" />
     <Content Include="Scripts\locales\bootstrap-datepicker.he.js" />
     <Content Include="Scripts\locales\bootstrap-datepicker.hr.js" />
     <Content Include="Scripts\locales\bootstrap-datepicker.hu.js" />
@@ -223,12 +227,14 @@
     <Content Include="Scripts\locales\bootstrap-datepicker.it.js" />
     <Content Include="Scripts\locales\bootstrap-datepicker.ja.js" />
     <Content Include="Scripts\locales\bootstrap-datepicker.ka.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.kk.js" />
     <Content Include="Scripts\locales\bootstrap-datepicker.kr.js" />
     <Content Include="Scripts\locales\bootstrap-datepicker.lt.js" />
     <Content Include="Scripts\locales\bootstrap-datepicker.lv.js" />
     <Content Include="Scripts\locales\bootstrap-datepicker.mk.js" />
     <Content Include="Scripts\locales\bootstrap-datepicker.ms.js" />
     <Content Include="Scripts\locales\bootstrap-datepicker.nb.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.nl-BE.js" />
     <Content Include="Scripts\locales\bootstrap-datepicker.nl.js" />
     <Content Include="Scripts\locales\bootstrap-datepicker.no.js" />
     <Content Include="Scripts\locales\bootstrap-datepicker.pl.js" />
@@ -245,7 +251,9 @@
     <Content Include="Scripts\locales\bootstrap-datepicker.sw.js" />
     <Content Include="Scripts\locales\bootstrap-datepicker.th.js" />
     <Content Include="Scripts\locales\bootstrap-datepicker.tr.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.ua.js" />
     <Content Include="Scripts\locales\bootstrap-datepicker.uk.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.vi.js" />
     <Content Include="Scripts\locales\bootstrap-datepicker.zh-CN.js" />
     <Content Include="Scripts\locales\bootstrap-datepicker.zh-TW.js" />
     <Content Include="Scripts\moment-with-langs.js" />
@@ -258,7 +266,6 @@
     <TypeScriptCompile Include="Scripts\typings\bootstrap\bootstrap.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\jquery.cookie\jquery.cookie.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\jquery\jquery.d.ts" />
-    <TypeScriptCompile Include="Scripts\typings\knockout\knockout.amd.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\knockout\knockout.d.ts" />
     <TypeScriptCompile Include="Scripts\typings\leaflet\leaflet.d.ts" />
     <Content Include="Scripts\app\webApi.js">
@@ -410,6 +417,7 @@
     <TypeScriptIncludeComments>false</TypeScriptIncludeComments>
     <TypeScriptSourceMap>false</TypeScriptSourceMap>
     <TypeScriptModuleKind>commonjs</TypeScriptModuleKind>
+    <TypeScriptRemoveComments>True</TypeScriptRemoveComments>
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" />
 </Project>

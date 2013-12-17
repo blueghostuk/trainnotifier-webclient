@@ -7,8 +7,8 @@
 class Berth {
     public static TsFormat = "HH:mm:ss";
 
-    public contents: KnockoutObservable<string> = ko.observable();
-    public timestamp: KnockoutObservable<string> = ko.observable();
+    public contents = ko.observable<string>();
+    public timestamp = ko.observable<string>();
     public text: string = null;
     public label: boolean = false;
     public fulltimestamp: Moment = moment.utc();
@@ -199,7 +199,7 @@ var routeWvhBhm: Array<RouteRow> =
 
 var webApi: IWebApi = new TrainNotifier.WebApi();
 
-var runningTrains: KnockoutObservableArray<TrainNotifier.KnockoutModels.Routes.RouteTrainMovement> = ko.observableArray();
+var runningTrains = ko.observableArray<TrainNotifier.KnockoutModels.Routes.RouteTrainMovement>();
 
 function updateBerthContents() {
     for (var i = 0; i < route.length; i++) {
@@ -257,7 +257,7 @@ function showTrain(berth: Berth) {
 }
 
 var route = routeXCSouth;
-var routeBinding: KnockoutObservableArray<RouteRow> = ko.observableArray();
+var routeBinding = ko.observableArray<RouteRow>();
 
 function switchRoute(routeId: string, updateSelector: boolean = false) {
     switch (routeId) {

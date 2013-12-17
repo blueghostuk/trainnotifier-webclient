@@ -6,12 +6,12 @@
 /// <reference path="webApi.ts" />
 /// <reference path="global.ts" />
 
-var titleModel = new TrainNotifier.KnockoutModels.Search.TitleViewModel();
+var searchTitleModel = new TrainNotifier.KnockoutModels.Search.TitleViewModel();
 
 var startEndSearchResults = ko.observableArray();
 var callingAtSearchResults = ko.observableArray();
 var callingBetweenSearchResults = new TrainNotifier.KnockoutModels.Search.CallingBetweenResults();
-var nearestSearchResults: KnockoutObservableArray<TrainNotifier.KnockoutModels.Search.NearestTrainMovement> = ko.observableArray();
+var nearestSearchResults = ko.observableArray<TrainNotifier.KnockoutModels.Search.NearestTrainMovement>();
 
 var currentStanox: IStationTiploc;
 var currentToStanox: IStationTiploc;
@@ -120,7 +120,7 @@ $(function () {
     webApi = new TrainNotifier.WebApi();
     TrainNotifier.Common.webApi = webApi;
 
-    ko.applyBindings(titleModel, $("#title").get(0));
+    ko.applyBindings(searchTitleModel, $("#title").get(0));
 
     ko.applyBindings(startEndSearchResults, $("#start-end-at-search-results").get(0));
     ko.applyBindings(callingAtSearchResults, $("#calling-at-search-results").get(0));
@@ -566,42 +566,42 @@ function setTitle(start: string) {
     if (currentStanox) {
         var from = currentStanox.Description.toLowerCase();
         title += from;
-        titleModel.from(from);
+        searchTitleModel.from(from);
         switch (currentMode) {
             case TrainNotifier.Search.SearchMode.callingAt:
-                titleModel.link("search/at/" + currentStanox.CRS);
-                titleModel.title("Use this as a permanent link for trains calling at this location around the current time");
+                searchTitleModel.link("search/at/" + currentStanox.CRS);
+                searchTitleModel.title("Use this as a permanent link for trains calling at this location around the current time");
                 break;
 
             case TrainNotifier.Search.SearchMode.origin:
-                titleModel.link("search/from/" + currentStanox.CRS);
-                titleModel.title("Use this as a permanent link for trains starting from this location around the current time");
+                searchTitleModel.link("search/from/" + currentStanox.CRS);
+                searchTitleModel.title("Use this as a permanent link for trains starting from this location around the current time");
                 break;
         }
     } else {
-        titleModel.from(null);
-        titleModel.link(null);
-        titleModel.title(null);
+        searchTitleModel.from(null);
+        searchTitleModel.link(null);
+        searchTitleModel.title(null);
     }
     if (currentToStanox) {
         var to = currentToStanox.Description.toLowerCase();
         if (currentStanox) {
             title += " to ";
-            titleModel.to(to);
+            searchTitleModel.to(to);
         } else {
-            titleModel.from(to);
-            titleModel.to(null);
+            searchTitleModel.from(to);
+            searchTitleModel.to(null);
         }
         switch (currentMode) {
 
             case TrainNotifier.Search.SearchMode.between:
-                titleModel.link("search/from/" + currentStanox.CRS + "/to/" + currentToStanox.CRS);
-                titleModel.title("Use this as a permanent link for trains calling at this location around the current time");
+                searchTitleModel.link("search/from/" + currentStanox.CRS + "/to/" + currentToStanox.CRS);
+                searchTitleModel.title("Use this as a permanent link for trains calling at this location around the current time");
                 break;
 
             case TrainNotifier.Search.SearchMode.terminate:
-                titleModel.link("search/to/" + currentToStanox.CRS);
-                titleModel.title("Use this as a permanent link for trains terminating at this location around the current time");
+                searchTitleModel.link("search/to/" + currentToStanox.CRS);
+                searchTitleModel.title("Use this as a permanent link for trains terminating at this location around the current time");
                 break;
         }
         title += currentToStanox.Description.toLowerCase();
@@ -612,9 +612,9 @@ function setTitle(start: string) {
             + currentStartDate.format(TrainNotifier.DateTimeFormats.shortTimeFormat) + " - "
             + currentEndDate.format(TrainNotifier.DateTimeFormats.shortTimeFormat);
         title += date;
-        titleModel.DateRange(date);
+        searchTitleModel.DateRange(date);
     }
-    titleModel.setTitle(title);
+    searchTitleModel.setTitle(title);
 }
 
 function setTimeLinks() {

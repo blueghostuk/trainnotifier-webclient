@@ -1,9 +1,6 @@
 var TrainNotifier;
 (function (TrainNotifier) {
     (function (KnockoutModels) {
-        /// <reference path="global.ts" />
-        /// <reference path="../typings/knockout/knockout.d.ts" />
-        /// <reference path="../typings/moment/moment.d.ts" />
         (function (PPM) {
             var PPMRecord = (function () {
                 function PPMRecord(stats) {

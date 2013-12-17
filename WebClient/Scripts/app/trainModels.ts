@@ -30,7 +30,7 @@ module TrainNotifier.KnockoutModels.Train {
         public cancel = ko.observable<boolean>(false);
         public stopNumber: number;
 
-        private associateLiveStop: KnockoutObservable<LiveStopBase> = ko.observable();
+        private associateLiveStop = ko.observable<LiveStopBase>();
 
         constructor(scheduleStop: IRunningScheduleTrainStop, tiplocs: IStationTiploc[]) {
             var tiploc = StationTiploc.findStationTiploc(scheduleStop.TiplocStanoxCode, tiplocs);

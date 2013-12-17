@@ -1,9 +1,7 @@
-// Module
+
 var TrainNotifier;
 (function (TrainNotifier) {
-    // Class
     var TrainOperatingCompany = (function () {
-        // Constructor
         function TrainOperatingCompany(code, name) {
             this.code = code;
             this.name = name;

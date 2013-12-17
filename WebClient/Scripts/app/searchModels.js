@@ -6,10 +6,6 @@ var __extends = this.__extends || function (d, b) {
 };
 var TrainNotifier;
 (function (TrainNotifier) {
-    /// <reference path="../typings/moment/moment.d.ts" />
-    /// <reference path="../typings/knockout/knockout.d.ts" />
-    /// <reference path="global.ts" />
-    /// <reference path="webApi.ts" />
     (function (Search) {
         (function (SearchMode) {
             SearchMode[SearchMode["terminate"] = 1] = "terminate";
@@ -45,7 +41,6 @@ var TrainNotifier;
             })();
             Search.TitleViewModel = TitleViewModel;
 
-            // base class
             var TrainMovement = (function () {
                 function TrainMovement(trainMovement, tiplocs, queryStartDate) {
                     this.operatorCode = "NA";
@@ -72,7 +67,6 @@ var TrainNotifier;
                     if (trainMovement.Actual) {
                         this.headCode = trainMovement.Actual.HeadCode;
                     } else {
-                        // if no actual we can only show the uid
                         this.headCode = trainMovement.Schedule.Headcode || trainMovement.Schedule.TrainUid;
                     }
                     if (trainMovement.Actual && trainMovement.Actual.OriginDepartTimestamp) {
@@ -181,7 +175,6 @@ var TrainNotifier;
                             this.fromStationCss = "starts";
                         }
 
-                        // TODO: compare to actual
                         this.fromPlatform = fromStop.Platform;
                         this.publicDeparture = TrainNotifier.DateTimeFormats.formatTimeString(fromStop.PublicDeparture);
                         this.wttDeparture = TrainNotifier.DateTimeFormats.formatTimeString(fromStop.Departure);
@@ -192,25 +185,22 @@ var TrainNotifier;
                             this.toStation = toTiploc.Description ? toTiploc.Description.toLowerCase() : toTiploc.Tiploc;
                         }
 
-                        // TODO: compare to actual
                         this.toPlatform = toStop.Platform;
                         this.publicArrival = TrainNotifier.DateTimeFormats.formatTimeString(toStop.PublicArrival);
                         this.wttArrival = TrainNotifier.DateTimeFormats.formatTimeString(toStop.Arrival);
                     }
 
                     if (trainMovement.Actual && trainMovement.Actual.Stops.length > 0) {
-                        // TODO: check is actual location and is departure
                         var fromActual = trainMovement.Actual.Stops[0];
                         this.actualDeparture = TrainNotifier.DateTimeFormats.formatDateTimeString(fromActual.ActualTimestamp);
 
                         if (toStop) {
                             var lastActual = trainMovement.Actual.Stops[trainMovement.Actual.Stops.length - 1];
-                            if (lastActual.ScheduleStopNumber == toStop.StopNumber && lastActual.EventType == TrainNotifier.EventType.Arrival && lastActual.TiplocStanoxCode == toStop.TiplocStanoxCode) {
+                            if (lastActual.ScheduleStopNumber == toStop.StopNumber && lastActual.EventType == 2 /* Arrival */ && lastActual.TiplocStanoxCode == toStop.TiplocStanoxCode) {
                                 this.actualArrival = TrainNotifier.DateTimeFormats.formatDateTimeString(lastActual.ActualTimestamp);
                             }
                         }
                     }
-                    // TODO: what about can/reinstate/c.o.origin
                 }
                 return StartingAtTrainMovement;
             })(TrainMovement);
@@ -237,7 +227,6 @@ var TrainNotifier;
                             this.fromStation = fromTiploc.Description ? fromTiploc.Description.toLowerCase() : fromTiploc.Tiploc;
                         }
 
-                        // TODO: compare to actual
                         this.fromPlatform = fromStop.Platform;
                         this.publicDeparture = TrainNotifier.DateTimeFormats.formatTimeString(fromStop.PublicDeparture);
                         this.wttDeparture = TrainNotifier.DateTimeFormats.formatTimeString(fromStop.Departure);
@@ -249,20 +238,18 @@ var TrainNotifier;
                             this.toStationCss = "terminates";
                         }
 
-                        // TODO: compare to actual
                         this.toPlatform = toStop.Platform;
                         this.publicArrival = TrainNotifier.DateTimeFormats.formatTimeString(toStop.PublicArrival);
                         this.wttArrival = TrainNotifier.DateTimeFormats.formatTimeString(toStop.Arrival);
                     }
 
                     if (trainMovement.Actual && trainMovement.Actual.Stops.length > 0) {
-                        // TODO: check is actual location and is departure
                         var fromActual = trainMovement.Actual.Stops[0];
                         this.actualDeparture = TrainNotifier.DateTimeFormats.formatDateTimeString(fromActual.ActualTimestamp);
 
                         if (toStop) {
                             var lastActual = trainMovement.Actual.Stops[trainMovement.Actual.Stops.length - 1];
-                            if (lastActual.ScheduleStopNumber == toStop.StopNumber && lastActual.EventType == TrainNotifier.EventType.Arrival && lastActual.TiplocStanoxCode == toStop.TiplocStanoxCode) {
+                            if (lastActual.ScheduleStopNumber == toStop.StopNumber && lastActual.EventType == 2 /* Arrival */ && lastActual.TiplocStanoxCode == toStop.TiplocStanoxCode) {
                                 this.actualArrival = TrainNotifier.DateTimeFormats.formatDateTimeString(lastActual.ActualTimestamp);
                             }
                         }
@@ -302,13 +289,11 @@ var TrainNotifier;
                             }
                         }
 
-                        // find the at stop
                         var atStops = trainMovement.Schedule.Stops.filter(function (element) {
                             return TrainMovement.matchesTiploc(element.TiplocStanoxCode, atTiplocs);
                         });
 
                         if (atStops.length > 0) {
-                            // take first, if it calls at more than 1 we cant handle that at the moment
                             atStop = atStops[0];
                             this.atPlatform = atStop.Platform;
 
@@ -339,7 +324,6 @@ var TrainNotifier;
                     }
 
                     if (trainMovement.Actual && trainMovement.Actual.Stops.length > 0 && atStop) {
-                        // find the at stops
                         var atActualStops = trainMovement.Actual.Stops.filter(function (element) {
                             return TrainMovement.matchesTiploc(element.TiplocStanoxCode, atTiplocs) && element.ScheduleStopNumber == atStop.StopNumber;
                         });
@@ -347,10 +331,10 @@ var TrainNotifier;
                         if (atActualStops.length > 0) {
                             for (var i = 0; i < atActualStops.length; i++) {
                                 switch (atActualStops[i].EventType) {
-                                    case TrainNotifier.EventType.Arrival:
+                                    case 2 /* Arrival */:
                                         this.atActualArrival = TrainNotifier.DateTimeFormats.formatDateTimeString(atActualStops[i].ActualTimestamp);
                                         break;
-                                    case TrainNotifier.EventType.Departure:
+                                    case 1 /* Departure */:
                                         this.atActualDeparture = TrainNotifier.DateTimeFormats.formatDateTimeString(atActualStops[i].ActualTimestamp);
                                         break;
                                 }
@@ -454,13 +438,11 @@ var TrainNotifier;
                         this.publicDeparture = TrainNotifier.DateTimeFormats.formatTimeString(fromTiplocStop.PublicDeparture);
                         this.wttDeparture = TrainNotifier.DateTimeFormats.formatTimeString(fromTiplocStop.Departure);
 
-                        // TODO: compare to actual
                         this.fromPlatform = fromTiplocStop.Platform;
 
                         if (trainMovement.Actual && trainMovement.Actual.Stops.length > 0) {
-                            // find the from stops
                             var fromDepartStops = trainMovement.Actual.Stops.filter(function (element) {
-                                return TrainMovement.matchesTiploc(element.TiplocStanoxCode, fromTiplocs) && element.ScheduleStopNumber == fromTiplocStop.StopNumber && element.EventType == TrainNotifier.EventType.Departure;
+                                return TrainMovement.matchesTiploc(element.TiplocStanoxCode, fromTiplocs) && element.ScheduleStopNumber == fromTiplocStop.StopNumber && element.EventType == 1 /* Departure */;
                             });
 
                             if (fromDepartStops.length > 0) {
@@ -476,13 +458,11 @@ var TrainNotifier;
                         this.publicArrival = TrainNotifier.DateTimeFormats.formatTimeString(toTiplocStop.PublicArrival);
                         this.wttArrival = TrainNotifier.DateTimeFormats.formatTimeString(toTiplocStop.Arrival);
 
-                        // TODO: compare to actual
                         this.toPlatform = toTiplocStop.Platform;
 
                         if (trainMovement.Actual && trainMovement.Actual.Stops.length > 0) {
-                            // find the from stops
                             var toArriveStops = trainMovement.Actual.Stops.filter(function (element) {
-                                return TrainMovement.matchesTiploc(element.TiplocStanoxCode, toTiplocs) && element.ScheduleStopNumber == toTiplocStop.StopNumber && element.EventType == TrainNotifier.EventType.Arrival;
+                                return TrainMovement.matchesTiploc(element.TiplocStanoxCode, toTiplocs) && element.ScheduleStopNumber == toTiplocStop.StopNumber && element.EventType == 2 /* Arrival */;
                             });
 
                             if (toArriveStops.length > 0) {
