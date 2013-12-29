@@ -37,7 +37,7 @@ $(function () {
             locations.push({
                 value: results[i].StationName,
                 crs: results[i].CRS,
-                tokens: [results[i].StationName, results[i].CRS, results[i].Tiploc]
+                tokens: [results[i].CRS, results[i].StationName, results[i].Tiploc]
             });
         }
         $(".station-lookup").typeahead({

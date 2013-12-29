@@ -519,28 +519,46 @@
                 };
                 return deferred;
             },
-            getSuggestions: function(query, cb) {
+            getSuggestions: function (query, cb) {
                 var that = this, terms, suggestions, cacheHit = false;
                 if (query.length < this.minLength) {
                     return;
                 }
                 terms = utils.tokenizeQuery(query);
-                suggestions = this._getLocalSuggestions(terms).slice(0, this.limit);
+                suggestions = this._getLocalSuggestions(terms);
+                suggestions = sortTrainResults(terms, suggestions)
+                    .slice(0, this.limit);
                 if (suggestions.length < this.limit && this.transport) {
                     cacheHit = this.transport.get(query, processRemoteData);
                 }
                 !cacheHit && cb && cb(suggestions);
                 function processRemoteData(data) {
                     suggestions = suggestions.slice(0);
-                    utils.each(data, function(i, datum) {
+                    utils.each(data, function (i, datum) {
                         var item = that._transformDatum(datum), isDuplicate;
-                        isDuplicate = utils.some(suggestions, function(suggestion) {
+                        isDuplicate = utils.some(suggestions, function (suggestion) {
                             return item.value === suggestion.value;
                         });
                         !isDuplicate && suggestions.push(item);
                         return suggestions.length < that.limit;
                     });
                     cb && cb(suggestions);
+                }
+                function sortTrainResults(terms, suggestions) {
+                    if (suggestions.length == 0 || terms[0].length != 3)
+                        return suggestions;
+
+                    var crs = terms[0].toLowerCase();
+                    var matched = [];
+                    var unmatched = [];
+                    suggestions.forEach(function (element, index, array) {
+                        if (element.tokens[0].toLowerCase() == crs)
+                            matched.push(element);
+                        else
+                            unmatched.push(element);
+                    });
+
+                    return matched.concat(unmatched);
                 }
             }
         });
