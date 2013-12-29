@@ -17,8 +17,8 @@ var TrainNotifier;
         function WebSockets() {
         }
         WebSockets.prototype.connect = function () {
-            $(".btn-connect").attr("disabled", true);
-            $(".btn-disconnect").attr("disabled", false);
+            $(".btn-connect").prop("disabled", true);
+            $(".btn-disconnect").prop("disabled", false);
 
             this.ws = new WebSocket("ws://" + TrainNotifier.Common.serverSettings.wsUrl);
             this.ws.onopen = function () {
@@ -29,7 +29,7 @@ var TrainNotifier;
                 $("#status").removeClass("btn-warning");
                 $("#status").removeClass("btn-info");
                 $("#status").addClass("btn-success");
-                $(".btn-connect").attr("disabled", true);
+                $(".btn-connect").prop("disabled", true);
 
                 try  {
                     if (TrainNotifier.Common.page.wsOpenCommand) {
@@ -46,14 +46,14 @@ var TrainNotifier;
                 $("#status").removeClass("btn-success");
                 $("#status").removeClass("btn-info");
                 $("#status").addClass("btn-warning");
-                $(".btn-connect").attr("disabled", false);
-                $(".btn-disconnect").attr("disabled", true);
+                $(".btn-connect").prop("disabled", false);
+                $(".btn-disconnect").prop("disabled", true);
             };
         };
 
         WebSockets.prototype.disconnect = function () {
-            $(".btn-connect").attr("disabled", false);
-            $(".btn-disconnect").attr("disabled", true);
+            $(".btn-connect").prop("disabled", false);
+            $(".btn-disconnect").prop("disabled", true);
 
             this.ws.close();
             if (TrainNotifier.Common.page.setStatus) {
