@@ -629,8 +629,8 @@ module TrainNotifier {
         private static _xu: ICategoryType = { CategoryTypeId: CategoryTypeId.XU, Code: "XU", Description: "Unadvertised Express" };
         private static _xx: ICategoryType = { CategoryTypeId: CategoryTypeId.XX, Code: "XX", Description: "Express Passenger" };
         private static _xz: ICategoryType = { CategoryTypeId: CategoryTypeId.XZ, Code: "XZ", Description: "Sleeper (Domestic)" };
-        private static _br: ICategoryType = { CategoryTypeId: CategoryTypeId.BR, Code: "BR", Description: "Bus � Replacement due to engineering work" };
-        private static _bs: ICategoryType = { CategoryTypeId: CategoryTypeId.BS, Code: "BS", Description: "Bus � WTT Service" };
+        private static _br: ICategoryType = { CategoryTypeId: CategoryTypeId.BR, Code: "BR", Description: "Bus Replacement due to engineering work" };
+        private static _bs: ICategoryType = { CategoryTypeId: CategoryTypeId.BS, Code: "BS", Description: "Bus WTT Service" };
         private static _ee: ICategoryType = { CategoryTypeId: CategoryTypeId.EE, Code: "EE", Description: "Empty Coaching Stock (ECS)" };
         private static _el: ICategoryType = { CategoryTypeId: CategoryTypeId.EL, Code: "EL", Description: "ECS, London Underground/Metro Service" };
         private static _es: ICategoryType = { CategoryTypeId: CategoryTypeId.ES, Code: "ES", Description: "ECS & Staff" };

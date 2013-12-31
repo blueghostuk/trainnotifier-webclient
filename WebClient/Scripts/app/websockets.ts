@@ -49,9 +49,14 @@ module TrainNotifier{
     export class WebSockets{
         private ws: WebSocket;
 
+        constructor() {
+            $(".btn-connect").attr("disabled", true);
+            $(".btn-disconnect").attr("disabled", false);
+        }
+
         connect() {
-            $(".btn-connect").prop("disabled", true);
-            $(".btn-disconnect").prop("disabled", false);
+            $(".btn-connect").attr("disabled", true);
+            $(".btn-disconnect").attr("disabled", false);
 
             this.ws = new WebSocket("ws://" + TrainNotifier.Common.serverSettings.wsUrl);
             this.ws.onopen = function () {
@@ -85,8 +90,8 @@ module TrainNotifier{
         }
 
         disconnect() {
-            $(".btn-connect").prop("disabled", false);
-            $(".btn-disconnect").prop("disabled", true);
+            $(".btn-connect").attr("disabled", false);
+            $(".btn-disconnect").attr("disabled", true);
 
             this.ws.close();
             if (TrainNotifier.Common.page.setStatus) {
