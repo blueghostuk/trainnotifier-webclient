@@ -324,24 +324,31 @@ module TrainNotifier {
         public static EnRoute = "EN ROUTE";
     }
 
+    export enum STPIndicatorValue {
+        Cancellation = 1,
+        STP = 2,
+        Overlay = 3,
+        Permanent = 4
+    }
+
     export class STPIndicator {
         public static Cancellation: ISTPIndicator = {
-            STPIndicatorId: 1,
+            STPIndicatorId: STPIndicatorValue.Cancellation,
             Code: 'C',
             Description: 'Cancellation Of Permanent Schedule'
         }
         public static STP: ISTPIndicator = {
-            STPIndicatorId: 2,
+            STPIndicatorId: STPIndicatorValue.STP,
             Code: 'N',
             Description: 'STP'
         }
         public static Overlay: ISTPIndicator = {
-            STPIndicatorId: 3,
+            STPIndicatorId: STPIndicatorValue.Overlay,
             Code: 'O',
             Description: 'Overlay'
         }
         public static Permanent: ISTPIndicator = {
-            STPIndicatorId: 4,
+            STPIndicatorId: STPIndicatorValue.Permanent,
             Code: 'P',
             Description: 'Permanent'
         }
@@ -780,7 +787,7 @@ interface IScheduleStatus {
 }
 
 interface ISTPIndicator {
-    STPIndicatorId: number;
+    STPIndicatorId: TrainNotifier.STPIndicatorValue;
     Code: string;
     Description: string;
 }
@@ -844,7 +851,7 @@ interface IRunningScheduleTrain {
     EndDate: string;
     AtocCode: IAtocCode;
     ScheduleStatusId: number;
-    STPIndicatorId: number;
+    STPIndicatorId: TrainNotifier.STPIndicatorValue;
     PowerTypeId?: TrainNotifier.PowerTypeId;
     CategoryTypeId?: TrainNotifier.CategoryTypeId;
     Speed?: number;
@@ -879,7 +886,7 @@ interface IAssociation {
     DateType: number;
     // not used
     Schedule?: any;
-    STPIndicator: number;
+    STPIndicator: TrainNotifier.STPIndicatorValue;
     Location: ITiploc;
 }
 

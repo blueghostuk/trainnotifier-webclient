@@ -95,6 +95,11 @@ module TrainNotifier.KnockoutModels.Search {
                 }
             }
 
+            if (trainMovement.Schedule.STPIndicatorId == TrainNotifier.STPIndicatorValue.Cancellation) {
+                this.cancel(true);
+                this.title = "Cancelled via schedule";
+            }
+
             if (trainMovement.ChangeOfOrigins.length > 0) {
                 var coo = trainMovement.ChangeOfOrigins[0];
                 var cooTiploc = StationTiploc.findStationTiploc(coo.NewOriginStanoxCode, tiplocs);
