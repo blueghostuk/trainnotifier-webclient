@@ -652,8 +652,12 @@ function setTimeLinks() {
             break;
     }
 
-    $(".neg-hrs").attr("href", "search/" + url + minusStartDate.format("/YYYY/MM/DD/HH-mm"));
-    $(".plus-hrs").attr("href", "search/" + url + plusStartDate.format("/YYYY/MM/DD/HH-mm"));
+    var tocUrl = "";
+    if (toc)
+        tocUrl = "?toc=" + toc;
+
+    $(".neg-hrs").attr("href", "search/" + url + minusStartDate.format("/YYYY/MM/DD/HH-mm") + tocUrl);
+    $(".plus-hrs").attr("href", "search/" + url + plusStartDate.format("/YYYY/MM/DD/HH-mm") + tocUrl);
 
     setHash(url, moment(currentStartDate).format("YYYY-MM-DD/HH-mm") + moment(currentEndDate).format("/HH-mm"), true);
 }
@@ -677,6 +681,8 @@ function setHash(hash, dateHash, dontLoad) {
     if (dateHash) {
         hash += "/" + dateHash;
     }
+    if (toc)
+        hash += "?toc=" + toc;
     document.location.hash = hash;
     if (!dontLoad) {
         loadHashCommand();
