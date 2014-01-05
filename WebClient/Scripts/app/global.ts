@@ -65,6 +65,12 @@ module TrainNotifier {
             });
             $(".stanox-" + stanox.Stanox).addClass("stationName");
         }
+
+        static trimNullableString(str: string) {
+            if (str)
+                return str.trim();
+            return null;
+        }
     }
 
     export class DateTimeFormats {

@@ -46,7 +46,7 @@
     </li>
     <li><a href="~/ppm">PPM</a></li>
     <li><a href="~/about">About</a></li>
-    <li><a href="#" id="advancedSwitch" title="Switch Mode">Advanced</a></li>
+    <li><a href="#" id="advancedSwitch" title="Switch to this Mode">Advanced</a></li>
 }
 <div class="row">
     <div class="col-md-12" id="resultsBlock">
@@ -67,8 +67,8 @@
         </div>
         <div class="row">
             <ul class="pager">
-                <li class="previous"><a href="#" onclick="previousDate(); return false;" class="neg-hrs">&lt; Earlier</a></li>
-                <li class="next"><a href="#" onclick="nextDate(); return false;" class="plus-hrs">Later &gt;</a></li>
+                <li class="previous"><a href="#" onclick="previousDate(); return false;" class="neg-hrs">← Earlier</a></li>
+                <li class="next"><a href="#" onclick="nextDate(); return false;" class="plus-hrs">Later →</a></li>
             </ul>
             <div id="start-end-at-search-results" data-bind="visible: $data.length > 0">
                 <table class="table table-hover table-bordered table-header-colour">
@@ -632,8 +632,8 @@
                 </table>
             </div>
             <ul class="pager">
-                <li class="previous"><a href="#" onclick="previousDate(); return false;" class="neg-hrs">&lt; Earlier</a></li>
-                <li class="next"><a href="#" onclick="nextDate(); return false;" class="plus-hrs">Later &gt;</a></li>
+                <li class="previous"><a href="#" onclick="previousDate(); return false;" class="neg-hrs">← Earlier</a></li>
+                <li class="next"><a href="#" onclick="nextDate(); return false;" class="plus-hrs">Later →</a></li>
             </ul>
         </div>
     </div>

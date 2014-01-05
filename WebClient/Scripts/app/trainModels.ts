@@ -22,13 +22,14 @@ module TrainNotifier.KnockoutModels.Train {
         public departureDelay: KnockoutComputed<number>;
         public departureDelayCss: KnockoutComputed<string>;
         public line: string = null;
-        public platform: string = null;
+        public platform = ko.observable<string>();
         public eAllowance: string = null;
         public paAllowance: string = null;
         public peAllowance: string = null;
         public pass: string = null;
         public cancel = ko.observable<boolean>(false);
         public stopNumber: number;
+        public changePlatform = ko.observable<boolean>(false);
 
         private associateLiveStop = ko.observable<LiveStopBase>();
 
@@ -56,7 +57,7 @@ module TrainNotifier.KnockoutModels.Train {
             }
 
             this.line = scheduleStop.Line;
-            this.platform = scheduleStop.Platform;
+            this.platform(scheduleStop.Platform);
             if (scheduleStop.EngineeringAllowance) {
                 this.eAllowance = "[" + scheduleStop.EngineeringAllowance + "]"
             }
@@ -65,7 +66,7 @@ module TrainNotifier.KnockoutModels.Train {
             }
             if (scheduleStop.PerformanceAllowance) {
                 this.peAllowance = "<" + scheduleStop.PerformanceAllowance + ">";
-            }            
+            }
 
             var self = this;
             this.actualArrival = ko.computed(function () {
@@ -116,6 +117,10 @@ module TrainNotifier.KnockoutModels.Train {
 
         associateWithLiveStop(liveStop: LiveStopBase) {
             this.associateLiveStop(liveStop);
+            if (liveStop.platform() && (liveStop.platform() != this.platform())) {
+                this.platform(liveStop.platform());
+                this.changePlatform(true);
+            }
         }
 
         validateAssociation(liveStop: LiveStopBase) {
@@ -217,7 +222,7 @@ module TrainNotifier.KnockoutModels.Train {
 
         private updateCommon(line: string, platform: string, offRoute: boolean, nextStanox: string, expectedAtNextStanox: string, tiplocs: IStationTiploc[]) {
             this.line(this.line() || line);
-            this.platform(this.platform() || platform);
+            this.platform(TrainNotifier.Common.trimNullableString(this.platform() || platform));
 
             this.offRoute(this.offRoute() || offRoute);
             if (nextStanox) {
@@ -516,7 +521,7 @@ module TrainNotifier.KnockoutModels.Train {
                     canTxt += " @ " + canTiploc.Description ? canTiploc.Description.toLowerCase() : canTiploc.Tiploc;
                 }
                 canTxt += " @ " + moment(can.CancelledTimestamp).format(DateTimeFormats.timeFormat)
-                    + " - Reason: ";
+                + " - Reason: ";
                 if (can.Description) {
                     canTxt += can.Description;
                 }

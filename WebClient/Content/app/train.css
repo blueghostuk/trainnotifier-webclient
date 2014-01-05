@@ -11,6 +11,10 @@
     margin-top: -10px !important;
 }
 
+.changePlatform {
+    font-weight: bold;
+}
+
 table {
     margin-top: 5px;
 }

@@ -38,6 +38,12 @@ var TrainNotifier;
             });
             $(".stanox-" + stanox.Stanox).addClass("stationName");
         };
+
+        Common.trimNullableString = function (str) {
+            if (str)
+                return str.trim();
+            return null;
+        };
         return Common;
     })();
     TrainNotifier.Common = Common;

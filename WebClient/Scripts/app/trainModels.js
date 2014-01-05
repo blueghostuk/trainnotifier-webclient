@@ -1,4 +1,4 @@
-var __extends = this.__extends || function (d, b) {
+﻿var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
     __.prototype = b.prototype;
@@ -15,12 +15,13 @@ var TrainNotifier;
                     this.wttDepart = null;
                     this.publicDepart = null;
                     this.line = null;
-                    this.platform = null;
+                    this.platform = ko.observable();
                     this.eAllowance = null;
                     this.paAllowance = null;
                     this.peAllowance = null;
                     this.pass = null;
                     this.cancel = ko.observable(false);
+                    this.changePlatform = ko.observable(false);
                     this.associateLiveStop = ko.observable();
                     var tiploc = TrainNotifier.StationTiploc.findStationTiploc(scheduleStop.TiplocStanoxCode, tiplocs);
                     this.stopNumber = scheduleStop.StopNumber;
@@ -45,7 +46,7 @@ var TrainNotifier;
                     }
 
                     this.line = scheduleStop.Line;
-                    this.platform = scheduleStop.Platform;
+                    this.platform(scheduleStop.Platform);
                     if (scheduleStop.EngineeringAllowance) {
                         this.eAllowance = "[" + scheduleStop.EngineeringAllowance + "]";
                     }
@@ -104,6 +105,10 @@ var TrainNotifier;
 
                 ScheduleStop.prototype.associateWithLiveStop = function (liveStop) {
                     this.associateLiveStop(liveStop);
+                    if (liveStop.platform() && (liveStop.platform() != this.platform())) {
+                        this.platform(liveStop.platform());
+                        this.changePlatform(true);
+                    }
                 };
 
                 ScheduleStop.prototype.validateAssociation = function (liveStop) {
@@ -201,7 +206,7 @@ var TrainNotifier;
 
                 LiveStopBase.prototype.updateCommon = function (line, platform, offRoute, nextStanox, expectedAtNextStanox, tiplocs) {
                     this.line(this.line() || line);
-                    this.platform(this.platform() || platform);
+                    this.platform(TrainNotifier.Common.trimNullableString(this.platform() || platform));
 
                     this.offRoute(this.offRoute() || offRoute);
                     if (nextStanox) {

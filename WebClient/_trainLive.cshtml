@@ -2,12 +2,12 @@
     <thead>
         <tr>
             <th>Location</th>
+            <th title="Platform">Pfm</th>
             <th class="hidden-xs hidden-sm visible-md visible-lg" title="Expected WTT time is tooltip. Delay is shown next to time">Arrive</th>
             <th class="visible-xs visible-sm hidden-md hidden-lg" title="Expected WTT time is tooltip. Delay is shown next to time">Arr</th>
             <th class="hidden-xs hidden-sm visible-md visible-lg" title="Expected WTT time is tooltip. Delay is shown next to time">Depart</th>
             <th class="visible-xs visible-sm hidden-md hidden-lg" title="Expected WTT time is tooltip. Delay is shown next to time">Dept</th>
             <th class="hidden-xs hidden-sm visible-md visible-lg">Line</th>
-            <th title="Platform">Pfm</th>
             <th class="hidden-xs hidden-sm visible-md visible-lg">Notes</th>
         </tr>
     </thead>
@@ -16,6 +16,7 @@
             <td class="col station stationName">
                 <a class="pointer" data-bind="text: location"></a>
             </td>
+            <td class="col extra platform" data-bind="text: platform"></td>
             <td class="col arrive actual">
                 <span data-bind="text: actualArrival, attr: { title: plannedArrival }" class="tooltip-dynamic"></span>&nbsp;
                 <span data-bind="visible: arrivalDelay" title="Delay">(<span class="badge" data-bind="text: arrivalDelay, css: arrivalDelayCss"></span>)</span>
@@ -25,7 +26,6 @@
                 <span data-bind="visible: departureDelay" title="Delay">(<span class="badge" data-bind="text: departureDelay, css: departureDelayCss"></span>)</span>
             </td>
             <td class="col extra line hidden-xs hidden-sm visible-md visible-lg" data-bind="text: line"></td>
-            <td class="col extra platform" data-bind="text: platform"></td>
             <td class="col extra notes hidden-xs hidden-sm visible-md visible-lg">
                 <span data-bind="visible: nextLocation">Next @@ <span data-bind="text: nextLocation" class="stationName"></span>&nbsp;in&nbsp;<span data-bind="text: nextAt"></span></span>
                 <span data-bind="visible: notes, text: notes"></span>

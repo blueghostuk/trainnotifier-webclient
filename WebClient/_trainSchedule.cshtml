@@ -2,13 +2,15 @@
     <thead>
         <tr>
             <th>&nbsp;</th>
+            <th>&nbsp;</th>
             <th colspan="2">Arrive</th>
             <th colspan="2">Depart</th>
-            <th class="hidden-xs hidden-sm visible-md visible-lg" colspan="3"></th>
-            <th class="visible-xs visible-sm hidden-md hidden-lg" colspan="2"></th>
+            <th class="hidden-xs hidden-sm visible-md visible-lg" colspan="2"></th>
+            <th class="visible-xs visible-sm hidden-md hidden-lg"></th>
         </tr>
         <tr>
             <th>Location</th>
+            <th title="Platform">Pfm</th>
             <th>WTT</th>
             <th class="hidden-xs hidden-sm visible-md visible-lg">Public</th>
             <th class="visible-xs visible-sm hidden-md hidden-lg">Pub</th>
@@ -16,7 +18,6 @@
             <th class="hidden-xs hidden-sm visible-md visible-lg">Depart</th>
             <th class="visible-xs visible-sm hidden-md hidden-lg">Dept</th>
             <th class="hidden-xs hidden-sm visible-md visible-lg">Line</th>
-            <th title="Platform">Pfm</th>
             <th class="hidden-xs hidden-sm visible-md visible-lg">Allowances</th>
         </tr>
     </thead>
@@ -26,12 +27,12 @@
                 <a class="pointer" data-bind="visible: locationCRS, text: location, attr: { href: '/search-schedule#at/' + locationCRS }"></a>
                 <a class="pointer" data-bind="visible: !locationCRS, text: location" onclick="    return false;"></a>
             </td>
+            <td class="col extra platform" data-bind="text: platform"></td>
             <td class="col arrive wtt" data-bind="text: pass ? 'Pass' : wttArrive, attr: { colspan: pass ? 2 : 1 }"></td>
             <td class="col arrive public" data-bind="text: publicArrive, visible: !pass"></td>
             <td class="col depart wtt" data-bind="text: pass ? pass : wttDepart, attr: { colspan: pass ? 2 : 1 }"></td>
             <td class="col depart public" data-bind="text: pass ? '' : publicDepart, visible: !pass"></td>
             <td class="col extra line hidden-xs hidden-sm visible-md visible-lg" data-bind="text: line"></td>
-            <td class="col extra platform" data-bind="text: platform"></td>
             <td class="col extra allowances hidden-xs hidden-sm visible-md visible-lg">
                 <span data-bind="text: eAllowance, visible: eAllowance" title="Engineering Allowance"></span>
                 <span data-bind="text: paAllowance, visible: paAllowance" title="Pathing Allowance"></span>
@@ -41,5 +42,6 @@
     </tbody>
 </table>
 <p class="text-info">
-    <span class="glyphicon glyphicon-info-sign"></span>&nbsp;This page shows the original Schedule.
+    <span class="glyphicon glyphicon-info-sign"></span>&nbsp;This page shows the original Schedule.<br />
+    <span class="glyphicon glyphicon-info-sign"></span>&nbsp;Passing stops are hidden in simple mode. Switch to Advanced mode from the top menu
 </p>
