@@ -11,7 +11,9 @@ $(function () {
     TrainNotifier.Common.webApi = webApi;
 
     $('.datepicker').datepicker({
-        format: 'dd/mm/yyyy'
+        format: 'dd/mm/yyyy',
+        startDate: moment().subtract({ days: 14 }).toDate(),
+        todayHighlight: true
     }).on("changeDate", function () {
         $(this).datepicker('hide');
     });
