@@ -7,7 +7,7 @@ interface IWebApi {
     getStanoxByCrsCode(crsCode: string): JQueryPromise<any>;
 
     getStations(): JQueryPromise<any>;
-    getStationByLocation(lat: number, lon: number): JQueryPromise<any>;
+    getStationByLocation(lat: number, lon: number, limit?: number): JQueryPromise<any>;
 
     getTrainMovementByUid(uid: string, date: string): JQueryPromise<any>;
     getTrainMovementById(id: string): JQueryPromise<any>;
@@ -69,10 +69,11 @@ module TrainNotifier {
             return $.getJSON(this.getBaseUrl() + "/Stanox/" + stanox);
         }
 
-        getStationByLocation(lat: number, lon: number) {
+        getStationByLocation(lat: number, lon: number, limit: number = 5) {
             return $.getJSON(this.getBaseUrl() + "/Station/GeoLookup", $.extend({}, this.getArgs(), {
                 lat: lat,
-                lon: lon
+                lon: lon,
+                limit: limit
             }));
         }
 

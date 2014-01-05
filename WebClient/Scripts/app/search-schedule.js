@@ -137,7 +137,10 @@ function getNearest(lat, lon) {
     $(".pager").hide();
     setTitle("Nearest Trains");
 
-    webApi.getTrainMovementsNearLocation(lat, lon, 10).done(function (data) {
+    var getMovements = webApi.getTrainMovementsNearLocation(lat, lon, 10);
+    var getStations = webApi.getStationByLocation(lat, lon, 3);
+    $.when(getStations, getMovements).done(function (stations, movements) {
+        var data = movements[0];
         if (data && data.Movements.length > 0) {
             $("#no-results-row").hide();
 
@@ -156,6 +159,11 @@ function getNearest(lat, lon) {
         } else {
             $("#no-results-row").show();
         }
+        var stats = stations[0];
+        var stationNames = stats.map(function (value) {
+            return value.StationName;
+        });
+        searchTitleModel.from(stationNames.join(", ").capitalize() + ", & others");
     }).always(function () {
         hide($(".progress"));
         thisPage.advancedSwitch(false);

@@ -26,10 +26,12 @@ var TrainNotifier;
             return $.getJSON(this.getBaseUrl() + "/Stanox/" + stanox);
         };
 
-        WebApi.prototype.getStationByLocation = function (lat, lon) {
+        WebApi.prototype.getStationByLocation = function (lat, lon, limit) {
+            if (typeof limit === "undefined") { limit = 5; }
             return $.getJSON(this.getBaseUrl() + "/Station/GeoLookup", $.extend({}, this.getArgs(), {
                 lat: lat,
-                lon: lon
+                lon: lon,
+                limit: limit
             }));
         };
 

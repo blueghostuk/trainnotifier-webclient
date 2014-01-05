@@ -37,6 +37,15 @@ function hide(element) {
     $(element).addClass("hide");
 }
 
+interface String {
+    capitalize(): string;
+}
+
+// http://stackoverflow.com/a/7592235
+String.prototype.capitalize = function () {
+    return this.toLowerCase().replace(/(?:^|\s)\S/g, function (a) { return a.toUpperCase(); });
+};
+
 // Module
 module TrainNotifier {
 

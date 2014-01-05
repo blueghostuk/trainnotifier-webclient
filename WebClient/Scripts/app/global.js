@@ -15,6 +15,12 @@ function hide(element) {
     $(element).addClass("hide");
 }
 
+String.prototype.capitalize = function () {
+    return this.toLowerCase().replace(/(?:^|\s)\S/g, function (a) {
+        return a.toUpperCase();
+    });
+};
+
 var TrainNotifier;
 (function (TrainNotifier) {
     var Common = (function () {
