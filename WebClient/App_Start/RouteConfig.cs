@@ -195,7 +195,7 @@ namespace TrainNotifier.WebClient.App_Start
 
             public void ProcessRequest(HttpContext context)
             {
-                RedirectToUrl(context, string.Format("~/train#!get/{0}/{1:yyyy-MM-dd}", _trainUid, _date));
+                RedirectToUrl(context, string.Format("~/train#!{0}/{1:yyyy/MM/dd}", _trainUid, _date));
             }
         }
     }

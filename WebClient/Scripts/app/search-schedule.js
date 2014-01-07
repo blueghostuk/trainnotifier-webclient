@@ -10,11 +10,12 @@ var currentToStanox;
 var currentStartDate = null;
 var currentEndDate = null;
 var currentMode = null;
+var currentCommand;
 
 var thisPage = {
-    settingHash: false,
+    settingHash: true,
     setCommand: function (command) {
-        $("#global-search-box").val(command);
+        currentCommand = command;
     },
     parseCommand: function () {
         var cmdString = thisPage.getCommand();
@@ -55,7 +56,7 @@ var thisPage = {
         return false;
     },
     getCommand: function () {
-        return $("#global-search-box").val();
+        return currentCommand;
     },
     advancedMode: false,
     advancedSwitch: function (change) {

@@ -18,11 +18,12 @@ var currentToStanox: IStationTiploc;
 var currentStartDate: Moment = null;
 var currentEndDate: Moment = null;
 var currentMode: TrainNotifier.Search.SearchMode = null;
+var currentCommand: string;
 
 var thisPage: IPage = {
-    settingHash: false,
+    settingHash: true,
     setCommand: function (command) {
-        $("#global-search-box").val(command);
+        currentCommand = command;
     },
     parseCommand: function () {
         var cmdString = thisPage.getCommand();
@@ -64,7 +65,7 @@ var thisPage: IPage = {
         return false;
     },
     getCommand: function () {
-        return $("#global-search-box").val();
+        return currentCommand;
     },
     advancedMode: false,
     advancedSwitch: function (change: boolean = true) {
