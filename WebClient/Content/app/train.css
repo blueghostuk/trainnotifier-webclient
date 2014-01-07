@@ -24,19 +24,19 @@ tr.info a {
 }
 
 .col.station {
-    background-color: #EEEEED;
+    background-color: rgba(247, 247, 247, 0.23);
 }
 
 .col.arrive {
-    background-color: #E8E8E7;
+    background-color: rgba(247, 247, 247, 0.23);
 }
 
 .col.depart {
-    background-color: #E3E3E2;
+    background-color: rgba(247, 247, 247, 0.23);
 }
 
 .col.extra {
-    background-color: #E0E0DF;
+    background-color: rgba(247, 247, 247, 0.23);
 }
 
 div#title {

@@ -71,6 +71,10 @@ tr.info > td > span.changeOfOrigin {
     display: block;
 }
 
+.pager{
+    margin: 5px 0px !important;
+}
+
 @media (max-width: 979px) {
 
     div.tab-pane.active > table {
