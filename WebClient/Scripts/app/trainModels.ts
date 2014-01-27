@@ -16,11 +16,13 @@ module TrainNotifier.KnockoutModels.Train {
         public actualArrival: KnockoutComputed<string>;
         public arrivalDelay: KnockoutComputed<number>;
         public arrivalDelayCss: KnockoutComputed<string>;
+        public arrivalCss: KnockoutComputed<string>;
         public wttDepart: string = null;
         public publicDepart: string = null;
         public actualDeparture: KnockoutComputed<string>;
         public departureDelay: KnockoutComputed<number>;
         public departureDelayCss: KnockoutComputed<string>;
+        public departureCss: KnockoutComputed<string>;
         public line: string = null;
         public platform: string = null;
         public actualPlatform = ko.observable<string>();
@@ -86,6 +88,9 @@ module TrainNotifier.KnockoutModels.Train {
             this.arrivalDelayCss = ko.computed(function () {
                 return self.getDelayCss(self.arrivalDelay());
             });
+            this.arrivalCss = ko.computed(function () {
+                return self.getDelayCss(self.arrivalDelay(), "");
+            });
 
             this.actualDeparture = ko.computed(function () {
                 if (self.associateLiveStop())
@@ -102,11 +107,12 @@ module TrainNotifier.KnockoutModels.Train {
             this.departureDelayCss = ko.computed(function () {
                 return self.getDelayCss(self.departureDelay());
             });
+            this.departureCss = ko.computed(function () {
+                return self.getDelayCss(self.departureDelay(), "");
+            });
         }
 
-        private getDelayCss(value: Number) {
-            if (value === 0)
-                return "alert-success";
+        private getDelayCss(value: Number, defaultValue: string = "hidden") {
             if (value < 0)
                 return "alert-info";
             if (value > 10)
@@ -114,7 +120,7 @@ module TrainNotifier.KnockoutModels.Train {
             if (value > 0)
                 return "alert-warning";
 
-            return "hidden";
+            return defaultValue;
         }
 
         associateWithLiveStop(liveStop: LiveStopBase) {
@@ -172,9 +178,7 @@ module TrainNotifier.KnockoutModels.Train {
             this.locationStanox = tiploc.Stanox;
         }
 
-        private static getDelayCss(value: Number) {
-            if (value === 0)
-                return "alert-success";
+        private static getDelayCss(value: Number, defaultValue: string = "hidden") {
             if (value < 0)
                 return "alert-info";
             if (value > 10)
@@ -182,7 +186,7 @@ module TrainNotifier.KnockoutModels.Train {
             if (value > 0)
                 return "alert-warning";
 
-            return "hidden";
+            return defaultValue;
         }
 
         private updateArrival(plannedArrival: string, actualArrival: string, line: string, platform: string, offRoute: boolean, nextStanox: string, expectedAtNextStanox: string, tiplocs: IStationTiploc[]) {

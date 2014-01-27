@@ -23,15 +23,16 @@ tr.info a {
     color: white;
 }
 
-span.badge.alert-info {
+.alert-info {
     color: green;
+    font-weight: bold;
 }
 
-span.badge.alert-warning {
+.alert-warning {
     color: red;
 }
 
-span.badge.alert-important {
+.alert-important {
     color: red;
     font-weight: bold;
 }

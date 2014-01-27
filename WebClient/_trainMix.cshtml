@@ -57,13 +57,13 @@
             @*4. Advanced - Pass(Empty)/Public Expected Arrival*@
             <td class="col arrive public" data-bind="text: pass ? '' : publicArrive"></td>
             @*5. ALL - Actual Arrival*@
-            <td class="col arrive actual" data-bind="text: pass ? '' : actualArrival"></td>
+            <td class="col arrive actual" data-bind="text: pass ? '' : actualArrival, css: arrivalCss"></td>
             @*6. Advanced - Pass/WTT Expected Departure*@
             <td class="col depart wtt hidden-xs hidden-sm visible-md visible-lg" data-bind="text: pass ? pass : wttDepart"></td>
             @*7. Advanced - Pass(Empty)/Public Expected Departure*@
             <td class="col depart public advanced" data-bind="text: pass ? '' : publicDepart"></td>
             @*8. ALL - Actual Departure*@
-            <td class="col depart actual" data-bind="text: actualDeparture"></td>
+            <td class="col depart actual" data-bind="text: actualDeparture, css: departureCss"></td>
             @*9. ALL - Line*@
             <td class="col extra line hidden-xs hidden-sm visible-md visible-lg" data-bind="text: line"></td>
             @*10. ALL - Allowances*@

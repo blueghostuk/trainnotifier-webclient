@@ -22,7 +22,8 @@
 }
 
 .table tbody tr.cancel > td {
-    background-color: #ff0000 !important;
+    background-color: rgba(255, 0, 0, 0.14) !important;
+    text-decoration: line-through;
 }
 
 table.table-header-colour thead th {

@@ -1,4 +1,4 @@
-﻿/// <reference path="websockets.ts" />
+/// <reference path="websockets.ts" />
 /// <reference path="global.ts" />
 /// <reference path="../typings/moment/moment.d.ts" />
 /// <reference path="../typings/knockout/knockout.d.ts" />
@@ -80,6 +80,9 @@ var TrainNotifier;
                     this.arrivalDelayCss = ko.computed(function () {
                         return self.getDelayCss(self.arrivalDelay());
                     });
+                    this.arrivalCss = ko.computed(function () {
+                        return self.getDelayCss(self.arrivalDelay(), "");
+                    });
 
                     this.actualDeparture = ko.computed(function () {
                         if (self.associateLiveStop())
@@ -96,10 +99,12 @@ var TrainNotifier;
                     this.departureDelayCss = ko.computed(function () {
                         return self.getDelayCss(self.departureDelay());
                     });
+                    this.departureCss = ko.computed(function () {
+                        return self.getDelayCss(self.departureDelay(), "");
+                    });
                 }
-                ScheduleStop.prototype.getDelayCss = function (value) {
-                    if (value === 0)
-                        return "alert-success";
+                ScheduleStop.prototype.getDelayCss = function (value, defaultValue) {
+                    if (typeof defaultValue === "undefined") { defaultValue = "hidden"; }
                     if (value < 0)
                         return "alert-info";
                     if (value > 10)
@@ -107,7 +112,7 @@ var TrainNotifier;
                     if (value > 0)
                         return "alert-warning";
 
-                    return "hidden";
+                    return defaultValue;
                 };
 
                 ScheduleStop.prototype.associateWithLiveStop = function (liveStop) {
@@ -161,9 +166,8 @@ var TrainNotifier;
                     this.location = tiploc.Description ? tiploc.Description.toLowerCase() : tiploc.Tiploc;
                     this.locationStanox = tiploc.Stanox;
                 }
-                LiveStopBase.getDelayCss = function (value) {
-                    if (value === 0)
-                        return "alert-success";
+                LiveStopBase.getDelayCss = function (value, defaultValue) {
+                    if (typeof defaultValue === "undefined") { defaultValue = "hidden"; }
                     if (value < 0)
                         return "alert-info";
                     if (value > 10)
@@ -171,7 +175,7 @@ var TrainNotifier;
                     if (value > 0)
                         return "alert-warning";
 
-                    return "hidden";
+                    return defaultValue;
                 };
 
                 LiveStopBase.prototype.updateArrival = function (plannedArrival, actualArrival, line, platform, offRoute, nextStanox, expectedAtNextStanox, tiplocs) {
