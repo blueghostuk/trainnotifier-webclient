@@ -48,10 +48,10 @@
             @*1. ALL - Location*@
             <td class="col station stationName">
                 <a class="pointer" data-bind="visible: locationCRS, text: location, attr: { href: '/search-schedule#at/' + locationCRS }"></a>
-                <a class="pointer" data-bind="visible: !locationCRS, text: location" onclick="    return false;"></a>
+                <a class="pointer" data-bind="visible: !locationCRS, text: location" onclick="return false;"></a>
             </td>
             @*2. ALL - Platform*@
-            <td class="col extra platform" data-bind="text: platform, css: { changePlatform: changePlatform }"></td>
+            <td class="col extra platform" data-bind="text: actualPlatform, css: { changePlatform: changePlatform }"></td>
             @*3. Advanced - Pass(Pass)/WTT Expected Arrival*@
             <td class="col arrive wtt hidden-xs hidden-sm visible-md visible-lg" data-bind="text: pass ? 'Pass' : wttArrive"></td>
             @*4. Advanced - Pass(Empty)/Public Expected Arrival*@

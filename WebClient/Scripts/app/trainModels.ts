@@ -22,7 +22,8 @@ module TrainNotifier.KnockoutModels.Train {
         public departureDelay: KnockoutComputed<number>;
         public departureDelayCss: KnockoutComputed<string>;
         public line: string = null;
-        public platform = ko.observable<string>();
+        public platform: string = null;
+        public actualPlatform = ko.observable<string>();
         public eAllowance: string = null;
         public paAllowance: string = null;
         public peAllowance: string = null;
@@ -57,7 +58,8 @@ module TrainNotifier.KnockoutModels.Train {
             }
 
             this.line = scheduleStop.Line;
-            this.platform(scheduleStop.Platform);
+            this.platform = scheduleStop.Platform;
+            this.actualPlatform(scheduleStop.Platform);
             if (scheduleStop.EngineeringAllowance) {
                 this.eAllowance = "[" + scheduleStop.EngineeringAllowance + "]"
             }
@@ -117,8 +119,8 @@ module TrainNotifier.KnockoutModels.Train {
 
         associateWithLiveStop(liveStop: LiveStopBase) {
             this.associateLiveStop(liveStop);
-            if (liveStop.platform() && (liveStop.platform() != this.platform())) {
-                this.platform(liveStop.platform());
+            if ((liveStop.platform() != null) && (liveStop.platform() != this.platform)) {
+                this.actualPlatform(liveStop.platform());
                 this.changePlatform(true);
             }
         }

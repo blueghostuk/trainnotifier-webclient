@@ -23,6 +23,19 @@ tr.info a {
     color: white;
 }
 
+span.badge.alert-info {
+    color: green;
+}
+
+span.badge.alert-warning {
+    color: red;
+}
+
+span.badge.alert-important {
+    color: red;
+    font-weight: bold;
+}
+
 .col.station {
     background-color: rgba(247, 247, 247, 0.23);
 }

@@ -1,3 +1,8 @@
+﻿/// <reference path="websockets.ts" />
+/// <reference path="global.ts" />
+/// <reference path="../typings/moment/moment.d.ts" />
+/// <reference path="../typings/knockout/knockout.d.ts" />
+/// <reference path="webApi.ts" />
 var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -15,7 +20,8 @@ var TrainNotifier;
                     this.wttDepart = null;
                     this.publicDepart = null;
                     this.line = null;
-                    this.platform = ko.observable();
+                    this.platform = null;
+                    this.actualPlatform = ko.observable();
                     this.eAllowance = null;
                     this.paAllowance = null;
                     this.peAllowance = null;
@@ -46,7 +52,8 @@ var TrainNotifier;
                     }
 
                     this.line = scheduleStop.Line;
-                    this.platform(scheduleStop.Platform);
+                    this.platform = scheduleStop.Platform;
+                    this.actualPlatform(scheduleStop.Platform);
                     if (scheduleStop.EngineeringAllowance) {
                         this.eAllowance = "[" + scheduleStop.EngineeringAllowance + "]";
                     }
@@ -105,8 +112,8 @@ var TrainNotifier;
 
                 ScheduleStop.prototype.associateWithLiveStop = function (liveStop) {
                     this.associateLiveStop(liveStop);
-                    if (liveStop.platform() && (liveStop.platform() != this.platform())) {
-                        this.platform(liveStop.platform());
+                    if ((liveStop.platform() != null) && (liveStop.platform() != this.platform)) {
+                        this.actualPlatform(liveStop.platform());
                         this.changePlatform(true);
                     }
                 };
@@ -309,6 +316,8 @@ var TrainNotifier;
                     if (berthUpdate.To && berthUpdate.To.length > 0)
                         this.location += " - " + berthUpdate.To;
 
+                    // supplied time is in UTC, want to format to local (in theory this is UK)
+                    // note these times are shown with seconds as they may not be on the 00/30 mark
                     this.actualArrival(moment.utc(berthUpdate.Time).local().format(TrainNotifier.DateTimeFormats.timeFormat));
                     this.notes("From Area: " + berthUpdate.AreaId);
                 }
@@ -645,7 +654,7 @@ var TrainNotifier;
                     var self = this;
                     this.fullTitle = ko.computed(function () {
                         if (self.id() && self.from() && self.to() && self.start() && self.end()) {
-                            document.title = self.id() + " " + self.from() + " to " + self.to() + " " + self.start() + " - " + self.end() + " - ";
+                            document.title = self.id() + " " + self.from() + " to " + self.to() + " " + self.start() + " - " + self.end() + " - "; // + TrainNotifier.Common.page.pageTitle;
                         }
                         return "";
                     }).extend({ throttle: 500 });
