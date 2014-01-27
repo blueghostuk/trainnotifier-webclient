@@ -1,0 +1,63 @@
+﻿@{
+    Layout = "~/_Layout.cshtml";
+}
+@using System.Web.Optimization;
+@section CustomCss{
+    @Styles.Render("~/bundles/css/history")
+}
+@section FooterJs{
+    @Scripts.Render("~/bundles/js/history")
+}
+@section TopMenu{
+    <li><a href="~/">Home</a></li>
+    <li class="active"><a>Train History</a></li>
+    <li class="dropdown">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Live <b class="caret"></b></a>
+        <ul class="dropdown-menu">
+            <li><a href="~/route">Routes</a></li>
+            <li><a href="~/station">Stations</a></li>
+            <li><a href="~/live">Live Feed</a></li>
+        </ul>
+    </li>
+    <li><a href="~/ppm">PPM</a></li>
+    <li><a href="~/about">About</a></li>
+}
+<div class="row">
+    <!--/.col-md-2-->
+    <div class="col-md-12" id="resultsBlock">
+        <div class="row alert alert-info hide" id="no-results-row">
+            <strong>No Results Found</strong>
+        </div>
+        <div class="row alert alert-error hide" id="error-row">
+            <strong>Error fetching data. Please Refresh to try again</strong>
+        </div>
+        <div class="progress progress-striped active">
+            <div class="progress-bar" role="progressbar" style="width: 100%"></div>
+        </div>
+        <div class="row" id="title" data-bind="visible: id">
+            <span data-bind="text: id" class="xxl"></span>
+            <span data-bind="text: from" class="stationName xl"></span><span data-bind="visible: to">&nbsp;to&nbsp;</span><span data-bind="text: to" class="stationName xl"></span>
+            <hr style="margin: 5px 0px;" />
+        </div>
+        <div class="row">
+            <ul class="nav nav-tabs" id="trainNav">
+                <li class="active"><a href="#history" data-toggle="tab">History</a></li>
+                @*<li><a href="#calendar" data-toggle="tab">Calendar</a></li>
+                <li><a href="#performance" data-toggle="tab">Performance</a></li>*@
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane active" id="history">
+                    @RenderPage("_historyHistory.cshtml")
+                </div>
+                @*<div class="tab-pane" id="calendar">
+                    @RenderPage("_historyCalendar.cshtml")
+                </div>
+                <div class="tab-pane" id="performance">
+                    @RenderPage("_historyPerformance.cshtml")
+                </div>*@
+            </div>
+        </div>
+    </div>
+    <!--/.col-md-12-->
+</div>
+<!--/row-fluid-->

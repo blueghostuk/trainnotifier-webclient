@@ -1,0 +1,61 @@
+﻿body {
+    padding-top: 60px;
+    padding-bottom: 40px;
+}
+
+table {
+    margin-top: 5px;
+}
+
+.starts, .terminates {
+    font-weight: normal !important;
+}
+
+.stationName {
+    font-weight: bold;
+}
+
+div#title {
+    margin-top: 5px;
+    font-size: large;
+}
+
+    div#title span.xxl {
+        font-weight: bold;
+        font-size: xx-large;
+        margin-left: 5px;
+    }
+
+    div#title span.xl {
+        font-weight: bold;
+        font-size: x-large;
+    }
+
+@media (max-width: 480px) {
+    body {
+        font-size: 14px;
+    }
+
+    div#title {
+        margin-top: 5px;
+        font-size: 14px;
+    }
+
+        div#title span.xxl {
+            font-weight: bold;
+            font-size: 14px;
+            margin-left: 5px;
+        }
+
+        div#title span.xl {
+            font-weight: bold;
+            font-size: 14px;
+        }
+}
+
+@media (max-width: 979px) {
+    div#title span:first-child {
+        margin-left: 0px !important;
+        display: block !important;
+    }
+}
