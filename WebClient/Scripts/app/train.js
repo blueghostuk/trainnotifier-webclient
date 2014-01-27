@@ -1,15 +1,15 @@
+var currentTrainUid = ko.observable();
 var trainTitleModel = new TrainNotifier.KnockoutModels.Train.TrainTitleViewModel();
-
-var _lastTrainData;
-
 var scheduleStops = ko.observableArray();
 var liveStops = ko.observableArray();
 var currentTrainDetails = new TrainNotifier.KnockoutModels.Train.TrainDetails();
 
+var _lastTrainData;
 var currentTiplocs = [];
-
 var map;
 var webSockets = new TrainNotifier.WebSockets();
+var currentCommand;
+
 var thisPage = {
     settingHash: false,
     setCommand: function (command) {
@@ -18,38 +18,29 @@ var thisPage = {
         if (advancedMode != -1) {
             command = command.substring(0, advancedMode);
         }
-        $("#global-search-box").val(command.replace("!", ""));
         document.location.hash = original;
+        currentCommand = original.replace("!", "");
+        ;
     },
     parseCommand: function () {
         var cmdString = thisPage.getCommand();
-        var idx = cmdString.indexOf("/");
-        if (idx == -1)
-            return false;
-
-        var cmd = cmdString.substring(0, idx);
-        var args = cmdString.substring(idx + 1);
+        var cmd = "get";
+        var args = cmdString.split('/');
+        if (args.length == 5) {
+            cmd = args[4];
+        } else if (args.length == 2) {
+            cmd = args[0];
+        }
 
         if (cmd == "id") {
-            getById(args);
+            getById(args[1]);
             return true;
         } else if (cmd == "get" || cmd == "sub") {
             var subscribe = cmd == "sub";
-            var hashIdx = args.indexOf('/');
-            var advancedMode = args.indexOf('/advanced');
-            if (advancedMode != -1) {
-                args = args.substring(0, advancedMode);
-            }
             var date = "";
             var trainUid = "";
-            if (hashIdx === -1) {
-                trainUid = args;
-                date = moment().format(TrainNotifier.DateTimeFormats.dateQueryFormat);
-                this.setCommand(cmdString + "/" + moment().format(TrainNotifier.DateTimeFormats.dateQueryFormat));
-            } else {
-                trainUid = args.substring(0, hashIdx);
-                date = args.substring(hashIdx + 1);
-            }
+            trainUid = args[0];
+            date = args[1] + "-" + args[2] + "-" + args[3];
             getTrainData(trainUid, date, subscribe);
             return true;
         }
@@ -57,13 +48,30 @@ var thisPage = {
         return false;
     },
     getCommand: function () {
-        return $("#global-search-box").val();
+        return currentCommand;
     },
     wsOpenCommand: function () {
         this.parseCommand();
     },
     setStatus: function (status) {
         $("#status").html(status);
+    },
+    advancedMode: false,
+    advancedSwitch: function (change) {
+        if (typeof change === "undefined") { change = true; }
+        if (change) {
+            this.advancedMode = !this.advancedMode;
+            $.cookie("advancedMode-train", this.advancedMode ? "on" : "off", { expires: 365 });
+        }
+        if (this.advancedMode) {
+            $("#advancedSwitch").html("Simple");
+
+            $(".pass").show();
+        } else {
+            $("#advancedSwitch").html("Advanced");
+
+            $(".pass").hide();
+        }
     }
 };
 
@@ -79,9 +87,19 @@ $(function () {
     ko.applyBindings(scheduleStops, $("#mix").get(0));
     ko.applyBindings(trainTitleModel, $("#title").get(0));
     ko.applyBindings(currentTrainDetails, $("#details").get(0));
+    ko.applyBindings(currentTrainUid, $("#trainNav").get(0));
 
     if (document.location.hash.length > 0) {
         thisPage.setCommand(document.location.hash.substr(1));
+    }
+    $("#advancedSwitch").click(function (e) {
+        e.preventDefault();
+        thisPage.advancedSwitch();
+    });
+    var advancedCookie = $.cookie("advancedMode-train");
+    if (advancedCookie && advancedCookie == "on") {
+        thisPage.advancedMode = true;
+        thisPage.advancedSwitch(false);
     }
     $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
         if ($(e.target).attr("href") == "#map") {
@@ -191,7 +209,7 @@ function connectToWebsocketServer() {
 
     setInterval(function () {
         if (webSockets.state == WebSocket.CLOSED) {
-            thisPage.wsOpenCommand();
+            webSockets.connect();
         }
     }, 2000);
 }
@@ -271,7 +289,7 @@ function sendWsCommand(command) {
 
 function subTrain() {
     if (_lastTrainData && _lastTrainData.Movement.Actual && webSockets && webSockets.state == WebSocket.OPEN) {
-        thisPage.setCommand("sub/" + _lastTrainData.Movement.Schedule.TrainUid + "/" + moment(_lastTrainData.Movement.Actual.OriginDepartTimestamp).format(TrainNotifier.DateTimeFormats.dateQueryFormat));
+        thisPage.setCommand("!" + _lastTrainData.Movement.Schedule.TrainUid + "/" + moment(_lastTrainData.Movement.Actual.OriginDepartTimestamp).format(TrainNotifier.DateTimeFormats.dateUrlFormat) + "/sub");
         doSubTrain();
     }
 }
@@ -280,7 +298,7 @@ function getById(id) {
     preAjax();
     webApi.getTrainMovementById(id).done(function (data) {
         if (data) {
-            thisPage.setCommand("get/" + data.TrainUid + "/" + moment(data.SchedOriginDeparture).format(TrainNotifier.DateTimeFormats.dateQueryFormat));
+            thisPage.setCommand("!" + data.TrainUid + "/" + moment(data.SchedOriginDeparture).format(TrainNotifier.DateTimeFormats.dateUrlFormat));
             getTrainData(data.TrainUid, moment(data.SchedOriginDeparture).format(TrainNotifier.DateTimeFormats.dateQueryFormat), false);
         } else {
             show($("#no-results-row"));
@@ -293,6 +311,7 @@ function getById(id) {
 }
 
 function getTrainData(trainUid, date, subscribe) {
+    currentTrainUid(trainUid);
     preAjax();
     sendWsCommand("unsubtrain:");
     reset();
@@ -427,6 +446,7 @@ function getTrainData(trainUid, date, subscribe) {
     }).fail(function () {
         show($("#error-row"));
     }).always(function () {
+        thisPage.advancedSwitch(false);
         hide($(".progress"));
     });
 }
@@ -451,7 +471,7 @@ function getAssociations(date) {
 }
 
 function tryConnect() {
-    if (webSockets && webSockets.state === WebSocket.CLOSED) {
+    if (webSockets && webSockets.state !== WebSocket.OPEN) {
         webSockets.connect();
     }
 }

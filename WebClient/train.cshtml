@@ -36,10 +36,11 @@
     </li>
     <li><a href="~/ppm">PPM</a></li>
     <li><a href="~/about">About</a></li>
+    <li><a href="#" id="advancedSwitch" title="Switch to this Mode">Advanced</a></li>
 }
 @section TopMenuAdditional{
     <div class="navbar-form navbar-right">
-        <a class="btn btn-primary btn-sm btn-disconnect" id="btn_Subscribe" onclick="subTrain();" disabled="disabled" title="Get Live Updates for this train">
+        <a class="btn btn-primary btn-sm btn-disconnect" id="btn_Subscribe" onclick="subTrain();" disabled="true" title="Get Live Updates for this train">
             <span class="glyphicon glyphicon-refresh"></span>
         </a>
         <a class="btn btn-primary btn-sm btn-connect" id="status" onclick="tryConnect(); return false;">Connection Status</a>
@@ -66,12 +67,13 @@
             <hr style="margin: 5px 0px;" />
         </div>
         <div class="row">
-            <ul class="nav nav-tabs">
+            <ul class="nav nav-tabs" id="trainNav">
                 <li class="active"><a href="#mix" data-toggle="tab">Train</a></li>
                 <li><a href="#schedule" data-toggle="tab">Schedule</a></li>
                 <li><a href="#trains" data-toggle="tab">Live</a></li>
                 <li><a href="#details" data-toggle="tab">Details</a></li>
                 <li><a href="#map" class="hidden-xs" data-toggle="tab">Map</a></li>
+                @*<li><a href="/history#!" data-bind="attr: { href: '/history#!' + $data }">History</a></li>*@
             </ul>
             <div class="tab-content">
                 <div class="tab-pane active" id="mix">
