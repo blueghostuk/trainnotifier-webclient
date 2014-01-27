@@ -30,6 +30,7 @@ $(function () {
     $('.datepicker').datepicker({
         format: 'dd/mm/yyyy',
         startDate: moment().subtract({ days: 14 }).toDate(),
+        weekStart: 1,
         todayHighlight: true
     }).on("changeDate", function () {
             $(this).datepicker('hide');
@@ -58,7 +59,7 @@ $(function () {
             locations.push({
                 value: results[i].StationName,
                 crs: results[i].CRS,
-                tokens: [results[i].CRS, results[i].StationName, results[i].Tiploc]
+                tokens: getTokens(results[i])
             });
         }
         $(".station-lookup").typeahead({
@@ -72,6 +73,17 @@ $(function () {
         $("#at-crs").attr("placeholder", "Type calling at station name here");
     });
 });
+
+function getTokens(station: IStationTiploc) {
+    var results: Array<string> = [];
+    results.push(station.CRS);
+    results.push(station.Tiploc);
+    var stationSplit = station.StationName.split(" ");
+    for (var i = 0; i < stationSplit.length; i++) {
+        results.push(stationSplit[i]);
+    }
+    return results;
+}
 
 function findStation(value: string): IStationLookup {
     var matches = locations.filter(function (item) {
