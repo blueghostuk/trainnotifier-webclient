@@ -1,5 +1,4 @@
-﻿/*http://jsfiddle.net/needathinkle/MA7Ep/*/
-.twitter-typeahead {
+﻿.twitter-typeahead {
     width: 100%;
     position: relative;
 }
@@ -8,7 +7,7 @@
     .twitter-typeahead .tt-hint {
         margin-bottom: 0;
         width: 100%;
-        height: 30px;
+        height: 34px;
         position: absolute;
         top: 0;
         left: 0;
@@ -17,7 +16,7 @@
     .twitter-typeahead .tt-hint {
         color: #a1a1a1;
         z-index: 1;
-        padding: 6px 12px;
+        padding: 6px 7px;
         border: 1px solid transparent;
     }
 
@@ -28,8 +27,8 @@
         border-top-right-radius: 0 !important;
         border-bottom-right-radius: 0 !important;
         /* add these 2 statements if you have an prepended input group */
-        border-top-left-radius: 0 !important;
-        border-bottom-left-radius: 0 !important;
+        border-top-left-radius: 0!important;
+        border-bottom-left-radius: 0!important;
     }
 
 .tt-dropdown-menu {
@@ -76,15 +75,3 @@
     .tt-suggestion p {
         margin: 0;
     }
-
-.input-group-sm * .form-control {
-    font-size: 12px;
-}
-
-.input-group-sm * p {
-    font-size: 12px;
-}
-
-.input-group-sm * .tt-hint {
-    font-size: 12px;
-}
