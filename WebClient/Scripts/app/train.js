@@ -1,4 +1,4 @@
-var currentTrainUid = ko.observable();
+﻿var currentTrainUid = ko.observable();
 var trainTitleModel = new TrainNotifier.KnockoutModels.Train.TrainTitleViewModel();
 var scheduleStops = ko.observableArray();
 var liveStops = ko.observableArray();
@@ -333,8 +333,15 @@ function getTrainData(trainUid, date, subscribe) {
                 }
             }
             if (data.Movement.Schedule && data.Movement.Schedule.Stops.length > 0) {
+                var previousStop;
                 for (var i = 0; i < data.Movement.Schedule.Stops.length; i++) {
-                    scheduleStops.push(new TrainNotifier.KnockoutModels.Train.ScheduleStop(data.Movement.Schedule.Stops[i], currentTiplocs));
+                    var thisStop = new TrainNotifier.KnockoutModels.Train.ScheduleStop(data.Movement.Schedule.Stops[i], currentTiplocs);
+
+                    if (previousStop != null) {
+                        thisStop.associateWithPreviousStop(previousStop);
+                    }
+                    previousStop = thisStop;
+                    scheduleStops.push(thisStop);
                 }
 
                 if (data.Movement.ChangeOfOrigins.length > 0) {
@@ -415,6 +422,10 @@ function getTrainData(trainUid, date, subscribe) {
                                 break;
                             }
                         }
+                    }
+
+                    for (var i = 0; i < scheduleStops().length; i++) {
+                        scheduleStops()[i].estimateFromPreviousStop();
                     }
 
                     var orderedModelStops = modelStops.sort(function (a, b) {

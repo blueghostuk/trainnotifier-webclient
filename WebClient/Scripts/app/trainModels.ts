@@ -14,12 +14,14 @@ module TrainNotifier.KnockoutModels.Train {
         public wttArrive: string = null;
         public publicArrive: string = null;
         public actualArrival: KnockoutComputed<string>;
+        private estimateArrival = ko.observable<string>(null);
         public arrivalDelay: KnockoutComputed<number>;
         public arrivalDelayCss: KnockoutComputed<string>;
         public arrivalCss: KnockoutComputed<string>;
         public wttDepart: string = null;
         public publicDepart: string = null;
         public actualDeparture: KnockoutComputed<string>;
+        private estimateDeparture = ko.observable<string>(null);
         public departureDelay: KnockoutComputed<number>;
         public departureDelayCss: KnockoutComputed<string>;
         public departureCss: KnockoutComputed<string>;
@@ -34,7 +36,13 @@ module TrainNotifier.KnockoutModels.Train {
         public stopNumber: number;
         public changePlatform = ko.observable<boolean>(false);
 
+        private isEstimateArrival = ko.observable<boolean>(true);
+        private isEstimateDeparture = ko.observable<boolean>(true);
         private associateLiveStop = ko.observable<LiveStopBase>();
+
+        private previousStop: ScheduleStop = null;
+
+        private delay: Duration;
 
         constructor(scheduleStop: IRunningScheduleTrainStop, tiplocs: IStationTiploc[]) {
             var tiploc = StationTiploc.findStationTiploc(scheduleStop.TiplocStanoxCode, tiplocs);
@@ -74,10 +82,11 @@ module TrainNotifier.KnockoutModels.Train {
 
             var self = this;
             this.actualArrival = ko.computed(function () {
+                var arrival: string = null;
                 if (self.associateLiveStop())
-                    return self.associateLiveStop().actualArrival();
+                    arrival = self.associateLiveStop().actualArrival();
 
-                return null;
+                return arrival ? arrival : self.estimateArrival() ? self.estimateArrival() : self.publicArrive;
             });
             this.arrivalDelay = ko.computed(function () {
                 if (self.associateLiveStop())
@@ -87,16 +96,17 @@ module TrainNotifier.KnockoutModels.Train {
             });
             this.arrivalDelayCss = ko.computed(function () {
                 return self.getDelayCss(self.arrivalDelay());
-            });
+            }).extend({ throttle: 500 });
             this.arrivalCss = ko.computed(function () {
-                return self.getDelayCss(self.arrivalDelay(), "");
-            });
+                return self.getDelayCss(self.arrivalDelay(), self.isEstimateArrival() ? "estimate " : "non-estimate ", "");
+            }).extend({ throttle: 500 });
 
             this.actualDeparture = ko.computed(function () {
+                var departure: string = null;
                 if (self.associateLiveStop())
-                    return self.associateLiveStop().actualDeparture();
+                    departure = self.associateLiveStop().actualDeparture();
 
-                return null;
+                return departure ? departure : self.estimateDeparture() ? self.estimateDeparture() : self.publicDepart ? self.publicDepart : self.pass ? self.pass : null;
             });
             this.departureDelay = ko.computed(function () {
                 if (self.associateLiveStop())
@@ -106,25 +116,27 @@ module TrainNotifier.KnockoutModels.Train {
             });
             this.departureDelayCss = ko.computed(function () {
                 return self.getDelayCss(self.departureDelay());
-            });
+            }).extend({ throttle: 500 });
             this.departureCss = ko.computed(function () {
-                return self.getDelayCss(self.departureDelay(), "");
-            });
+                return self.getDelayCss(self.departureDelay(), self.isEstimateDeparture() ? "estimate " : "non-estimate ", "");
+            }).extend({ throttle: 500 });
         }
 
-        private getDelayCss(value: Number, defaultValue: string = "hidden") {
+        private getDelayCss(value: Number, prefix = "", defaultValue: string = "hidden") {
             if (value < 0)
-                return "alert-info";
+                return prefix + "alert-info";
             if (value > 10)
-                return "alert-important";
+                return prefix + "alert-important";
             if (value > 0)
-                return "alert-warning";
+                return prefix + "alert-warning";
 
-            return defaultValue;
+            return prefix + defaultValue;
         }
 
         associateWithLiveStop(liveStop: LiveStopBase) {
             this.associateLiveStop(liveStop);
+            this.isEstimateArrival(liveStop.actualArrival() == null);
+            this.isEstimateDeparture(liveStop.actualDeparture() == null);
             if ((liveStop.platform() != null) && (liveStop.platform() != this.platform)) {
                 this.actualPlatform(liveStop.platform());
                 this.changePlatform(true);
@@ -136,6 +148,45 @@ module TrainNotifier.KnockoutModels.Train {
                 return false;
 
             return liveStop.locationStanox === this.locationStanox;
+        }
+
+        associateWithPreviousStop(previousStop: ScheduleStop) {
+            this.previousStop = previousStop;
+        }
+
+        estimateFromPreviousStop() {
+            if (this.previousStop == null)
+                return;
+
+            var previousExpected = this.previousStop.publicDepart ? this.previousStop.publicDepart : this.previousStop.pass;
+            var previousActual = this.previousStop.actualDeparture();
+            if (!previousExpected || !previousActual)
+                return;
+
+            var previousExpectedDuration = moment.duration(previousExpected);
+            var delay = this.previousStop.delay ? this.previousStop.delay : moment.duration(previousActual).subtract(previousExpectedDuration);
+            if (delay.asSeconds() <= 0)
+                return;
+
+            this.delay = delay;
+
+            if (this.wttArrive && (!this.associateLiveStop() || !this.associateLiveStop().actualArrival())) {
+                var arr = moment.duration(this.wttArrive);
+                var usualDifference = moment.duration(arr).subtract(previousExpectedDuration);
+                var est = arr.add(usualDifference);
+                this.estimateArrival(est.hours() + ":" + est.minutes());
+
+            }
+            if (this.wttDepart && (!this.associateLiveStop() || !this.associateLiveStop().actualDeparture())) {
+                var dept = moment.duration(this.wttDepart);
+                var usualDifference = moment.duration(dept).subtract(moment.duration(this.wttArrive));
+                var est = dept.add(usualDifference);
+                this.estimateDeparture(est.hours() + ":" + est.minutes());
+            }
+            if (this.pass) {
+                /*var usualDifference = moment.duration(this.pass).asSeconds() - moment.duration(previousExpected).asSeconds();
+                console.log("usual pass diff at " + this.locationCRS + " is " + usualDifference + "s");*/
+            }
         }
     }
 

@@ -357,9 +357,16 @@ function getTrainData(trainUid: string, date, subscribe: boolean) {
                 }
             }
             if (data.Movement.Schedule && data.Movement.Schedule.Stops.length > 0) {
+                var previousStop: TrainNotifier.KnockoutModels.Train.ScheduleStop;
                 for (var i = 0; i < data.Movement.Schedule.Stops.length; i++) {
-                    scheduleStops.push(new TrainNotifier.KnockoutModels.Train.ScheduleStop(
-                        data.Movement.Schedule.Stops[i], currentTiplocs));
+                    var thisStop = new TrainNotifier.KnockoutModels.Train.ScheduleStop(
+                        data.Movement.Schedule.Stops[i], currentTiplocs);
+
+                    if (previousStop != null) {
+                        thisStop.associateWithPreviousStop(previousStop);
+                    }
+                    previousStop = thisStop;
+                    scheduleStops.push(thisStop);
                 }
 
                 if (data.Movement.ChangeOfOrigins.length > 0) {
@@ -445,6 +452,10 @@ function getTrainData(trainUid: string, date, subscribe: boolean) {
                                 break;
                             }
                         }
+                    }
+
+                    for (var i = 0; i < scheduleStops().length; i++) {
+                        scheduleStops()[i].estimateFromPreviousStop();
                     }
 
                     var orderedModelStops = modelStops.sort(function (a: TrainNotifier.KnockoutModels.Train.LiveStopBase, b: TrainNotifier.KnockoutModels.Train.LiveStopBase) {
