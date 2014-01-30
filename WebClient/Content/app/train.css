@@ -37,14 +37,6 @@ tr.info a {
     font-weight: bold;
 }
 
-.estimate {
-    font-style: italic;
-}
-
-.non-estimate {
-    font-weight: bold;
-}
-
 .col.station {
     background-color: rgba(247, 247, 247, 0.23);
 }

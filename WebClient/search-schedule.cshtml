@@ -249,7 +249,7 @@
                                 <a data-bind="text: atWttArrival, attr: { href: 'trains/' + trainId + '/' + departureDate }"></a>
                             </td>
                             <td class="visible-md visible-lg time" title="Actual Arrival">
-                                <a data-bind="text: atActualArrival, attr: { href: 'trains/' + trainId + '/' + departureDate }"></a>
+                                <a data-bind="text: atActualArrival, attr: { href: 'trains/' + trainId + '/' + departureDate }, css: { estimate: atActualArrivalEstimate, 'non-estimate': !atActualArrivalEstimate }"></a>
                             </td>
                             <td class="visible-xs visible-sm time">
                                 <a data-bind="attr: { href: 'trains/' + trainId + '/' + departureDate }">
@@ -295,7 +295,7 @@
                                 <a data-bind="text: atWttDeparture, attr: { href: 'trains/' + trainId + '/' + departureDate }"></a>
                             </td>
                             <td class="visible-md visible-lg time" title="Actual Departure">
-                                <a data-bind="text: atActualDeparture, attr: { href: 'trains/' + trainId + '/' + departureDate }"></a>
+                                <a data-bind="text: atActualDeparture, attr: { href: 'trains/' + trainId + '/' + departureDate}, css: { estimate: atActualDepartureEstimate, 'non-estimate': !atActualDepartureEstimate }"></a>
                             </td>
                             <td class="visible-xs visible-sm time">
                                 <a data-bind="attr: { href: 'trains/' + trainId + '/' + departureDate }">
@@ -648,9 +648,11 @@
 </div>
 <!--/row-fluid-->
 <div class="row-fluid">
-    <p class="text-info span12">
+    <p class="span12">
         <span class="glyphicon glyphicon-info-sign"></span>&nbsp;Passing, <span title="Empty Coaching Stock">ECS</span> and <span title="Freight or Other Operator">TOC-ZZ</span> trains will be hidden in Simple Mode.
         <br />
-        <span class="glyphicon glyphicon-info-sign"></span>&nbsp;Trains in italics are non-activated trains. This means they may not run. Trains are typically activated a few hours before scheduled departure time.
+        <span class="glyphicon glyphicon-info-sign"></span>&nbsp;Trains in <em>italics</em> are non-activated trains. This means they may not run. Trains are typically activated a few hours before scheduled departure time.
+        <br />
+        <span class="glyphicon glyphicon-info-sign"></span>&nbsp;Actual times in <em>italics</em> are estimates. Times in <strong>bold</strong> are actual times.
     </p>
 </div>

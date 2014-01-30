@@ -1,4 +1,4 @@
-var __extends = this.__extends || function (d, b) {
+﻿var __extends = this.__extends || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
     __.prototype = b.prototype;
@@ -268,13 +268,15 @@ var TrainNotifier;
                 __extends(CallingAtTrainMovement, _super);
                 function CallingAtTrainMovement(trainMovement, atTiploc, tiplocs, queryStartDate) {
                     _super.call(this, trainMovement, tiplocs, queryStartDate);
-                    this.atPlatform = "";
-                    this.atPublicDeparture = "";
-                    this.atWttDeparture = "";
-                    this.atActualDeparture = "";
-                    this.atPublicArrival = "";
-                    this.atWttArrival = "";
-                    this.atActualArrival = "";
+                    this.atPlatform = null;
+                    this.atPublicDeparture = null;
+                    this.atWttDeparture = null;
+                    this.atActualDeparture = null;
+                    this.atActualDepartureEstimate = true;
+                    this.atPublicArrival = null;
+                    this.atWttArrival = null;
+                    this.atActualArrival = null;
+                    this.atActualArrivalEstimate = true;
                     this.pass = ko.observable(false);
 
                     var atTiplocs = tiplocs.filter(function (t) {
@@ -306,13 +308,21 @@ var TrainNotifier;
                                 this.pass(true);
                                 this.atPublicDeparture = "Pass";
                                 this.atWttDeparture = TrainNotifier.DateTimeFormats.formatTimeString(atStop.Pass);
+                                this.departure = moment.duration(atStop.Pass);
+
                                 this.atPublicArrival = "Pass";
                                 this.atWttArrival = TrainNotifier.DateTimeFormats.formatTimeString(atStop.Pass);
+                                this.arrival = moment.duration(atStop.Pass);
                             } else {
                                 this.atPublicDeparture = TrainNotifier.DateTimeFormats.formatTimeString(atStop.PublicDeparture);
                                 this.atWttDeparture = TrainNotifier.DateTimeFormats.formatTimeString(atStop.Departure);
+                                if (atStop.PublicDeparture)
+                                    this.departure = moment.duration(atStop.PublicDeparture);
+
                                 this.atPublicArrival = TrainNotifier.DateTimeFormats.formatTimeString(atStop.PublicArrival);
                                 this.atWttArrival = TrainNotifier.DateTimeFormats.formatTimeString(atStop.Arrival);
+                                if (atStop.PublicArrival)
+                                    this.arrival = moment.duration(atStop.PublicArrival);
                             }
                         }
 
@@ -338,13 +348,41 @@ var TrainNotifier;
                                 switch (atActualStops[i].EventType) {
                                     case 2 /* Arrival */:
                                         this.atActualArrival = TrainNotifier.DateTimeFormats.formatDateTimeString(atActualStops[i].ActualTimestamp);
+                                        this.atActualArrivalEstimate = false;
                                         break;
                                     case 1 /* Departure */:
                                         this.atActualDeparture = TrainNotifier.DateTimeFormats.formatDateTimeString(atActualStops[i].ActualTimestamp);
+                                        this.atActualDepartureEstimate = false;
                                         break;
                                 }
                             }
+                        } else {
+                            var precedingStops = trainMovement.Actual.Stops.filter(function (element) {
+                                return element.ScheduleStopNumber < atStop.StopNumber;
+                            });
+                            if (precedingStops.length > 0) {
+                                var currentDelay = 0;
+                                for (var i = 0; i < precedingStops.length; i++) {
+                                    var precedingStop = precedingStops[i];
+                                    var actual = moment(precedingStop.ActualTimestamp);
+                                    var planned = moment(precedingStop.PlannedTimestamp);
+                                    if (actual.isAfter(planned)) {
+                                        currentDelay = actual.diff(planned, 'minutes', true);
+                                    } else {
+                                        currentDelay = 0;
+                                    }
+                                }
+                                if (this.arrival) {
+                                    this.atActualArrival = TrainNotifier.DateTimeFormats.formatTimeDuration(this.arrival.add(moment.duration(currentDelay, 'minutes')));
+                                }
+                                if (this.departure) {
+                                    this.atActualDeparture = TrainNotifier.DateTimeFormats.formatTimeDuration(this.departure.add(moment.duration(currentDelay, 'minutes')));
+                                }
+                            }
                         }
+                    } else {
+                        this.atActualArrival = TrainNotifier.DateTimeFormats.formatTimeDuration(this.arrival);
+                        this.atActualDeparture = TrainNotifier.DateTimeFormats.formatTimeDuration(this.departure);
                     }
 
                     var css = [];

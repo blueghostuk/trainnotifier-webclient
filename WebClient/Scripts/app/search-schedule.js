@@ -1,4 +1,4 @@
-var searchTitleModel = new TrainNotifier.KnockoutModels.Search.TitleViewModel();
+﻿var searchTitleModel = new TrainNotifier.KnockoutModels.Search.TitleViewModel();
 
 var startEndSearchResults = ko.observableArray();
 var callingAtSearchResults = ko.observableArray();

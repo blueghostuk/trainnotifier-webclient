@@ -38,6 +38,7 @@ tr.info > td {
     tr.info > td > span.changeOfOrigin {
         display: block;
     }
+
 .changeOfDestination {
     text-decoration: line-through;
 }
@@ -63,8 +64,17 @@ tr.error > td > span.changeOfDestination {
     cursor: pointer;
 }
 
-.pager{
+.pager {
     margin: 5px 0px !important;
+}
+
+.estimate {
+    font-style: italic;
+}
+
+.non-estimate {
+    font-weight: bold;
+    font-style: normal !important;
 }
 
 @media (max-width: 979px) {

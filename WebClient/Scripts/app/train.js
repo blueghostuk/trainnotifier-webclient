@@ -1,4 +1,4 @@
-﻿var currentTrainUid = ko.observable();
+var currentTrainUid = ko.observable();
 var trainTitleModel = new TrainNotifier.KnockoutModels.Train.TrainTitleViewModel();
 var scheduleStops = ko.observableArray();
 var liveStops = ko.observableArray();

@@ -8,8 +8,8 @@
 
 var searchTitleModel = new TrainNotifier.KnockoutModels.Search.TitleViewModel();
 
-var startEndSearchResults = ko.observableArray();
-var callingAtSearchResults = ko.observableArray();
+var startEndSearchResults = ko.observableArray<TrainNotifier.KnockoutModels.Search.TrainMovement>();
+var callingAtSearchResults = ko.observableArray<TrainNotifier.KnockoutModels.Search.TrainMovement>();
 var callingBetweenSearchResults = new TrainNotifier.KnockoutModels.Search.CallingBetweenResults();
 var nearestSearchResults = ko.observableArray<TrainNotifier.KnockoutModels.Search.NearestTrainMovement>();
 

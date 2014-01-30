@@ -73,6 +73,14 @@ var TrainNotifier;
             return null;
         };
 
+        DateTimeFormats.formatTimeDuration = function (duration) {
+            if (duration) {
+                return DateTimeFormats.padString(duration.hours().toString()) + ":" + DateTimeFormats.padString(duration.minutes().toString());
+            }
+
+            return null;
+        };
+
         DateTimeFormats.formatTimeMoment = function (timeMoment) {
             if (timeMoment && timeMoment.isValid()) {
                 var ts = timeMoment.format(TrainNotifier.DateTimeFormats.shortTimeFormat);
@@ -82,6 +90,14 @@ var TrainNotifier;
                 return ts;
             }
             return null;
+        };
+
+        DateTimeFormats.padString = function (input) {
+            if (input.length == 0)
+                return "00";
+            if (input.length == 1)
+                return "0" + input;
+            return input;
         };
         DateTimeFormats.timeUrlFormat = "HH-mm";
         DateTimeFormats.timeFormat = "HH:mm:ss";

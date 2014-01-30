@@ -112,6 +112,14 @@ module TrainNotifier {
             return null;
         }
 
+        public static formatTimeDuration(duration: Duration): string {
+            if (duration) {
+                return DateTimeFormats.padString(duration.hours().toString()) + ":" + DateTimeFormats.padString(duration.minutes().toString());
+            }
+
+            return null;
+        }
+
         public static formatTimeMoment(timeMoment: Moment): string {
             if (timeMoment && timeMoment.isValid()) {
                 var ts = timeMoment.format(TrainNotifier.DateTimeFormats.shortTimeFormat);
@@ -122,6 +130,15 @@ module TrainNotifier {
             }
             return null;
         }
+
+        private static padString(input: string) {
+            if (input.length == 0)
+                return "00";
+            if (input.length == 1)
+                return "0" + input;
+            return input;
+        }
+
     }
 
     export class CommonStrings{

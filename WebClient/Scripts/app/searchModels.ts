@@ -284,14 +284,18 @@ module TrainNotifier.KnockoutModels.Search {
 
     export class CallingAtTrainMovement extends TrainMovement {
 
-        public atPlatform: string = "";
-        public atPublicDeparture: string = "";
-        public atWttDeparture: string = "";
-        public atActualDeparture: string = "";
+        public atPlatform: string = null;
+        public atPublicDeparture: string = null;
+        public atWttDeparture: string = null;
+        public atActualDeparture: string = null;
+        public atActualDepartureEstimate = true;
+        private departure: Duration;
 
-        public atPublicArrival: string = "";
-        public atWttArrival: string = "";
-        public atActualArrival: string = "";
+        public atPublicArrival: string = null;
+        public atWttArrival: string = null;
+        public atActualArrival: string = null;
+        public atActualArrivalEstimate = true;
+        private arrival: Duration;
 
         public pass = ko.observable<boolean>(false);
 
@@ -330,13 +334,21 @@ module TrainNotifier.KnockoutModels.Search {
                         this.pass(true);
                         this.atPublicDeparture = "Pass";
                         this.atWttDeparture = DateTimeFormats.formatTimeString(atStop.Pass);
+                        this.departure = moment.duration(atStop.Pass);
+
                         this.atPublicArrival = "Pass";
                         this.atWttArrival = DateTimeFormats.formatTimeString(atStop.Pass);
+                        this.arrival = moment.duration(atStop.Pass);
                     } else {
                         this.atPublicDeparture = DateTimeFormats.formatTimeString(atStop.PublicDeparture);
                         this.atWttDeparture = DateTimeFormats.formatTimeString(atStop.Departure);
+                        if (atStop.PublicDeparture)
+                            this.departure = moment.duration(atStop.PublicDeparture);
+
                         this.atPublicArrival = DateTimeFormats.formatTimeString(atStop.PublicArrival);
                         this.atWttArrival = DateTimeFormats.formatTimeString(atStop.Arrival);
+                        if (atStop.PublicArrival)
+                            this.arrival = moment.duration(atStop.PublicArrival);
                     }
                 }
 
@@ -365,13 +377,42 @@ module TrainNotifier.KnockoutModels.Search {
                         switch (atActualStops[i].EventType) {
                             case EventType.Arrival:
                                 this.atActualArrival = DateTimeFormats.formatDateTimeString(atActualStops[i].ActualTimestamp);
+                                this.atActualArrivalEstimate = false;
                                 break;
                             case EventType.Departure:
                                 this.atActualDeparture = DateTimeFormats.formatDateTimeString(atActualStops[i].ActualTimestamp);
+                                this.atActualDepartureEstimate = false;
                                 break;
                         }
                     }
+                } else {
+                    var precedingStops = trainMovement.Actual.Stops.filter(
+                        function (element) {
+                            return element.ScheduleStopNumber < atStop.StopNumber;
+                        });
+                    if (precedingStops.length > 0) {
+                        var currentDelay: number = 0;
+                        for (var i = 0; i < precedingStops.length; i++) {
+                            var precedingStop = precedingStops[i];
+                            var actual = moment(precedingStop.ActualTimestamp)
+                            var planned = moment(precedingStop.PlannedTimestamp);
+                            if (actual.isAfter(planned)) {
+                                currentDelay = actual.diff(planned, 'minutes', true);
+                            } else {
+                                currentDelay = 0;
+                            }
+                        }
+                        if (this.arrival) {
+                            this.atActualArrival = DateTimeFormats.formatTimeDuration(this.arrival.add(moment.duration(currentDelay, 'minutes')));
+                        }
+                        if (this.departure) {
+                            this.atActualDeparture = DateTimeFormats.formatTimeDuration(this.departure.add(moment.duration(currentDelay, 'minutes')));
+                        }
+                    }
                 }
+            } else {
+                this.atActualArrival = DateTimeFormats.formatTimeDuration(this.arrival);
+                this.atActualDeparture = DateTimeFormats.formatTimeDuration(this.departure);
             }
 
 

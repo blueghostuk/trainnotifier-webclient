@@ -155,7 +155,7 @@ module TrainNotifier.KnockoutModels.Train {
         }
 
         estimateFromPreviousStop() {
-            if (this.previousStop == null)
+            if (this.previousStop == null || (!this.isEstimateArrival() && !this.isEstimateDeparture()))
                 return;
 
             var previousExpected = this.previousStop.publicDepart ? this.previousStop.publicDepart : this.previousStop.pass;
@@ -164,7 +164,7 @@ module TrainNotifier.KnockoutModels.Train {
                 return;
 
             var previousExpectedDuration = moment.duration(previousExpected);
-            var delay = this.previousStop.delay ? this.previousStop.delay : moment.duration(previousActual).subtract(previousExpectedDuration);
+            var delay = moment.duration(previousActual).subtract(previousExpectedDuration);
             if (delay.asSeconds() <= 0)
                 return;
 
@@ -172,20 +172,19 @@ module TrainNotifier.KnockoutModels.Train {
 
             if (this.wttArrive && (!this.associateLiveStop() || !this.associateLiveStop().actualArrival())) {
                 var arr = moment.duration(this.wttArrive);
-                var usualDifference = moment.duration(arr).subtract(previousExpectedDuration);
-                var est = arr.add(usualDifference);
-                this.estimateArrival(est.hours() + ":" + est.minutes());
+                var est = arr.add(delay);
+                this.estimateArrival(DateTimeFormats.formatTimeDuration(est));
 
             }
             if (this.wttDepart && (!this.associateLiveStop() || !this.associateLiveStop().actualDeparture())) {
                 var dept = moment.duration(this.wttDepart);
-                var usualDifference = moment.duration(dept).subtract(moment.duration(this.wttArrive));
-                var est = dept.add(usualDifference);
-                this.estimateDeparture(est.hours() + ":" + est.minutes());
+                var est = dept.add(delay);
+                this.estimateDeparture(DateTimeFormats.formatTimeDuration(est));
             }
-            if (this.pass) {
-                /*var usualDifference = moment.duration(this.pass).asSeconds() - moment.duration(previousExpected).asSeconds();
-                console.log("usual pass diff at " + this.locationCRS + " is " + usualDifference + "s");*/
+            if (this.pass && (!this.associateLiveStop() || !this.associateLiveStop().actualDeparture())) {
+                var dept = moment.duration(this.pass);
+                var est = dept.add(delay);
+                this.estimateDeparture(DateTimeFormats.formatTimeDuration(est));
             }
         }
     }
