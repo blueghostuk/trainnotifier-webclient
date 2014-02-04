@@ -110,7 +110,7 @@ var TrainNotifier;
         DateTimeFormats.dateTitleFormat = "ddd Do MMM YYYY";
         DateTimeFormats.dateTimeApiFormat = "YYYY-MM-DDTHH:mm";
         DateTimeFormats.timeFrameMinutesBefore = 15;
-        DateTimeFormats.timeFrameHours = 1;
+        DateTimeFormats.timeFrameHours = 0.75;
         return DateTimeFormats;
     })();
     TrainNotifier.DateTimeFormats = DateTimeFormats;

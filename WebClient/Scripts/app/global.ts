@@ -94,7 +94,7 @@ module TrainNotifier {
         public static dateTitleFormat = "ddd Do MMM YYYY";
         public static dateTimeApiFormat = "YYYY-MM-DDTHH:mm";
         public static timeFrameMinutesBefore = 15;
-        public static timeFrameHours = 1;
+        public static timeFrameHours = 0.75;
 
         public static formatTimeString(time: string) : string {
             if (time){
