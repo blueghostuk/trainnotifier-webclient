@@ -138,12 +138,12 @@
                                 <a data-bind="text: wttDeparture, attr: { href: 'trains/' + trainId + '/' + departureDate }"></a>
                             </td>
                             <td class="visible-md visible-lg time" title="Actual Departure">
-                                <a data-bind="text: actualDeparture, attr: { href: 'trains/' + trainId + '/' + departureDate }"></a>
+                                <a data-bind="text: actualDeparture, attr: { href: 'trains/' + trainId + '/' + departureDate }, css: { estimate: actualDepartureEstimate, 'non-estimate': !actualDepartureEstimate }"></a>
                             </td>
                             <td class="visible-xs visible-sm time">
                                 <a data-bind="attr: { href: 'trains/' + trainId + '/' + departureDate }">
                                     <!-- ko if: actualDeparture -->
-                                    <span style="font-weight: bold;" data-bind="text: actualDeparture"></span>
+                                    <span data-bind="text: actualDeparture, css: { estimate: actualDepartureEstimate, 'non-estimate': !actualDepartureEstimate }"></span>
                                     <!-- /ko -->
                                     <!-- ko if: !actualDeparture -->
                                     <!-- ko if: publicDeparture -->
@@ -173,12 +173,12 @@
                                 <a data-bind="text: wttArrival, attr: { href: 'trains/' + trainId + '/' + departureDate }"></a>
                             </td>
                             <td class="visible-md visible-lg time" title="Actual Arrival">
-                                <a data-bind="text: actualArrival, attr: { href: 'trains/' + trainId + '/' + departureDate }"></a>
+                                <a data-bind="text: actualArrival, attr: { href: 'trains/' + trainId + '/' + departureDate }, css: { estimate: actualArrivalEstimate, 'non-estimate': !actualArrivalEstimate }"></a>
                             </td>
                             <td class="visible-xs visible-sm time">
                                 <a data-bind="attr: { href: 'trains/' + trainId + '/' + departureDate }">
                                     <!-- ko if: actualArrival -->
-                                    <span style="font-weight: bold;" data-bind="text: actualArrival"></span>
+                                    <span data-bind="text: actualArrival, css: { estimate: actualArrivalEstimate, 'non-estimate': !actualArrivalEstimate }"></span>
                                     <!-- /ko -->
                                     <!-- ko if: !actualArrival -->
                                     <!-- ko if: publicArrival -->
@@ -254,7 +254,7 @@
                             <td class="visible-xs visible-sm time">
                                 <a data-bind="attr: { href: 'trains/' + trainId + '/' + departureDate }">
                                     <!-- ko if: atActualArrival -->
-                                    <span style="font-weight: bold;" data-bind="text: atActualArrival"></span>
+                                    <span data-bind="text: atActualArrival, css: { estimate: atActualArrivalEstimate, 'non-estimate': !atActualArrivalEstimate }"></span>
                                     <!-- /ko -->
                                     <!-- ko if: !atActualArrival -->
                                     <!-- ko if: atPublicArrival && atPublicArrival == "Pass" -->
@@ -300,7 +300,7 @@
                             <td class="visible-xs visible-sm time">
                                 <a data-bind="attr: { href: 'trains/' + trainId + '/' + departureDate }">
                                     <!-- ko if: atActualDeparture -->
-                                    <span style="font-weight: bold;" data-bind="text: atActualDeparture"></span>
+                                    <span data-bind="text: atActualDeparture, css: { estimate: atActualDepartureEstimate, 'non-estimate': !atActualDepartureEstimate }"></span>
                                     <!-- /ko -->
                                     <!-- ko if: !atActualDeparture -->
                                     <!-- ko if: atPublicDeparture && atPublicDeparture == "Pass" -->
