@@ -8,6 +8,15 @@ var TrainNotifier;
 (function (TrainNotifier) {
     (function (KnockoutModels) {
         (function (Routes) {
+            var RouteTrainMovementResults = (function () {
+                function RouteTrainMovementResults() {
+                    this.trainId = ko.observable();
+                    this.results = ko.observableArray();
+                }
+                return RouteTrainMovementResults;
+            })();
+            Routes.RouteTrainMovementResults = RouteTrainMovementResults;
+
             var RouteTrainMovement = (function (_super) {
                 __extends(RouteTrainMovement, _super);
                 function RouteTrainMovement(trainMovement, tiplocs, queryStartDate) {

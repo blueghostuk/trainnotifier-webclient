@@ -1,9 +1,4 @@
-﻿body {
-    padding-top: 60px;
-    padding-bottom: 40px;
-}
-
-tr.info > td > a {
+﻿tr.info > td > a {
     color: white !important;
 }
 

@@ -2,6 +2,14 @@
     Layout = "~/_Layout.cshtml";
 }
 @using System.Web.Optimization;
+@section CustomCss{
+    <style type="text/css">
+        body{
+            padding-top: 0px !important;
+            padding-bottom: 0px !important;
+        }
+    </style>
+}
 @section FooterJs{
     @Scripts.Render("~/bundles/js/index")
 }
@@ -13,6 +21,7 @@
             <li><a href="~/route">Routes</a></li>
             <li><a href="~/station">Stations</a></li>
             <li><a href="~/live">Live Feed</a></li>
+            <li><a href="~/live-search">Live Train Search</a></li>
         </ul>
     </li>
     <li><a href="~/ppm">PPM</a></li>
@@ -78,7 +87,7 @@
             </div>
             <br />
             <p>
-                <button type="submit" class="btn btn-primary">Search</button>
+                <input type="submit" class="btn btn-primary" value="Search" />
                 <button type="submit" id="nearest" class="btn btn-info">Find Nearest Train</button>
             </p>
         </form>

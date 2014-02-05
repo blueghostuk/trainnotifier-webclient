@@ -16,6 +16,7 @@
             <li><a class="active">Routes</a></li>
             <li><a href="~/station">Stations</a></li>
             <li><a href="~/live">Live Feed</a></li>
+            <li><a href="~/live-search">Live Train Search</a></li>
         </ul>
     </li>
     <li><a href="~/ppm">PPM</a></li>
@@ -71,7 +72,7 @@
         <div class="progress progress-striped active hide">
             <div class="bar" style="width: 100%"></div>
         </div>
-        <table class="table table-hover table-bordered table-header-colour" id="route-results" data-bind="visible: $data.length > 0">
+        <table class="table table-hover table-bordered table-header-colour" id="route-results" data-bind="visible: results().length > 0">
             <thead class="header">
                 <tr>
                     <th>ID</th>
@@ -82,7 +83,7 @@
                     <th>At</th>
                 </tr>
             </thead>
-            <tbody data-bind="foreach: $data">
+            <tbody data-bind="foreach: results">
                 <tr data-bind="css: { info: highlight }">
                     <td><a data-bind="text: headCode, attr: { href: 'trains/' + trainId + '/' + departureDate }"></a></td>
                     <td data-bind="text: operatorCode, attr: { title: operatorName }"></td>
@@ -99,6 +100,11 @@
                 </tr>
             </tbody>
             <tfoot>
+                <tr>
+                    <td colspan="6" class="text-warning text-info">
+                        <i class="icon-info-sign"></i>&nbsp;<a data-bind="attr: { href: 'live-search#!' + trainId() }">View more detailed information</a>
+                    </td>
+                </tr>
                 <tr>
                     <td colspan="6" class="text-warning text-center">
                         The highlighted train movement (if any) is not entirely accurate yet. You can probably tell which one is correct more accurately

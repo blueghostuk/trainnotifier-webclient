@@ -6,6 +6,11 @@
 
 module TrainNotifier.KnockoutModels.Routes {
 
+    export class RouteTrainMovementResults {
+        public trainId = ko.observable<string>();
+        public results = ko.observableArray<RouteTrainMovement>();
+    }
+
     export class RouteTrainMovement extends TrainNotifier.KnockoutModels.Search.TrainMovement {
 
         public departure: string = "";

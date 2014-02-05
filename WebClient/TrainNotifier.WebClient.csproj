@@ -129,6 +129,7 @@
     <Content Include="packages.config" />
     <Content Include="index.cshtml" />
     <Content Include="ppm.cshtml" />
+    <Content Include="live-search.cshtml" />
     <None Include="Scripts\jquery-2.1.0.intellisense.js" />
     <Content Include="Scripts\bootstrap-datepicker.js" />
     <Content Include="Scripts\jquery-2.1.0.js" />
@@ -206,6 +207,10 @@
     <Content Include="Scripts\app\live.js">
       <DependentUpon>live.ts</DependentUpon>
     </Content>
+    <TypeScriptCompile Include="Scripts\app\liveTrain.ts" />
+    <Content Include="Scripts\app\liveTrain.js">
+      <DependentUpon>liveTrain.ts</DependentUpon>
+    </Content>
     <TypeScriptCompile Include="Scripts\app\ppmModels.ts" />
     <Content Include="Scripts\app\ppmModels.js">
       <DependentUpon>ppmModels.ts</DependentUpon>
@@ -276,7 +281,6 @@
     </Content>
     <Content Include="_ppmTable.cshtml" />
     <Content Include="_ppmOperator.cshtml" />
-    <None Include="Properties\PublishProfiles\azure.pubxml" />
     <Content Include="Scripts\jquery.ba-hashchange.js" />
     <Content Include="Scripts\jquery.ba-hashchange.min.js" />
     <Content Include="Scripts\jquery.color-2.1.2.js" />

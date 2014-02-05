@@ -165,7 +165,7 @@ var routeWvhBhm = [
 
 var webApi = new TrainNotifier.WebApi();
 
-var runningTrains = ko.observableArray();
+var runningTrains = ko.observable(new TrainNotifier.KnockoutModels.Routes.RouteTrainMovementResults());
 
 function updateBerthContents() {
     for (var i = 0; i < route.length; i++) {
@@ -194,7 +194,7 @@ function showTrain(berth) {
     $(".progress").show();
     $("#error-row").hide();
     $("#no-results-row").hide();
-    runningTrains.removeAll();
+    runningTrains().results.removeAll();
     if (berth && berth.contents()) {
         webApi.getTrainMovementsByHeadcode(berth.contents(), berth.fulltimestamp.format(TrainNotifier.DateTimeFormats.dateQueryFormat)).done(function (data) {
             if (data && data.Movements.length > 0) {
@@ -202,8 +202,10 @@ function showTrain(berth) {
                     return new TrainNotifier.KnockoutModels.Routes.RouteTrainMovement(movement, data.Tiplocs, berth.fulltimestamp);
                 });
 
+                runningTrains().trainId(viewModels[0].headCode);
+
                 for (var i = 0; i < viewModels.length; i++) {
-                    runningTrains.push(viewModels[i]);
+                    runningTrains().results.push(viewModels[i]);
                 }
             } else {
                 $("#no-results-row").show();

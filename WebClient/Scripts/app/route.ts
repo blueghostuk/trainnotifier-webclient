@@ -199,7 +199,7 @@ var routeWvhBhm: Array<RouteRow> =
 
 var webApi: IWebApi = new TrainNotifier.WebApi();
 
-var runningTrains = ko.observableArray<TrainNotifier.KnockoutModels.Routes.RouteTrainMovement>();
+var runningTrains = ko.observable<TrainNotifier.KnockoutModels.Routes.RouteTrainMovementResults>(new TrainNotifier.KnockoutModels.Routes.RouteTrainMovementResults());
 
 function updateBerthContents() {
     for (var i = 0; i < route.length; i++) {
@@ -228,7 +228,7 @@ function showTrain(berth: Berth) {
     $(".progress").show();
     $("#error-row").hide();
     $("#no-results-row").hide();
-    runningTrains.removeAll();
+    runningTrains().results.removeAll();
     if (berth && berth.contents()) {
         //trainDetails.id(berth.contents())
         webApi.getTrainMovementsByHeadcode(berth.contents(), berth.fulltimestamp.format(TrainNotifier.DateTimeFormats.dateQueryFormat))
@@ -238,8 +238,10 @@ function showTrain(berth: Berth) {
                         return new TrainNotifier.KnockoutModels.Routes.RouteTrainMovement(movement, data.Tiplocs, berth.fulltimestamp);
                     });
 
+                    runningTrains().trainId(viewModels[0].headCode);
+
                     for (var i = 0; i < viewModels.length; i++) {
-                        runningTrains.push(viewModels[i]);
+                        runningTrains().results.push(viewModels[i]);
                     }
                 } else {
                     $("#no-results-row").show();
