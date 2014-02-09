@@ -4,7 +4,7 @@
 
 var settings = {
     apiUrl: "api.trainnotifier.co.uk",
-    wsUrl: "www.trainnotifier.co.uk:81"
+    wsUrl: "ws.trainnotifier.co.uk:81"
 };
 var webApi;
 
