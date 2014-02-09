@@ -44,7 +44,7 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "ChromeExtension", "http://l
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrainNotifier.Common.Model", "..\externals\trainnotifier\TrainNotifier.Common.Model\TrainNotifier.Common.Model.csproj", "{C1027696-DBD0-4E90-ABBF-848DAB6938B4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindowsApp", "..\WindowsApp\WindowsApp.csproj", "{E67BAB95-5CF8-49EB-8FF2-1B283FF2796C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrainNotifier.Windows8", "..\WindowsApp\TrainNotifier.Windows8.csproj", "{E67BAB95-5CF8-49EB-8FF2-1B283FF2796C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrainNotifier.Common.Web", "..\TrainNotifier.Common.Web\TrainNotifier.Common.Web.csproj", "{5235980F-97BD-4BA6-AC1A-265C18364175}"
 EndProject
