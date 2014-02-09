@@ -129,7 +129,6 @@
     <Content Include="packages.config" />
     <Content Include="index.cshtml" />
     <Content Include="ppm.cshtml" />
-    <Content Include="live-search.cshtml" />
     <None Include="Scripts\jquery-2.1.0.intellisense.js" />
     <Content Include="Scripts\bootstrap-datepicker.js" />
     <Content Include="Scripts\jquery-2.1.0.js" />
@@ -206,10 +205,6 @@
     <TypeScriptCompile Include="Scripts\app\live.ts" />
     <Content Include="Scripts\app\live.js">
       <DependentUpon>live.ts</DependentUpon>
-    </Content>
-    <TypeScriptCompile Include="Scripts\app\liveTrain.ts" />
-    <Content Include="Scripts\app\liveTrain.js">
-      <DependentUpon>liveTrain.ts</DependentUpon>
     </Content>
     <TypeScriptCompile Include="Scripts\app\ppmModels.ts" />
     <Content Include="Scripts\app\ppmModels.js">

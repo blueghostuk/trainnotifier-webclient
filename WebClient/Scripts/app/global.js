@@ -65,10 +65,11 @@ var TrainNotifier;
             return null;
         };
 
-        DateTimeFormats.formatDateTimeString = function (dateTime) {
+        DateTimeFormats.formatDateTimeString = function (dateTime, format) {
+            if (typeof format === "undefined") { format = TrainNotifier.DateTimeFormats.shortTimeFormat; }
             if (dateTime) {
                 var timeMoment = moment(dateTime);
-                return DateTimeFormats.formatTimeMoment(timeMoment);
+                return DateTimeFormats.formatTimeMoment(timeMoment, format);
             }
             return null;
         };
@@ -81,9 +82,10 @@ var TrainNotifier;
             return null;
         };
 
-        DateTimeFormats.formatTimeMoment = function (timeMoment) {
+        DateTimeFormats.formatTimeMoment = function (timeMoment, format) {
+            if (typeof format === "undefined") { format = TrainNotifier.DateTimeFormats.shortTimeFormat; }
             if (timeMoment && timeMoment.isValid()) {
-                var ts = timeMoment.format(TrainNotifier.DateTimeFormats.shortTimeFormat);
+                var ts = timeMoment.format(format);
                 if (timeMoment.seconds() === 30) {
                     ts += TrainNotifier.CommonStrings.halfMinute;
                 }

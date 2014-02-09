@@ -104,10 +104,10 @@ module TrainNotifier {
             return null;
         }
 
-        public static formatDateTimeString(dateTime: string): string {
+        public static formatDateTimeString(dateTime: string, format: string = TrainNotifier.DateTimeFormats.shortTimeFormat): string {
             if (dateTime) {
                 var timeMoment = moment(dateTime);
-                return DateTimeFormats.formatTimeMoment(timeMoment);
+                return DateTimeFormats.formatTimeMoment(timeMoment, format);
             }
             return null;
         }
@@ -120,9 +120,9 @@ module TrainNotifier {
             return null;
         }
 
-        public static formatTimeMoment(timeMoment: Moment): string {
+        public static formatTimeMoment(timeMoment: Moment, format: string = TrainNotifier.DateTimeFormats.shortTimeFormat): string {
             if (timeMoment && timeMoment.isValid()) {
-                var ts = timeMoment.format(TrainNotifier.DateTimeFormats.shortTimeFormat);
+                var ts = timeMoment.format(format);
                 if (timeMoment.seconds() === 30) {
                     ts += TrainNotifier.CommonStrings.halfMinute;
                 }

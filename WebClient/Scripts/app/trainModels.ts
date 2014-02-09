@@ -242,7 +242,7 @@ module TrainNotifier.KnockoutModels.Train {
         private updateArrival(plannedArrival: string, actualArrival: string, line: string, platform: string, offRoute: boolean, nextStanox: string, expectedAtNextStanox: string, tiplocs: IStationTiploc[]) {
             this.arrivalSet = true;
             this.plannedArrival(DateTimeFormats.formatDateTimeString(plannedArrival));
-            this.actualArrival(DateTimeFormats.formatDateTimeString(actualArrival));
+            this.actualArrival(DateTimeFormats.formatDateTimeString(actualArrival, TrainNotifier.DateTimeFormats.timeFormat));
 
             var planned = moment(plannedArrival);
             var actual = moment(actualArrival);
@@ -260,7 +260,7 @@ module TrainNotifier.KnockoutModels.Train {
         private updateDeparture(plannedDeparture: string, actualDeparture: string, line: string, platform: string, offRoute: boolean, nextStanox: string, expectedAtNextStanox: string, tiplocs: IStationTiploc[]) {
             this.departureSet = true;
             this.plannedDeparture(DateTimeFormats.formatDateTimeString(plannedDeparture));
-            this.actualDeparture(DateTimeFormats.formatDateTimeString(actualDeparture));
+            this.actualDeparture(DateTimeFormats.formatDateTimeString(actualDeparture, TrainNotifier.DateTimeFormats.timeFormat));
 
             var planned = moment(plannedDeparture);
             var actual = moment(actualDeparture);

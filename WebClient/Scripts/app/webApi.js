@@ -149,10 +149,6 @@ var TrainNotifier;
         WebApi.prototype.getBerthContents = function (berth) {
             return $.getJSON(this.getBaseUrl() + "/Td/Berth/" + berth, this.getArgs());
         };
-
-        WebApi.prototype.getLiveTrain = function (id) {
-            return $.getJSON(this.getBaseUrl() + "/Td/Describer/" + id, this.getArgs());
-        };
         return WebApi;
     })();
     TrainNotifier.WebApi = WebApi;

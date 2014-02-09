@@ -30,7 +30,6 @@ interface IWebApi {
     getPPMData(operatorCode: string, name: string): JQueryPromise<any>;
 
     getBerthContents(berth: string): JQueryPromise<any>;
-    getLiveTrain(id: string): JQueryPromise<any>;
 }
 
 interface IEstimate {
@@ -190,10 +189,6 @@ module TrainNotifier {
 
         getBerthContents(berth: string) {
             return $.getJSON(this.getBaseUrl() + "/Td/Berth/" + berth, this.getArgs());
-        }
-
-        getLiveTrain(id: string) {
-            return $.getJSON(this.getBaseUrl() + "/Td/Describer/" + id, this.getArgs());
         }
     }
 }
@@ -834,41 +829,4 @@ interface IPPMData {
     Timestamp: string;
     Total: number;
     Trend: number;
-}
-
-interface ITdTrain {
-    Describer: string;
-    Trains: ITdTrainElement[];
-}
-
-interface ITdTrainElement {
-    Berths: any;
-    BerthsArray: ITdTrainBerths[];
-    Describer: string;
-    FirstSeen: string;
-    Schedule: ITrainMovementResult;
-}
-
-interface ITdTrainBerths {
-    AreaId: string;
-    Exited: string;
-    FirstSeen: string;
-    Name: string;
-    TDElement: ITDElement;
-    TiplocCode: ITiploc;
-}
-
-interface ITDElement {
-    BERTHOFFSET: string;
-    COMMENT: string;
-    EVENT: string;
-    FROMBERTH: string;
-    PLATFORM: string;
-    ROUTE: string;
-    STANME: string;
-    STANOX: string;
-    STEPTYPE: string;
-    TD: string;
-    TOBERTH: string;
-    TOLINE: string;
 }

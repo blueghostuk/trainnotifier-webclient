@@ -212,7 +212,7 @@ module TrainNotifier.KnockoutModels.Search {
             if (trainMovement.Actual && trainMovement.Actual.Stops.length > 0) {
                 // TODO: check is actual location and is departure
                 var fromActual = trainMovement.Actual.Stops[0];
-                this.actualDeparture = DateTimeFormats.formatDateTimeString(fromActual.ActualTimestamp);
+                this.actualDeparture = DateTimeFormats.formatDateTimeString(fromActual.ActualTimestamp, TrainNotifier.DateTimeFormats.timeFormat);
                 this.actualDepartureEstimate = false;
 
                 // TODO: check is actual
@@ -220,7 +220,7 @@ module TrainNotifier.KnockoutModels.Search {
                 if (lastActual.ScheduleStopNumber == toStop.StopNumber &&
                     lastActual.EventType == EventType.Arrival &&
                     lastActual.TiplocStanoxCode == toStop.TiplocStanoxCode) {
-                    this.actualArrival = DateTimeFormats.formatDateTimeString(lastActual.ActualTimestamp);
+                    this.actualArrival = DateTimeFormats.formatDateTimeString(lastActual.ActualTimestamp, TrainNotifier.DateTimeFormats.timeFormat);
                     this.actualArrivalEstimate = false;
                 } else {
                     // TODO: estimate actual
@@ -250,15 +250,17 @@ module TrainNotifier.KnockoutModels.Search {
 
     export class TerminatingAtTrainMovement extends TrainMovement {
 
-        public fromPlatform: string = "";
-        public publicDeparture: string = "";
-        public wttDeparture: string = "";
-        public actualDeparture: string = "";
+        public fromPlatform: string = null;
+        public publicDeparture: string = null;
+        public wttDeparture: string = null;
+        public actualDeparture: string = null;
+        public actualDepartureEstimate = true;
 
-        public toPlatform: string = "";
-        public publicArrival: string = "";
-        public wttArrival: string = "";
-        public actualArrival: string = "";
+        public toPlatform: string = null;
+        public publicArrival: string = null;
+        public wttArrival: string = null;
+        public actualArrival: string = null;
+        public actualArrivalEstimate = true;
 
         constructor(trainMovement: ITrainMovementResult, tiplocs: IStationTiploc[], queryStartDate: Moment) {
             super(trainMovement, tiplocs, queryStartDate);
@@ -291,7 +293,8 @@ module TrainNotifier.KnockoutModels.Search {
             if (trainMovement.Actual && trainMovement.Actual.Stops.length > 0) {
                 // TODO: check is actual location and is departure
                 var fromActual = trainMovement.Actual.Stops[0];
-                this.actualDeparture = DateTimeFormats.formatDateTimeString(fromActual.ActualTimestamp);
+                this.actualDeparture = DateTimeFormats.formatDateTimeString(fromActual.ActualTimestamp, TrainNotifier.DateTimeFormats.timeFormat);
+                this.actualDepartureEstimate = false;
 
                 // TODO: check is actual
                 if (toStop) {
@@ -299,7 +302,8 @@ module TrainNotifier.KnockoutModels.Search {
                     if (lastActual.ScheduleStopNumber == toStop.StopNumber &&
                         lastActual.EventType == EventType.Arrival &&
                         lastActual.TiplocStanoxCode == toStop.TiplocStanoxCode) {
-                        this.actualArrival = DateTimeFormats.formatDateTimeString(lastActual.ActualTimestamp);
+                        this.actualArrival = DateTimeFormats.formatDateTimeString(lastActual.ActualTimestamp, TrainNotifier.DateTimeFormats.timeFormat);
+                        this.actualArrivalEstimate = false;
                     }
                 }
             }
@@ -400,11 +404,11 @@ module TrainNotifier.KnockoutModels.Search {
                     for (var i = 0; i < atActualStops.length; i++) {
                         switch (atActualStops[i].EventType) {
                             case EventType.Arrival:
-                                this.atActualArrival = DateTimeFormats.formatDateTimeString(atActualStops[i].ActualTimestamp);
+                                this.atActualArrival = DateTimeFormats.formatDateTimeString(atActualStops[i].ActualTimestamp, TrainNotifier.DateTimeFormats.timeFormat);
                                 this.atActualArrivalEstimate = false;
                                 break;
                             case EventType.Departure:
-                                this.atActualDeparture = DateTimeFormats.formatDateTimeString(atActualStops[i].ActualTimestamp);
+                                this.atActualDeparture = DateTimeFormats.formatDateTimeString(atActualStops[i].ActualTimestamp, TrainNotifier.DateTimeFormats.timeFormat);
                                 this.atActualDepartureEstimate = false;
                                 break;
                         }
@@ -438,7 +442,6 @@ module TrainNotifier.KnockoutModels.Search {
                 this.atActualArrival = DateTimeFormats.formatTimeDuration(this.arrival);
                 this.atActualDeparture = DateTimeFormats.formatTimeDuration(this.departure);
             }
-
 
             var css = [];
             if (this.pass()) {
@@ -545,7 +548,7 @@ module TrainNotifier.KnockoutModels.Search {
                         });
 
                     if (fromDepartStops.length > 0) {
-                        this.actualDeparture = DateTimeFormats.formatDateTimeString(fromDepartStops[0].ActualTimestamp);
+                        this.actualDeparture = DateTimeFormats.formatDateTimeString(fromDepartStops[0].ActualTimestamp, TrainNotifier.DateTimeFormats.timeFormat);
                     }
                 }
                 this.passDeparture = fromTiplocStop.Pass != null;
@@ -569,7 +572,7 @@ module TrainNotifier.KnockoutModels.Search {
                         });
 
                     if (toArriveStops.length > 0) {
-                        this.actualArrival = DateTimeFormats.formatDateTimeString(toArriveStops[0].ActualTimestamp);
+                        this.actualArrival = DateTimeFormats.formatDateTimeString(toArriveStops[0].ActualTimestamp, TrainNotifier.DateTimeFormats.timeFormat);
                     }
                 }
                 this.passArrival = toTiplocStop.Pass != null;

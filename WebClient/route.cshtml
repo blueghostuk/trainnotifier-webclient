@@ -16,7 +16,6 @@
             <li><a class="active">Routes</a></li>
             <li><a href="~/station">Stations</a></li>
             <li><a href="~/live">Live Feed</a></li>
-            <li><a href="~/live-search">Live Train Search</a></li>
         </ul>
     </li>
     <li><a href="~/ppm">PPM</a></li>
@@ -44,12 +43,13 @@
             <tbody data-bind="foreach: $data">
                 <tr>
                     <td class="comment down label" data-bind="css: { 'label-primary': down.label, 'label-info': !down.label }">
-                        <span data-bind="text: down.text"></span>
+                        <abbr data-bind="text: down.text, attr: { title: down.abbr }"></abbr>
                     </td>
-                    <td class="berth down" data-bind="text: down.contents, attr: { title: down.timestamp }, click: function () { showTrain(down); }"></td>
+                    <td class="berth down" data-bind="text: down.contents, attr: { title: down.timestamp }, click: function () { showTrain(down); }">
+                    </td>
                     <td class="berth up" data-bind="text: up.contents, attr: { title: up.timestamp }, click: function () { showTrain(up); }"></td>
                     <td class="comment up label" data-bind="css: { 'label-primary': down.label, 'label-info': !down.label }">
-                        <span data-bind="text: up.text"></span>
+                        <abbr data-bind="text: up.text, attr: { title: up.abbr }"></abbr>
                     </td>
                 </tr>
             </tbody>

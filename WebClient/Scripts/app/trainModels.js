@@ -223,7 +223,7 @@ var TrainNotifier;
                 LiveStopBase.prototype.updateArrival = function (plannedArrival, actualArrival, line, platform, offRoute, nextStanox, expectedAtNextStanox, tiplocs) {
                     this.arrivalSet = true;
                     this.plannedArrival(TrainNotifier.DateTimeFormats.formatDateTimeString(plannedArrival));
-                    this.actualArrival(TrainNotifier.DateTimeFormats.formatDateTimeString(actualArrival));
+                    this.actualArrival(TrainNotifier.DateTimeFormats.formatDateTimeString(actualArrival, TrainNotifier.DateTimeFormats.timeFormat));
 
                     var planned = moment(plannedArrival);
                     var actual = moment(actualArrival);
@@ -241,7 +241,7 @@ var TrainNotifier;
                 LiveStopBase.prototype.updateDeparture = function (plannedDeparture, actualDeparture, line, platform, offRoute, nextStanox, expectedAtNextStanox, tiplocs) {
                     this.departureSet = true;
                     this.plannedDeparture(TrainNotifier.DateTimeFormats.formatDateTimeString(plannedDeparture));
-                    this.actualDeparture(TrainNotifier.DateTimeFormats.formatDateTimeString(actualDeparture));
+                    this.actualDeparture(TrainNotifier.DateTimeFormats.formatDateTimeString(actualDeparture, TrainNotifier.DateTimeFormats.timeFormat));
 
                     var planned = moment(plannedDeparture);
                     var actual = moment(actualDeparture);

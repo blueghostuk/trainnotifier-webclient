@@ -76,9 +76,6 @@ namespace TrainNotifier.WebClient
             bundles.Add(new StyleBundle("~/bundles/css/search-schedule").Include(
                 "~/Content/app/search-schedule.css"));
 
-            bundles.Add(new ScriptBundle("~/bundles/js/liveTrain").Include(
-                "~/Scripts/app/liveTrain.js"));
-
             bundles.Add(new StyleBundle("~/Content/css").Include(
                 // minification fucks this up so include seperately in _Layout.cshtml
                 //"~/Content/bootstrap/spacelab.css",
