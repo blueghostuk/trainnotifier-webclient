@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.20827.3
+VisualStudioVersion = 12.0.30110.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{B3B90A1F-C059-4857-984E-313F60433D10}"
 	ProjectSection(SolutionItems) = preProject
@@ -41,7 +41,7 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "ChromeExtension", "http://l
 		DefaultWebSiteLanguage = "Visual C#"
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrainNotifier.Common", "..\NetworkRailDownloader.Common\TrainNotifier.Common.csproj", "{55F15444-39A6-4B55-AA31-CED7A996DE47}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrainNotifier.Common.Model", "..\externals\trainnotifier\TrainNotifier.Common.Model\TrainNotifier.Common.Model.csproj", "{C1027696-DBD0-4E90-ABBF-848DAB6938B4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -72,16 +72,16 @@ Global
 		{5652EDA0-77AF-45F8-BAE3-FB6776DFF74F}.Debug-Staging|Any CPU.Build.0 = Debug|Any CPU
 		{5652EDA0-77AF-45F8-BAE3-FB6776DFF74F}.Release|Any CPU.ActiveCfg = Debug|Any CPU
 		{5652EDA0-77AF-45F8-BAE3-FB6776DFF74F}.Release|Any CPU.Build.0 = Debug|Any CPU
-		{55F15444-39A6-4B55-AA31-CED7A996DE47}.Azure|Any CPU.ActiveCfg = Release|Any CPU
-		{55F15444-39A6-4B55-AA31-CED7A996DE47}.Azure|Any CPU.Build.0 = Release|Any CPU
-		{55F15444-39A6-4B55-AA31-CED7A996DE47}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{55F15444-39A6-4B55-AA31-CED7A996DE47}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{55F15444-39A6-4B55-AA31-CED7A996DE47}.Debug-Local|Any CPU.ActiveCfg = Debug|Any CPU
-		{55F15444-39A6-4B55-AA31-CED7A996DE47}.Debug-Local|Any CPU.Build.0 = Debug|Any CPU
-		{55F15444-39A6-4B55-AA31-CED7A996DE47}.Debug-Staging|Any CPU.ActiveCfg = Debug|Any CPU
-		{55F15444-39A6-4B55-AA31-CED7A996DE47}.Debug-Staging|Any CPU.Build.0 = Debug|Any CPU
-		{55F15444-39A6-4B55-AA31-CED7A996DE47}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{55F15444-39A6-4B55-AA31-CED7A996DE47}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C1027696-DBD0-4E90-ABBF-848DAB6938B4}.Azure|Any CPU.ActiveCfg = Release|Any CPU
+		{C1027696-DBD0-4E90-ABBF-848DAB6938B4}.Azure|Any CPU.Build.0 = Release|Any CPU
+		{C1027696-DBD0-4E90-ABBF-848DAB6938B4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C1027696-DBD0-4E90-ABBF-848DAB6938B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C1027696-DBD0-4E90-ABBF-848DAB6938B4}.Debug-Local|Any CPU.ActiveCfg = Debug|Any CPU
+		{C1027696-DBD0-4E90-ABBF-848DAB6938B4}.Debug-Local|Any CPU.Build.0 = Debug|Any CPU
+		{C1027696-DBD0-4E90-ABBF-848DAB6938B4}.Debug-Staging|Any CPU.ActiveCfg = Debug|Any CPU
+		{C1027696-DBD0-4E90-ABBF-848DAB6938B4}.Debug-Staging|Any CPU.Build.0 = Debug|Any CPU
+		{C1027696-DBD0-4E90-ABBF-848DAB6938B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C1027696-DBD0-4E90-ABBF-848DAB6938B4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

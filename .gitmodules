@@ -1,0 +1,3 @@
+[submodule "externals/trainnotifier"]
+	path = externals/trainnotifier
+	url = https://github.com/blueghostuk/trainnotifier-server.git
