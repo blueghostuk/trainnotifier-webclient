@@ -4,19 +4,19 @@
         if (TrainNotifier.WebClient.Handlers.AtHandler.IsAtRequest(Request.Url))
         {
             var handler = new TrainNotifier.WebClient.Handlers.AtHandler(Response);
-            handler.ProcessRequest(Request.Url);
+            await handler.ProcessRequest(Request.Url);
             return;
         }
         else if (TrainNotifier.WebClient.Handlers.FromHandler.IsFromRequest(Request.Url))
         {
             var handler = new TrainNotifier.WebClient.Handlers.FromHandler(Response);
-            handler.ProcessRequest(Request.Url);
+            await handler.ProcessRequest(Request.Url);
             return;
         }
         else if (TrainNotifier.WebClient.Handlers.ToHandler.IsToRequest(Request.Url))
         {
             var handler = new TrainNotifier.WebClient.Handlers.ToHandler(Response);
-            handler.ProcessRequest(Request.Url);
+            await handler.ProcessRequest(Request.Url);
             return;
         }
     }

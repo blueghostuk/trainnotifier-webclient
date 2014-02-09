@@ -3,14 +3,15 @@ using System.Configuration;
 using System.Linq;
 using System.Web;
 using TrainNotifier.Common.Model.Api;
-using TrainNotifier.WebClient.App_Code;
+using TrainNotifier.Common.Web;
 
 namespace TrainNotifier.WebClient.Handlers
 {
     public class TrainHandler
     {
-        private readonly string _linkUrlFormat = ConfigurationManager.AppSettings["linkUrlFormat"];
-        private readonly string _apiUrl = ConfigurationManager.AppSettings["apiUrl"];
+        private static readonly string _linkUrlFormat = ConfigurationManager.AppSettings["linkUrlFormat"];
+        private static readonly string _apiUrl = ConfigurationManager.AppSettings["apiUrl"];
+        private static readonly string _apiName = ConfigurationManager.AppSettings["apiName"];
 
         private readonly HttpResponseBase _response;
         private readonly WebApiService _webApiService;
@@ -18,7 +19,7 @@ namespace TrainNotifier.WebClient.Handlers
         public TrainHandler(HttpResponseBase response)
         {
             _response = response;
-            _webApiService = new WebApiService(string.Concat("http://", _apiUrl));
+            _webApiService = new WebApiService(string.Concat("http://", _apiUrl), _apiName);
         }
 
         public static bool IsTrainRequest(Uri uri)
@@ -26,13 +27,13 @@ namespace TrainNotifier.WebClient.Handlers
             return uri.Query.Replace(HandlerHelper.QueryFragment, string.Empty).Split('/').First().Contains("get");
         }
 
-        public void ProcessRequest(Uri url)
+        public async void ProcessRequest(Uri url)
         {
             var parts = url.Query.Replace(HandlerHelper.QueryFragment, string.Empty).Split('/');
             string trainUid = parts.ElementAt(1);
             DateTime date = DateTime.Parse(parts.ElementAt(2));
 
-            SingleTrainMovementResult result = _webApiService.GetTrainMovement(trainUid, date);
+            SingleTrainMovementResult result = await _webApiService.GetTrainMovement(trainUid, date);
 
             if (result == null || result.Movement == null)
                 return;
@@ -46,8 +47,8 @@ namespace TrainNotifier.WebClient.Handlers
 
             string message = string.Format("{0} from {1} to {2} on {3}",
                 schedule.TrainUid,
-                _webApiService.GetTiplocCode(result.Tiplocs, stops.First().TiplocStanoxCode).StationName,
-                _webApiService.GetTiplocCode(result.Tiplocs, stops.Last().TiplocStanoxCode).StationName,
+                WebApiService.GetTiplocCode(result.Tiplocs, stops.First().TiplocStanoxCode).StationName,
+                WebApiService.GetTiplocCode(result.Tiplocs, stops.Last().TiplocStanoxCode).StationName,
                 date);
 
             _response.Write(string.Format("<title>{0}</title>", message));
@@ -64,7 +65,7 @@ namespace TrainNotifier.WebClient.Handlers
             foreach (var stop in stops)
             {
                 _response.Write(string.Format("Calling at {0} at {1}<br />",
-                    _webApiService.GetTiplocCode(result.Tiplocs, stop.TiplocStanoxCode).StationName,
+                    WebApiService.GetTiplocCode(result.Tiplocs, stop.TiplocStanoxCode).StationName,
                     stop.PublicDeparture ?? stop.Departure ?? stop.Pass ?? stop.PublicArrival ?? stop.Arrival));
             }
             _response.Write("</p>");

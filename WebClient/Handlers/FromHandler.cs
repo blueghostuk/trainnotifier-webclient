@@ -4,14 +4,15 @@ using System.Linq;
 using System.Web;
 using TrainNotifier.Common.Model.Api;
 using TrainNotifier.Common.Model.Schedule;
-using TrainNotifier.WebClient.App_Code;
+using TrainNotifier.Common.Web;
 
 namespace TrainNotifier.WebClient.Handlers
 {
     public class FromHandler
     {
-        private readonly string _linkUrlFormat = ConfigurationManager.AppSettings["linkUrlFormat"];
-        private readonly string _apiUrl = ConfigurationManager.AppSettings["apiUrl"];
+        private static readonly string _linkUrlFormat = ConfigurationManager.AppSettings["linkUrlFormat"];
+        private static readonly string _apiUrl = ConfigurationManager.AppSettings["apiUrl"];
+        private static readonly string _apiName = ConfigurationManager.AppSettings["apiName"];
 
         private readonly HttpResponseBase _response;
         private readonly WebApiService _webApiService;
@@ -19,7 +20,7 @@ namespace TrainNotifier.WebClient.Handlers
         public FromHandler(HttpResponseBase response)
         {
             _response = response;
-            _webApiService = new WebApiService(string.Concat("http://", _apiUrl));
+            _webApiService = new WebApiService(string.Concat("http://", _apiUrl), _apiName);
         }
 
         public static bool IsFromRequest(Uri uri)
@@ -27,11 +28,11 @@ namespace TrainNotifier.WebClient.Handlers
             return uri.Query.Replace(HandlerHelper.QueryFragment, string.Empty).Split('/').First().Contains("from");
         }
 
-        public void ProcessRequest(Uri url)
+        public async void ProcessRequest(Uri url)
         {
             string atCrsCode = url.Query.Replace(HandlerHelper.QueryFragment, string.Empty).Split('/').ElementAt(1);
 
-            StationTiploc station = _webApiService.GetStation(atCrsCode);
+            StationTiploc station = await _webApiService.GetStation(atCrsCode);
 
             _response.Write("<!DOCTYPE html><html><head>");
 
@@ -49,7 +50,7 @@ namespace TrainNotifier.WebClient.Handlers
             _response.Write(string.Format("<h2>On {0:dd/MM/yyyy} between {1:HH:mm} and {2:HH:mm}</h2>", today, startTime, endTime));
             _response.Write("<hr />");
 
-            TrainMovementResults results = _webApiService.StartingAtStation(atCrsCode, startTime, endTime);
+            TrainMovementResults results = await _webApiService.StartingAtStation(atCrsCode, startTime, endTime);
 
             _response.Write("<p>"); 
             if (results != null && results.Movements != null && results.Movements.Any())
@@ -65,8 +66,8 @@ namespace TrainNotifier.WebClient.Handlers
                         link,
                         schedule.Headcode ?? schedule.TrainUid,
                         schedule.DepartureTime,
-                        _webApiService.GetTiplocCode(results.Tiplocs, stops.First().TiplocStanoxCode).StationName,
-                        _webApiService.GetTiplocCode(results.Tiplocs, stops.Last().TiplocStanoxCode).StationName));
+                        WebApiService.GetTiplocCode(results.Tiplocs, stops.First().TiplocStanoxCode).StationName,
+                        WebApiService.GetTiplocCode(results.Tiplocs, stops.Last().TiplocStanoxCode).StationName));
                 }
             }
             else

@@ -299,7 +299,6 @@
     <TypeScriptCompile Include="Scripts\typings\moment\moment.d.ts" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="App_Code\WebApiService.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Global.asax.cs">
@@ -339,7 +338,12 @@
       <Project>{c1027696-dbd0-4e90-abbf-848dab6938b4}</Project>
       <Name>TrainNotifier.Common.Model</Name>
     </ProjectReference>
+    <ProjectReference Include="..\TrainNotifier.Common.Web\TrainNotifier.Common.Web.csproj">
+      <Project>{5235980f-97bd-4ba6-ac1a-265c18364175}</Project>
+      <Name>TrainNotifier.Common.Web</Name>
+    </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
