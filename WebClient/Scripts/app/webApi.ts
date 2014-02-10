@@ -216,6 +216,11 @@ interface IBerthContents {
 
 module TrainNotifier {
 
+    export enum LiveTrainStopSource {
+        Trust = 0,
+        TD = 1
+    }
+
     export enum EventType {
         Departure = 1,
         Arrival = 2
@@ -668,13 +673,14 @@ module TrainNotifier {
 }
 
 interface IRunningTrainActualStop {
-    EventType: number;
+    EventType: TrainNotifier.EventType;
     PlannedTimestamp: string;
     ActualTimestamp?: string;
     Line?: string;
     Platform?: string;
     ScheduleStopNumber: number;
     TiplocStanoxCode: string;
+    Source: TrainNotifier.LiveTrainStopSource;
 }
 
 interface IRunningTrainActual {
@@ -682,7 +688,7 @@ interface IRunningTrainActual {
     TrainId: string;
     HeadCode: string;
     TrainServiceCode: string;
-    State: number;
+    State: TrainNotifier.TrainState;
     ScheduleOriginStanoxCode: string;
     OriginDepartTimestamp: string;
     Stops: IRunningTrainActualStop[];
@@ -761,6 +767,7 @@ interface IReinstatement {
     NewOriginStanoxCode: string;
     PlannedDepartureTime: string;
 }
+
 interface IChangeOfOrigin {
     NewOriginStanoxCode: string;
     ReasonCode: string;

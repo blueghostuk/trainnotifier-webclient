@@ -156,6 +156,12 @@ var TrainNotifier;
 
 var TrainNotifier;
 (function (TrainNotifier) {
+    (function (LiveTrainStopSource) {
+        LiveTrainStopSource[LiveTrainStopSource["Trust"] = 0] = "Trust";
+        LiveTrainStopSource[LiveTrainStopSource["TD"] = 1] = "TD";
+    })(TrainNotifier.LiveTrainStopSource || (TrainNotifier.LiveTrainStopSource = {}));
+    var LiveTrainStopSource = TrainNotifier.LiveTrainStopSource;
+
     (function (EventType) {
         EventType[EventType["Departure"] = 1] = "Departure";
         EventType[EventType["Arrival"] = 2] = "Arrival";
