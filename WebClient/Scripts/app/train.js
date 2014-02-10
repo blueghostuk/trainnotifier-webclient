@@ -387,7 +387,7 @@ function getTrainData(trainUid, date, subscribe) {
                 trainTitleModel.id(data.Movement.Actual.HeadCode);
                 if (data.Movement.Actual.Stops.length > 0) {
                     var arrivals = data.Movement.Actual.Stops.filter(function (stop) {
-                        return stop.EventType === 2 /* Arrival */;
+                        return stop.EventType === 2 /* Arrival */ && (stop.ScheduleStopNumber != 0 || (stop.ScheduleStopNumber == 0 && stop.Source == 1 /* TD */));
                     });
 
                     var departures = data.Movement.Actual.Stops.filter(function (stop) {

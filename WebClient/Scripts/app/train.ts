@@ -415,7 +415,8 @@ function getTrainData(trainUid: string, date, subscribe: boolean) {
                 trainTitleModel.id(data.Movement.Actual.HeadCode);
                 if (data.Movement.Actual.Stops.length > 0) {
                     var arrivals = data.Movement.Actual.Stops.filter(function (stop: IRunningTrainActualStop) {
-                        return stop.EventType === TrainNotifier.EventType.Arrival;
+                        return stop.EventType === TrainNotifier.EventType.Arrival &&
+                            (stop.ScheduleStopNumber != 0 || (stop.ScheduleStopNumber == 0 && stop.Source == TrainNotifier.LiveTrainStopSource.TD));
                     });
 
                     var departures = data.Movement.Actual.Stops.filter(function (stop: IRunningTrainActualStop) {

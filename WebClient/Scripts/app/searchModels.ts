@@ -210,10 +210,13 @@ module TrainNotifier.KnockoutModels.Search {
             }
 
             if (trainMovement.Actual && trainMovement.Actual.Stops.length > 0) {
-                // TODO: check is actual location and is departure
-                var fromActual = trainMovement.Actual.Stops[0];
-                this.actualDeparture = DateTimeFormats.formatDateTimeString(fromActual.ActualTimestamp, TrainNotifier.DateTimeFormats.timeFormat);
-                this.actualDepartureEstimate = false;
+                var fromActual = trainMovement.Actual.Stops.filter(function (value: IRunningTrainActualStop) {
+                    return value.EventType == TrainNotifier.EventType.Departure && value.ScheduleStopNumber == 0;
+                });
+                if (fromActual != null && fromActual.length == 1) {
+                    this.actualDeparture = DateTimeFormats.formatDateTimeString(fromActual[0].ActualTimestamp, TrainNotifier.DateTimeFormats.timeFormat);
+                    this.actualDepartureEstimate = false;
+                }
 
                 // TODO: check is actual
                 var lastActual = trainMovement.Actual.Stops[trainMovement.Actual.Stops.length - 1];
@@ -292,9 +295,13 @@ module TrainNotifier.KnockoutModels.Search {
 
             if (trainMovement.Actual && trainMovement.Actual.Stops.length > 0) {
                 // TODO: check is actual location and is departure
-                var fromActual = trainMovement.Actual.Stops[0];
-                this.actualDeparture = DateTimeFormats.formatDateTimeString(fromActual.ActualTimestamp, TrainNotifier.DateTimeFormats.timeFormat);
-                this.actualDepartureEstimate = false;
+                var fromActual = trainMovement.Actual.Stops.filter(function (value: IRunningTrainActualStop) {
+                    return value.EventType == TrainNotifier.EventType.Departure && value.ScheduleStopNumber == 0;
+                });
+                if (fromActual != null && fromActual.length == 1) {
+                    this.actualDeparture = DateTimeFormats.formatDateTimeString(fromActual[0].ActualTimestamp, TrainNotifier.DateTimeFormats.timeFormat);
+                    this.actualDepartureEstimate = false;
+                }
 
                 // TODO: check is actual
                 if (toStop) {
@@ -397,7 +404,8 @@ module TrainNotifier.KnockoutModels.Search {
                 var atActualStops: IRunningTrainActualStop[] = trainMovement.Actual.Stops.filter(
                     function (element: IRunningTrainActualStop) {
                         return TrainMovement.matchesTiploc(element.TiplocStanoxCode, atTiplocs) &&
-                            element.ScheduleStopNumber == atStop.StopNumber;
+                            element.ScheduleStopNumber == atStop.StopNumber &&
+                            (element.ScheduleStopNumber != 0 || element.ScheduleStopNumber == 0 && element.Source == TrainNotifier.LiveTrainStopSource.TD);
                     });
 
                 if (atActualStops.length > 0) {

@@ -200,9 +200,13 @@ var TrainNotifier;
                     }
 
                     if (trainMovement.Actual && trainMovement.Actual.Stops.length > 0) {
-                        var fromActual = trainMovement.Actual.Stops[0];
-                        this.actualDeparture = TrainNotifier.DateTimeFormats.formatDateTimeString(fromActual.ActualTimestamp, TrainNotifier.DateTimeFormats.timeFormat);
-                        this.actualDepartureEstimate = false;
+                        var fromActual = trainMovement.Actual.Stops.filter(function (value) {
+                            return value.EventType == 1 /* Departure */ && value.ScheduleStopNumber == 0;
+                        });
+                        if (fromActual != null && fromActual.length == 1) {
+                            this.actualDeparture = TrainNotifier.DateTimeFormats.formatDateTimeString(fromActual[0].ActualTimestamp, TrainNotifier.DateTimeFormats.timeFormat);
+                            this.actualDepartureEstimate = false;
+                        }
 
                         var lastActual = trainMovement.Actual.Stops[trainMovement.Actual.Stops.length - 1];
                         if (lastActual.ScheduleStopNumber == toStop.StopNumber && lastActual.EventType == 2 /* Arrival */ && lastActual.TiplocStanoxCode == toStop.TiplocStanoxCode) {
@@ -273,9 +277,13 @@ var TrainNotifier;
                     }
 
                     if (trainMovement.Actual && trainMovement.Actual.Stops.length > 0) {
-                        var fromActual = trainMovement.Actual.Stops[0];
-                        this.actualDeparture = TrainNotifier.DateTimeFormats.formatDateTimeString(fromActual.ActualTimestamp, TrainNotifier.DateTimeFormats.timeFormat);
-                        this.actualDepartureEstimate = false;
+                        var fromActual = trainMovement.Actual.Stops.filter(function (value) {
+                            return value.EventType == 1 /* Departure */ && value.ScheduleStopNumber == 0;
+                        });
+                        if (fromActual != null && fromActual.length == 1) {
+                            this.actualDeparture = TrainNotifier.DateTimeFormats.formatDateTimeString(fromActual[0].ActualTimestamp, TrainNotifier.DateTimeFormats.timeFormat);
+                            this.actualDepartureEstimate = false;
+                        }
 
                         if (toStop) {
                             var lastActual = trainMovement.Actual.Stops[trainMovement.Actual.Stops.length - 1];
@@ -366,7 +374,7 @@ var TrainNotifier;
 
                     if (trainMovement.Actual && trainMovement.Actual.Stops.length > 0 && atStop) {
                         var atActualStops = trainMovement.Actual.Stops.filter(function (element) {
-                            return TrainMovement.matchesTiploc(element.TiplocStanoxCode, atTiplocs) && element.ScheduleStopNumber == atStop.StopNumber;
+                            return TrainMovement.matchesTiploc(element.TiplocStanoxCode, atTiplocs) && element.ScheduleStopNumber == atStop.StopNumber && (element.ScheduleStopNumber != 0 || element.ScheduleStopNumber == 0 && element.Source == 1 /* TD */);
                         });
 
                         if (atActualStops.length > 0) {
