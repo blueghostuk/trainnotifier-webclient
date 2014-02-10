@@ -27,13 +27,13 @@ namespace TrainNotifier.WebClient.Handlers
             return uri.Query.Replace(HandlerHelper.QueryFragment, string.Empty).Split('/').First().Contains("get");
         }
 
-        public async void ProcessRequest(Uri url)
+        public void ProcessRequest(Uri url)
         {
             var parts = url.Query.Replace(HandlerHelper.QueryFragment, string.Empty).Split('/');
             string trainUid = parts.ElementAt(1);
             DateTime date = DateTime.Parse(parts.ElementAt(2));
 
-            SingleTrainMovementResult result = await _webApiService.GetTrainMovement(trainUid, date);
+            SingleTrainMovementResult result = _webApiService.GetTrainMovement(trainUid, date).Result;
 
             if (result == null || result.Movement == null)
                 return;
