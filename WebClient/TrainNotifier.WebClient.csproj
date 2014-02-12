@@ -94,7 +94,8 @@
     <Content Include="bin\System.Web.WebPages.Deployment.dll" />
     <Content Include="bin\System.Web.WebPages.dll" />
     <Content Include="bin\System.Web.WebPages.Razor.dll" />
-    <Content Include="bin\TrainNotifier.Common.dll" />
+    <Content Include="bin\TrainNotifier.Common.Model.dll" />
+    <Content Include="bin\TrainNotifier.Common.Web.dll" />
     <Content Include="bin\TrainNotifier.WebClient.dll" />
     <Content Include="bin\WebGrease.dll" />
     <Content Include="Content\app\history.css" />

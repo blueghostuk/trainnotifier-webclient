@@ -68,12 +68,14 @@ var thisPage = {
         if (this.advancedMode) {
             $("#advancedSwitch").html("Simple");
 
-            $(".toc-ZZ, .cat-EE, .passing").show();
+            $(".toc-ZZ, .cat-EE, .passing, .advanced-col").removeClass("hide");
+            $(".simple-col").addClass("hide");
             $(".cat-ee").show();
         } else {
             $("#advancedSwitch").html("Advanced");
 
-            $(".toc-ZZ, .cat-EE, .passing").hide();
+            $(".toc-ZZ, .cat-EE, .passing, .advanced-col").addClass("hide");
+            $(".simple-col").removeClass("hide");
         }
     }
 };

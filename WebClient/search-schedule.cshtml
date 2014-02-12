@@ -80,12 +80,14 @@
                             <th class="visible-md visible-lg" colspan="2">From</th>
                             <th class="visible-xs visible-sm" colspan="3">From</th>
                             <!-- 3 -->
-                            <th class="visible-md visible-lg" colspan="3">Departure</th>
+                            <th class="visible-md visible-lg simple-col" colspan="2">Departure</th>
+                            <th class="visible-md visible-lg advanced-col" colspan="3">Departure</th>
                             <!-- 4 -->
                             <th class="visible-md visible-lg" colspan="2">To</th>
                             <th class="visible-xs visible-sm" colspan="3">To</th>
                             <!-- 5 -->
-                            <th class="visible-md visible-lg" colspan="3">Arrival</th>
+                            <th class="visible-md visible-lg simple-col" colspan="2">Arrival</th>
+                            <th class="visible-md visible-lg advanced-col" colspan="3">Arrival</th>
                         </tr>
                         <tr>
                             <!-- 1 -->
@@ -128,13 +130,13 @@
                                 </a>
                             </td>
                             <td>
-                                <a data-bind="text: fromPlatform, attr: { href: 'trains/' + trainId + '/' + departureDate }"></a>
+                                <a data-bind="text: fromPlatform, attr: { href: 'trains/' + trainId + '/' + departureDate }, css: { estimate: fromPlatformEstimate, 'non-estimate': !fromPlatformEstimate }"></a>
                             </td>
                             <!-- 3 -->
                             <td class="visible-md visible-lg time" title="Public Departure">
                                 <a data-bind="text: publicDeparture, attr: { href: 'trains/' + trainId + '/' + departureDate }"></a>
                             </td>
-                            <td class="visible-md visible-lg" title="WTT Departure">
+                            <td class="visible-md visible-lg time advanced-col"  title="WTT Departure">
                                 <a data-bind="text: wttDeparture, attr: { href: 'trains/' + trainId + '/' + departureDate }"></a>
                             </td>
                             <td class="visible-md visible-lg time" title="Actual Departure">
@@ -163,13 +165,13 @@
                                 </a>
                             </td>
                             <td>
-                                <a data-bind="text: toPlatform, attr: { href: 'trains/' + trainId + '/' + departureDate }"></a>
+                                <a data-bind="text: toPlatform, attr: { href: 'trains/' + trainId + '/' + departureDate }, css: { estimate: toPlatformEstimate, 'non-estimate': !toPlatformEstimate }"></a>
                             </td>
                             <!-- 5 -->
                             <td class="visible-md visible-lg time" title="Public Arrival">
                                 <a data-bind="text: publicArrival, attr: { href: 'trains/' + trainId + '/' + departureDate }"></a>
                             </td>
-                            <td class="visible-md visible-lg" title="WTT Arrival">
+                            <td class="visible-md visible-lg time advanced-col" title="WTT Arrival">
                                 <a data-bind="text: wttArrival, attr: { href: 'trains/' + trainId + '/' + departureDate }"></a>
                             </td>
                             <td class="visible-md visible-lg time" title="Actual Arrival">
@@ -215,7 +217,7 @@
                             <th class="visible-md visible-lg">Operator</th>
                             <!-- 2 -->
                             <th class="visible-md visible-lg">Public</th>
-                            <th class="visible-md visible-lg advanced">WTT</th>
+                            <th class="visible-md visible-lg advanced-col">WTT</th>
                             <th class="visible-md visible-lg">Actual</th>
                             <th class="visible-xs visible-sm">Arr</th>
                             <!-- 3 -->
@@ -227,7 +229,7 @@
                             <th>To</th>
                             <!-- 6 -->
                             <th class="visible-md visible-lg">Public</th>
-                            <th class="visible-md visible-lg advanced">WTT</th>
+                            <th class="visible-md visible-lg advanced-col">WTT</th>
                             <th class="visible-md visible-lg">Actual</th>
                             <th class="visible-xs visible-sm">Dept</th>
                         </tr>
@@ -245,7 +247,7 @@
                             <td class="visible-md visible-lg time" title="Public Arrival">
                                 <a data-bind="text: atPublicArrival, attr: { href: 'trains/' + trainId + '/' + departureDate }"></a>
                             </td>
-                            <td class="visible-md visible-lg" title="WTT Arrival">
+                            <td class="visible-md visible-lg advanced-col" title="WTT Arrival">
                                 <a data-bind="text: atWttArrival, attr: { href: 'trains/' + trainId + '/' + departureDate }"></a>
                             </td>
                             <td class="visible-md visible-lg time" title="Actual Arrival">
@@ -291,7 +293,7 @@
                             <td class="visible-md visible-lg time" title="Public Departure">
                                 <a data-bind="text: atPublicDeparture, attr: { href: 'trains/' + trainId + '/' + departureDate }"></a>
                             </td>
-                            <td class="visible-md visible-lg" title="WTT Departure">
+                            <td class="visible-md visible-lg advanced-col" title="WTT Departure">
                                 <a data-bind="text: atWttDeparture, attr: { href: 'trains/' + trainId + '/' + departureDate }"></a>
                             </td>
                             <td class="visible-md visible-lg time" title="Actual Departure">
@@ -330,10 +332,12 @@
                             <!-- 3 -->
                             <th colspan="2"></th>
                             <!-- 4 -->
-                            <th class="visible-md visible-lg" colspan="4">Departure from <span class="stationName" data-bind="text: fromStation"></span></th>
+                            <th class="visible-md visible-lg advanced-col" colspan="4">Departure from <span class="stationName" data-bind="text: fromStation"></span></th>
+                            <th class="visible-md visible-lg simple-col" colspan="3">Departure from <span class="stationName" data-bind="text: fromStation"></span></th>
                             <th class="visible-xs visible-sm" colspan="3">Dept. <span class="stationName" data-bind="text: fromShortStation"></span></th>
                             <!-- 5 -->
-                            <th class="visible-md visible-lg" colspan="4">Arrival at <span class="stationName" data-bind="text: toStation"></span></th>
+                            <th class="visible-md visible-lg advanced-col" colspan="4">Arrival at <span class="stationName" data-bind="text: toStation"></span></th>
+                            <th class="visible-md visible-lg simple-col" colspan="3">Arrival at <span class="stationName" data-bind="text: toStation"></span></th>
                             <th class="visible-xs visible-sm" colspan="3">Arr. <span class="stationName" data-bind="text: toShortStation"></span></th>
                         </tr>
                         <tr>
@@ -348,13 +352,13 @@
                             <!-- 4 -->
                             <th>Pfm</th>
                             <th class="visible-md visible-lg">Public</th>
-                            <th class="visible-md visible-lg">WTT</th>
+                            <th class="visible-md visible-lg advanced-col">WTT</th>
                             <th class="visible-md visible-lg">Actual</th>
                             <th class="visible-xs visible-sm" colspan="2">At</th>
                             <!-- 5 -->
                             <th>Pfm</th>
                             <th class="visible-md visible-lg">Public</th>
-                            <th class="visible-md visible-lg">WTT</th>
+                            <th class="visible-md visible-lg advanced-col">WTT</th>
                             <th class="visible-md visible-lg">Actual</th>
                             <th class="visible-xs visible-sm" colspan="2"></th>
                         </tr>
@@ -390,7 +394,7 @@
                             <td class="visible-xs visible-sm pass">
                                 <a data-bind="attr: { href: 'trains/' + trainId + '/' + departureDate }">Pass</a>
                             </td>
-                            <td class="visible-md visible-lg pass time" title="WTT Departure">
+                            <td class="visible-md visible-lg pass time advanced-col" title="WTT Departure">
                                 <a data-bind="text: wttDeparture, attr: { href: 'trains/' + trainId + '/' + departureDate }"></a>
                             </td>
                             <td class="visible-md visible-lg pass time" title="Actual Departure">
@@ -404,7 +408,7 @@
                             <td class="visible-md visible-lg time" title="Public Departure">
                                 <a data-bind="text: publicDeparture, attr: { href: 'trains/' + trainId + '/' + departureDate }"></a>
                             </td>
-                            <td class="visible-md visible-lg" title="WTT Departure">
+                            <td class="visible-md visible-lg time advanced-col" title=" wtt departure">
                                 <a data-bind="text: wttDeparture, attr: { href: 'trains/' + trainId + '/' + departureDate }"></a>
                             </td>
                             <td class="visible-md visible-lg time" title="Actual Departure">
@@ -435,7 +439,7 @@
                             <td class="visible-xs visible-sm pass">
                                 <a data-bind="attr: { href: 'trains/' + trainId + '/' + departureDate }">Pass</a>
                             </td>
-                            <td class="visible-md visible-lg pass time" title="WTT Arrival">
+                            <td class="visible-md visible-lg pass time advanced-col" title="WTT Arrival">
                                 <a data-bind="text: wttArrival, attr: { href: 'trains/' + trainId + '/' + departureDate }"></a>
                             </td>
                             <td class="visible-md visible-lg pass time" title="Actual Arrival">
@@ -449,7 +453,7 @@
                             <td class="visible-md visible-lg time" title="Public Arrival">
                                 <a data-bind="text: publicArrival, attr: { href: 'trains/' + trainId + '/' + departureDate }"></a>
                             </td>
-                            <td class="visible-md visible-lg" title="WTT Arrival">
+                            <td class="visible-md visible-lg time advanced-col" title="WTT Arrival">
                                 <a data-bind="text: wttArrival, attr: { href: 'trains/' + trainId + '/' + departureDate }"></a>
                             </td>
                             <td class="visible-md visible-lg time" title="Actual Arrival">
@@ -649,7 +653,7 @@
 <!--/row-fluid-->
 <div class="row-fluid">
     <p class="span12">
-        <span class="glyphicon glyphicon-info-sign"></span>&nbsp;Passing, <span title="Empty Coaching Stock">ECS</span> and <span title="Freight or Other Operator">TOC-ZZ</span> trains will be hidden in Simple Mode.
+        <span class="glyphicon glyphicon-info-sign"></span>&nbsp;<abbr title="Working Timetable">WTT</abbr> times and Passing, <abbr title="Empty Coaching Stock">ECS</abbr> and <abbr title="Freight or Other Operator">TOC-ZZ</abbr> trains will be hidden in Simple Mode.
         <br />
         <span class="glyphicon glyphicon-info-sign"></span>&nbsp;Trains in <em>italics</em> are non-activated trains. This means they may not run. Trains are typically activated a few hours before scheduled departure time.
         <br />

@@ -167,11 +167,13 @@ var TrainNotifier;
                     this.wttDeparture = null;
                     this.actualDeparture = null;
                     this.actualDepartureEstimate = true;
+                    this.fromPlatformEstimate = true;
                     this.toPlatform = null;
                     this.publicArrival = null;
                     this.wttArrival = null;
                     this.actualArrival = null;
                     this.actualArrivalEstimate = true;
+                    this.toPlatformEstimate = true;
 
                     var toStop;
                     if (trainMovement.Schedule.Stops.length > 0) {
@@ -205,13 +207,17 @@ var TrainNotifier;
                         });
                         if (fromActual != null && fromActual.length == 1) {
                             this.actualDeparture = TrainNotifier.DateTimeFormats.formatDateTimeString(fromActual[0].ActualTimestamp, TrainNotifier.DateTimeFormats.timeFormat);
+                            this.fromPlatform = fromActual[0].Platform;
                             this.actualDepartureEstimate = false;
+                            this.fromPlatformEstimate = false;
                         }
 
                         var lastActual = trainMovement.Actual.Stops[trainMovement.Actual.Stops.length - 1];
                         if (lastActual.ScheduleStopNumber == toStop.StopNumber && lastActual.EventType == 2 /* Arrival */ && lastActual.TiplocStanoxCode == toStop.TiplocStanoxCode) {
                             this.actualArrival = TrainNotifier.DateTimeFormats.formatDateTimeString(lastActual.ActualTimestamp, TrainNotifier.DateTimeFormats.timeFormat);
+                            this.toPlatform = lastActual.Platform;
                             this.actualArrivalEstimate = false;
+                            this.toPlatformEstimate = false;
                         } else {
                             var precedingStops = trainMovement.Actual.Stops.filter(function (element) {
                                 return element.ScheduleStopNumber < toStop.StopNumber;
@@ -246,11 +252,13 @@ var TrainNotifier;
                     this.wttDeparture = null;
                     this.actualDeparture = null;
                     this.actualDepartureEstimate = true;
+                    this.fromPlatformEstimate = true;
                     this.toPlatform = null;
                     this.publicArrival = null;
                     this.wttArrival = null;
                     this.actualArrival = null;
                     this.actualArrivalEstimate = true;
+                    this.toPlatformEstimate = true;
 
                     var toStop;
                     if (trainMovement.Schedule.Stops.length > 0) {
@@ -282,14 +290,18 @@ var TrainNotifier;
                         });
                         if (fromActual != null && fromActual.length == 1) {
                             this.actualDeparture = TrainNotifier.DateTimeFormats.formatDateTimeString(fromActual[0].ActualTimestamp, TrainNotifier.DateTimeFormats.timeFormat);
+                            this.fromPlatform = fromActual[0].Platform;
                             this.actualDepartureEstimate = false;
+                            this.fromPlatformEstimate = false;
                         }
 
                         if (toStop) {
                             var lastActual = trainMovement.Actual.Stops[trainMovement.Actual.Stops.length - 1];
                             if (lastActual.ScheduleStopNumber == toStop.StopNumber && lastActual.EventType == 2 /* Arrival */ && lastActual.TiplocStanoxCode == toStop.TiplocStanoxCode) {
                                 this.actualArrival = TrainNotifier.DateTimeFormats.formatDateTimeString(lastActual.ActualTimestamp, TrainNotifier.DateTimeFormats.timeFormat);
+                                this.toPlatform = lastActual.Platform;
                                 this.actualArrivalEstimate = false;
+                                this.toPlatformEstimate = false;
                             }
                         }
                     }

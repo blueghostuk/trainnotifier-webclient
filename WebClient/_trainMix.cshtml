@@ -6,11 +6,13 @@
             @*2. ALL - Platform*@
             <th>&nbsp;</th>
             @*3+4+5. Arrive*@
-            <th class="hidden-xs hidden-sm visible-md visible-lg" colspan="3">Arrive</th>
+            <th class="hidden-xs hidden-sm visible-md visible-lg advanced-col" colspan="3">Arrive</th>
+            <th class="hidden-xs hidden-sm visible-md visible-lg simple-col" colspan="1">Arrive</th>
             @*3+4+5. Arrive*@
             <th class="visible-xs visible-sm hidden-md hidden-lg" colspan="2">Arr.</th>
             @*6+7+8. Depart*@
-            <th class="hidden-xs hidden-sm visible-md visible-lg" colspan="3">Depart</th>
+            <th class="hidden-xs hidden-sm visible-md visible-lg advanced-col" colspan="3">Depart</th>
+            <th class="hidden-xs hidden-sm visible-md visible-lg simple-col" colspan="3">Depart</th>
             @*6+7+8. Depart*@
             <th class="visible-xs visible-sm hidden-md hidden-lg" colspan="2">Dept.</th>
             @*9+10. Additional*@
@@ -22,7 +24,7 @@
             @*2*@
             <th><abbr title="Platform">Pfm.</abbr></th>
             @*3*@
-            <th class="hidden-xs hidden-sm visible-md visible-lg"><abbr title="Working Timetable">WTT</abbr></th>
+            <th class="hidden-xs hidden-sm visible-md visible-lg advanced-col"><abbr title="Working Timetable">WTT</abbr></th>
             @*4*@
             <th class="hidden-xs hidden-sm visible-md visible-lg"><abbr title="Public Timetable">Public</abbr></th>
             <th class="visible-xs visible-sm hidden-md hidden-lg"><abbr title="Public Timetable">Pub.</abbr></th>
@@ -30,7 +32,7 @@
             <th class="hidden-xs hidden-sm visible-md visible-lg"><abbr title="Actual or Estimated">Actual</abbr></th>
             <th class="visible-xs visible-sm hidden-md hidden-lg"><abbr title="Actual or Estimated">Act.</abbr></th>
             @*6*@
-            <th class="hidden-xs hidden-sm visible-md visible-lg"><abbr title="Working Timetable">WTT</abbr></th>
+            <th class="hidden-xs hidden-sm visible-md visible-lg advanced-col"><abbr title="Working Timetable">WTT</abbr></th>
             @*7*@
             <th class="hidden-xs hidden-sm visible-md visible-lg"><abbr title="Public Timetable">Public</abbr></th>
             <th class="visible-xs visible-sm hidden-md hidden-lg"><abbr title="Public Timetable">Pub.</abbr></th>
@@ -53,15 +55,15 @@
             @*2. ALL - Platform*@
             <td class="col extra platform" data-bind="text: actualPlatform, css: { changePlatform: changePlatform }"></td>
             @*3. Advanced - Pass(Pass)/WTT Expected Arrival*@
-            <td class="col arrive wtt hidden-xs hidden-sm visible-md visible-lg" data-bind="text: pass ? 'Pass' : wttArrive"></td>
+            <td class="col arrive wtt hidden-xs hidden-sm visible-md visible-lg advanced-col" data-bind="text: pass ? 'Pass' : wttArrive"></td>
             @*4. Advanced - Pass(Empty)/Public Expected Arrival*@
             <td class="col arrive public" data-bind="text: pass ? '' : publicArrive"></td>
             @*5. ALL - Actual Arrival*@
             <td class="col arrive actual" data-bind="text: pass ? '' : actualArrival, css: arrivalCss"></td>
             @*6. Advanced - Pass/WTT Expected Departure*@
-            <td class="col depart wtt hidden-xs hidden-sm visible-md visible-lg" data-bind="text: pass ? pass : wttDepart"></td>
+            <td class="col depart wtt hidden-xs hidden-sm visible-md visible-lg advanced-col" data-bind="text: pass ? pass : wttDepart"></td>
             @*7. Advanced - Pass(Empty)/Public Expected Departure*@
-            <td class="col depart public advanced" data-bind="text: pass ? '' : publicDepart"></td>
+            <td class="col depart public" data-bind="text: pass ? '' : publicDepart"></td>
             @*8. ALL - Actual Departure*@
             <td class="col depart actual" data-bind="text: actualDeparture, css: departureCss"></td>
             @*9. ALL - Line*@
@@ -77,6 +79,6 @@
 </table>
 <p>
     <span class="glyphicon glyphicon-info-sign"></span>&nbsp;This page shows the Schedule with current running information. Click the <span class="glyphicon glyphicon-refresh"></span> icon above to activate live tracking.<br />
-    <span class="glyphicon glyphicon-info-sign"></span>&nbsp;Passing stops are hidden in simple mode. Switch to Advanced mode from the top menu.<br />
+    <span class="glyphicon glyphicon-info-sign"></span>&nbsp;<abbr title="Working Timetable">WTT</abbr> times and passing stops are hidden in simple mode. Switch to Advanced mode from the top menu.<br />
     <span class="glyphicon glyphicon-info-sign"></span>&nbsp;Actual times in <em>italics</em> are estimates. Times in <strong>bold</strong> are actual times.
 </p>

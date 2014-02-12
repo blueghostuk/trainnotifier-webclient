@@ -1,4 +1,20 @@
-﻿.sidebar-nav {
+﻿th.advanced-col.hide {
+    display: none !important;
+}
+
+td.advanced-col.hide {
+    display: none !important;
+}
+
+th.simple-col.hide {
+    display: none !important;
+}
+
+td.simple-col.hide {
+    display: none !important;
+}
+
+.sidebar-nav {
     padding: 9px 0;
 }
 

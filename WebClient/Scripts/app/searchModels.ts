@@ -172,12 +172,14 @@ module TrainNotifier.KnockoutModels.Search {
         public wttDeparture: string = null;
         public actualDeparture: string = null;
         public actualDepartureEstimate = true;
+        public fromPlatformEstimate = true;
 
         public toPlatform: string = null;
         public publicArrival: string = null;
         public wttArrival: string = null;
         public actualArrival: string = null;
         public actualArrivalEstimate = true;
+        public toPlatformEstimate = true;
 
         constructor(trainMovement: ITrainMovementResult, tiplocs: IStationTiploc[], queryStartDate: Moment) {
             super(trainMovement, tiplocs, queryStartDate);
@@ -215,7 +217,9 @@ module TrainNotifier.KnockoutModels.Search {
                 });
                 if (fromActual != null && fromActual.length == 1) {
                     this.actualDeparture = DateTimeFormats.formatDateTimeString(fromActual[0].ActualTimestamp, TrainNotifier.DateTimeFormats.timeFormat);
+                    this.fromPlatform = fromActual[0].Platform;
                     this.actualDepartureEstimate = false;
+                    this.fromPlatformEstimate = false;
                 }
 
                 // TODO: check is actual
@@ -224,7 +228,9 @@ module TrainNotifier.KnockoutModels.Search {
                     lastActual.EventType == EventType.Arrival &&
                     lastActual.TiplocStanoxCode == toStop.TiplocStanoxCode) {
                     this.actualArrival = DateTimeFormats.formatDateTimeString(lastActual.ActualTimestamp, TrainNotifier.DateTimeFormats.timeFormat);
+                    this.toPlatform = lastActual.Platform;
                     this.actualArrivalEstimate = false;
+                    this.toPlatformEstimate = false;
                 } else {
                     // TODO: estimate actual
                     var precedingStops = trainMovement.Actual.Stops.filter(
@@ -258,12 +264,14 @@ module TrainNotifier.KnockoutModels.Search {
         public wttDeparture: string = null;
         public actualDeparture: string = null;
         public actualDepartureEstimate = true;
+        public fromPlatformEstimate = true;
 
         public toPlatform: string = null;
         public publicArrival: string = null;
         public wttArrival: string = null;
         public actualArrival: string = null;
         public actualArrivalEstimate = true;
+        public toPlatformEstimate = true;
 
         constructor(trainMovement: ITrainMovementResult, tiplocs: IStationTiploc[], queryStartDate: Moment) {
             super(trainMovement, tiplocs, queryStartDate);
@@ -300,7 +308,9 @@ module TrainNotifier.KnockoutModels.Search {
                 });
                 if (fromActual != null && fromActual.length == 1) {
                     this.actualDeparture = DateTimeFormats.formatDateTimeString(fromActual[0].ActualTimestamp, TrainNotifier.DateTimeFormats.timeFormat);
+                    this.fromPlatform = fromActual[0].Platform;
                     this.actualDepartureEstimate = false;
+                    this.fromPlatformEstimate = false;
                 }
 
                 // TODO: check is actual
@@ -310,7 +320,9 @@ module TrainNotifier.KnockoutModels.Search {
                         lastActual.EventType == EventType.Arrival &&
                         lastActual.TiplocStanoxCode == toStop.TiplocStanoxCode) {
                         this.actualArrival = DateTimeFormats.formatDateTimeString(lastActual.ActualTimestamp, TrainNotifier.DateTimeFormats.timeFormat);
+                        this.toPlatform = lastActual.Platform;
                         this.actualArrivalEstimate = false;
+                        this.toPlatformEstimate = false;
                     }
                 }
             }

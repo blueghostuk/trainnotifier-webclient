@@ -74,11 +74,13 @@ var thisPage: IPage = {
         if (this.advancedMode) {
             $("#advancedSwitch").html("Simple");
 
-            $(".pass").show();
+            $(".pass, .advanced-col").removeClass("hide");
+            $(".simple-col").addClass("hide");
         } else {
             $("#advancedSwitch").html("Advanced");
 
-            $(".pass").hide();
+            $(".pass, .advanced-col").addClass("hide");
+            $(".simple-col").removeClass("hide");
         }
     }
 };
