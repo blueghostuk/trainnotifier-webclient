@@ -323,6 +323,7 @@ var TrainNotifier;
                     this.atWttArrival = null;
                     this.atActualArrival = null;
                     this.atActualArrivalEstimate = true;
+                    this.atPlatformEstimate = true;
                     this.pass = ko.observable(false);
 
                     var atTiplocs = tiplocs.filter(function (t) {
@@ -395,12 +396,15 @@ var TrainNotifier;
                                     case 2 /* Arrival */:
                                         this.atActualArrival = TrainNotifier.DateTimeFormats.formatDateTimeString(atActualStops[i].ActualTimestamp, TrainNotifier.DateTimeFormats.timeFormat);
                                         this.atActualArrivalEstimate = false;
+                                        this.atPlatform = TrainNotifier.Common.coalesce([atActualStops[i].Platform, this.atPlatform]);
                                         break;
                                     case 1 /* Departure */:
                                         this.atActualDeparture = TrainNotifier.DateTimeFormats.formatDateTimeString(atActualStops[i].ActualTimestamp, TrainNotifier.DateTimeFormats.timeFormat);
                                         this.atActualDepartureEstimate = false;
+                                        this.atPlatform = TrainNotifier.Common.coalesce([atActualStops[i].Platform, this.atPlatform]);
                                         break;
                                 }
+                                this.atPlatformEstimate = false;
                             }
                         } else {
                             var precedingStops = trainMovement.Actual.Stops.filter(function (element) {

@@ -344,6 +344,8 @@ module TrainNotifier.KnockoutModels.Search {
         public atActualArrivalEstimate = true;
         private arrival: Duration;
 
+        public atPlatformEstimate = true;
+
         public pass = ko.observable<boolean>(false);
 
         constructor(trainMovement: ITrainMovementResult, atTiploc: IStationTiploc, tiplocs: IStationTiploc[], queryStartDate: Moment) {
@@ -426,12 +428,15 @@ module TrainNotifier.KnockoutModels.Search {
                             case EventType.Arrival:
                                 this.atActualArrival = DateTimeFormats.formatDateTimeString(atActualStops[i].ActualTimestamp, TrainNotifier.DateTimeFormats.timeFormat);
                                 this.atActualArrivalEstimate = false;
+                                this.atPlatform = TrainNotifier.Common.coalesce([atActualStops[i].Platform, this.atPlatform]);
                                 break;
                             case EventType.Departure:
                                 this.atActualDeparture = DateTimeFormats.formatDateTimeString(atActualStops[i].ActualTimestamp, TrainNotifier.DateTimeFormats.timeFormat);
                                 this.atActualDepartureEstimate = false;
+                                this.atPlatform = TrainNotifier.Common.coalesce([atActualStops[i].Platform, this.atPlatform]);
                                 break;
                         }
+                        this.atPlatformEstimate = false;
                     }
                 } else {
                     var precedingStops = trainMovement.Actual.Stops.filter(

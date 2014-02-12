@@ -80,6 +80,16 @@ module TrainNotifier {
                 return str.trim();
             return null;
         }
+
+        static coalesce(str: string[]) {
+            for (var i = 0; i < str.length; i++) {
+                var trimmed = Common.trimNullableString(str[i]);
+                if (trimmed && trimmed.length > 0) {
+                    return trimmed;
+                }
+            }
+            return null;
+        }
     }
 
     export class DateTimeFormats {

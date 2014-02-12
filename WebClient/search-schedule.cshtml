@@ -279,8 +279,8 @@
                                 </a>
                             </td>
                             <!-- 4 -->
-                            <td class="centerText" data-bind="text: atPlatform">
-                                <a data-bind="text: atPlatform, attr: { href: 'trains/' + trainId + '/' + departureDate }"></a>
+                            <td class="centerText">
+                                <a data-bind="text: atPlatform, attr: { href: 'trains/' + trainId + '/' + departureDate }, css: { estimate: atPlatformEstimate, 'non-estimate': !atPlatformEstimate }"></a>
                             </td>
                             <!-- 5 -->
                             <td class="stationName" data-bind="css: toStationCss">

@@ -50,6 +50,16 @@ var TrainNotifier;
                 return str.trim();
             return null;
         };
+
+        Common.coalesce = function (str) {
+            for (var i = 0; i < str.length; i++) {
+                var trimmed = Common.trimNullableString(str[i]);
+                if (trimmed && trimmed.length > 0) {
+                    return trimmed;
+                }
+            }
+            return null;
+        };
         return Common;
     })();
     TrainNotifier.Common = Common;
