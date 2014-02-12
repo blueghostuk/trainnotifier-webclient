@@ -76,7 +76,7 @@
                 @*<li><a href="/history#!" data-bind="attr: { href: '/history#!' + $data }">History</a></li>*@
             </ul>
             <div class="tab-content">
-                <div class="tab-pane active" id="mix">
+                <div class="tab-pane active" id="mix" data-bind="visible: $data.length > 0">
                     @RenderPage("_trainMix.cshtml")
                 </div>
                 <div class="tab-pane" id="schedule">
