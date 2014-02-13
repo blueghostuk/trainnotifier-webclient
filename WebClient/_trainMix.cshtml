@@ -55,17 +55,17 @@
             @*2. ALL - Platform*@
             <td class="col extra platform" data-bind="text: actualPlatform, css: { changePlatform: changePlatform }"></td>
             @*3. Advanced - Pass(Pass)/WTT Expected Arrival*@
-            <td class="col arrive wtt hidden-xs hidden-sm visible-md visible-lg advanced-col" data-bind="text: pass ? 'Pass' : wttArrive"></td>
+            <td class="col arrive wtt time hidden-xs hidden-sm visible-md visible-lg advanced-col" data-bind="text: pass ? 'Pass' : wttArrive"></td>
             @*4. Advanced - Pass(Empty)/Public Expected Arrival*@
-            <td class="col arrive public" data-bind="text: pass ? '' : publicArrive"></td>
+            <td class="col arrive public time" data-bind="text: pass ? '' : publicArrive"></td>
             @*5. ALL - Actual Arrival*@
-            <td class="col arrive actual" data-bind="text: pass ? '' : actualArrival, css: arrivalCss"></td>
+            <td class="col arrive actual time" data-bind="text: pass ? '' : actualArrival, css: arrivalCss"></td>
             @*6. Advanced - Pass/WTT Expected Departure*@
-            <td class="col depart wtt hidden-xs hidden-sm visible-md visible-lg advanced-col" data-bind="text: pass ? pass : wttDepart"></td>
+            <td class="col depart wtt time hidden-xs hidden-sm visible-md visible-lg advanced-col" data-bind="text: pass ? pass : wttDepart"></td>
             @*7. Advanced - Pass(Empty)/Public Expected Departure*@
-            <td class="col depart public" data-bind="text: pass ? '' : publicDepart"></td>
+            <td class="col depart public time" data-bind="text: pass ? '' : publicDepart"></td>
             @*8. ALL - Actual Departure*@
-            <td class="col depart actual" data-bind="text: actualDeparture, css: departureCss"></td>
+            <td class="col depart actual time" data-bind="text: actualDeparture, css: departureCss"></td>
             @*9. ALL - Line*@
             <td class="col extra line hidden-xs hidden-sm visible-md visible-lg" data-bind="text: line"></td>
             @*10. ALL - Allowances*@

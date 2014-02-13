@@ -88,7 +88,22 @@ tr.error > td > span.changeOfDestination {
     }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
+
+    table > tbody > tr > td.time:nth-child(6) {
+        padding-right: 2px !important;
+    }
+
+    
+    table > tbody > tr > td.time:nth-child(13){
+        padding-left: 2px !important;
+    }
+
+    td.time, td.platform, td.stationName {
+        padding-left: 0px !important;
+        padding-right: 0px !important;
+    }
+
     div#title {
         font-size: 14px !important;
         padding-left: 10px;

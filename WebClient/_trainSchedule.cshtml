@@ -30,10 +30,10 @@
                 <a class="pointer" data-bind="visible: !locationCRS, text: location" onclick="    return false;"></a>
             </td>
             <td class="col extra platform" data-bind="text: platform"></td>
-            <td class="col arrive wtt advanced-col" data-bind="text: pass ? 'Pass' : wttArrive, attr: { colspan: pass ? 2 : 1 }"></td>
-            <td class="col arrive public" data-bind="text: publicArrive, visible: !pass"></td>
-            <td class="col depart wtt advanced-col" data-bind="text: pass ? pass : wttDepart, attr: { colspan: pass ? 2 : 1 }"></td>
-            <td class="col depart public" data-bind="text: pass ? '' : publicDepart, visible: !pass"></td>
+            <td class="col arrive wtt time advanced-col"  data-bind="text: pass ? 'Pass' : wttArrive, attr: { colspan: pass ? 2 : 1 }"></td>
+            <td class="col arrive public time" data-bind="text: publicArrive, visible: !pass"></td>
+            <td class="col depart wtt time advanced-col" data-bind="text: pass ? pass : wttDepart, attr: { colspan: pass ? 2 : 1 }"></td>
+            <td class="col depart public time" data-bind="text: pass ? '' : publicDepart, visible: !pass"></td>
             <td class="col extra line hidden-xs hidden-sm visible-md visible-lg" data-bind="text: line"></td>
             <td class="col extra allowances hidden-xs hidden-sm visible-md visible-lg">
                 <span data-bind="text: eAllowance, visible: eAllowance" title="Engineering Allowance"></span>

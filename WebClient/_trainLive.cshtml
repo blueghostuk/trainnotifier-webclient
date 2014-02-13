@@ -17,11 +17,11 @@
                 <a class="pointer" data-bind="text: location"></a>
             </td>
             <td class="col extra platform" data-bind="text: platform"></td>
-            <td class="col arrive actual">
+            <td class="col arrive actual time">
                 <span data-bind="text: actualArrival, attr: { title: plannedArrival }" class="tooltip-dynamic"></span>&nbsp;
                 <span data-bind="visible: arrivalDelay" title="Delay">(<span class="badge" data-bind="text: arrivalDelay, css: arrivalDelayCss"></span>)</span>
             </td>
-            <td class="col depart actual">
+            <td class="col depart actual time">
                 <span data-bind="text: actualDeparture, attr: { title: plannedDeparture }" class="tooltip-dynamic"></span>&nbsp;
                 <span data-bind="visible: departureDelay" title="Delay">(<span class="badge" data-bind="text: departureDelay, css: departureDelayCss"></span>)</span>
             </td>
