@@ -103,7 +103,6 @@
     <Content Include="Content\app\ppm.css" />
     <Content Include="Content\app\route.css" />
     <Content Include="Content\app\search-schedule.css" />
-    <Content Include="Content\app\station.css" />
     <Content Include="Content\app\styles.css" />
     <Content Include="Content\app\tocs.css" />
     <Content Include="Content\app\train.css" />
@@ -236,10 +235,6 @@
     <Content Include="Scripts\app\searchModels.js">
       <DependentUpon>searchModels.ts</DependentUpon>
     </Content>
-    <TypeScriptCompile Include="Scripts\app\station.ts" />
-    <Content Include="Scripts\app\station.js">
-      <DependentUpon>station.ts</DependentUpon>
-    </Content>
     <Content Include="Scripts\app\train.js">
       <DependentUpon>train.ts</DependentUpon>
     </Content>
@@ -314,7 +309,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="search-schedule.cshtml" />
-    <Content Include="station.cshtml" />
     <Content Include="Scripts\jquery-2.1.0.min.map" />
     <None Include="Web.Azure.config">
       <DependentUpon>Web.config</DependentUpon>
