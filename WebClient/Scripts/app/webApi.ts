@@ -14,7 +14,7 @@ interface IWebApi {
     getTrainMovementAssociations(uid: string, date: string): JQueryPromise<any>;
     getTrainMovementsByHeadcode(headcode: string, date: string): JQueryPromise<any>;
 
-    getTrainMovementsTerminatingAtLocation(stanox: string, startDate: string, endDate: string, atocCode? : string): JQueryPromise<any>;
+    getTrainMovementsTerminatingAtLocation(stanox: string, startDate: string, endDate: string, atocCode?: string): JQueryPromise<any>;
     getTrainMovementsTerminatingAtStation(crsCode: string, startDate: string, endDate: string, atocCode?: string): JQueryPromise<any>;
     getTrainMovementsStartingAtLocation(stanox: string, startDate: string, endDate: string, atocCode?: string): JQueryPromise<any>;
     getTrainMovementsStartingAtStation(crsCode: string, startDate: string, endDate: string, atocCode?: string): JQueryPromise<any>;
@@ -22,6 +22,8 @@ interface IWebApi {
     getTrainMovementsCallingAtStation(crsCode: string, startDate: string, endDate: string, atocCode?: string): JQueryPromise<any>;
     getTrainMovementsBetweenLocations(fromStanox: string, toStanox: string, startDate: string, endDate: string, atocCode?: string): JQueryPromise<any>;
     getTrainMovementsBetweenStations(fromCrsCode: string, toCrsCode: string, startDate: string, endDate: string, atocCode?: string): JQueryPromise<any>;
+
+    getTrainMovementLink(headcode: string, crsCode: string, platform: string): JQueryPromise<any>;
 
     getTrainMovementsNearLocation(lat: number, lon: number, limit: number): JQueryPromise<any>;
 
@@ -169,6 +171,10 @@ module TrainNotifier {
                 endDate: endDate,
                 atocCode: atocCode
             }));
+        }
+
+        getTrainMovementLink(headcode: string, crsCode: string, platform: string) {
+            return $.getJSON(this.getBaseUrl() + "/TrainMovement/Headcode/" + headcode + "/" + crsCode + "/" + platform + "/", this.getArgs());
         }
 
         getPPMData(operatorCode: string, name: string) {
@@ -836,4 +842,9 @@ interface IPPMData {
     Timestamp: string;
     Total: number;
     Trend: number;
+}
+
+interface ITrainMovementLink {
+    TrainUid: string;
+    OriginDepartTimestamp: string;
 }

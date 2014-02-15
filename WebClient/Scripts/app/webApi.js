@@ -130,6 +130,10 @@ var TrainNotifier;
             }));
         };
 
+        WebApi.prototype.getTrainMovementLink = function (headcode, crsCode, platform) {
+            return $.getJSON(this.getBaseUrl() + "/TrainMovement/Headcode/" + headcode + "/" + crsCode + "/" + platform + "/", this.getArgs());
+        };
+
         WebApi.prototype.getPPMData = function (operatorCode, name) {
             return $.getJSON(this.getBaseUrl() + "/PPM/", $.extend({}, this.getArgs(), {
                 operatorCode: operatorCode,
