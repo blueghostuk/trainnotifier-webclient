@@ -131,6 +131,15 @@ $(function () {
     ko.applyBindings(nearestSearchResults, $("#nearest-search-results").get(0));
 
     loadHashCommand();
+
+    window.onhashchange = function () {
+        if (!thisPage.settingHash) {
+            thisPage.settingHash = true;
+            thisPage.setCommand(document.location.hash.substr(1));
+            thisPage.parseCommand();
+        }
+        thisPage.settingHash = false;
+    };
 });
 
 function getDateTime(args): Moment {
@@ -201,7 +210,6 @@ function getCallingBetween(from: string, to: string, convertFromCrs: boolean, fr
         endDate.add('days', 1);
     }
 
-    var hash = "from/" + from + "/to/" + to;
     var fromQuery, toQuery: JQueryPromise<any>;
     if (convertFromCrs) {
         fromQuery = webApi.getStanoxByCrsCode(from);
@@ -211,7 +219,6 @@ function getCallingBetween(from: string, to: string, convertFromCrs: boolean, fr
         toQuery = webApi.getStanox(to);
     }
 
-    setHash(hash, null, true);
     preAjax();
     $.when(fromQuery, toQuery).done(function (from, to) {
         getCallingBetweenByStanox(from[0], to[0], startDate, endDate);
@@ -235,9 +242,7 @@ function getDestination(crs: string, convertFromCrs: boolean, fromDate: Moment, 
     if (endDate.isBefore(startDate)) {
         endDate.add('days', 1);
     }
-    var hash = "to/" + crs;
     var query: JQueryPromise<any>;
-    setHash(hash, null, true);
     preAjax();
 
     if (convertFromCrs) {
@@ -267,9 +272,8 @@ function getOrigin(crs: string, convertFromCrs: boolean, fromDate: Moment, toDat
     if (endDate.isBefore(startDate)) {
         endDate.add('days', 1);
     }
-    var hash = "from/" + crs;
+
     var query: JQueryPromise<any>;
-    setHash(hash, null, true);
     preAjax();
     if (convertFromCrs) {
         query = webApi.getStanoxByCrsCode(crs);
@@ -298,9 +302,8 @@ function getStation(crs: string, convertFromCrs: boolean, fromDate: Moment, toDa
     if (endDate.isBefore(startDate)) {
         endDate.add('days', 1);
     }
-    var hash = "at/" + crs;
+
     var query: JQueryPromise<any>;
-    setHash(hash, null, true);
     preAjax();
 
     if (convertFromCrs) {
@@ -670,7 +673,7 @@ function setTimeLinks() {
     $(".neg-hrs").attr("href", "search/" + url + minusStartDate.format("/YYYY/MM/DD/HH-mm") + tocUrl);
     $(".plus-hrs").attr("href", "search/" + url + plusStartDate.format("/YYYY/MM/DD/HH-mm") + tocUrl);
 
-    setHash(url, moment(currentStartDate).format("YYYY-MM-DD/HH-mm") + moment(currentEndDate).format("/HH-mm"), true);
+    setHash("!" + url, moment(currentStartDate).format("YYYY-MM-DD/HH-mm") + moment(currentEndDate).format("/HH-mm"), true);
 }
 
 function loadHashCommand() {
@@ -694,7 +697,9 @@ function setHash(hash, dateHash, dontLoad) {
     }
     if (toc)
         hash += "?toc=" + toc;
-    document.location.hash = hash;
+    if (document.location.hash != "#" + hash) {
+        document.location.hash = hash;
+    }
     if (!dontLoad) {
         loadHashCommand();
     }
