@@ -21,7 +21,6 @@ interface IStationLookup {
 var locations: Array<IStationLookup> = [];
 
 declare var Bloodhound: any;
-declare var typeahead: any;
 
 interface JQuery {
     typeahead(options: any, datasets: any);
