@@ -1,4 +1,4 @@
-﻿var searchTitleModel = new TrainNotifier.KnockoutModels.Search.TitleViewModel();
+var searchTitleModel = new TrainNotifier.KnockoutModels.Search.TitleViewModel();
 
 var startEndSearchResults = ko.observableArray();
 var callingAtSearchResults = ko.observableArray();
@@ -33,15 +33,15 @@ var thisPage = {
         switch (cmd) {
             case 'from':
                 if (args.length >= 3 && args[1] == "to") {
-                    getCallingBetween(args[0], args[2], convertFromCrs, getDateTime(args.slice(3, 5)), (args.length <= 5 ? null : getDateTime(args.slice(3, 4).concat(args.slice(5, 7)))));
+                    getCallingBetweenByCrs(args[0], args[2], convertFromCrs, getDateTime(args.slice(3, 5)), (args.length <= 5 ? null : getDateTime(args.slice(3, 4).concat(args.slice(5, 7)))));
                     return true;
                 } else {
-                    getOrigin(args[0], convertFromCrs, getDateTime(args.slice(1, 3)), (args.length <= 3 ? null : getDateTime(args.slice(1, 2).concat(args.slice(3, 5)))));
+                    getStartingAtByCrs(args[0], convertFromCrs, getDateTime(args.slice(1, 3)), (args.length <= 3 ? null : getDateTime(args.slice(1, 2).concat(args.slice(3, 5)))));
                     return true;
                 }
                 break;
             case 'to':
-                getDestination(args[0], convertFromCrs, getDateTime(args.slice(1, 3)), (args.length <= 3 ? null : getDateTime(args.slice(1, 2).concat(args.slice(3, 5)))));
+                getDestinationByCrs(args[0], convertFromCrs, getDateTime(args.slice(1, 3)), (args.length <= 3 ? null : getDateTime(args.slice(1, 2).concat(args.slice(3, 5)))));
                 return true;
 
             case 'at':
@@ -184,7 +184,7 @@ function getNearest(lat, lon) {
     });
 }
 
-function getCallingBetween(from, to, convertFromCrs, fromDate, toDate) {
+function getCallingBetweenByCrs(from, to, convertFromCrs, fromDate, toDate) {
     $("#commandOptions > a#from-to" + (convertFromCrs ? "-crs" : "")).addClass("active");
     var startDate;
     var endDate;
@@ -201,8 +201,8 @@ function getCallingBetween(from, to, convertFromCrs, fromDate, toDate) {
 
     var fromQuery, toQuery;
     if (convertFromCrs) {
-        fromQuery = webApi.getStanoxByCrsCode(from);
-        toQuery = webApi.getStanoxByCrsCode(to);
+        fromQuery = webApi.getAllStanoxByCrsCode(from);
+        toQuery = webApi.getAllStanoxByCrsCode(to);
     } else {
         fromQuery = webApi.getStanox(from);
         toQuery = webApi.getStanox(to);
@@ -210,14 +210,26 @@ function getCallingBetween(from, to, convertFromCrs, fromDate, toDate) {
 
     preAjax();
     $.when(fromQuery, toQuery).done(function (from, to) {
-        getCallingBetweenByStanox(from[0], to[0], startDate, endDate);
+        var fromTiplocs;
+        var toTiplocs;
+        if (!from[0].length) {
+            fromTiplocs = [from[0]];
+        } else {
+            fromTiplocs = from[0];
+        }
+        if (!to[0].length) {
+            toTiplocs = [to[0]];
+        } else {
+            toTiplocs = to[0];
+        }
+        getCallingBetweenByTiploc(fromTiplocs, toTiplocs, startDate, endDate);
     }).fail(function () {
         hide($(".progress"));
         show($("#error-row"));
     });
 }
 
-function getDestination(crs, convertFromCrs, fromDate, toDate) {
+function getDestinationByCrs(crs, convertFromCrs, fromDate, toDate) {
     $("#commandOptions > a#to" + (convertFromCrs ? "-crs" : "")).addClass("active");
     var startDate;
     var endDate;
@@ -240,14 +252,14 @@ function getDestination(crs, convertFromCrs, fromDate, toDate) {
         query = webApi.getStanox(crs);
     }
     query.done(function (from) {
-        getDestinationByStanox(from, startDate, endDate);
+        getDestinationByTiploc(from, startDate, endDate);
     }).fail(function () {
         hide($(".progress"));
         show($("#error-row"));
     });
 }
 
-function getOrigin(crs, convertFromCrs, fromDate, toDate) {
+function getStartingAtByCrs(crs, convertFromCrs, fromDate, toDate) {
     $("#commandOptions > a#from" + (convertFromCrs ? "-crs" : "")).addClass("active");
     var startDate;
     var endDate;
@@ -265,12 +277,14 @@ function getOrigin(crs, convertFromCrs, fromDate, toDate) {
     var query;
     preAjax();
     if (convertFromCrs) {
-        query = webApi.getStanoxByCrsCode(crs);
+        query = webApi.getAllStanoxByCrsCode(crs);
     } else {
         query = webApi.getStanox(crs);
     }
     query.done(function (from) {
-        getOriginByStanox(from, startDate, endDate);
+        if (!from.length)
+            from = [from];
+        getStartingAtByTiploc(from, startDate, endDate);
     }).fail(function () {
         hide($(".progress"));
         show($("#error-row"));
@@ -296,38 +310,42 @@ function getStation(crs, convertFromCrs, fromDate, toDate) {
     preAjax();
 
     if (convertFromCrs) {
-        query = webApi.getStanoxByCrsCode(crs);
+        query = webApi.getAllStanoxByCrsCode(crs);
     } else {
         query = webApi.getStanox(crs);
     }
     query.done(function (at) {
-        getCallingAtStanox(at, startDate, endDate);
+        var at;
+        if (!at.length) {
+            at = [at];
+        }
+        getCallingAtTiploc(at, startDate, endDate);
     }).fail(function () {
         hide($(".progress"));
         show($("#error-row"));
     });
 }
 
-function getDestinationByStanox(to, startDate, endDate) {
+function getDestinationByTiploc(to, startDate, endDate) {
     currentMode = 1 /* terminate */;
     if (to) {
-        currentToStanox = to;
+        currentToStanox = [to];
     }
     currentStanox = null;
     currentStartDate = startDate;
     currentEndDate = endDate;
     clear();
 
-    setTitle("Trains terminating at " + currentToStanox.Description);
+    setTitle("Trains terminating at " + TrainNotifier.StationTiploc.toDisplayString(currentToStanox[0]));
     setTimeLinks();
 
     var query;
     var startDateQuery = currentStartDate.format(TrainNotifier.DateTimeFormats.dateTimeApiFormat);
     var endDateQuery = currentEndDate.format(TrainNotifier.DateTimeFormats.dateTimeApiFormat);
-    if (currentToStanox.CRS && currentToStanox.CRS.length == 3) {
-        query = webApi.getTrainMovementsTerminatingAtStation(currentToStanox.CRS, startDateQuery, endDateQuery, toc);
+    if (currentToStanox[0].CRS && currentToStanox[0].CRS.length == 3) {
+        query = webApi.getTrainMovementsTerminatingAtStation(currentToStanox[0].CRS, startDateQuery, endDateQuery, toc);
     } else {
-        query = webApi.getTrainMovementsTerminatingAtLocation(currentToStanox.Stanox, startDateQuery, endDateQuery, toc);
+        query = webApi.getTrainMovementsTerminatingAtLocation(currentToStanox[0].Stanox, startDateQuery, endDateQuery, toc);
     }
 
     query.done(function (data) {
@@ -350,7 +368,7 @@ function getDestinationByStanox(to, startDate, endDate) {
     });
 }
 
-function getOriginByStanox(from, startDate, endDate) {
+function getStartingAtByTiploc(from, startDate, endDate) {
     currentMode = 2 /* origin */;
     if (from) {
         currentStanox = from;
@@ -359,16 +377,16 @@ function getOriginByStanox(from, startDate, endDate) {
     currentStartDate = startDate;
     currentEndDate = endDate;
     clear();
-    setTitle("Trains starting at " + currentStanox.Description);
+    setTitle("Trains starting at " + TrainNotifier.StationTiploc.toDisplayString(currentStanox[0]));
     setTimeLinks();
 
     var query;
     var startDateQuery = currentStartDate.format(TrainNotifier.DateTimeFormats.dateTimeApiFormat);
     var endDateQuery = currentEndDate.format(TrainNotifier.DateTimeFormats.dateTimeApiFormat);
-    if (currentStanox.CRS && currentStanox.CRS.length == 3) {
-        query = webApi.getTrainMovementsStartingAtStation(currentStanox.CRS, startDateQuery, endDateQuery, toc);
+    if (currentStanox[0].CRS && currentStanox[0].CRS.length == 3) {
+        query = webApi.getTrainMovementsStartingAtStation(currentStanox[0].CRS, startDateQuery, endDateQuery, toc);
     } else {
-        query = webApi.getTrainMovementsStartingAtLocation(currentStanox.Stanox, startDateQuery, endDateQuery, toc);
+        query = webApi.getTrainMovementsStartingAtLocation(currentStanox[0].Stanox, startDateQuery, endDateQuery, toc);
     }
     query.done(function (data) {
         if (data && data.Movements.length > 0) {
@@ -390,25 +408,25 @@ function getOriginByStanox(from, startDate, endDate) {
     });
 }
 
-function getCallingAtStanox(at, startDate, endDate) {
+function getCallingAtTiploc(at, startDate, endDate) {
     currentMode = 3 /* callingAt */;
-    if (at) {
+    if (at && at.length > 0) {
         currentStanox = at;
     }
     currentToStanox = null;
     currentStartDate = startDate;
     currentEndDate = endDate;
     clear();
-    setTitle("Trains calling at " + currentStanox.Description);
+    setTitle("Trains calling at " + TrainNotifier.StationTiploc.toDisplayString(currentStanox[0]));
     setTimeLinks();
 
     var query;
     var startDateQuery = currentStartDate.format(TrainNotifier.DateTimeFormats.dateTimeApiFormat);
     var endDateQuery = currentEndDate.format(TrainNotifier.DateTimeFormats.dateTimeApiFormat);
-    if (currentStanox.CRS && currentStanox.CRS.length == 3) {
-        query = webApi.getTrainMovementsCallingAtStation(currentStanox.CRS, startDateQuery, endDateQuery, toc);
+    if (currentStanox[0].CRS && currentStanox[0].CRS.length == 3) {
+        query = webApi.getTrainMovementsCallingAtStation(currentStanox[0].CRS, startDateQuery, endDateQuery, toc);
     } else {
-        query = webApi.getTrainMovementsCallingAtLocation(currentStanox.Stanox, startDateQuery, endDateQuery, toc);
+        query = webApi.getTrainMovementsCallingAtLocation(currentStanox[0].Stanox, startDateQuery, endDateQuery, toc);
     }
 
     query.done(function (data) {
@@ -431,7 +449,7 @@ function getCallingAtStanox(at, startDate, endDate) {
     });
 }
 
-function getCallingBetweenByStanox(from, to, startDate, endDate) {
+function getCallingBetweenByTiploc(from, to, startDate, endDate) {
     currentMode = 4 /* between */;
     if (from) {
         currentStanox = from;
@@ -442,20 +460,20 @@ function getCallingBetweenByStanox(from, to, startDate, endDate) {
     currentStartDate = startDate;
     currentEndDate = endDate;
     clear();
-    setTitle("Trains from " + currentStanox.Description + " to " + currentToStanox.Description);
-    callingBetweenSearchResults.fromStation(currentStanox.Description.toLowerCase());
-    callingBetweenSearchResults.fromShortStation(currentStanox.CRS ? currentStanox.CRS : "");
-    callingBetweenSearchResults.toStation(currentToStanox.Description.toLowerCase());
-    callingBetweenSearchResults.toShortStation(currentToStanox.CRS ? currentToStanox.CRS : "");
+    setTitle("Trains from " + TrainNotifier.StationTiploc.toDisplayString(currentStanox[0]) + " to " + TrainNotifier.StationTiploc.toDisplayString(currentToStanox[0]));
+    callingBetweenSearchResults.fromStation(TrainNotifier.StationTiploc.toDisplayString(currentStanox[0]));
+    callingBetweenSearchResults.fromShortStation(currentStanox[0].CRS ? currentStanox[0].CRS : "");
+    callingBetweenSearchResults.toStation(TrainNotifier.StationTiploc.toDisplayString(currentToStanox[0]));
+    callingBetweenSearchResults.toShortStation(currentToStanox[0].CRS ? currentToStanox[0].CRS : "");
     setTimeLinks();
 
     var query;
     var startDateQuery = currentStartDate.format(TrainNotifier.DateTimeFormats.dateTimeApiFormat);
     var endDateQuery = currentEndDate.format(TrainNotifier.DateTimeFormats.dateTimeApiFormat);
-    if (currentStanox.CRS && currentStanox.CRS.length == 3 && currentToStanox.CRS && currentToStanox.CRS.length == 3) {
-        query = webApi.getTrainMovementsBetweenStations(currentStanox.CRS, currentToStanox.CRS, startDateQuery, endDateQuery, toc);
+    if (currentStanox[0].CRS && currentStanox[0].CRS.length == 3 && currentToStanox[0].CRS && currentToStanox[0].CRS.length == 3) {
+        query = webApi.getTrainMovementsBetweenStations(currentStanox[0].CRS, currentToStanox[0].CRS, startDateQuery, endDateQuery, toc);
     } else {
-        query = webApi.getTrainMovementsBetweenLocations(currentStanox.Stanox, currentToStanox.Stanox, startDateQuery, endDateQuery, toc);
+        query = webApi.getTrainMovementsBetweenLocations(currentStanox[0].Stanox, currentToStanox[0].Stanox, startDateQuery, endDateQuery, toc);
     }
 
     query.done(function (data) {
@@ -487,16 +505,16 @@ function previousDate() {
     var endDate = moment(currentEndDate).subtract({ hours: TrainNotifier.DateTimeFormats.timeFrameHours });
     switch (currentMode) {
         case 2 /* origin */:
-            getOriginByStanox(null, startDate, endDate);
+            getStartingAtByTiploc(null, startDate, endDate);
             break;
         case 1 /* terminate */:
-            getDestinationByStanox(null, startDate, endDate);
+            getDestinationByTiploc(null, startDate, endDate);
             break;
         case 3 /* callingAt */:
-            getCallingAtStanox(null, startDate, endDate);
+            getCallingAtTiploc(null, startDate, endDate);
             break;
         case 4 /* between */:
-            getCallingBetweenByStanox(null, null, startDate, endDate);
+            getCallingBetweenByTiploc(null, null, startDate, endDate);
             break;
     }
 }
@@ -507,16 +525,16 @@ function nextDate() {
     var endDate = moment(currentEndDate).add({ hours: TrainNotifier.DateTimeFormats.timeFrameHours });
     switch (currentMode) {
         case 2 /* origin */:
-            getOriginByStanox(null, startDate, endDate);
+            getStartingAtByTiploc(null, startDate, endDate);
             break;
         case 1 /* terminate */:
-            getDestinationByStanox(null, startDate, endDate);
+            getDestinationByTiploc(null, startDate, endDate);
             break;
         case 3 /* callingAt */:
-            getCallingAtStanox(null, startDate, endDate);
+            getCallingAtTiploc(null, startDate, endDate);
             break;
         case 4 /* between */:
-            getCallingBetweenByStanox(null, null, startDate, endDate);
+            getCallingBetweenByTiploc(null, null, startDate, endDate);
             break;
     }
 }
@@ -530,18 +548,18 @@ function clear() {
 
 function setTitle(start) {
     var title = start;
-    if (currentStanox) {
-        var from = currentStanox.Description.toLowerCase();
+    if (currentStanox && currentStanox.length > 0) {
+        var from = TrainNotifier.StationTiploc.toDisplayString(currentStanox[0]);
         title += from;
         searchTitleModel.from(from);
         switch (currentMode) {
             case 3 /* callingAt */:
-                searchTitleModel.link("search/at/" + currentStanox.CRS);
+                searchTitleModel.link("search/at/" + currentStanox[0].CRS);
                 searchTitleModel.title("Use this as a permanent link for trains calling at this location around the current time");
                 break;
 
             case 2 /* origin */:
-                searchTitleModel.link("search/from/" + currentStanox.CRS);
+                searchTitleModel.link("search/from/" + currentStanox[0].CRS);
                 searchTitleModel.title("Use this as a permanent link for trains starting from this location around the current time");
                 break;
         }
@@ -550,8 +568,8 @@ function setTitle(start) {
         searchTitleModel.link(null);
         searchTitleModel.title(null);
     }
-    if (currentToStanox) {
-        var to = currentToStanox.Description.toLowerCase();
+    if (currentToStanox && currentToStanox.length > 0) {
+        var to = TrainNotifier.StationTiploc.toDisplayString(currentToStanox[0]);
         if (currentStanox) {
             title += " to ";
             searchTitleModel.to(to);
@@ -561,16 +579,16 @@ function setTitle(start) {
         }
         switch (currentMode) {
             case 4 /* between */:
-                searchTitleModel.link("search/from/" + currentStanox.CRS + "/to/" + currentToStanox.CRS);
+                searchTitleModel.link("search/from/" + currentStanox[0].CRS + "/to/" + currentToStanox[0].CRS);
                 searchTitleModel.title("Use this as a permanent link for trains calling at this location around the current time");
                 break;
 
             case 1 /* terminate */:
-                searchTitleModel.link("search/to/" + currentToStanox.CRS);
+                searchTitleModel.link("search/to/" + currentToStanox[0].CRS);
                 searchTitleModel.title("Use this as a permanent link for trains terminating at this location around the current time");
                 break;
         }
-        title += currentToStanox.Description.toLowerCase();
+        title += TrainNotifier.StationTiploc.toDisplayString(currentToStanox[0]);
     }
     if (currentStartDate && currentEndDate) {
         title += " on ";
@@ -587,31 +605,31 @@ function setTimeLinks() {
     var url = "";
     switch (currentMode) {
         case 2 /* origin */:
-            if (currentStanox.CRS) {
-                url = "from/" + currentStanox.CRS;
+            if (currentStanox[0].CRS) {
+                url = "from/" + currentStanox[0].CRS;
             } else {
-                url = "from/" + currentStanox.Stanox;
+                url = "from/" + currentStanox[0].Stanox;
             }
             break;
         case 1 /* terminate */:
-            if (currentToStanox.CRS) {
-                url = "to/" + currentToStanox.CRS;
+            if (currentToStanox[0].CRS) {
+                url = "to/" + currentToStanox[0].CRS;
             } else {
-                url = "to/" + currentToStanox.Stanox;
+                url = "to/" + currentToStanox[0].Stanox;
             }
             break;
         case 3 /* callingAt */:
-            if (currentStanox.CRS) {
-                url = "at/" + currentStanox.CRS;
+            if (currentStanox[0].CRS) {
+                url = "at/" + currentStanox[0].CRS;
             } else {
-                url = "at/" + currentStanox.Stanox;
+                url = "at/" + currentStanox[0].Stanox;
             }
             break;
         case 4 /* between */:
-            if (currentStanox.CRS && currentToStanox.CRS) {
-                url = "from/" + currentStanox.CRS + "/to/" + currentToStanox.CRS;
+            if (currentStanox[0].CRS && currentToStanox[0].CRS) {
+                url = "from/" + currentStanox[0].CRS + "/to/" + currentToStanox[0].CRS;
             } else {
-                url = "from/" + currentStanox.Stanox + "/to/" + currentToStanox.Stanox;
+                url = "from/" + currentStanox[0].Stanox + "/to/" + currentToStanox[0].Stanox;
             }
             break;
     }

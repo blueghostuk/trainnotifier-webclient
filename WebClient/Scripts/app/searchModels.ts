@@ -348,19 +348,16 @@ module TrainNotifier.KnockoutModels.Search {
 
         public pass = false;
 
-        constructor(trainMovement: ITrainMovementResult, atTiploc: IStationTiploc, tiplocs: IStationTiploc[], queryStartDate: Moment) {
+        constructor(trainMovement: ITrainMovementResult, atTiplocs: IStationTiploc[], tiplocs: IStationTiploc[], queryStartDate: Moment) {
             super(trainMovement, tiplocs, queryStartDate);
-
-            var atTiplocs = tiplocs.filter(function (t) {
-                return t.CRS == atTiploc.CRS;
-            });
 
             var atStop: IRunningScheduleTrainStop;
             if (trainMovement.Schedule.Stops.length > 0) {
                 var fromStop = trainMovement.Schedule.Stops[0];
                 var fromTiploc = StationTiploc.findStationTiploc(fromStop.TiplocStanoxCode, tiplocs);
                 if (fromTiploc) {
-                    if (fromTiploc.Stanox == atTiploc.Stanox) {
+                    var startsAt = StationTiploc.stationTiplocMatches(fromTiploc, atTiplocs);
+                    if (startsAt) {
                         this.fromStation = "Starts here";
                         this.fromStationCss = "starts";
                     } else {
@@ -404,7 +401,8 @@ module TrainNotifier.KnockoutModels.Search {
                 var toStop = trainMovement.Schedule.Stops[trainMovement.Schedule.Stops.length - 1];
                 var toTiploc = StationTiploc.findStationTiploc(toStop.TiplocStanoxCode, tiplocs);
                 if (toTiploc) {
-                    if (toTiploc.Stanox == atTiploc.Stanox) {
+                    var terminatesAt = StationTiploc.stationTiplocMatches(toTiploc, atTiplocs);
+                    if (terminatesAt) {
                         this.toStation = "Terminates here";
                         this.toStationCss = "terminates";
                     } else {
@@ -518,7 +516,7 @@ module TrainNotifier.KnockoutModels.Search {
         public passDeparture = false;
         public passArrival = false;
 
-        constructor(trainMovement: ITrainMovementResult, fromTiploc: IStationTiploc, toTiploc: IStationTiploc, tiplocs: IStationTiploc[], queryStartDate: Moment) {
+        constructor(trainMovement: ITrainMovementResult, fromTiplocs: IStationTiploc[], toTiplocs: IStationTiploc[], tiplocs: IStationTiploc[], queryStartDate: Moment) {
             super(trainMovement, tiplocs, queryStartDate);
 
             if (trainMovement.Schedule.Stops.length > 0) {
@@ -537,12 +535,6 @@ module TrainNotifier.KnockoutModels.Search {
 
             var fromTiplocStop: IRunningScheduleTrainStop;
             var toTiplocStop: IRunningScheduleTrainStop;
-            var fromTiplocs = tiplocs.filter(function (t) {
-                return t.CRS == fromTiploc.CRS;
-            });
-            var toTiplocs = tiplocs.filter(function (t) {
-                return t.CRS == toTiploc.CRS;
-            });
             if (trainMovement.Schedule && trainMovement.Schedule.Stops) {
                 var fromStops = trainMovement.Schedule.Stops.filter(function (currentStop: IRunningScheduleTrainStop) {
                     return TrainMovement.matchesTiploc(currentStop.TiplocStanoxCode, fromTiplocs);
@@ -639,7 +631,7 @@ module TrainNotifier.KnockoutModels.Search {
         public atStation: string = "";
 
         constructor(trainMovement: ITrainMovementResult, atTiploc: IStationTiploc, tiplocs: IStationTiploc[], queryStartDate: Moment) {
-            super(trainMovement, atTiploc, atTiploc, tiplocs, queryStartDate);
+            super(trainMovement, [atTiploc], [atTiploc], tiplocs, queryStartDate);
 
             this.atStation = atTiploc.Description.toLowerCase();
         }

@@ -5,6 +5,7 @@
 interface IWebApi {
     getStanox(stanox: string): JQueryPromise<any>;
     getStanoxByCrsCode(crsCode: string): JQueryPromise<any>;
+    getAllStanoxByCrsCode(crsCode: string): JQueryPromise<any>;
 
     getStations(): JQueryPromise<any>;
     getStationByLocation(lat: number, lon: number, limit?: number): JQueryPromise<any>;
@@ -80,9 +81,11 @@ module TrainNotifier {
         }
 
         getStanoxByCrsCode(crsCode: string) {
-            return $.getJSON(this.getBaseUrl() + "/Stanox/?GetByCRS", $.extend({}, this.getArgs(), {
-                crsCode: crsCode
-            }));
+            return $.getJSON(this.getBaseUrl() + "/Stanox/Single/" + crsCode, this.getArgs());
+        }
+
+        getAllStanoxByCrsCode(crsCode: string) {
+            return $.getJSON(this.getBaseUrl() + "/Stanox/Find/" + crsCode, this.getArgs());
         }
 
         getTrainMovementByUid(uid: string, date: string) {
@@ -392,6 +395,16 @@ module TrainNotifier {
             if (results && results.length > 0)
                 return results[0];
             return null;
+        }
+        public static stationTiplocMatches(tiploc: IStationTiploc, tiplocs: IStationTiploc[]) {
+            return tiplocs.some(function (t) {
+                return t.CRS == tiploc.CRS ||
+                    t.Stanox == tiploc.Stanox;
+            });
+        }
+        public static toDisplayString(tiploc: IStationTiploc) {
+            return (tiploc.StationName && tiploc.StationName.length > 0 ?
+                tiploc.StationName : tiploc.Description).toLowerCase();
         }
     }
 

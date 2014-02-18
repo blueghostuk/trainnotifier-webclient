@@ -312,7 +312,7 @@ var TrainNotifier;
 
             var CallingAtTrainMovement = (function (_super) {
                 __extends(CallingAtTrainMovement, _super);
-                function CallingAtTrainMovement(trainMovement, atTiploc, tiplocs, queryStartDate) {
+                function CallingAtTrainMovement(trainMovement, atTiplocs, tiplocs, queryStartDate) {
                     _super.call(this, trainMovement, tiplocs, queryStartDate);
                     this.atPlatform = null;
                     this.atPublicDeparture = null;
@@ -326,16 +326,13 @@ var TrainNotifier;
                     this.atPlatformEstimate = true;
                     this.pass = false;
 
-                    var atTiplocs = tiplocs.filter(function (t) {
-                        return t.CRS == atTiploc.CRS;
-                    });
-
                     var atStop;
                     if (trainMovement.Schedule.Stops.length > 0) {
                         var fromStop = trainMovement.Schedule.Stops[0];
                         var fromTiploc = TrainNotifier.StationTiploc.findStationTiploc(fromStop.TiplocStanoxCode, tiplocs);
                         if (fromTiploc) {
-                            if (fromTiploc.Stanox == atTiploc.Stanox) {
+                            var startsAt = TrainNotifier.StationTiploc.stationTiplocMatches(fromTiploc, atTiplocs);
+                            if (startsAt) {
                                 this.fromStation = "Starts here";
                                 this.fromStationCss = "starts";
                             } else {
@@ -376,7 +373,8 @@ var TrainNotifier;
                         var toStop = trainMovement.Schedule.Stops[trainMovement.Schedule.Stops.length - 1];
                         var toTiploc = TrainNotifier.StationTiploc.findStationTiploc(toStop.TiplocStanoxCode, tiplocs);
                         if (toTiploc) {
-                            if (toTiploc.Stanox == atTiploc.Stanox) {
+                            var terminatesAt = TrainNotifier.StationTiploc.stationTiplocMatches(toTiploc, atTiplocs);
+                            if (terminatesAt) {
                                 this.toStation = "Terminates here";
                                 this.toStationCss = "terminates";
                             } else {
@@ -478,7 +476,7 @@ var TrainNotifier;
 
             var CallingBetweenTrainMovement = (function (_super) {
                 __extends(CallingBetweenTrainMovement, _super);
-                function CallingBetweenTrainMovement(trainMovement, fromTiploc, toTiploc, tiplocs, queryStartDate) {
+                function CallingBetweenTrainMovement(trainMovement, fromTiplocs, toTiplocs, tiplocs, queryStartDate) {
                     _super.call(this, trainMovement, tiplocs, queryStartDate);
                     this.fromPlatform = "";
                     this.publicDeparture = "";
@@ -507,12 +505,6 @@ var TrainNotifier;
 
                     var fromTiplocStop;
                     var toTiplocStop;
-                    var fromTiplocs = tiplocs.filter(function (t) {
-                        return t.CRS == fromTiploc.CRS;
-                    });
-                    var toTiplocs = tiplocs.filter(function (t) {
-                        return t.CRS == toTiploc.CRS;
-                    });
                     if (trainMovement.Schedule && trainMovement.Schedule.Stops) {
                         var fromStops = trainMovement.Schedule.Stops.filter(function (currentStop) {
                             return TrainMovement.matchesTiploc(currentStop.TiplocStanoxCode, fromTiplocs);
@@ -600,7 +592,7 @@ var TrainNotifier;
             var NearestTrainMovement = (function (_super) {
                 __extends(NearestTrainMovement, _super);
                 function NearestTrainMovement(trainMovement, atTiploc, tiplocs, queryStartDate) {
-                    _super.call(this, trainMovement, atTiploc, atTiploc, tiplocs, queryStartDate);
+                    _super.call(this, trainMovement, [atTiploc], [atTiploc], tiplocs, queryStartDate);
                     this.atStation = "";
 
                     this.atStation = atTiploc.Description.toLowerCase();

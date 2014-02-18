@@ -36,9 +36,11 @@ var TrainNotifier;
         };
 
         WebApi.prototype.getStanoxByCrsCode = function (crsCode) {
-            return $.getJSON(this.getBaseUrl() + "/Stanox/?GetByCRS", $.extend({}, this.getArgs(), {
-                crsCode: crsCode
-            }));
+            return $.getJSON(this.getBaseUrl() + "/Stanox/Single/" + crsCode, this.getArgs());
+        };
+
+        WebApi.prototype.getAllStanoxByCrsCode = function (crsCode) {
+            return $.getJSON(this.getBaseUrl() + "/Stanox/Find/" + crsCode, this.getArgs());
         };
 
         WebApi.prototype.getTrainMovementByUid = function (uid, date) {
@@ -348,6 +350,14 @@ var TrainNotifier;
             if (results && results.length > 0)
                 return results[0];
             return null;
+        };
+        StationTiploc.stationTiplocMatches = function (tiploc, tiplocs) {
+            return tiplocs.some(function (t) {
+                return t.CRS == tiploc.CRS || t.Stanox == tiploc.Stanox;
+            });
+        };
+        StationTiploc.toDisplayString = function (tiploc) {
+            return (tiploc.StationName && tiploc.StationName.length > 0 ? tiploc.StationName : tiploc.Description).toLowerCase();
         };
         return StationTiploc;
     })();
