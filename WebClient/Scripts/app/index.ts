@@ -16,12 +16,16 @@ var webApi: IWebApi;
 interface IStationLookup {
     value: string;
     crs: string;
-    tokens?: Array<string>
 }
 
 var locations: Array<IStationLookup> = [];
 
-declare var Hogan: any;
+declare var Bloodhound: any;
+declare var typeahead: any;
+
+interface JQuery {
+    typeahead(options: any, datasets: any);
+}
 
 $(function () {
     webApi = new TrainNotifier.WebApi();
@@ -55,35 +59,37 @@ $(function () {
     ko.applyBindings(tocs, $("#tocs").get(0));
 
     webApi.getStations().done(function (results: IStationTiploc[]) {
-        for (var i = 0; i < results.length; i++) {
-            locations.push({
-                value: results[i].StationName,
-                crs: results[i].CRS,
-                tokens: getTokens(results[i])
-            });
-        }
-        $(".station-lookup").typeahead({
-            name: 'stations-lookup',
-            local: locations,
-            template: '<p><strong>{{value}}</strong>&nbsp;({{crs}})</p>',
-            engine: Hogan
+
+        locations = results.map(function (value) {
+            return {
+                value: value.StationName,
+                crs: value.CRS
+            };
         });
+
+        var locationLookup = new Bloodhound({
+            name: 'stations-lookup',
+            datumTokenizer: function (datum: IStationLookup) {
+                var nameTokens: Array<any> = Bloodhound.tokenizers.whitespace(datum.value);
+                var crsTokens: Array<any> = Bloodhound.tokenizers.whitespace(datum.crs);
+
+                return nameTokens.concat(crsTokens);
+            },
+            queryTokenizer: Bloodhound.tokenizers.whitespace,
+            local: locations
+        });
+
+        locationLookup.initialize();
+
+        $(".station-lookup").typeahead(null, {
+            source: locationLookup.ttAdapter()
+        });
+
         $("#from-crs").attr("placeholder", "Type from station name here");
         $("#to-crs").attr("placeholder", "Type to station name here");
         $("#at-crs").attr("placeholder", "Type calling at station name here");
     });
 });
-
-function getTokens(station: IStationTiploc) {
-    var results: Array<string> = [];
-    results.push(station.CRS);
-    results.push(station.Tiploc);
-    var stationSplit = station.StationName.split(" ");
-    for (var i = 0; i < stationSplit.length; i++) {
-        results.push(stationSplit[i]);
-    }
-    return results;
-}
 
 function findStation(value: string): IStationLookup {
     var matches = locations.filter(function (item) {

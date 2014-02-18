@@ -13,22 +13,13 @@
         left: 0;
     }
 
-    .twitter-typeahead .tt-hint {
-        color: #a1a1a1;
-        z-index: 1;
-        padding: 6px 7px;
-        border: 1px solid transparent;
-    }
-
     .twitter-typeahead .tt-query {
         z-index: 2;
         border-radius: 4px !important;
-        /* add these 2 statements if you have an appended input group */
         border-top-right-radius: 0 !important;
         border-bottom-right-radius: 0 !important;
-        /* add these 2 statements if you have an prepended input group */
-        border-top-left-radius: 0!important;
-        border-bottom-left-radius: 0!important;
+        border-top-left-radius: 0 !important;
+        border-bottom-left-radius: 0 !important;
     }
 
 .tt-dropdown-menu {
@@ -54,6 +45,7 @@
 .tt-suggestion {
     display: block;
     padding: 3px 20px;
+    cursor: pointer;
 }
 
     .tt-suggestion.tt-is-under-cursor {
