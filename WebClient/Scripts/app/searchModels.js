@@ -46,17 +46,17 @@ var TrainNotifier;
                     this.operatorCode = "NA";
                     this.operatorName = "Unknown";
                     this.title = null;
-                    this.cancel = ko.observable(false);
+                    this.cancel = false;
                     this.cancelEnRoute = null;
-                    this.reinstate = ko.observable(false);
-                    this.changeOfOrigin = ko.observable(false);
+                    this.reinstate = false;
+                    this.changeOfOrigin = false;
                     this.changeOfOriginStation = null;
                     this.departureDate = "";
                     this.fromStation = "";
                     this.fromStationCss = null;
                     this.toStation = "";
                     this.toStationCss = null;
-                    this.category = ko.observable("cat-na");
+                    this.category = "cat-na";
                     var self = this;
 
                     this.trainId = trainMovement.Schedule.TrainUid;
@@ -85,13 +85,13 @@ var TrainNotifier;
                                 this.cancelEnRoute = cancelTiploc.Description.toLowerCase();
                             }
 
-                            this.cancel(true);
+                            this.cancel = true;
                             this.title = titleText;
                         }
                     }
 
                     if (trainMovement.Schedule.STPIndicatorId == 1 /* Cancellation */) {
-                        this.cancel(true);
+                        this.cancel = true;
                         this.title = "Cancelled via schedule";
                     }
 
@@ -102,7 +102,7 @@ var TrainNotifier;
                             var titleText = "Will start from " + cooTiploc.Description.toLocaleLowerCase() + " at " + moment(coo.NewDepartureTime).format(TrainNotifier.DateTimeFormats.timeFormat) + " (" + coo.Description + ")";
 
                             this.changeOfOriginStation = cooTiploc.Description.toLocaleLowerCase();
-                            this.changeOfOrigin(true);
+                            this.changeOfOrigin = true;
                             this.title = titleText;
                         }
                     }
@@ -112,10 +112,10 @@ var TrainNotifier;
                         if (reinstateTiploc) {
                             var titleText = "Reinstated at " + reinstateTiploc.Description.toLowerCase() + " at " + moment(reinstatement.PlannedDepartureTime).format(TrainNotifier.DateTimeFormats.timeFormat);
 
-                            this.reinstate(true);
+                            this.reinstate = true;
                             this.title = titleText;
 
-                            this.cancel(false);
+                            this.cancel = false;
                             this.cancelEnRoute = null;
                         }
                     }
@@ -123,25 +123,25 @@ var TrainNotifier;
                     if (trainMovement.Schedule.CategoryTypeId) {
                         var cat = TrainNotifier.CategoryTypeLookup.getCategoryType(trainMovement.Schedule.CategoryTypeId);
                         if (cat) {
-                            this.category(cat.Code);
+                            this.category = cat.Code;
                         }
                     }
 
                     var css = [];
-                    if (this.cancel()) {
+                    if (this.cancel) {
                         css.push("cancel");
                     }
-                    if (this.changeOfOrigin()) {
+                    if (this.changeOfOrigin) {
                         css.push("info");
                     }
-                    if (this.reinstate()) {
+                    if (this.reinstate) {
                         css.push("reinstatement");
                     }
                     if (this.operatorCode) {
                         css.push("toc-" + self.operatorCode);
                     }
-                    if (this.category()) {
-                        css.push("cat-" + self.category());
+                    if (this.category) {
+                        css.push("cat-" + self.category);
                     }
                     if (!trainMovement.Actual || !trainMovement.Actual.Activated) {
                         css.push("unactivated");
@@ -324,7 +324,7 @@ var TrainNotifier;
                     this.atActualArrival = null;
                     this.atActualArrivalEstimate = true;
                     this.atPlatformEstimate = true;
-                    this.pass = ko.observable(false);
+                    this.pass = false;
 
                     var atTiplocs = tiplocs.filter(function (t) {
                         return t.CRS == atTiploc.CRS;
@@ -352,7 +352,7 @@ var TrainNotifier;
                             this.atPlatform = atStop.Platform;
 
                             if (atStop.Pass) {
-                                this.pass(true);
+                                this.pass = true;
                                 this.atPublicDeparture = "Pass";
                                 this.atWttDeparture = TrainNotifier.DateTimeFormats.formatTimeString(atStop.Pass);
                                 this.departure = moment.duration(atStop.Pass);
@@ -436,23 +436,23 @@ var TrainNotifier;
                     }
 
                     var css = [];
-                    if (this.pass()) {
+                    if (this.pass) {
                         css.push("passing");
                     }
-                    if (this.cancel()) {
+                    if (this.cancel) {
                         css.push("cancel");
                     }
-                    if (this.changeOfOrigin()) {
+                    if (this.changeOfOrigin) {
                         css.push("info");
                     }
-                    if (this.reinstate()) {
+                    if (this.reinstate) {
                         css.push("reinstatement");
                     }
                     if (this.operatorCode) {
                         css.push("toc-" + this.operatorCode);
                     }
-                    if (this.category()) {
-                        css.push("cat-" + this.category());
+                    if (this.category) {
+                        css.push("cat-" + this.category);
                     }
                     if (!trainMovement.Actual || !trainMovement.Actual.Activated) {
                         css.push("unactivated");
@@ -569,20 +569,20 @@ var TrainNotifier;
                     }
 
                     var css = [];
-                    if (this.cancel()) {
+                    if (this.cancel) {
                         css.push("cancel");
                     }
-                    if (this.changeOfOrigin()) {
+                    if (this.changeOfOrigin) {
                         css.push("info");
                     }
-                    if (this.reinstate()) {
+                    if (this.reinstate) {
                         css.push("reinstatement");
                     }
                     if (this.operatorCode) {
                         css.push("toc-" + this.operatorCode);
                     }
-                    if (this.category()) {
-                        css.push("cat-" + this.category());
+                    if (this.category) {
+                        css.push("cat-" + this.category);
                     }
                     if (this.passArrival || this.passDeparture) {
                         css.push("passing");

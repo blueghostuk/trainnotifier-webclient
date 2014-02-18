@@ -38,10 +38,10 @@ module TrainNotifier.KnockoutModels.Search {
         public operatorCode: string = "NA";
         public operatorName: string = "Unknown";
         public title: string = null;
-        public cancel = ko.observable<boolean>(false);
+        public cancel = false;
         public cancelEnRoute: string = null;
-        public reinstate = ko.observable<boolean>(false);
-        public changeOfOrigin = ko.observable<boolean>(false);
+        public reinstate = false;
+        public changeOfOrigin =false;
         public changeOfOriginStation: string = null;
 
         public departureDate: string = "";
@@ -54,7 +54,7 @@ module TrainNotifier.KnockoutModels.Search {
 
         public computedCss: string;
 
-        public category = ko.observable<string>("cat-na");
+        public category = "cat-na";
 
         constructor(trainMovement: ITrainMovementResult, tiplocs: IStationTiploc[], queryStartDate: Moment) {
             var self = this;
@@ -90,13 +90,13 @@ module TrainNotifier.KnockoutModels.Search {
                         this.cancelEnRoute = cancelTiploc.Description.toLowerCase();
                     }
 
-                    this.cancel(true);
+                    this.cancel =true;
                     this.title = titleText;
                 }
             }
 
             if (trainMovement.Schedule.STPIndicatorId == TrainNotifier.STPIndicatorValue.Cancellation) {
-                this.cancel(true);
+                this.cancel =true;
                 this.title = "Cancelled via schedule";
             }
 
@@ -109,7 +109,7 @@ module TrainNotifier.KnockoutModels.Search {
                         + " (" + coo.Description + ")";
 
                     this.changeOfOriginStation = cooTiploc.Description.toLocaleLowerCase();
-                    this.changeOfOrigin(true);
+                    this.changeOfOrigin =true;
                     this.title = titleText;
                 }
             }
@@ -120,10 +120,10 @@ module TrainNotifier.KnockoutModels.Search {
                     var titleText = "Reinstated at " + reinstateTiploc.Description.toLowerCase()
                         + " at " + moment(reinstatement.PlannedDepartureTime).format(DateTimeFormats.timeFormat);
 
-                    this.reinstate(true);
+                    this.reinstate =true;
                     this.title = titleText;
 
-                    this.cancel(false);
+                    this.cancel =false;
                     this.cancelEnRoute = null;
                 }
             }
@@ -131,25 +131,25 @@ module TrainNotifier.KnockoutModels.Search {
             if (trainMovement.Schedule.CategoryTypeId) {
                 var cat = CategoryTypeLookup.getCategoryType(trainMovement.Schedule.CategoryTypeId);
                 if (cat) {
-                    this.category(cat.Code);
+                    this.category =cat.Code;
                 }
             }
 
             var css = [];
-            if (this.cancel()) {
+            if (this.cancel) {
                 css.push("cancel");
             }
-            if (this.changeOfOrigin()) {
+            if (this.changeOfOrigin) {
                 css.push("info");
             }
-            if (this.reinstate()) {
+            if (this.reinstate) {
                 css.push("reinstatement");
             }
             if (this.operatorCode) {
                 css.push("toc-" + self.operatorCode);
             }
-            if (this.category()) {
-                css.push("cat-" + self.category());
+            if (this.category) {
+                css.push("cat-" + self.category);
             }
             if (!trainMovement.Actual || !trainMovement.Actual.Activated) {
                 css.push("unactivated");
@@ -346,7 +346,7 @@ module TrainNotifier.KnockoutModels.Search {
 
         public atPlatformEstimate = true;
 
-        public pass = ko.observable<boolean>(false);
+        public pass = false;
 
         constructor(trainMovement: ITrainMovementResult, atTiploc: IStationTiploc, tiplocs: IStationTiploc[], queryStartDate: Moment) {
             super(trainMovement, tiplocs, queryStartDate);
@@ -380,7 +380,7 @@ module TrainNotifier.KnockoutModels.Search {
                     this.atPlatform = atStop.Platform;
 
                     if (atStop.Pass) {
-                        this.pass(true);
+                        this.pass=true;
                         this.atPublicDeparture = "Pass";
                         this.atWttDeparture = DateTimeFormats.formatTimeString(atStop.Pass);
                         this.departure = moment.duration(atStop.Pass);
@@ -469,23 +469,23 @@ module TrainNotifier.KnockoutModels.Search {
             }
 
             var css = [];
-            if (this.pass()) {
+            if (this.pass) {
                 css.push("passing")
                 }
-            if (this.cancel()) {
+            if (this.cancel) {
                 css.push("cancel");
             }
-            if (this.changeOfOrigin()) {
+            if (this.changeOfOrigin) {
                 css.push("info");
             }
-            if (this.reinstate()) {
+            if (this.reinstate) {
                 css.push("reinstatement");
             }
             if (this.operatorCode) {
                 css.push("toc-" + this.operatorCode);
             }
-            if (this.category()) {
-                css.push("cat-" + this.category());
+            if (this.category) {
+                css.push("cat-" + this.category);
             }
             if (!trainMovement.Actual || !trainMovement.Actual.Activated) {
                 css.push("unactivated");
@@ -608,20 +608,20 @@ module TrainNotifier.KnockoutModels.Search {
 
 
             var css = [];
-            if (this.cancel()) {
+            if (this.cancel) {
                 css.push("cancel");
             }
-            if (this.changeOfOrigin()) {
+            if (this.changeOfOrigin) {
                 css.push("info");
             }
-            if (this.reinstate()) {
+            if (this.reinstate) {
                 css.push("reinstatement");
             }
             if (this.operatorCode) {
                 css.push("toc-" + this.operatorCode);
             }
-            if (this.category()) {
-                css.push("cat-" + this.category());
+            if (this.category) {
+                css.push("cat-" + this.category);
             }
             if (this.passArrival || this.passDeparture) {
                 css.push("passing");
