@@ -80,7 +80,10 @@ $(function () {
 
         locationLookup.initialize();
 
-        $(".station-lookup").typeahead(null, {
+        $(".station-lookup").typeahead({
+            highlight: true,
+            autoselect: true
+        }, {
             source: locationLookup.ttAdapter()
         });
 

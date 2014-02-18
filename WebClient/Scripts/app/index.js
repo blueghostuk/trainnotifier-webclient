@@ -1,4 +1,4 @@
-﻿var fromLocal = ko.observableArray();
+var fromLocal = ko.observableArray();
 var toLocal = ko.observableArray();
 var atLocal = ko.observableArray();
 
@@ -57,7 +57,10 @@ $(function () {
 
         locationLookup.initialize();
 
-        $(".station-lookup").typeahead(null, {
+        $(".station-lookup").typeahead({
+            highlight: true,
+            autoselect: true
+        }, {
             source: locationLookup.ttAdapter()
         });
 
