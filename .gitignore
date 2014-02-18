@@ -98,7 +98,6 @@ packages
 
 #program bin
 WebClient/bin/*.*
-WebClient/bin/bin/*.*
 
 # Local App.config transformation
 *.Debug-Local.config
