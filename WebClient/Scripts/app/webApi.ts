@@ -3,11 +3,14 @@
 /// <reference path="../typings/moment/moment.d.ts" />
 
 interface IWebApi {
+
+    useLocalStorage: boolean;
+
     getStanox(stanox: string): JQueryPromise<any>;
     getStanoxByCrsCode(crsCode: string): JQueryPromise<any>;
     getAllStanoxByCrsCode(crsCode: string): JQueryPromise<any>;
 
-    getStations(): JQueryPromise<any>;
+    getStations(): JQueryPromise<IStationTiploc[]>;
     getStationByLocation(lat: number, lon: number, limit?: number): JQueryPromise<any>;
 
     getTrainMovementByUid(uid: string, date: string): JQueryPromise<any>;
@@ -48,7 +51,9 @@ module TrainNotifier {
 
     export class WebApi implements IWebApi {
 
-        constructor(public serverSettings?: IServerSettings) {
+        private static stationsLocalStorageKey = "tn-stations";
+
+        constructor(public serverSettings?: IServerSettings, public useLocalStorage = true) {
             if (!serverSettings) {
                 this.serverSettings = TrainNotifier.Common.serverSettings;
             }
@@ -65,6 +70,18 @@ module TrainNotifier {
         }
 
         getStations() {
+            if (this.useLocalStorage) {
+                var stations: string = localStorage.getItem(WebApi.stationsLocalStorageKey);
+                if (stations) {
+                    return $.Deferred().resolve(JSON.parse(stations)).promise();
+                } else {
+                    return $.getJSON(this.getBaseUrl() + "/Station/", this.getArgs())
+                        .done(function (stations: IStationTiploc[]) {
+                            localStorage.setItem(WebApi.stationsLocalStorageKey, JSON.stringify(stations));
+                            return $.Deferred().resolve(stations).promise();
+                        });
+                }
+            }
             return $.getJSON(this.getBaseUrl() + "/Station/", this.getArgs());
         }
 
@@ -85,6 +102,13 @@ module TrainNotifier {
         }
 
         getAllStanoxByCrsCode(crsCode: string) {
+            if (this.useLocalStorage) {
+                this.getStations().done(function (stations: IStationTiploc[]) {
+                    return stations.filter(function (s) {
+                        return s.CRS == crsCode;
+                    });
+                });
+            }
             return $.getJSON(this.getBaseUrl() + "/Stanox/Find/" + crsCode, this.getArgs());
         }
 

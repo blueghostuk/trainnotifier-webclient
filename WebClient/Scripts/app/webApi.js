@@ -2,8 +2,10 @@
 var TrainNotifier;
 (function (TrainNotifier) {
     var WebApi = (function () {
-        function WebApi(serverSettings) {
+        function WebApi(serverSettings, useLocalStorage) {
+            if (typeof useLocalStorage === "undefined") { useLocalStorage = true; }
             this.serverSettings = serverSettings;
+            this.useLocalStorage = useLocalStorage;
             if (!serverSettings) {
                 this.serverSettings = TrainNotifier.Common.serverSettings;
             }
@@ -19,6 +21,17 @@ var TrainNotifier;
         };
 
         WebApi.prototype.getStations = function () {
+            if (this.useLocalStorage) {
+                var stations = localStorage.getItem(WebApi.stationsLocalStorageKey);
+                if (stations) {
+                    return $.Deferred().resolve(JSON.parse(stations)).promise();
+                } else {
+                    return $.getJSON(this.getBaseUrl() + "/Station/", this.getArgs()).done(function (stations) {
+                        localStorage.setItem(WebApi.stationsLocalStorageKey, JSON.stringify(stations));
+                        return $.Deferred().resolve(stations).promise();
+                    });
+                }
+            }
             return $.getJSON(this.getBaseUrl() + "/Station/", this.getArgs());
         };
 
@@ -40,6 +53,13 @@ var TrainNotifier;
         };
 
         WebApi.prototype.getAllStanoxByCrsCode = function (crsCode) {
+            if (this.useLocalStorage) {
+                this.getStations().done(function (stations) {
+                    return stations.filter(function (s) {
+                        return s.CRS == crsCode;
+                    });
+                });
+            }
             return $.getJSON(this.getBaseUrl() + "/Stanox/Find/" + crsCode, this.getArgs());
         };
 
@@ -155,6 +175,7 @@ var TrainNotifier;
         WebApi.prototype.getBerthContents = function (berth) {
             return $.getJSON(this.getBaseUrl() + "/Td/Berth/" + berth, this.getArgs());
         };
+        WebApi.stationsLocalStorageKey = "tn-stations";
         return WebApi;
     })();
     TrainNotifier.WebApi = WebApi;
