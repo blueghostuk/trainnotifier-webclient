@@ -319,13 +319,13 @@ function subTrain() {
 
 function getById(id: string) {
     preAjax();
-    webApi.getTrainMovementById(id).done(function (data) {
+    webApi.getTrainMovementById(id).done(function (data: ITrainMovementLink) {
         if (data) {
             thisPage.setCommand("!"
                 + data.TrainUid
                 + "/"
-                + moment(data.SchedOriginDeparture).format(TrainNotifier.DateTimeFormats.dateUrlFormat));
-            getTrainData(data.TrainUid, moment(data.SchedOriginDeparture).format(TrainNotifier.DateTimeFormats.dateQueryFormat), false);
+                + moment(data.OriginDepartTimestamp).format(TrainNotifier.DateTimeFormats.dateUrlFormat));
+            getTrainData(data.TrainUid, moment(data.OriginDepartTimestamp).format(TrainNotifier.DateTimeFormats.dateQueryFormat), false);
         } else {
             show($("#no-results-row"));
         }

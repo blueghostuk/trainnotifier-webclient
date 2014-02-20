@@ -300,8 +300,8 @@ function getById(id) {
     preAjax();
     webApi.getTrainMovementById(id).done(function (data) {
         if (data) {
-            thisPage.setCommand("!" + data.TrainUid + "/" + moment(data.SchedOriginDeparture).format(TrainNotifier.DateTimeFormats.dateUrlFormat));
-            getTrainData(data.TrainUid, moment(data.SchedOriginDeparture).format(TrainNotifier.DateTimeFormats.dateQueryFormat), false);
+            thisPage.setCommand("!" + data.TrainUid + "/" + moment(data.OriginDepartTimestamp).format(TrainNotifier.DateTimeFormats.dateUrlFormat));
+            getTrainData(data.TrainUid, moment(data.OriginDepartTimestamp).format(TrainNotifier.DateTimeFormats.dateQueryFormat), false);
         } else {
             show($("#no-results-row"));
         }

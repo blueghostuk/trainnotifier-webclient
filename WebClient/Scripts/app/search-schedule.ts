@@ -350,7 +350,7 @@ function getDestinationByTiploc(to: IStationTiploc, startDate: Moment, endDate: 
     setTitle("Trains terminating at " + TrainNotifier.StationTiploc.toDisplayString(currentToStanox[0]));
     setTimeLinks();
 
-    var query: JQueryPromise<any>;
+    var query: JQueryPromise<ITrainMovementResults>;
     var startDateQuery = currentStartDate.format(TrainNotifier.DateTimeFormats.dateTimeApiFormat);
     var endDateQuery = currentEndDate.format(TrainNotifier.DateTimeFormats.dateTimeApiFormat)
     if (currentToStanox[0].CRS && currentToStanox[0].CRS.length == 3) {
@@ -367,7 +367,7 @@ function getDestinationByTiploc(to: IStationTiploc, startDate: Moment, endDate: 
             toc);
     }
 
-    query.done(function (data) {
+    query.done(function (data : ITrainMovementResults) {
         if (data && data.Movements.length > 0) {
 
             var viewModels: TrainNotifier.KnockoutModels.Search.TerminatingAtTrainMovement[] = data.Movements.map(function (movement: ITrainMovementResult) {
@@ -400,7 +400,7 @@ function getStartingAtByTiploc(from: IStationTiploc[], startDate: Moment, endDat
     setTitle("Trains starting at " + TrainNotifier.StationTiploc.toDisplayString(currentStanox[0]));
     setTimeLinks();
 
-    var query: JQueryPromise<any>;
+    var query: JQueryPromise<ITrainMovementResults>;
     var startDateQuery = currentStartDate.format(TrainNotifier.DateTimeFormats.dateTimeApiFormat);
     var endDateQuery = currentEndDate.format(TrainNotifier.DateTimeFormats.dateTimeApiFormat)
     if (currentStanox[0].CRS && currentStanox[0].CRS.length == 3) {
@@ -448,7 +448,7 @@ function getCallingAtTiploc(at: IStationTiploc[], startDate, endDate) {
     setTitle("Trains calling at " + TrainNotifier.StationTiploc.toDisplayString(currentStanox[0]));
     setTimeLinks();
 
-    var query: JQueryPromise<any>;
+    var query: JQueryPromise<ITrainMovementResults>;
     var startDateQuery = currentStartDate.format(TrainNotifier.DateTimeFormats.dateTimeApiFormat);
     var endDateQuery = currentEndDate.format(TrainNotifier.DateTimeFormats.dateTimeApiFormat)
     if (currentStanox[0].CRS && currentStanox[0].CRS.length == 3) {
@@ -504,7 +504,7 @@ function getCallingBetweenByTiploc(from: IStationTiploc[], to: IStationTiploc[],
     callingBetweenSearchResults.toShortStation(currentToStanox[0].CRS ? currentToStanox[0].CRS : "");
     setTimeLinks();
 
-    var query: JQueryPromise<any>;
+    var query: JQueryPromise<ITrainMovementResults>;
     var startDateQuery = currentStartDate.format(TrainNotifier.DateTimeFormats.dateTimeApiFormat);
     var endDateQuery = currentEndDate.format(TrainNotifier.DateTimeFormats.dateTimeApiFormat);
     if (currentStanox[0].CRS && currentStanox[0].CRS.length == 3 && currentToStanox[0].CRS && currentToStanox[0].CRS.length == 3) {

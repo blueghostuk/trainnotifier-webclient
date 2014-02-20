@@ -146,7 +146,8 @@
         TrainNotifier.Common.serverSettings = {
             apiUrl: "@System.Configuration.ConfigurationManager.AppSettings["apiUrl"]",
             wsUrl: "@System.Configuration.ConfigurationManager.AppSettings["wsUrl"]",
-            apiName: "@System.Configuration.ConfigurationManager.AppSettings["apiName"]"
+            apiName: "@System.Configuration.ConfigurationManager.AppSettings["apiName"]",
+            useLocalStorage: true
         };
     </script>
     @RenderSection("FooterJs", required: false)

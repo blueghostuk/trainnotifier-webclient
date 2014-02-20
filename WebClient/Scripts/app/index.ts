@@ -16,6 +16,7 @@ var webApi: IWebApi;
 interface IStationLookup {
     value: string;
     crs: string;
+    stanox: string;
 }
 
 var locations: Array<IStationLookup> = [];
@@ -59,10 +60,13 @@ $(function () {
 
     webApi.getStations().done(function (results: IStationTiploc[]) {
 
-        locations = results.map(function (value) {
+        locations = results.filter(function (value) {
+            return value.CRS != null;
+        }).map(function (value) {
             return {
-                value: value.StationName,
-                crs: value.CRS
+                value: TrainNotifier.StationTiploc.toDisplayString(value, false),
+                crs: value.CRS,
+                stanox: value.Stanox
             };
         });
 
@@ -79,7 +83,7 @@ $(function () {
         });
 
         locationLookup.initialize();
-
+        \
         $(".station-lookup").typeahead({
             highlight: true,
             autoselect: true
@@ -94,10 +98,18 @@ $(function () {
 });
 
 function findStation(value: string): IStationLookup {
+    if (!value || value.length == 0)
+        return null;
+    value = value.toLowerCase();
     var matches = locations.filter(function (item) {
-        return item.value.toLowerCase() == value.toLowerCase();
+        return item.value.toLowerCase() == value ||
+            item.crs != null && item.crs.toLowerCase() == value;
     });
     return matches.length > 0 ? matches[0] : null;
+}
+
+function getStationQuery(value: IStationLookup) {
+    return value != null ? ((value.crs != null && value.crs.length > 0) ? value.crs.toUpperCase() : value.stanox) : null;
 }
 
 function showLocation() {
@@ -107,31 +119,15 @@ function showLocation() {
         tocVal = "?toc=" + tocVal;
     }
 
-
     var fromStation: string = $("#from-crs").val();
-    var fromCrs: any = findStation(fromStation);
-    if (fromCrs) {
-        fromCrs = fromCrs.crs;
-    } else {
-        if (fromStation.length > 0)
-            fromCrs = fromStation.substring(0, 4);
-    }
+    var fromCrs = findStation(fromStation);
+
     var toStation: string = $("#to-crs").val();
-    var toCrs: any = findStation(toStation);
-    if (toCrs) {
-        toCrs = toCrs.crs;
-    } else {
-        if (toStation.length > 0)
-            toCrs = toStation.substring(0, 4);
-    }
+    var toCrs = findStation(toStation);
+
     var atStation: string = $("#at-crs").val();
-    var atCrs: any = findStation(atStation);
-    if (atCrs) {
-        atCrs = atCrs.crs;
-    } else {
-        if (atStation.length > 0)
-            atCrs = atStation.substring(0, 4);
-    }
+    var atCrs = findStation(atStation);
+
     var dateVal = $("#date-picker").val();
     var date;
     if (dateVal && dateVal.length > 0) {
@@ -153,16 +149,20 @@ function showLocation() {
         time = "/" + moment().format(TrainNotifier.DateTimeFormats.timeUrlFormat);
     }
 
-    if (fromCrs) {
-        if (toCrs) {
-            document.location.href = "search/from/" + fromCrs.toUpperCase() + "/to/" + toCrs.toUpperCase() + date + time + tocVal;
+    var fromQuery = getStationQuery(fromCrs);
+    var toQuery = getStationQuery(toCrs);
+    var atQuery = getStationQuery(atCrs);
+
+    if (fromQuery) {
+        if (toQuery) {
+            document.location.href = "search/from/" + fromQuery + "/to/" + toQuery + date + time + tocVal;
         } else {
-            document.location.href = "search/from/" + fromCrs.toUpperCase() + date + time + tocVal;
+            document.location.href = "search/from/" + fromQuery + date + time + tocVal;
         }
     } else if (toCrs) {
-        document.location.href = "search/to/" + toCrs.toUpperCase() + date + time + tocVal;
+        document.location.href = "search/to/" + toQuery + date + time + tocVal;
     } else if (atCrs) {
-        document.location.href = "search/at/" + atCrs.toUpperCase() + date + time + tocVal;
+        document.location.href = "search/at/" + atQuery + date + time + tocVal;
     }
 
     return false;
@@ -201,7 +201,8 @@ function lookupLocalFrom() {
                         fromLocal.push(stations[i].StationName);
                         locations.push({
                             value: stations[i].StationName,
-                            crs: stations[i].CRS
+                            crs: stations[i].CRS,
+                            stanox: stations[i].Stanox
                         });
                     }
                 }
@@ -222,7 +223,8 @@ function lookupLocalTo() {
                         toLocal.push(stations[i].StationName);
                         locations.push({
                             value: stations[i].StationName,
-                            crs: stations[i].CRS
+                            crs: stations[i].CRS,
+                            stanox: stations[i].Stanox
                         });
                     }
                 }
@@ -242,7 +244,8 @@ function lookupLocalAt() {
                         atLocal.push(stations[i].StationName);
                         locations.push({
                             value: stations[i].StationName,
-                            crs: stations[i].CRS
+                            crs: stations[i].CRS,
+                            stanox: stations[i].Stanox
                         });
                     }
                 }

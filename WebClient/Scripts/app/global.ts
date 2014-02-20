@@ -19,6 +19,7 @@ interface IServerSettings {
     apiUrl: string;
     wsUrl: string;
     apiName: string;
+    useLocalStorage?: boolean;
 }
 
 function preAjax() {
@@ -55,7 +56,7 @@ module TrainNotifier {
         static serverSettings: IServerSettings;
         static page: IPage;
         static webApi: IWebApi;
-        
+
         static displayStanox(stanox: IStationTiploc) {
             if (!stanox)
                 return;
@@ -106,8 +107,8 @@ module TrainNotifier {
         public static timeFrameMinutesBefore = 15;
         public static timeFrameHours = 0.75;
 
-        public static formatTimeString(time: string) : string {
-            if (time){
+        public static formatTimeString(time: string): string {
+            if (time) {
                 var timeMoment = moment(time, TrainNotifier.DateTimeFormats.timeFormat);
                 return DateTimeFormats.formatTimeMoment(timeMoment);
             }
@@ -151,7 +152,7 @@ module TrainNotifier {
 
     }
 
-    export class CommonStrings{
+    export class CommonStrings {
         public static halfMinute = "½";
     }
 

@@ -4,32 +4,31 @@
 
 interface IWebApi {
 
-    useLocalStorage: boolean;
-
-    getStanox(stanox: string): JQueryPromise<any>;
+    getTiplocs(): JQueryPromise<IStationTiploc[]>;
+    getStanox(stanox: string): JQueryPromise<IStationTiploc>;
     getStanoxByCrsCode(crsCode: string): JQueryPromise<any>;
-    getAllStanoxByCrsCode(crsCode: string): JQueryPromise<any>;
+    getAllStanoxByCrsCode(crsCode: string): JQueryPromise<IStationTiploc[]>;
 
     getStations(): JQueryPromise<IStationTiploc[]>;
     getStationByLocation(lat: number, lon: number, limit?: number): JQueryPromise<any>;
 
-    getTrainMovementByUid(uid: string, date: string): JQueryPromise<any>;
-    getTrainMovementById(id: string): JQueryPromise<any>;
+    getTrainMovementByUid(uid: string, date: string): JQueryPromise<ISingleTrainMovementResult>;
+    getTrainMovementById(id: string): JQueryPromise<ITrainMovementLink>;
     getTrainMovementAssociations(uid: string, date: string): JQueryPromise<any>;
-    getTrainMovementsByHeadcode(headcode: string, date: string): JQueryPromise<any>;
+    getTrainMovementsByHeadcode(headcode: string, date: string): JQueryPromise<ITrainMovementResults>;
 
-    getTrainMovementsTerminatingAtLocation(stanox: string, startDate: string, endDate: string, atocCode?: string): JQueryPromise<any>;
-    getTrainMovementsTerminatingAtStation(crsCode: string, startDate: string, endDate: string, atocCode?: string): JQueryPromise<any>;
-    getTrainMovementsStartingAtLocation(stanox: string, startDate: string, endDate: string, atocCode?: string): JQueryPromise<any>;
-    getTrainMovementsStartingAtStation(crsCode: string, startDate: string, endDate: string, atocCode?: string): JQueryPromise<any>;
-    getTrainMovementsCallingAtLocation(stanox: string, startDate: string, endDate: string, atocCode?: string): JQueryPromise<any>;
-    getTrainMovementsCallingAtStation(crsCode: string, startDate: string, endDate: string, atocCode?: string): JQueryPromise<any>;
-    getTrainMovementsBetweenLocations(fromStanox: string, toStanox: string, startDate: string, endDate: string, atocCode?: string): JQueryPromise<any>;
-    getTrainMovementsBetweenStations(fromCrsCode: string, toCrsCode: string, startDate: string, endDate: string, atocCode?: string): JQueryPromise<any>;
+    getTrainMovementsTerminatingAtLocation(stanox: string, startDate: string, endDate: string, atocCode?: string): JQueryPromise<ITrainMovementResults>;
+    getTrainMovementsTerminatingAtStation(crsCode: string, startDate: string, endDate: string, atocCode?: string): JQueryPromise<ITrainMovementResults>;
+    getTrainMovementsStartingAtLocation(stanox: string, startDate: string, endDate: string, atocCode?: string): JQueryPromise<ITrainMovementResults>;
+    getTrainMovementsStartingAtStation(crsCode: string, startDate: string, endDate: string, atocCode?: string): JQueryPromise<ITrainMovementResults>;
+    getTrainMovementsCallingAtLocation(stanox: string, startDate: string, endDate: string, atocCode?: string): JQueryPromise<ITrainMovementResults>;
+    getTrainMovementsCallingAtStation(crsCode: string, startDate: string, endDate: string, atocCode?: string): JQueryPromise<ITrainMovementResults>;
+    getTrainMovementsBetweenLocations(fromStanox: string, toStanox: string, startDate: string, endDate: string, atocCode?: string): JQueryPromise<ITrainMovementResults>;
+    getTrainMovementsBetweenStations(fromCrsCode: string, toCrsCode: string, startDate: string, endDate: string, atocCode?: string): JQueryPromise<ITrainMovementResults>;
 
-    getTrainMovementLink(headcode: string, crsCode: string, platform: string): JQueryPromise<any>;
+    getTrainMovementLink(headcode: string, crsCode: string, platform: string): JQueryPromise<ITrainMovementLink>;
 
-    getTrainMovementsNearLocation(lat: number, lon: number, limit: number): JQueryPromise<any>;
+    getTrainMovementsNearLocation(lat: number, lon: number, limit: number): JQueryPromise<ITrainMovementResults>;
 
     getPPMSectors(): JQueryPromise<any>;
     getPPMOperatorRegions(operatorCode: string): JQueryPromise<any>;
@@ -47,13 +46,18 @@ interface IEstimate {
     CurrentDelay: number;
 }
 
+interface JQueryPromise<T> {
+    // hack to get below to compile, javascript generated works fine
+    then<U>(onFulfill: (stationTiplocs: IStationTiploc[], any) => U, onReject?: (...reasons: any[]) => U, onProgress?: (...progression: any[]) => any): JQueryPromise<U>;
+}
+
 module TrainNotifier {
 
     export class WebApi implements IWebApi {
 
-        private static stationsLocalStorageKey = "tn-stations";
+        private static tiplocsLocalStorageKey = "tn-tiplocs";
 
-        constructor(public serverSettings?: IServerSettings, public useLocalStorage = true) {
+        constructor(public serverSettings?: IServerSettings) {
             if (!serverSettings) {
                 this.serverSettings = TrainNotifier.Common.serverSettings;
             }
@@ -65,20 +69,62 @@ module TrainNotifier {
 
         private getArgs() {
             return {
+                returnTiplocs: !this.serverSettings.useLocalStorage,
                 apiName: this.serverSettings.apiName
             };
         }
 
+        private getTrainMovementResults(results: JQueryPromise<ITrainMovementResults>): JQueryPromise<ITrainMovementResults> {
+            if (this.serverSettings.useLocalStorage) {
+                return $.when(this.getStations(), results).then(function (stations: IStationTiploc[], trainMovementResults) {
+                    var trainMovement: ITrainMovementResults = trainMovementResults[0];
+                    trainMovement.Tiplocs = stations;
+                    return $.Deferred<ITrainMovementResults>().resolve(trainMovement).promise();
+                });
+            } else {
+                return results;
+            }
+        }
+
+        private getTrainMovementResult(results: JQueryPromise<ISingleTrainMovementResult>): JQueryPromise<ISingleTrainMovementResult> {
+            if (this.serverSettings.useLocalStorage) {
+                return $.when(this.getStations(), results).then(function (stations: IStationTiploc[], trainMovementResults) {
+                    var trainMovement: ISingleTrainMovementResult = trainMovementResults[0];
+                    trainMovement.Tiplocs = stations;
+                    return $.Deferred<ITrainMovementResults>().resolve(trainMovement).promise();
+                });
+            } else {
+                return results;
+            }
+        }
+
         getStations() {
-            if (this.useLocalStorage) {
-                var stations: string = localStorage.getItem(WebApi.stationsLocalStorageKey);
+            //if (this.serverSettings.useLocalStorage) {
+            //    var stations: string = localStorage.getItem(WebApi.stationsLocalStorageKey);
+            //    if (stations) {
+            //        return $.Deferred().resolve(JSON.parse(stations)).promise();
+            //    } else {
+            //        return $.getJSON(this.getBaseUrl() + "/Station/", this.getArgs())
+            //            .done(function (stations: IStationTiploc[]) {
+            //                localStorage.setItem(WebApi.stationsLocalStorageKey, JSON.stringify(stations));
+            //                return $.Deferred<IStationTiploc[]>().resolve(stations).promise();
+            //            });
+            //    }
+            //}
+            //return $.getJSON(this.getBaseUrl() + "/Station/", this.getArgs());
+            return this.getTiplocs();
+        }
+
+        getTiplocs() {
+            if (this.serverSettings.useLocalStorage) {
+                var stations: string = localStorage.getItem(WebApi.tiplocsLocalStorageKey);
                 if (stations) {
                     return $.Deferred().resolve(JSON.parse(stations)).promise();
                 } else {
-                    return $.getJSON(this.getBaseUrl() + "/Station/", this.getArgs())
+                    return $.getJSON(this.getBaseUrl() + "/Stanox/", this.getArgs())
                         .done(function (stations: IStationTiploc[]) {
-                            localStorage.setItem(WebApi.stationsLocalStorageKey, JSON.stringify(stations));
-                            return $.Deferred().resolve(stations).promise();
+                            localStorage.setItem(WebApi.tiplocsLocalStorageKey, JSON.stringify(stations));
+                            return $.Deferred<IStationTiploc[]>().resolve(stations).promise();
                         });
                 }
             }
@@ -86,6 +132,15 @@ module TrainNotifier {
         }
 
         getStanox(stanox: string) {
+            if (this.serverSettings.useLocalStorage) {
+                stanox = stanox.toLowerCase();
+                return this.getTiplocs().then(function (stations: IStationTiploc[]) {
+                    var filtered = stations.filter(function (s) {
+                        return s.Stanox!= null && s.Stanox.toLowerCase() == stanox;
+                    });
+                    return $.Deferred().resolve(filtered).promise();
+                });
+            }
             return $.getJSON(this.getBaseUrl() + "/Stanox/" + stanox);
         }
 
@@ -102,18 +157,20 @@ module TrainNotifier {
         }
 
         getAllStanoxByCrsCode(crsCode: string) {
-            if (this.useLocalStorage) {
-                this.getStations().done(function (stations: IStationTiploc[]) {
-                    return stations.filter(function (s) {
-                        return s.CRS == crsCode;
+            if (this.serverSettings.useLocalStorage) {
+                crsCode = crsCode.toLowerCase();
+                return this.getStations().then(function (stations: IStationTiploc[]) {
+                    var filtered = stations.filter(function (s) {
+                        return s.CRS != null && s.CRS.toLowerCase() == crsCode;
                     });
+                    return $.Deferred().resolve(filtered).promise();
                 });
             }
             return $.getJSON(this.getBaseUrl() + "/Stanox/Find/" + crsCode, this.getArgs());
         }
 
         getTrainMovementByUid(uid: string, date: string) {
-            return $.getJSON(this.getBaseUrl() + "/TrainMovement/Uid/" + uid + "/" + date, this.getArgs());
+            return this.getTrainMovementResult($.getJSON(this.getBaseUrl() + "/TrainMovement/Uid/" + uid + "/" + date, this.getArgs()));
         }
 
         getTrainMovementById(id: string) {
@@ -125,79 +182,79 @@ module TrainNotifier {
         }
 
         getTrainMovementsByHeadcode(headcode: string, date: string) {
-            return $.getJSON(this.getBaseUrl() + "/TrainMovement/Headcode/" + headcode + "/" + date, this.getArgs());
+            return this.getTrainMovementResults($.getJSON(this.getBaseUrl() + "/TrainMovement/Headcode/" + headcode + "/" + date, this.getArgs()));
         }
 
         getTrainMovementsTerminatingAtLocation(stanox: string, startDate: string, endDate: string, atocCode?: string) {
-            return $.getJSON(this.getBaseUrl() + "/TrainMovement/TerminatingAt/Location/" + stanox, $.extend({}, this.getArgs(), {
+            return this.getTrainMovementResults($.getJSON(this.getBaseUrl() + "/TrainMovement/TerminatingAt/Location/" + stanox, $.extend({}, this.getArgs(), {
                 startDate: startDate,
                 endDate: endDate,
                 atocCode: atocCode
-            }));
+            })));
         }
 
         getTrainMovementsTerminatingAtStation(crsCode: string, startDate: string, endDate: string, atocCode?: string) {
-            return $.getJSON(this.getBaseUrl() + "/TrainMovement/TerminatingAt/Station/" + crsCode, $.extend({}, this.getArgs(), {
+            return this.getTrainMovementResults($.getJSON(this.getBaseUrl() + "/TrainMovement/TerminatingAt/Station/" + crsCode, $.extend({}, this.getArgs(), {
                 startDate: startDate,
                 endDate: endDate,
                 atocCode: atocCode
-            }));
+            })));
         }
 
         getTrainMovementsNearLocation(lat: number, lon: number, limit: number = 10) {
-            return $.getJSON(this.getBaseUrl() + "/TrainMovement/Nearest/", $.extend({}, this.getArgs(), {
+            return this.getTrainMovementResults($.getJSON(this.getBaseUrl() + "/TrainMovement/Nearest/", $.extend({}, this.getArgs(), {
                 lat: lat,
                 lon: lon,
                 limit: limit
-            }));
-        }
-
-        getTrainMovementsStartingAtStation(crsCode: string, startDate: string, endDate: string, atocCode?: string) {
-            return $.getJSON(this.getBaseUrl() + "/TrainMovement/StartingAt/Station/" + crsCode, $.extend({}, this.getArgs(), {
-                startDate: startDate,
-                endDate: endDate,
-                atocCode: atocCode
-            }));
+            })));
         }
 
         getTrainMovementsCallingAtLocation(stanox: string, startDate: string, endDate: string, atocCode?: string) {
-            return $.getJSON(this.getBaseUrl() + "/TrainMovement/CallingAt/Location/" + stanox, $.extend({}, this.getArgs(), {
+            return this.getTrainMovementResults($.getJSON(this.getBaseUrl() + "/TrainMovement/CallingAt/Location/" + stanox, $.extend({}, this.getArgs(), {
                 startDate: startDate,
                 endDate: endDate,
                 atocCode: atocCode
-            }));
+            })));
         }
 
         getTrainMovementsCallingAtStation(crsCode: string, startDate: string, endDate: string, atocCode?: string) {
-            return $.getJSON(this.getBaseUrl() + "/TrainMovement/CallingAt/Station/" + crsCode, $.extend({}, this.getArgs(), {
+            return this.getTrainMovementResults($.getJSON(this.getBaseUrl() + "/TrainMovement/CallingAt/Station/" + crsCode, $.extend({}, this.getArgs(), {
                 startDate: startDate,
                 endDate: endDate,
                 atocCode: atocCode
-            }));
+            })));
         }
 
         getTrainMovementsBetweenLocations(fromStanox: string, toStanox: string, startDate: string, endDate: string, atocCode?: string) {
-            return $.getJSON(this.getBaseUrl() + "/TrainMovement/Between/Location/" + fromStanox + "/" + toStanox, $.extend({}, this.getArgs(), {
+            return this.getTrainMovementResults($.getJSON(this.getBaseUrl() + "/TrainMovement/Between/Location/" + fromStanox + "/" + toStanox, $.extend({}, this.getArgs(), {
                 startDate: startDate,
                 endDate: endDate,
                 atocCode: atocCode
-            }));
+            })));
         }
 
         getTrainMovementsBetweenStations(fromCrsCode: string, toCrsCode: string, startDate: string, endDate: string, atocCode?: string) {
-            return $.getJSON(this.getBaseUrl() + "/TrainMovement/Between/Station/" + fromCrsCode + "/" + toCrsCode, $.extend({}, this.getArgs(), {
+            return this.getTrainMovementResults($.getJSON(this.getBaseUrl() + "/TrainMovement/Between/Station/" + fromCrsCode + "/" + toCrsCode, $.extend({}, this.getArgs(), {
                 startDate: startDate,
                 endDate: endDate,
                 atocCode: atocCode
-            }));
+            })));
+        }
+
+        getTrainMovementsStartingAtStation(crsCode: string, startDate: string, endDate: string, atocCode?: string) {
+            return this.getTrainMovementResults($.getJSON(this.getBaseUrl() + "/TrainMovement/StartingAt/Station/" + crsCode, $.extend({}, this.getArgs(), {
+                startDate: startDate,
+                endDate: endDate,
+                atocCode: atocCode
+            })));
         }
 
         getTrainMovementsStartingAtLocation(stanox: string, startDate: string, endDate: string, atocCode?: string) {
-            return $.getJSON(this.getBaseUrl() + "/TrainMovement/StartingAt/Location/" + stanox, $.extend({}, this.getArgs(), {
+            return this.getTrainMovementResults($.getJSON(this.getBaseUrl() + "/TrainMovement/StartingAt/Location/" + stanox, $.extend({}, this.getArgs(), {
                 startDate: startDate,
                 endDate: endDate,
                 atocCode: atocCode
-            }));
+            })));
         }
 
         getTrainMovementLink(headcode: string, crsCode: string, platform: string) {
@@ -426,9 +483,12 @@ module TrainNotifier {
                     t.Stanox == tiploc.Stanox;
             });
         }
-        public static toDisplayString(tiploc: IStationTiploc) {
-            return (tiploc.StationName && tiploc.StationName.length > 0 ?
-                tiploc.StationName : tiploc.Description).toLowerCase();
+        public static toDisplayString(tiploc: IStationTiploc, lowercase: boolean = true) {
+            var value = (tiploc.StationName && tiploc.StationName.length > 0 ? tiploc.StationName :
+                tiploc.Description && tiploc.Description.length > 0 ? tiploc.Description : tiploc.Tiploc);
+            if (lowercase)
+                return value.toLowerCase();
+            return value;
         }
     }
 
