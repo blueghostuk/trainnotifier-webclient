@@ -41,7 +41,7 @@ module TrainNotifier.KnockoutModels.Search {
         public cancel = false;
         public cancelEnRoute: string = null;
         public reinstate = false;
-        public changeOfOrigin =false;
+        public changeOfOrigin = false;
         public changeOfOriginStation: string = null;
 
         public departureDate: string = "";
@@ -90,13 +90,13 @@ module TrainNotifier.KnockoutModels.Search {
                         this.cancelEnRoute = cancelTiploc.Description.toLowerCase();
                     }
 
-                    this.cancel =true;
+                    this.cancel = true;
                     this.title = titleText;
                 }
             }
 
             if (trainMovement.Schedule.STPIndicatorId == TrainNotifier.STPIndicatorValue.Cancellation) {
-                this.cancel =true;
+                this.cancel = true;
                 this.title = "Cancelled via schedule";
             }
 
@@ -109,7 +109,7 @@ module TrainNotifier.KnockoutModels.Search {
                         + " (" + coo.Description + ")";
 
                     this.changeOfOriginStation = cooTiploc.Description.toLocaleLowerCase();
-                    this.changeOfOrigin =true;
+                    this.changeOfOrigin = true;
                     this.title = titleText;
                 }
             }
@@ -120,10 +120,10 @@ module TrainNotifier.KnockoutModels.Search {
                     var titleText = "Reinstated at " + reinstateTiploc.Description.toLowerCase()
                         + " at " + moment(reinstatement.PlannedDepartureTime).format(DateTimeFormats.timeFormat);
 
-                    this.reinstate =true;
+                    this.reinstate = true;
                     this.title = titleText;
 
-                    this.cancel =false;
+                    this.cancel = false;
                     this.cancelEnRoute = null;
                 }
             }
@@ -131,7 +131,7 @@ module TrainNotifier.KnockoutModels.Search {
             if (trainMovement.Schedule.CategoryTypeId) {
                 var cat = CategoryTypeLookup.getCategoryType(trainMovement.Schedule.CategoryTypeId);
                 if (cat) {
-                    this.category =cat.Code;
+                    this.category = cat.Code;
                 }
             }
 
@@ -377,7 +377,7 @@ module TrainNotifier.KnockoutModels.Search {
                     this.atPlatform = atStop.Platform;
 
                     if (atStop.Pass) {
-                        this.pass=true;
+                        this.pass = true;
                         this.atPublicDeparture = "Pass";
                         this.atWttDeparture = DateTimeFormats.formatTimeString(atStop.Pass);
                         this.departure = moment.duration(atStop.Pass);

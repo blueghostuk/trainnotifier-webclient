@@ -91,7 +91,7 @@ function getPPMSectors() {
         });
 }
 
-function updateRegions(regions : Array<IPPMRegion>) {
+function updateRegions(regions: Array<IPPMRegion>) {
     if (!regions || regions.length == 0)
         return;
     for (var i = 0; i < data().length; i++) {

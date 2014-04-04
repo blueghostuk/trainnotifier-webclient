@@ -40,9 +40,9 @@ $(function () {
 
     $("#filter-location").attr("placeholder", "Loading stations ...");
 
-    webApi.getStations().done(function (results : IStationTiploc[]) {
+    webApi.getStations().done(function (results: IStationTiploc[]) {
         var locations = [];
-        for(var i=0; i < results.length; i++){
+        for (var i = 0; i < results.length; i++) {
             locations.push(results[i].StationName + ' (' + results[i].CRS + ' - ' + results[i].Tiploc + ')');
         }
         $("#filter-location").typeahead({

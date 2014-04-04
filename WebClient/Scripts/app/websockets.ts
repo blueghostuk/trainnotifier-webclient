@@ -36,7 +36,7 @@ interface IWebSocketBerthStep {
     Type: string;
 }
 
-module TrainNotifier{
+module TrainNotifier {
 
     export class WebSocketCommands {
         public static BerthUpdate = "subtrainupdate-berth";
@@ -46,7 +46,7 @@ module TrainNotifier{
         public static Arrival = "ARRIVAL";
     }
 
-    export class WebSockets{
+    export class WebSockets {
         private ws: WebSocket;
 
         constructor() {
@@ -102,7 +102,7 @@ module TrainNotifier{
             $("#status").addClass("btn-warning");
         }
 
-        onMessageHandler(handler : any) {
+        onMessageHandler(handler: any) {
             this.ws.onmessage = handler;
         }
 

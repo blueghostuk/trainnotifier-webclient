@@ -7,9 +7,9 @@
 /// <reference path="../typings/knockout/knockout.d.ts" />
 /// <reference path="../typings/jquery/jquery.d.ts" />
 
-var fromLocal = ko.observableArray();
-var toLocal = ko.observableArray();
-var atLocal = ko.observableArray();
+var fromLocal = ko.observableArray<string>();
+var toLocal = ko.observableArray<string>();
+var atLocal = ko.observableArray<string>();
 
 var webApi: IWebApi;
 
@@ -19,7 +19,7 @@ interface IStationLookup {
     stanox: string;
 }
 
-var locations: Array<IStationLookup> = [];
+var locations: IStationLookup[] = [];
 
 declare var Bloodhound: any;
 
@@ -63,12 +63,12 @@ $(function () {
         locations = results.filter(function (value) {
             return value.CRS != null;
         }).map(function (value) {
-            return {
-                value: TrainNotifier.StationTiploc.toDisplayString(value, false),
-                crs: value.CRS,
-                stanox: value.Stanox
-            };
-        });
+                return {
+                    value: TrainNotifier.StationTiploc.toDisplayString(value, false),
+                    crs: value.CRS,
+                    stanox: value.Stanox
+                };
+            });
 
         var locationLookup = new Bloodhound({
             name: 'stations-lookup',
@@ -83,13 +83,13 @@ $(function () {
         });
 
         locationLookup.initialize();
-        \
+
         $(".station-lookup").typeahead({
             highlight: true,
             autoselect: true
         }, {
-            source: locationLookup.ttAdapter()
-        });
+                source: locationLookup.ttAdapter()
+            });
 
         $("#from-crs").attr("placeholder", "Type from station name here");
         $("#to-crs").attr("placeholder", "Type to station name here");

@@ -367,7 +367,7 @@ function getDestinationByTiploc(to: IStationTiploc, startDate: Moment, endDate: 
             toc);
     }
 
-    query.done(function (data : ITrainMovementResults) {
+    query.done(function (data: ITrainMovementResults) {
         if (data && data.Movements.length > 0) {
 
             var viewModels: TrainNotifier.KnockoutModels.Search.TerminatingAtTrainMovement[] = data.Movements.map(function (movement: ITrainMovementResult) {
@@ -615,7 +615,7 @@ function setTitle(start: string) {
         searchTitleModel.link(null);
         searchTitleModel.title(null);
     }
-    if (currentToStanox&& currentToStanox.length > 0) {
+    if (currentToStanox && currentToStanox.length > 0) {
         var to = TrainNotifier.StationTiploc.toDisplayString(currentToStanox[0]);
         if (currentStanox) {
             title += " to ";
