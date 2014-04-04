@@ -716,6 +716,8 @@ function setHash(hash, dateHash, dontLoad) {
     if (toc)
         hash += "?toc=" + toc;
     if (document.location.hash != "#" + hash) {
+        if (dontLoad)
+            thisPage.settingHash = true;
         document.location.hash = hash;
     }
     if (!dontLoad) {
