@@ -46,8 +46,8 @@ interface IEstimate {
     CurrentDelay: number;
 }
 
+// hack to get below to compile, javascript generated works fine
 interface JQueryPromise<T> {
-    // hack to get below to compile, javascript generated works fine
     then<U>(onFulfill: (stationTiplocs: IStationTiploc[], any) => U, onReject?: (...reasons: any[]) => U, onProgress?: (...progression: any[]) => any): JQueryPromise<U>;
 }
 
@@ -74,24 +74,24 @@ module TrainNotifier {
             };
         }
 
-        private getTrainMovementResults(results: JQueryPromise<ITrainMovementResults>): JQueryPromise<ITrainMovementResults> {
+        private getTrainMovementResults(results: JQueryPromise<ITrainMovementResults>): any {
             if (this.serverSettings.useLocalStorage) {
                 return $.when(this.getStations(), results).then(function (stations: IStationTiploc[], trainMovementResults) {
                     var trainMovement: ITrainMovementResults = trainMovementResults[0];
                     trainMovement.Tiplocs = stations;
-                    return $.Deferred<ITrainMovementResults>().resolve(trainMovement).promise();
+                    return $.Deferred().resolve(trainMovement).promise();
                 });
             } else {
                 return results;
             }
         }
 
-        private getTrainMovementResult(results: JQueryPromise<ISingleTrainMovementResult>): JQueryPromise<ISingleTrainMovementResult> {
+        private getTrainMovementResult(results: JQueryPromise<ISingleTrainMovementResult>): any {
             if (this.serverSettings.useLocalStorage) {
                 return $.when(this.getStations(), results).then(function (stations: IStationTiploc[], trainMovementResults) {
                     var trainMovement: ISingleTrainMovementResult = trainMovementResults[0];
                     trainMovement.Tiplocs = stations;
-                    return $.Deferred<ITrainMovementResults>().resolve(trainMovement).promise();
+                    return $.Deferred().resolve(trainMovement).promise();
                 });
             } else {
                 return results;
@@ -99,19 +99,6 @@ module TrainNotifier {
         }
 
         getStations() {
-            //if (this.serverSettings.useLocalStorage) {
-            //    var stations: string = localStorage.getItem(WebApi.stationsLocalStorageKey);
-            //    if (stations) {
-            //        return $.Deferred().resolve(JSON.parse(stations)).promise();
-            //    } else {
-            //        return $.getJSON(this.getBaseUrl() + "/Station/", this.getArgs())
-            //            .done(function (stations: IStationTiploc[]) {
-            //                localStorage.setItem(WebApi.stationsLocalStorageKey, JSON.stringify(stations));
-            //                return $.Deferred<IStationTiploc[]>().resolve(stations).promise();
-            //            });
-            //    }
-            //}
-            //return $.getJSON(this.getBaseUrl() + "/Station/", this.getArgs());
             return this.getTiplocs();
         }
 
@@ -131,14 +118,14 @@ module TrainNotifier {
             return $.getJSON(this.getBaseUrl() + "/Station/", this.getArgs());
         }
 
-        getStanox(stanox: string) {
+        getStanox(stanox: string): any {
             if (this.serverSettings.useLocalStorage) {
                 stanox = stanox.toLowerCase();
                 return this.getTiplocs().then(function (stations: IStationTiploc[]) {
                     var filtered = stations.filter(function (s) {
-                        return s.Stanox!= null && s.Stanox.toLowerCase() == stanox;
+                        return s.Stanox != null && s.Stanox.toLowerCase() == stanox;
                     });
-                    return $.Deferred().resolve(filtered).promise();
+                    return $.Deferred<IStationTiploc[]>().resolve(filtered).promise();
                 });
             }
             return $.getJSON(this.getBaseUrl() + "/Stanox/" + stanox);
@@ -156,14 +143,14 @@ module TrainNotifier {
             return $.getJSON(this.getBaseUrl() + "/Stanox/Single/" + crsCode, this.getArgs());
         }
 
-        getAllStanoxByCrsCode(crsCode: string) {
+        getAllStanoxByCrsCode(crsCode: string): any {
             if (this.serverSettings.useLocalStorage) {
                 crsCode = crsCode.toLowerCase();
                 return this.getStations().then(function (stations: IStationTiploc[]) {
                     var filtered = stations.filter(function (s) {
                         return s.CRS != null && s.CRS.toLowerCase() == crsCode;
                     });
-                    return $.Deferred().resolve(filtered).promise();
+                    return $.Deferred<IStationTiploc[]>().resolve(filtered).promise();
                 });
             }
             return $.getJSON(this.getBaseUrl() + "/Stanox/Find/" + crsCode, this.getArgs());
