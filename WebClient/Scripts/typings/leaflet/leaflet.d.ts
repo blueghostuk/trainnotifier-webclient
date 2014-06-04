@@ -991,9 +991,9 @@ declare module L {
         export class Default extends Icon {
 
             /**
-              * Creates an icon instance with default options.
+              * Creates a default icon instance with the given options.
               */
-            constructor(options: IconOptions);
+            constructor(options?: IconOptions);
 
             static imagePath: string;
         }
@@ -3655,25 +3655,27 @@ declare module L {
         }
     }
 
-    export class tileLayer {
+    export interface TileLayerFactory {
         
         /**
           * Instantiates a tile layer object given a URL template and optionally an options
           * object.
           */
-        function (urlTemplate: string, options?: TileLayerOptions): TileLayer;
+        (urlTemplate: string, options?: TileLayerOptions): TileLayer;
 
         /**
           * Instantiates a WMS tile layer object given a base URL of the WMS service and
           * a WMS parameters/options object.
           */
-        static wms(baseUrl: string, options: WMSOptions): L.TileLayer.WMS;
+        wms(baseUrl: string, options: WMSOptions): L.TileLayer.WMS;
 
         /**
           * Instantiates a Canvas tile layer object given an options object (optionally).
           */
-        static canvas(options?: TileLayerOptions): L.TileLayer.Canvas;
+        canvas(options?: TileLayerOptions): L.TileLayer.Canvas;
     }
+
+    export var tileLayer: TileLayerFactory;
 }
  
 declare module L {

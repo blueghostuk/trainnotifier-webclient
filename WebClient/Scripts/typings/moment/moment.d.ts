@@ -50,11 +50,11 @@ interface Duration {
     years(): number;
     asYears(): number;
 
-    //add(number, string): Duration;
-    //add(number): Duration;
     add(Duration): Duration;
-    subtract(Duration): Duration;
 
+    subtract(n: number, p: string): Duration;
+    subtract(n: number): Duration;
+    subtract(d: Duration): Duration;
 }
 
 interface Moment {
