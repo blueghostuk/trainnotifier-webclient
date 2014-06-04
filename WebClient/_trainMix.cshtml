@@ -29,16 +29,16 @@
             <th class="hidden-xs hidden-sm visible-md visible-lg"><abbr title="Public Timetable">Public</abbr></th>
             <th class="visible-xs visible-sm hidden-md hidden-lg"><abbr title="Public Timetable">Pub.</abbr></th>
             @*5*@
-            <th class="hidden-xs hidden-sm visible-md visible-lg"><abbr title="Actual or Estimated">Actual</abbr></th>
-            <th class="visible-xs visible-sm hidden-md hidden-lg"><abbr title="Actual or Estimated">Act.</abbr></th>
+            <th class="hidden-xs hidden-sm visible-md visible-lg"><abbr title="Actual">Actual</abbr></th>
+            <th class="visible-xs visible-sm hidden-md hidden-lg"><abbr title="Actual">Act.</abbr></th>
             @*6*@
             <th class="hidden-xs hidden-sm visible-md visible-lg advanced-col"><abbr title="Working Timetable">WTT</abbr></th>
             @*7*@
             <th class="hidden-xs hidden-sm visible-md visible-lg"><abbr title="Public Timetable">Public</abbr></th>
             <th class="visible-xs visible-sm hidden-md hidden-lg"><abbr title="Public Timetable">Pub.</abbr></th>
             @*8*@
-            <th class="hidden-xs hidden-sm visible-md visible-lg"><abbr title="Actual or Estimated">Actual</abbr></th>
-            <th class="visible-xs visible-sm hidden-md hidden-lg"><abbr title="Actual or Estimated">Act.</abbr></th>
+            <th class="hidden-xs hidden-sm visible-md visible-lg"><abbr title="Actual">Actual</abbr></th>
+            <th class="visible-xs visible-sm hidden-md hidden-lg"><abbr title="Actual">Act.</abbr></th>
             @*9*@
             <th class="hidden-xs hidden-sm visible-md visible-lg">Line</th>
             @*10*@
@@ -59,13 +59,13 @@
             @*4. Advanced - Pass(Empty)/Public Expected Arrival*@
             <td class="col arrive public time" data-bind="text: pass ? '' : publicArrive"></td>
             @*5. ALL - Actual Arrival*@
-            <td class="col arrive actual time" data-bind="text: pass ? '' : actualArrival, css: arrivalCss"></td>
+            <td class="col arrive actual time actual" data-bind="text: pass ? '' : actualArrival, css: arrivalCss"></td>
             @*6. Advanced - Pass/WTT Expected Departure*@
             <td class="col depart wtt time hidden-xs hidden-sm visible-md visible-lg advanced-col" data-bind="text: pass ? pass : wttDepart"></td>
             @*7. Advanced - Pass(Empty)/Public Expected Departure*@
             <td class="col depart public time" data-bind="text: pass ? '' : publicDepart"></td>
             @*8. ALL - Actual Departure*@
-            <td class="col depart actual time" data-bind="text: actualDeparture, css: departureCss"></td>
+            <td class="col depart actual time actual" data-bind="text: actualDeparture, css: departureCss"></td>
             @*9. ALL - Line*@
             <td class="col extra line hidden-xs hidden-sm visible-md visible-lg" data-bind="text: line"></td>
             @*10. ALL - Allowances*@
@@ -79,6 +79,5 @@
 </table>
 <p>
     <span class="glyphicon glyphicon-info-sign"></span>&nbsp;This page shows the Schedule with current running information. Click the <span class="glyphicon glyphicon-refresh"></span> icon above to activate live tracking.<br />
-    <span class="glyphicon glyphicon-info-sign"></span>&nbsp;<abbr title="Working Timetable">WTT</abbr> times and passing stops are hidden in simple mode. Switch to Advanced mode from the top menu.<br />
-    <span class="glyphicon glyphicon-info-sign"></span>&nbsp;Actual times in <em>italics</em> are estimates. Times in <strong>bold</strong> are actual times.
+    <span class="glyphicon glyphicon-info-sign"></span>&nbsp;<abbr title="Working Timetable">WTT</abbr> times and passing stops are hidden in simple mode. Switch to Advanced mode from the top menu.
 </p>

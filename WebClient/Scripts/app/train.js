@@ -339,9 +339,6 @@ function getTrainData(trainUid, date, subscribe) {
                 for (var i = 0; i < data.Movement.Schedule.Stops.length; i++) {
                     var thisStop = new TrainNotifier.KnockoutModels.Train.ScheduleStop(data.Movement.Schedule.Stops[i], currentTiplocs);
 
-                    if (previousStop != null) {
-                        thisStop.associateWithPreviousStop(previousStop);
-                    }
                     previousStop = thisStop;
                     scheduleStops.push(thisStop);
                 }
@@ -424,10 +421,6 @@ function getTrainData(trainUid, date, subscribe) {
                                 break;
                             }
                         }
-                    }
-
-                    for (var i = 0; i < scheduleStops().length; i++) {
-                        scheduleStops()[i].estimateFromPreviousStop();
                     }
 
                     var orderedModelStops = modelStops.sort(function (a, b) {

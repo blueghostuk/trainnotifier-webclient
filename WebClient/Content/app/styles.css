@@ -72,13 +72,8 @@ tr.error > td > span.changeOfDestination {
     margin: 5px 0px !important;
 }
 
-.estimate {
-    font-style: italic;
-}
-
-.non-estimate {
+.actual {
     font-weight: bold;
-    font-style: normal !important;
 }
 
 @media (max-width: 979px) {

@@ -166,14 +166,10 @@ var TrainNotifier;
                     this.publicDeparture = null;
                     this.wttDeparture = null;
                     this.actualDeparture = null;
-                    this.actualDepartureEstimate = true;
-                    this.fromPlatformEstimate = true;
                     this.toPlatform = null;
                     this.publicArrival = null;
                     this.wttArrival = null;
                     this.actualArrival = null;
-                    this.actualArrivalEstimate = true;
-                    this.toPlatformEstimate = true;
 
                     var toStop;
                     if (trainMovement.Schedule.Stops.length > 0) {
@@ -208,34 +204,12 @@ var TrainNotifier;
                         if (fromActual != null && fromActual.length == 1) {
                             this.actualDeparture = TrainNotifier.DateTimeFormats.formatDateTimeString(fromActual[0].ActualTimestamp, TrainNotifier.DateTimeFormats.timeFormat);
                             this.fromPlatform = fromActual[0].Platform;
-                            this.actualDepartureEstimate = false;
-                            this.fromPlatformEstimate = false;
                         }
 
                         var lastActual = trainMovement.Actual.Stops[trainMovement.Actual.Stops.length - 1];
                         if (lastActual.ScheduleStopNumber == toStop.StopNumber && lastActual.EventType == 2 /* Arrival */ && lastActual.TiplocStanoxCode == toStop.TiplocStanoxCode) {
                             this.actualArrival = TrainNotifier.DateTimeFormats.formatDateTimeString(lastActual.ActualTimestamp, TrainNotifier.DateTimeFormats.timeFormat);
                             this.toPlatform = lastActual.Platform;
-                            this.actualArrivalEstimate = false;
-                            this.toPlatformEstimate = false;
-                        } else {
-                            var precedingStops = trainMovement.Actual.Stops.filter(function (element) {
-                                return element.ScheduleStopNumber < toStop.StopNumber;
-                            });
-                            if (precedingStops.length > 0) {
-                                var currentDelay = 0;
-                                for (var i = 0; i < precedingStops.length; i++) {
-                                    var precedingStop = precedingStops[i];
-                                    var actual = moment(precedingStop.ActualTimestamp);
-                                    var planned = moment(precedingStop.PlannedTimestamp);
-                                    if (actual.isAfter(planned)) {
-                                        currentDelay = actual.diff(planned, 'minutes', true);
-                                    } else {
-                                        currentDelay = 0;
-                                    }
-                                }
-                                this.actualArrival = TrainNotifier.DateTimeFormats.formatTimeDuration(moment.duration(toStop.Arrival).add(moment.duration(currentDelay, 'minutes')));
-                            }
                         }
                     }
                 }
@@ -251,14 +225,10 @@ var TrainNotifier;
                     this.publicDeparture = null;
                     this.wttDeparture = null;
                     this.actualDeparture = null;
-                    this.actualDepartureEstimate = true;
-                    this.fromPlatformEstimate = true;
                     this.toPlatform = null;
                     this.publicArrival = null;
                     this.wttArrival = null;
                     this.actualArrival = null;
-                    this.actualArrivalEstimate = true;
-                    this.toPlatformEstimate = true;
 
                     var toStop;
                     if (trainMovement.Schedule.Stops.length > 0) {
@@ -291,8 +261,6 @@ var TrainNotifier;
                         if (fromActual != null && fromActual.length == 1) {
                             this.actualDeparture = TrainNotifier.DateTimeFormats.formatDateTimeString(fromActual[0].ActualTimestamp, TrainNotifier.DateTimeFormats.timeFormat);
                             this.fromPlatform = fromActual[0].Platform;
-                            this.actualDepartureEstimate = false;
-                            this.fromPlatformEstimate = false;
                         }
 
                         if (toStop) {
@@ -300,8 +268,6 @@ var TrainNotifier;
                             if (lastActual.ScheduleStopNumber == toStop.StopNumber && lastActual.EventType == 2 /* Arrival */ && lastActual.TiplocStanoxCode == toStop.TiplocStanoxCode) {
                                 this.actualArrival = TrainNotifier.DateTimeFormats.formatDateTimeString(lastActual.ActualTimestamp, TrainNotifier.DateTimeFormats.timeFormat);
                                 this.toPlatform = lastActual.Platform;
-                                this.actualArrivalEstimate = false;
-                                this.toPlatformEstimate = false;
                             }
                         }
                     }
@@ -318,12 +284,9 @@ var TrainNotifier;
                     this.atPublicDeparture = null;
                     this.atWttDeparture = null;
                     this.atActualDeparture = null;
-                    this.atActualDepartureEstimate = true;
                     this.atPublicArrival = null;
                     this.atWttArrival = null;
                     this.atActualArrival = null;
-                    this.atActualArrivalEstimate = true;
-                    this.atPlatformEstimate = true;
                     this.pass = false;
 
                     var atStop;
@@ -393,38 +356,12 @@ var TrainNotifier;
                                 switch (atActualStops[i].EventType) {
                                     case 2 /* Arrival */:
                                         this.atActualArrival = TrainNotifier.DateTimeFormats.formatDateTimeString(atActualStops[i].ActualTimestamp, TrainNotifier.DateTimeFormats.timeFormat);
-                                        this.atActualArrivalEstimate = false;
                                         this.atPlatform = TrainNotifier.Common.coalesce([atActualStops[i].Platform, this.atPlatform]);
                                         break;
                                     case 1 /* Departure */:
                                         this.atActualDeparture = TrainNotifier.DateTimeFormats.formatDateTimeString(atActualStops[i].ActualTimestamp, TrainNotifier.DateTimeFormats.timeFormat);
-                                        this.atActualDepartureEstimate = false;
                                         this.atPlatform = TrainNotifier.Common.coalesce([atActualStops[i].Platform, this.atPlatform]);
                                         break;
-                                }
-                                this.atPlatformEstimate = false;
-                            }
-                        } else {
-                            var precedingStops = trainMovement.Actual.Stops.filter(function (element) {
-                                return element.ScheduleStopNumber < atStop.StopNumber;
-                            });
-                            if (precedingStops.length > 0) {
-                                var currentDelay = 0;
-                                for (var i = 0; i < precedingStops.length; i++) {
-                                    var precedingStop = precedingStops[i];
-                                    var actual = moment(precedingStop.ActualTimestamp);
-                                    var planned = moment(precedingStop.PlannedTimestamp);
-                                    if (actual.isAfter(planned)) {
-                                        currentDelay = actual.diff(planned, 'minutes', true);
-                                    } else {
-                                        currentDelay = 0;
-                                    }
-                                }
-                                if (this.arrival) {
-                                    this.atActualArrival = TrainNotifier.DateTimeFormats.formatTimeDuration(this.arrival.add(moment.duration(currentDelay, 'minutes')));
-                                }
-                                if (this.departure) {
-                                    this.atActualDeparture = TrainNotifier.DateTimeFormats.formatTimeDuration(this.departure.add(moment.duration(currentDelay, 'minutes')));
                                 }
                             }
                         }

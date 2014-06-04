@@ -130,7 +130,7 @@
                                 </a>
                             </td>
                             <td class="centerText platform">
-                                <a data-bind="text: fromPlatform, attr: { href: 'trains/' + trainId + '/' + departureDate }, css: { estimate: fromPlatformEstimate, 'non-estimate': !fromPlatformEstimate }"></a>
+                                <a data-bind="text: fromPlatform, attr: { href: 'trains/' + trainId + '/' + departureDate }"></a>
                             </td>
                             <!-- 3 -->
                             <td class="visible-md visible-lg time advanced-col" title="WTT Departure">
@@ -139,13 +139,13 @@
                             <td class="visible-md visible-lg time" title="Public Departure">
                                 <a data-bind="text: publicDeparture, attr: { href: 'trains/' + trainId + '/' + departureDate }"></a>
                             </td>
-                            <td class="visible-md visible-lg time" title="Actual Departure">
-                                <a data-bind="text: actualDeparture, attr: { href: 'trains/' + trainId + '/' + departureDate }, css: { estimate: actualDepartureEstimate, 'non-estimate': !actualDepartureEstimate }"></a>
+                            <td class="visible-md visible-lg time actual" title="Actual Departure">
+                                <a data-bind="text: actualDeparture, attr: { href: 'trains/' + trainId + '/' + departureDate }"></a>
                             </td>
                             <td class="visible-xs visible-sm time">
                                 <a data-bind="attr: { href: 'trains/' + trainId + '/' + departureDate }">
                                     <!-- ko if: actualDeparture -->
-                                    <span data-bind="text: actualDeparture, css: { estimate: actualDepartureEstimate, 'non-estimate': !actualDepartureEstimate }"></span>
+                                    <span class="actual" data-bind="text: actualDeparture"></span>
                                     <!-- /ko -->
                                     <!-- ko if: !actualDeparture -->
                                     <!-- ko if: publicDeparture -->
@@ -165,7 +165,7 @@
                                 </a>
                             </td>
                             <td class="centerText platform">
-                                <a data-bind="text: toPlatform, attr: { href: 'trains/' + trainId + '/' + departureDate }, css: { estimate: toPlatformEstimate, 'non-estimate': !toPlatformEstimate }"></a>
+                                <a data-bind="text: toPlatform, attr: { href: 'trains/' + trainId + '/' + departureDate }"></a>
                             </td>
                             <!-- 5 -->
                             <td class="visible-md visible-lg time advanced-col" title="WTT Arrival">
@@ -174,13 +174,13 @@
                             <td class="visible-md visible-lg time" title="Public Arrival">
                                 <a data-bind="text: publicArrival, attr: { href: 'trains/' + trainId + '/' + departureDate }"></a>
                             </td>
-                            <td class="visible-md visible-lg time" title="Actual Arrival">
-                                <a data-bind="text: actualArrival, attr: { href: 'trains/' + trainId + '/' + departureDate }, css: { estimate: actualArrivalEstimate, 'non-estimate': !actualArrivalEstimate }"></a>
+                            <td class="visible-md visible-lg time actual" title="Actual Arrival">
+                                <a data-bind="text: actualArrival, attr: { href: 'trains/' + trainId + '/' + departureDate }"></a>
                             </td>
                             <td class="visible-xs visible-sm time">
                                 <a data-bind="attr: { href: 'trains/' + trainId + '/' + departureDate }">
                                     <!-- ko if: actualArrival -->
-                                    <span data-bind="text: actualArrival, css: { estimate: actualArrivalEstimate, 'non-estimate': !actualArrivalEstimate }"></span>
+                                    <span class="actual" data-bind="text: actualArrival"></span>
                                     <!-- /ko -->
                                     <!-- ko if: !actualArrival -->
                                     <!-- ko if: publicArrival -->
@@ -250,13 +250,13 @@
                             <td class="visible-md visible-lg time" title="Public Arrival">
                                 <a data-bind="text: atPublicArrival, attr: { href: 'trains/' + trainId + '/' + departureDate }"></a>
                             </td>
-                            <td class="visible-md visible-lg time" title="Actual Arrival">
-                                <a data-bind="text: atActualArrival, attr: { href: 'trains/' + trainId + '/' + departureDate }, css: { estimate: atActualArrivalEstimate, 'non-estimate': !atActualArrivalEstimate }"></a>
+                            <td class="visible-md visible-lg time actual" title="Actual Arrival">
+                                <a data-bind="text: atActualArrival, attr: { href: 'trains/' + trainId + '/' + departureDate }"></a>
                             </td>
                             <td class="visible-xs visible-sm time">
                                 <a data-bind="attr: { href: 'trains/' + trainId + '/' + departureDate }">
                                     <!-- ko if: atActualArrival -->
-                                    <span data-bind="text: atActualArrival, css: { estimate: atActualArrivalEstimate, 'non-estimate': !atActualArrivalEstimate }"></span>
+                                    <span class="actual" data-bind="text: atActualArrival"></span>
                                     <!-- /ko -->
                                     <!-- ko if: !atActualArrival -->
                                     <!-- ko if: atPublicArrival && atPublicArrival == "Pass" -->
@@ -280,7 +280,7 @@
                             </td>
                             <!-- 4 -->
                             <td class="centerText platform">
-                                <a data-bind="text: atPlatform, attr: { href: 'trains/' + trainId + '/' + departureDate }, css: { estimate: atPlatformEstimate, 'non-estimate': !atPlatformEstimate }"></a>
+                                <a data-bind="text: atPlatform, attr: { href: 'trains/' + trainId + '/' + departureDate }"></a>
                             </td>
                             <!-- 5 -->
                             <td class="stationName" data-bind="css: toStationCss">
@@ -296,13 +296,13 @@
                             <td class="visible-md visible-lg time" title="Public Departure">
                                 <a data-bind="text: atPublicDeparture, attr: { href: 'trains/' + trainId + '/' + departureDate }"></a>
                             </td>
-                            <td class="visible-md visible-lg time" title="Actual Departure">
-                                <a data-bind="text: atActualDeparture, attr: { href: 'trains/' + trainId + '/' + departureDate}, css: { estimate: atActualDepartureEstimate, 'non-estimate': !atActualDepartureEstimate }"></a>
+                            <td class="visible-md visible-lg time actual" title="Actual Departure">
+                                <a data-bind="text: atActualDeparture, attr: { href: 'trains/' + trainId + '/' + departureDate}"></a>
                             </td>
                             <td class="visible-xs visible-sm time">
                                 <a data-bind="attr: { href: 'trains/' + trainId + '/' + departureDate }">
                                     <!-- ko if: atActualDeparture -->
-                                    <span data-bind="text: atActualDeparture, css: { estimate: atActualDepartureEstimate, 'non-estimate': !atActualDepartureEstimate }"></span>
+                                    <span class="actual" data-bind=" text atactualdeparture"></span>
                                     <!-- /ko -->
                                     <!-- ko if: !atActualDeparture -->
                                     <!-- ko if: atPublicDeparture && atPublicDeparture == "Pass" -->
@@ -400,7 +400,7 @@
                             <td class="visible-xs visible-sm pass">
                                 <a data-bind="attr: { href: 'trains/' + trainId + '/' + departureDate }">Pass</a>
                             </td>
-                            <td class="visible-md visible-lg pass time" title="Actual Departure">
+                            <td class="visible-md visible-lg pass time actual" title="Actual Departure">
                                 <a data-bind="text: actualDeparture, attr: { href: 'trains/' + trainId + '/' + departureDate }"></a>
                             </td>
                             <!-- /ko -->
@@ -414,14 +414,14 @@
                             <td class="visible-md visible-lg time" title="Public Departure">
                                 <a data-bind="text: publicDeparture, attr: { href: 'trains/' + trainId + '/' + departureDate }"></a>
                             </td>
-                            <td class="visible-md visible-lg time" title="Actual Departure">
+                            <td class="visible-md visible-lg time actual" title="Actual Departure">
                                 <a data-bind="text: actualDeparture, attr: { href: 'trains/' + trainId + '/' + departureDate }"></a>
                             </td>
                             <!-- /ko -->
                             <td class="visible-xs visible-sm time" data-bind="css: { pass: passDeparture }" colspan="2">
                                 <a data-bind="attr: { href: 'trains/' + trainId + '/' + departureDate }">
                                     <!-- ko if: actualDeparture -->
-                                    <span style=" font-weight: bold;" data-bind="text: actualDeparture">
+                                    <span class="actual" data-bind="text: actualDeparture">
                                     </span>
                                     <!-- /ko -->
                                     <!-- ko if: !actualDeparture -->
@@ -448,7 +448,7 @@
                             <td class="visible-xs visible-sm pass">
                                 <a data-bind="attr: { href: 'trains/' + trainId + '/' + departureDate }">Pass</a>
                             </td>
-                            <td class="visible-md visible-lg pass time" title="Actual Arrival">
+                            <td class="visible-md visible-lg pass time actual" title="Actual Arrival">
                                 <a data-bind="text: actualArrival, attr: { href: 'trains/' + trainId + '/' + departureDate }"></a>
                             </td>
                             <!-- /ko -->
@@ -462,14 +462,14 @@
                             <td class="visible-md visible-lg time" title="Public Arrival">
                                 <a data-bind="text: publicArrival, attr: { href: 'trains/' + trainId + '/' + departureDate }"></a>
                             </td>
-                            <td class="visible-md visible-lg time" title="Actual Arrival">
+                            <td class="visible-md visible-lg time actual" title="Actual Arrival">
                                 <a data-bind="text: actualArrival, attr: { href: 'trains/' + trainId + '/' + departureDate }"></a>
                             </td>
                             <!-- /ko -->
                             <td class="visible-xs visible-sm time" data-bind="css: { pass: passArrival }" colspan="2">
                                 <a data-bind="attr: { href: 'trains/' + trainId + '/' + departureDate }">
                                     <!-- ko if: actualArrival -->
-                                    <span style=" font-weight: bold;" data-bind="text: actualArrival">
+                                    <span class="actual" data-bind="text: actualArrival">
                                     </span>
                                     <!-- /ko -->
                                     <!-- ko if: !actualArrival -->
@@ -570,7 +570,7 @@
                             <td class="visible-xs visible-sm pass">
                                 <a data-bind="attr: { href: 'trains/' + trainId + '/' + departureDate }">Pass</a>
                             </td>
-                            <td class="visible-md visible-lg pass time" title="Actual Arrival">
+                            <td class="visible-md visible-lg pass time actual" title="Actual Arrival">
                                 <a data-bind="text: actualArrival, attr: { href: 'trains/' + trainId + '/' + departureDate }"></a>
                             </td>
                             <!-- /ko -->
@@ -584,14 +584,14 @@
                             <td class="visible-md visible-lg time" title="Public Arrival">
                                 <a data-bind="text: publicArrival, attr: { href: 'trains/' + trainId + '/' + departureDate }"></a>
                             </td>
-                            <td class="visible-md visible-lg time" title="Actual Arrival">
+                            <td class="visible-md visible-lg time actual" title="Actual Arrival">
                                 <a data-bind="text: actualArrival, attr: { href: 'trains/' + trainId + '/' + departureDate }"></a>
                             </td>
                             <!-- /ko -->
                             <td class="visible-xs visible-sm time" data-bind="css: { pass: passArrival }" colspan="2">
                                 <a data-bind="attr: { href: 'trains/' + trainId + '/' + departureDate }">
                                     <!-- ko if: actualArrival -->
-                                    <span style=" font-weight: bold;" data-bind="text: actualArrival">
+                                    <span class="actual" data-bind="text: actualArrival">
                                     </span>
                                     <!-- /ko -->
                                     <!-- ko if: !actualArrival -->
@@ -618,7 +618,7 @@
                             <td class="visible-xs visible-sm pass">
                                 <a data-bind="attr: { href: 'trains/' + trainId + '/' + departureDate }">Pass</a>
                             </td>
-                            <td class="visible-md visible-lg pass time" title="Actual Departure">
+                            <td class="visible-md visible-lg pass time actual" title="Actual Departure">
                                 <a data-bind="text: actualDeparture, attr: { href: 'trains/' + trainId + '/' + departureDate }"></a>
                             </td>
                             <!-- /ko -->
@@ -632,14 +632,14 @@
                             <td class="visible-md visible-lg time" title="Public Departure">
                                 <a data-bind="text: publicDeparture, attr: { href: 'trains/' + trainId + '/' + departureDate }"></a>
                             </td>
-                            <td class="visible-md visible-lg time" title="Actual Departure">
+                            <td class="visible-md visible-lg time actual" title="Actual Departure">
                                 <a data-bind="text: actualDeparture, attr: { href: 'trains/' + trainId + '/' + departureDate }"></a>
                             </td>
                             <!-- /ko -->
                             <td class="visible-xs visible-sm time" data-bind="css: { pass: passDeparture }" colspan="2">
                                 <a data-bind="attr: { href: 'trains/' + trainId + '/' + departureDate }">
                                     <!-- ko if: actualDeparture -->
-                                    <span style=" font-weight: bold;" data-bind="text: actualDeparture">
+                                    <span class="actual" data-bind="text: actualDeparture">
                                     </span>
                                     <!-- /ko -->
                                     <!-- ko if: !actualDeparture -->
@@ -670,7 +670,5 @@
         <span class="glyphicon glyphicon-info-sign"></span>&nbsp;<abbr title="Working Timetable">WTT</abbr> times and Passing, <abbr title="Empty Coaching Stock">ECS</abbr> and <abbr title="Freight or Other Operator">TOC-ZZ</abbr> trains will be hidden in Simple Mode.
         <br />
         <span class="glyphicon glyphicon-info-sign"></span>&nbsp;Trains in <em>italics</em> are non-activated trains. This means they may not run. Trains are typically activated a few hours before scheduled departure time.
-        <br />
-        <span class="glyphicon glyphicon-info-sign"></span>&nbsp;Actual times in <em>italics</em> are estimates. Times in <strong>bold</strong> are actual times.
     </p>
 </div>

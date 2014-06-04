@@ -401,21 +401,29 @@ var TrainNotifier;
         function StationTiploc() {
         }
         StationTiploc.findStationTiplocs = function (stanoxCode, tiplocs) {
-            return tiplocs.filter(function (element) {
-                return element.Stanox == stanoxCode;
-            });
+            var cached = StationTiploc.tiplocByStanoxCache[stanoxCode];
+            if (!cached) {
+                cached = tiplocs.filter(function (element) {
+                    return element.Stanox == stanoxCode;
+                });
+                StationTiploc.tiplocByStanoxCache[stanoxCode] = cached;
+            }
+            return cached;
         };
+
         StationTiploc.findStationTiploc = function (stanoxCode, tiplocs) {
             var results = StationTiploc.findStationTiplocs(stanoxCode, tiplocs);
             if (results && results.length > 0)
                 return results[0];
             return null;
         };
+
         StationTiploc.stationTiplocMatches = function (tiploc, tiplocs) {
             return tiplocs.some(function (t) {
                 return t.CRS == tiploc.CRS || t.Stanox == tiploc.Stanox;
             });
         };
+
         StationTiploc.toDisplayString = function (tiploc, lowercase) {
             if (typeof lowercase === "undefined") { lowercase = true; }
             var value = (tiploc.StationName && tiploc.StationName.length > 0 ? tiploc.StationName : tiploc.Description && tiploc.Description.length > 0 ? tiploc.Description : tiploc.Tiploc);
@@ -423,6 +431,7 @@ var TrainNotifier;
                 return value.toLowerCase();
             return value;
         };
+        StationTiploc.tiplocByStanoxCache = {};
         return StationTiploc;
     })();
     TrainNotifier.StationTiploc = StationTiploc;

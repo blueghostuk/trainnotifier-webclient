@@ -14,14 +14,12 @@ module TrainNotifier.KnockoutModels.Train {
         public wttArrive: string = null;
         public publicArrive: string = null;
         public actualArrival: KnockoutComputed<string>;
-        private estimateArrival = ko.observable<string>(null);
         public arrivalDelay: KnockoutComputed<number>;
         public arrivalDelayCss: KnockoutComputed<string>;
         public arrivalCss: KnockoutComputed<string>;
         public wttDepart: string = null;
         public publicDepart: string = null;
         public actualDeparture: KnockoutComputed<string>;
-        private estimateDeparture = ko.observable<string>(null);
         public departureDelay: KnockoutComputed<number>;
         public departureDelayCss: KnockoutComputed<string>;
         public departureCss: KnockoutComputed<string>;
@@ -36,13 +34,7 @@ module TrainNotifier.KnockoutModels.Train {
         public stopNumber: number;
         public changePlatform = ko.observable<boolean>(false);
 
-        private isEstimateArrival = ko.observable<boolean>(true);
-        private isEstimateDeparture = ko.observable<boolean>(true);
         private associateLiveStop = ko.observable<LiveStopBase>();
-
-        private previousStop: ScheduleStop = null;
-
-        private delay: Duration;
 
         constructor(scheduleStop: IRunningScheduleTrainStop, tiplocs: IStationTiploc[]) {
             var tiploc = StationTiploc.findStationTiploc(scheduleStop.TiplocStanoxCode, tiplocs);
@@ -86,7 +78,7 @@ module TrainNotifier.KnockoutModels.Train {
                 if (self.associateLiveStop())
                     arrival = self.associateLiveStop().actualArrival();
 
-                return arrival ? arrival : self.estimateArrival() ? self.estimateArrival() : self.publicArrive;
+                return arrival ? arrival : self.publicArrive;
             });
             this.arrivalDelay = ko.computed(function () {
                 if (self.associateLiveStop())
@@ -98,7 +90,7 @@ module TrainNotifier.KnockoutModels.Train {
                 return self.getDelayCss(self.arrivalDelay());
             }).extend({ throttle: 500 });
             this.arrivalCss = ko.computed(function () {
-                return self.getDelayCss(self.arrivalDelay(), self.isEstimateArrival() ? "estimate " : "non-estimate ", "");
+                return self.getDelayCss(self.arrivalDelay(), "");
             }).extend({ throttle: 500 });
 
             this.actualDeparture = ko.computed(function () {
@@ -106,7 +98,7 @@ module TrainNotifier.KnockoutModels.Train {
                 if (self.associateLiveStop())
                     departure = self.associateLiveStop().actualDeparture();
 
-                return departure ? departure : self.estimateDeparture() ? self.estimateDeparture() : self.publicDepart ? self.publicDepart : self.pass ? self.pass : null;
+                return departure ? departure : self.publicDepart ? self.publicDepart : self.pass ? self.pass : null;
             });
             this.departureDelay = ko.computed(function () {
                 if (self.associateLiveStop())
@@ -118,25 +110,23 @@ module TrainNotifier.KnockoutModels.Train {
                 return self.getDelayCss(self.departureDelay());
             }).extend({ throttle: 500 });
             this.departureCss = ko.computed(function () {
-                return self.getDelayCss(self.departureDelay(), self.isEstimateDeparture() ? "estimate " : "non-estimate ", "");
+                return self.getDelayCss(self.departureDelay(), "");
             }).extend({ throttle: 500 });
         }
 
-        private getDelayCss(value: Number, prefix = "", defaultValue: string = "hidden") {
+        private getDelayCss(value: Number, defaultValue: string = "hidden") {
             if (value < 0)
-                return prefix + "alert-info";
+                return "alert-info";
             if (value > 10)
-                return prefix + "alert-important";
+                return "alert-important";
             if (value > 0)
-                return prefix + "alert-warning";
+                return "alert-warning";
 
-            return prefix + defaultValue;
+            return defaultValue;
         }
 
         associateWithLiveStop(liveStop: LiveStopBase) {
             this.associateLiveStop(liveStop);
-            this.isEstimateArrival(liveStop.actualArrival() == null);
-            this.isEstimateDeparture(liveStop.actualDeparture() == null);
             if ((liveStop.platform() != null) && (liveStop.platform() != this.platform)) {
                 this.actualPlatform(liveStop.platform());
                 this.changePlatform(true);
@@ -148,44 +138,6 @@ module TrainNotifier.KnockoutModels.Train {
                 return false;
 
             return liveStop.locationStanox === this.locationStanox;
-        }
-
-        associateWithPreviousStop(previousStop: ScheduleStop) {
-            this.previousStop = previousStop;
-        }
-
-        estimateFromPreviousStop() {
-            if (this.previousStop == null || (!this.isEstimateArrival() && !this.isEstimateDeparture()))
-                return;
-
-            var previousExpected = this.previousStop.publicDepart ? this.previousStop.publicDepart : this.previousStop.pass;
-            var previousActual = this.previousStop.actualDeparture();
-            if (!previousExpected || !previousActual)
-                return;
-
-            var previousExpectedDuration = moment.duration(previousExpected);
-            var delay = moment.duration(previousActual).subtract(previousExpectedDuration);
-            if (delay.asSeconds() <= 0)
-                return;
-
-            this.delay = delay;
-
-            if (this.wttArrive && (!this.associateLiveStop() || !this.associateLiveStop().actualArrival())) {
-                var arr = moment.duration(this.wttArrive);
-                var est = arr.add(delay);
-                this.estimateArrival(DateTimeFormats.formatTimeDuration(est));
-
-            }
-            if (this.wttDepart && (!this.associateLiveStop() || !this.associateLiveStop().actualDeparture())) {
-                var dept = moment.duration(this.wttDepart);
-                var est = dept.add(delay);
-                this.estimateDeparture(DateTimeFormats.formatTimeDuration(est));
-            }
-            if (this.pass && (!this.associateLiveStop() || !this.associateLiveStop().actualDeparture())) {
-                var dept = moment.duration(this.pass);
-                var est = dept.add(delay);
-                this.estimateDeparture(DateTimeFormats.formatTimeDuration(est));
-            }
         }
     }
 

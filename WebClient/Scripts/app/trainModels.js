@@ -12,10 +12,8 @@ var TrainNotifier;
                 function ScheduleStop(scheduleStop, tiplocs) {
                     this.wttArrive = null;
                     this.publicArrive = null;
-                    this.estimateArrival = ko.observable(null);
                     this.wttDepart = null;
                     this.publicDepart = null;
-                    this.estimateDeparture = ko.observable(null);
                     this.line = null;
                     this.platform = null;
                     this.actualPlatform = ko.observable();
@@ -25,10 +23,7 @@ var TrainNotifier;
                     this.pass = null;
                     this.cancel = ko.observable(false);
                     this.changePlatform = ko.observable(false);
-                    this.isEstimateArrival = ko.observable(true);
-                    this.isEstimateDeparture = ko.observable(true);
                     this.associateLiveStop = ko.observable();
-                    this.previousStop = null;
                     var tiploc = TrainNotifier.StationTiploc.findStationTiploc(scheduleStop.TiplocStanoxCode, tiplocs);
                     this.stopNumber = scheduleStop.StopNumber;
                     this.location = tiploc.Description ? tiploc.Description.toLowerCase() : tiploc.Tiploc;
@@ -70,7 +65,7 @@ var TrainNotifier;
                         if (self.associateLiveStop())
                             arrival = self.associateLiveStop().actualArrival();
 
-                        return arrival ? arrival : self.estimateArrival() ? self.estimateArrival() : self.publicArrive;
+                        return arrival ? arrival : self.publicArrive;
                     });
                     this.arrivalDelay = ko.computed(function () {
                         if (self.associateLiveStop())
@@ -82,7 +77,7 @@ var TrainNotifier;
                         return self.getDelayCss(self.arrivalDelay());
                     }).extend({ throttle: 500 });
                     this.arrivalCss = ko.computed(function () {
-                        return self.getDelayCss(self.arrivalDelay(), self.isEstimateArrival() ? "estimate " : "non-estimate ", "");
+                        return self.getDelayCss(self.arrivalDelay(), "");
                     }).extend({ throttle: 500 });
 
                     this.actualDeparture = ko.computed(function () {
@@ -90,7 +85,7 @@ var TrainNotifier;
                         if (self.associateLiveStop())
                             departure = self.associateLiveStop().actualDeparture();
 
-                        return departure ? departure : self.estimateDeparture() ? self.estimateDeparture() : self.publicDepart ? self.publicDepart : self.pass ? self.pass : null;
+                        return departure ? departure : self.publicDepart ? self.publicDepart : self.pass ? self.pass : null;
                     });
                     this.departureDelay = ko.computed(function () {
                         if (self.associateLiveStop())
@@ -102,26 +97,23 @@ var TrainNotifier;
                         return self.getDelayCss(self.departureDelay());
                     }).extend({ throttle: 500 });
                     this.departureCss = ko.computed(function () {
-                        return self.getDelayCss(self.departureDelay(), self.isEstimateDeparture() ? "estimate " : "non-estimate ", "");
+                        return self.getDelayCss(self.departureDelay(), "");
                     }).extend({ throttle: 500 });
                 }
-                ScheduleStop.prototype.getDelayCss = function (value, prefix, defaultValue) {
-                    if (typeof prefix === "undefined") { prefix = ""; }
+                ScheduleStop.prototype.getDelayCss = function (value, defaultValue) {
                     if (typeof defaultValue === "undefined") { defaultValue = "hidden"; }
                     if (value < 0)
-                        return prefix + "alert-info";
+                        return "alert-info";
                     if (value > 10)
-                        return prefix + "alert-important";
+                        return "alert-important";
                     if (value > 0)
-                        return prefix + "alert-warning";
+                        return "alert-warning";
 
-                    return prefix + defaultValue;
+                    return defaultValue;
                 };
 
                 ScheduleStop.prototype.associateWithLiveStop = function (liveStop) {
                     this.associateLiveStop(liveStop);
-                    this.isEstimateArrival(liveStop.actualArrival() == null);
-                    this.isEstimateDeparture(liveStop.actualDeparture() == null);
                     if ((liveStop.platform() != null) && (liveStop.platform() != this.platform)) {
                         this.actualPlatform(liveStop.platform());
                         this.changePlatform(true);
@@ -133,43 +125,6 @@ var TrainNotifier;
                         return false;
 
                     return liveStop.locationStanox === this.locationStanox;
-                };
-
-                ScheduleStop.prototype.associateWithPreviousStop = function (previousStop) {
-                    this.previousStop = previousStop;
-                };
-
-                ScheduleStop.prototype.estimateFromPreviousStop = function () {
-                    if (this.previousStop == null || (!this.isEstimateArrival() && !this.isEstimateDeparture()))
-                        return;
-
-                    var previousExpected = this.previousStop.publicDepart ? this.previousStop.publicDepart : this.previousStop.pass;
-                    var previousActual = this.previousStop.actualDeparture();
-                    if (!previousExpected || !previousActual)
-                        return;
-
-                    var previousExpectedDuration = moment.duration(previousExpected);
-                    var delay = moment.duration(previousActual).subtract(previousExpectedDuration);
-                    if (delay.asSeconds() <= 0)
-                        return;
-
-                    this.delay = delay;
-
-                    if (this.wttArrive && (!this.associateLiveStop() || !this.associateLiveStop().actualArrival())) {
-                        var arr = moment.duration(this.wttArrive);
-                        var est = arr.add(delay);
-                        this.estimateArrival(TrainNotifier.DateTimeFormats.formatTimeDuration(est));
-                    }
-                    if (this.wttDepart && (!this.associateLiveStop() || !this.associateLiveStop().actualDeparture())) {
-                        var dept = moment.duration(this.wttDepart);
-                        var est = dept.add(delay);
-                        this.estimateDeparture(TrainNotifier.DateTimeFormats.formatTimeDuration(est));
-                    }
-                    if (this.pass && (!this.associateLiveStop() || !this.associateLiveStop().actualDeparture())) {
-                        var dept = moment.duration(this.pass);
-                        var est = dept.add(delay);
-                        this.estimateDeparture(TrainNotifier.DateTimeFormats.formatTimeDuration(est));
-                    }
                 };
                 return ScheduleStop;
             })();

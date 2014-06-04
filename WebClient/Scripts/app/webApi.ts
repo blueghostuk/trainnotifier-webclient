@@ -37,15 +37,6 @@ interface IWebApi {
     getBerthContents(berth: string): JQueryPromise<any>;
 }
 
-interface IEstimate {
-    Arrival?: Moment;
-    PublicArrival?: Moment;
-    Departure?: Moment;
-    PublicDeparture?: Moment;
-    Pass?: Moment;
-    CurrentDelay: number;
-}
-
 // hack to get below to compile, javascript generated works fine
 interface JQueryPromise<T> {
     then<U>(onFulfill: (stationTiplocs: IStationTiploc[], any) => U, onReject?: (...reasons: any[]) => U, onProgress?: (...progression: any[]) => any): JQueryPromise<U>;
@@ -453,23 +444,34 @@ module TrainNotifier {
     }
 
     export class StationTiploc {
+
+        private static tiplocByStanoxCache: { [index: string]: Array<IStationTiploc>; } = {};
+
         public static findStationTiplocs(stanoxCode: string, tiplocs: IStationTiploc[]) {
-            return tiplocs.filter(function (element: IStationTiploc) {
-                return element.Stanox == stanoxCode;
-            });
+            var cached = StationTiploc.tiplocByStanoxCache[stanoxCode];
+            if (!cached) {
+                cached = tiplocs.filter(function (element: IStationTiploc) {
+                    return element.Stanox == stanoxCode;
+                });
+                StationTiploc.tiplocByStanoxCache[stanoxCode] = cached;
+            }
+            return cached;
         }
+
         public static findStationTiploc(stanoxCode: string, tiplocs: IStationTiploc[]) {
             var results = StationTiploc.findStationTiplocs(stanoxCode, tiplocs);
             if (results && results.length > 0)
                 return results[0];
             return null;
         }
+
         public static stationTiplocMatches(tiploc: IStationTiploc, tiplocs: IStationTiploc[]) {
             return tiplocs.some(function (t) {
                 return t.CRS == tiploc.CRS ||
                     t.Stanox == tiploc.Stanox;
             });
         }
+
         public static toDisplayString(tiploc: IStationTiploc, lowercase: boolean = true) {
             var value = (tiploc.StationName && tiploc.StationName.length > 0 ? tiploc.StationName :
                 tiploc.Description && tiploc.Description.length > 0 ? tiploc.Description : tiploc.Tiploc);
@@ -841,8 +843,6 @@ interface IRunningScheduleTrainStop {
     Origin: boolean;
     Intermediate: boolean;
     Terminate: boolean;
-
-    Estimate?: IEstimate;
 }
 
 interface ICancellation {
