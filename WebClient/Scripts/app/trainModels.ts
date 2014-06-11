@@ -74,11 +74,9 @@ module TrainNotifier.KnockoutModels.Train {
 
             var self = this;
             this.actualArrival = ko.computed(function () {
-                var arrival: string = null;
                 if (self.associateLiveStop())
-                    arrival = self.associateLiveStop().actualArrival();
-
-                return arrival ? arrival : self.publicArrive;
+                    return self.associateLiveStop().actualArrival();
+                return null;
             });
             this.arrivalDelay = ko.computed(function () {
                 if (self.associateLiveStop())
@@ -94,11 +92,9 @@ module TrainNotifier.KnockoutModels.Train {
             }).extend({ throttle: 500 });
 
             this.actualDeparture = ko.computed(function () {
-                var departure: string = null;
                 if (self.associateLiveStop())
-                    departure = self.associateLiveStop().actualDeparture();
-
-                return departure ? departure : self.publicDepart ? self.publicDepart : self.pass ? self.pass : null;
+                    return self.associateLiveStop().actualDeparture();
+                return null;
             });
             this.departureDelay = ko.computed(function () {
                 if (self.associateLiveStop())
