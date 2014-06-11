@@ -1252,6 +1252,15 @@ interface JQueryStatic {
      * @param keepScripts A Boolean indicating whether to include scripts passed in the HTML string
      */
     parseHTML(data: string, context?: HTMLElement, keepScripts?: boolean): any[];
+
+    /**
+     * Parses a string into an array of DOM nodes.
+     *
+     * @param data HTML string to be parsed
+     * @param context DOM element to serve as the context in which the HTML fragment will be created
+     * @param keepScripts A Boolean indicating whether to include scripts passed in the HTML string
+     */
+    parseHTML(data: string, context?: Document, keepScripts?: boolean): any[];
 }
 
 /**
@@ -1359,13 +1368,6 @@ interface JQuery {
      * @param value A value to set for the attribute.
      */
     attr(attributeName: string, value: number): JQuery;
-    /**
-     * Used to set disabled attribute, it may be wrong but it actually works
-     *
-     * @param attributeName The name of the attribute to set.
-     * @param value A value to set for the attribute.
-     */
-    attr(attributeName: string, value: boolean): JQuery;
     /**
      * Set one or more attributes for the set of matched elements.
      *
