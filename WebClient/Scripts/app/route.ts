@@ -212,7 +212,7 @@ function updateBerthContents() {
                     berth.contents(data.m_Item2);
                 } else {
                     berth.timestamp(moment().format(Berth.TsFormat));
-                    berth.contents(null);
+                    berth.contents("");
                 }
             });
         });
