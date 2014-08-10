@@ -302,7 +302,7 @@
                             <td class="visible-xs visible-sm time">
                                 <a data-bind="attr: { href: 'trains/' + trainId + '/' + departureDate }">
                                     <!-- ko if: atActualDeparture -->
-                                    <span class="actual" data-bind=" text atactualdeparture"></span>
+                                    <span class="actual" data-bind="text: atActualDeparture"></span>
                                     <!-- /ko -->
                                     <!-- ko if: !atActualDeparture -->
                                     <!-- ko if: atPublicDeparture && atPublicDeparture == "Pass" -->
