@@ -1,7 +1,6 @@
 /// <reference path="tocs.ts" />
 /// <reference path="global.ts" />
 /// <reference path="webApi.ts" />
-/// <reference path="../typings/bootstrap.datepicker/bootstrap.datepicker.d.ts" />
 /// <reference path="../typings/moment/moment.d.ts" />
 /// <reference path="../typings/bootstrap/bootstrap.d.ts" />
 /// <reference path="../typings/knockout/knockout.d.ts" />
@@ -31,14 +30,6 @@ $(function () {
     webApi = new TrainNotifier.WebApi();
     TrainNotifier.Common.webApi = webApi;
 
-    $('.datepicker').datepicker({
-        format: 'dd/mm/yyyy',
-        startDate: moment().subtract({ days: 14 }).toDate(),
-        weekStart: 1,
-        todayHighlight: true
-    }).on("changeDate", function () {
-            $(this).datepicker('hide');
-        });
     $("form").submit(function () {
         return showLocation();
     });
@@ -128,22 +119,21 @@ function showLocation() {
     var atStation: string = $("#at-crs").val();
     var atCrs = findStation(atStation);
 
-    var dateVal = $("#date-picker").val();
-    var date;
-    if (dateVal && dateVal.length > 0) {
-        dateVal = getDate(dateVal);
-        if (dateVal && dateVal.isValid()) {
+    var date = $("#date-picker").val();
+    if (date && date.length > 0) {
+        var dateVal = moment(date, "YYYY-MM-DD");
+        if (dateVal.isValid()) {
             date = "/" + dateVal.format(TrainNotifier.DateTimeFormats.dateUrlFormat);
         }
     } else {
         date = "/" + moment().format(TrainNotifier.DateTimeFormats.dateUrlFormat);
     }
-    var time = "";
-    var timeVal = $("#time-picker").val();
-    if (timeVal && timeVal.length > 0) {
-        timeVal = getTime(timeVal);
-        if (timeVal && timeVal.isValid()) {
-            time = "/" + timeVal.format(TrainNotifier.DateTimeFormats.timeUrlFormat)
+
+    var time = $("#time-picker").val();
+    if (time && time.length > 0) {
+        var timeVal = moment(time, TrainNotifier.DateTimeFormats.timeUrlFormat);
+        if (timeVal.isValid()) {
+            time = "/" + timeVal.format(TrainNotifier.DateTimeFormats.timeUrlFormat);
         }
     } else {
         time = "/" + moment().format(TrainNotifier.DateTimeFormats.timeUrlFormat);
@@ -166,29 +156,6 @@ function showLocation() {
     }
 
     return false;
-}
-
-function getDate(dateVal) {
-    var d = moment(dateVal, "DD-MM-YYYY");
-    if (d.isValid())
-        return d;
-    d = moment(dateVal, "DD/MM/YYYY");
-    if (d.isValid())
-        return d;
-    d = moment(dateVal, "DDMMYYYY");
-    if (d.isValid())
-        return d;
-    return null;
-}
-
-function getTime(timeVal) {
-    var t = moment(timeVal, "HH:mm");
-    if (t.isValid())
-        return t;
-    t = moment(timeVal, "HHmm");
-    if (t.isValid())
-        return t;
-    return null;
 }
 
 function lookupLocalFrom() {

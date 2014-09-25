@@ -70,12 +70,12 @@
             <br />
             <div class="input-group input-group-sm" style="width:100%;">
                 <span class="input-group-addon">On:&nbsp;<span class="glyphicon glyphicon-calendar"></span></span>
-                <input type="text" class="form-control datepicker" placeholder="Date as DD/MM/YYYY (default to today)" id="date-picker" />
+                <input type="date" class="form-control" value="@DateTime.Today.ToString("yyyy-MM-dd")" id="date-picker" />
             </div>
             <br />
             <div class="input-group input-group-sm" style="width:100%;">
                 <span class="input-group-addon">At:&nbsp;<span class="glyphicon glyphicon-time"></span></span>
-                <input type="text" class="form-control" placeholder="Time as HH:mm (default to around now)" id="time-picker" />
+                <input type="time" class="form-control" value="@DateTime.Now.ToString("HH:mm")" id="time-picker" />
             </div>
             <br />
             <div class="input-group input-group-sm" style="width:100%;">
