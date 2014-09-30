@@ -1,16 +1,8 @@
-/// <reference path="../typings/moment/moment.d.ts" />
-/// <reference path="websockets.ts" />
-/// <reference path="../typings/knockout/knockout.d.ts" />
-/// <reference path="global.ts" />
-/// <reference path="webApi.ts" />
-/// <reference path="../typings/moment/moment.d.ts" />
-/// <reference path="../typings/jquery/jquery.d.ts" />
-
 var _locations;
 
 var webSockets = new TrainNotifier.WebSockets();
 
-var thisPage: IPage = {
+var thisPage = {
     settingHash: false,
     setStatus: function (status) {
         $("#status").html(status);
@@ -21,8 +13,8 @@ var thisPage: IPage = {
         if (station.length > 0) {
             var fromCrs = station.substr(station.lastIndexOf('(') + 1, 3);
             if (fromCrs.length == 3) {
-                TrainNotifier.Common.webApi.getStanoxByCrsCode(fromCrs).done(function (tiplocCode: ITiploc) {
-                    webSockets.send("substanox:" + tiplocCode.Stanox)
+                TrainNotifier.Common.webApi.getStanoxByCrsCode(fromCrs).done(function (tiplocCode) {
+                    webSockets.send("substanox:" + tiplocCode.Stanox);
                 });
                 return;
             }
@@ -32,7 +24,7 @@ var thisPage: IPage = {
 };
 
 TrainNotifier.Common.page = thisPage;
-var webApi: IWebApi;
+var webApi;
 
 $(function () {
     webApi = new TrainNotifier.WebApi();
@@ -40,7 +32,7 @@ $(function () {
 
     $("#filter-location").attr("placeholder", "Loading stations ...");
 
-    webApi.getStations().done(function (results: IStationTiploc[]) {
+    webApi.getStations().done(function (results) {
         var locations = [];
         for (var i = 0; i < results.length; i++) {
             locations.push(results[i].StationName + ' (' + results[i].CRS + ' - ' + results[i].Tiploc + ')');
@@ -52,7 +44,7 @@ $(function () {
     });
 });
 
-function sortTrainId(trainId: string) {
+function sortTrainId(trainId) {
     if (!trainId || trainId.length == 0)
         return;
 
@@ -73,7 +65,7 @@ function sortTrainId(trainId: string) {
     $(header).after(ordered);
 }
 
-function addMessage(message: string, parent?: string) {
+function addMessage(message, parent) {
     if (parent) {
         $("#" + parent).after(message);
     } else {
@@ -89,7 +81,7 @@ function connectWs() {
     webSockets.connect();
 
     webSockets.onMessageHandler(function (msg) {
-        var data: any = jQuery.parseJSON(msg.data);
+        var data = jQuery.parseJSON(msg.data);
         if (data.Response)
             data = data.Response;
         thisPage.setStatus("Received " + data.length + " messages at " + new Date(Date.now()).toLocaleString());
@@ -105,7 +97,7 @@ function connectWs() {
 
             var existing = $("#" + message.train_id).length == 1;
             var cls = "";
-            var parent: string;
+            var parent;
             if (existing) {
                 $("." + message.train_id).addClass(message.loc_stanox);
                 cls = $("#" + message.train_id).attr('class');

@@ -10,14 +10,8 @@
 }
 @section TopMenu{
     <li><a href="~/">Home</a></li>
-    <li class="dropdown">
-        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Live <b class="caret"></b></a>
-        <ul class="dropdown-menu">
-            <li><a class="active">Routes</a></li>
-            <li><a href="http://www.whattrain.co.uk/" target="_blank">Stations</a></li>
-            <li><a href="~/live">Live Feed</a></li>
-        </ul>
-    </li>
+    <li><a class="active">Routes</a></li>
+    <li><a href="http://www.whattrain.co.uk/" target="_blank">Stations</a></li>
     <li><a href="~/ppm">PPM</a></li>
     <li><a href="~/about">About</a></li>
 }
@@ -45,8 +39,7 @@
                     <td class="comment down label" data-bind="css: { 'label-primary': down.label, 'label-info': !down.label }">
                         <abbr data-bind="text: down.text, attr: { title: down.abbr }"></abbr>
                     </td>
-                    <td class="berth down" data-bind="text: down.contents, attr: { title: down.timestamp }, click: function () { showTrain(down); }">
-                    </td>
+                    <td class="berth down" data-bind="text: down.contents, attr: { title: down.timestamp }, click: function () { showTrain(down); }"></td>
                     <td class="berth up" data-bind="text: up.contents, attr: { title: up.timestamp }, click: function () { showTrain(up); }"></td>
                     <td class="comment up label" data-bind="css: { 'label-primary': down.label, 'label-info': !down.label }">
                         <abbr data-bind="text: up.text, attr: { title: up.abbr }"></abbr>
@@ -112,9 +105,9 @@
 </div>
 <!--/row-fluid-->
 <div class="row">
-    <p class="text-warning">
-        <i class="icon-info-sign"></i>&nbsp;The above berths are just my guestimation based on running trains. I plan to map this better at some point.<br />
+    <p class="text-warning info-text">
+        <i class="glyphicon glyphicon-info-sign"></i>&nbsp;The above boxes are just my guestimation based on running trains. I plan to map this better at some point.<br />
         Click on a train to view matched headcodes<br />
-        <i class="icon-info-sign"></i>&nbsp;Data is updated every 5 seconds
+        <i class="glyphicon glyphicon-info-sign"></i>&nbsp;Data is updated every 5 seconds
     </p>
 </div>

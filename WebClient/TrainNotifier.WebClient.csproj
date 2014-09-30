@@ -125,7 +125,6 @@
     <Content Include="bin\TrainNotifier.WebClient.dll" />
     <Content Include="bin\WebGrease.dll" />
     <Content Include="Content\app\history.css" />
-    <Content Include="Content\app\live.css" />
     <Content Include="Content\app\ppm.css" />
     <Content Include="Content\app\route.css" />
     <Content Include="Content\app\search-schedule.css" />
@@ -149,7 +148,6 @@
     <Content Include="Content\yeti.min.css" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
-    <Content Include="live.cshtml" />
     <Content Include="packages.config" />
     <Content Include="index.cshtml" />
     <Content Include="ppm.cshtml" />
@@ -180,7 +178,6 @@
     <TypeScriptCompile Include="Scripts\app\global.ts" />
     <TypeScriptCompile Include="Scripts\app\history.ts" />
     <TypeScriptCompile Include="Scripts\app\index.ts" />
-    <TypeScriptCompile Include="Scripts\app\live.ts" />
     <TypeScriptCompile Include="Scripts\app\ppmModels.ts" />
     <TypeScriptCompile Include="Scripts\app\routeModels.ts" />
     <TypeScriptCompile Include="Scripts\app\tocs.ts" />

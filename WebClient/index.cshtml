@@ -4,7 +4,7 @@
 @using System.Web.Optimization;
 @section CustomCss{
     <style type="text/css">
-        body{
+        body {
             padding-top: 0px !important;
             padding-bottom: 0px !important;
         }
@@ -15,14 +15,8 @@
 }
 @section TopMenu{
     <li class="active"><a>Home</a></li>
-    <li class="dropdown">
-        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Live <b class="caret"></b></a>
-        <ul class="dropdown-menu">
-            <li><a href="~/route">Routes</a></li>
-            <li><a href="http://www.whattrain.co.uk/" target="_blank">Stations</a></li>
-            <li><a href="~/live">Live Feed</a></li>
-        </ul>
-    </li>
+    <li><a href="~/route">Routes</a></li>
+    <li><a href="http://www.whattrain.co.uk/" target="_blank">Stations</a></li>
     <li><a href="~/ppm">PPM</a></li>
     <li><a href="~/about">About</a></li>
 }
@@ -93,7 +87,7 @@
     </div>
 </div>
 <div class="row">
-    <div class="col-sm-12">
+    <div class="col-sm-12 info-text">
         Search For Trains:
         <ul>
             <li>Starting From: a location</li>
