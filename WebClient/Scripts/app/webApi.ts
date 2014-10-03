@@ -445,12 +445,12 @@ module TrainNotifier {
 
     export class StationTiploc {
 
-        private static tiplocByStanoxCache: { [index: string]: Array<IStationTiploc>; } = {};
+        private static tiplocByStanoxCache: { [index: string]: IStationTiploc; } = {};
 
         public static findStationTiplocs(stanoxCode: string, tiplocs: IStationTiploc[]) {
             var cached = StationTiploc.tiplocByStanoxCache[stanoxCode];
             if (!cached) {
-                cached = tiplocs.filter(function (element: IStationTiploc) {
+                cached = StationTiploc.find(tiplocs, function (element: IStationTiploc) {
                     return element.Stanox == stanoxCode;
                 });
                 StationTiploc.tiplocByStanoxCache[stanoxCode] = cached;
@@ -459,10 +459,7 @@ module TrainNotifier {
         }
 
         public static findStationTiploc(stanoxCode: string, tiplocs: IStationTiploc[]) {
-            var results = StationTiploc.findStationTiplocs(stanoxCode, tiplocs);
-            if (results && results.length > 0)
-                return results[0];
-            return null;
+            return StationTiploc.findStationTiplocs(stanoxCode, tiplocs);
         }
 
         public static stationTiplocMatches(tiploc: IStationTiploc, tiplocs: IStationTiploc[]) {
@@ -478,6 +475,14 @@ module TrainNotifier {
             if (lowercase)
                 return value.toLowerCase();
             return value;
+        }
+
+        public static find<T>(array: Array<T>, callbackfn: (value: T, index: number, array: T[]) => boolean) : T {
+            var result : T = null;
+            array.some(function (el, i) {
+                return callbackfn(el, i , array) ? ((result = el), true) : false;
+            });
+            return result;
         }
     }
 
