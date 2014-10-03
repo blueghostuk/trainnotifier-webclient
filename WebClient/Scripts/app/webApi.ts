@@ -477,7 +477,7 @@ module TrainNotifier {
             return value;
         }
 
-        public static find<T>(array: Array<T>, callbackfn: (value: T, index: number, array: T[]) => boolean) : T {
+        private static find<T>(array: Array<T>, callbackfn: (value: T, index: number, array: T[]) => boolean) : T {
             var result : T = null;
             array.some(function (el, i) {
                 return callbackfn(el, i , array) ? ((result = el), true) : false;
