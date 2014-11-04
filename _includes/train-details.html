@@ -1,0 +1,42 @@
+<h4>Live Running Details</h4>
+<hr />
+<ul>
+    <li><span class="label label-info">Id:</span> <span data-bind="text: id"></span></li>
+    <li><span class="label label-info">Live Id:</span> <a onclick="subTrain();" data-bind="text: liveId, attr: { href: '#sub/' + trainUid() + '/' + scheduleDate() }" title="View Live Updates for this train" style="display: inline;"></a></li>
+    <li><span class="label label-info">Activated:</span> <span data-bind="text: activated"></span></li>
+    <li data-bind="visible: cancellation" style="display: none;"><span class="label label-danger">Cancelled:</span> <span data-bind="    text: cancellation"></span></li>
+    <li data-bind="visible: changeOfOrigin" style="display: none;"><span class="label label-warning">Will start from:</span> <span data-bind="    text: changeOfOrigin"></span></li>
+    <li data-bind="visible: reinstatement" style="display: none;"><span class="label label-info">Reinstated:</span> <span data-bind="    text: reinstatement"></span></li>
+</ul>
+<h4>Schedule Details</h4>
+<hr data-bind="visible: powerType || categoryType || speed" />
+<ul>
+    <li data-bind="visible: powerType"><span class="label label-info">Power Type:</span> <span data-bind="text: powerType"></span></li>
+    <li data-bind="visible: categoryType"><span class="label label-info">Category Type:</span> <span data-bind="    text: categoryType"></span></li>
+    <li data-bind="visible: speed"><span class="label label-info">Speed:</span> <span data-bind="text: speed"></span>mph</li>
+</ul>
+<hr />
+<ul>
+    <li><span class="label label-info">Operator:</span> <span data-bind="text: toc" style="display: inline;"></span></li>
+    <li><span class="label label-info">Type:</span> <span data-bind="text: type"></span></li>
+    <li><span class="label label-info">From:</span> <span data-bind="text: from"></span></li>
+    <li><span class="label label-info">To:</span> <span data-bind="text: to"></span></li>
+    <li><span class="label label-info">Runs:</span> <span data-bind="text: runs"></span></li>
+</ul>
+<h4 data-bind="visible: associations.length > 0">Associations</h4>
+<hr data-bind="visible: associations.length > 0" />
+<ul data-bind="foreach: associations">
+    <li>
+        <span class="label label-info" data-bind="text: title"></span>
+        <a data-bind="text: trainId, attr: { href: 'trains/' + url, onclick: 'setCommand(\'get/' + javascript + '\');parseCommand(); return false;' }"></a>
+        @@ <span class="stationName" data-bind="text: location"></span>
+    </li>
+</ul>
+<hr />
+<h4>Other Sites</h4>
+<ul data-bind="foreach: otherSites">
+    <li><a data-bind="text: text, attr: { href: url }" target="_blank"></a></li>
+</ul>
+<p class="text-info info-text">
+    <span class="glyphicon glyphicon-info-sign"></span>&nbsp;This page shows the details of this train movement with links to view it on other open-data websites.
+</p>

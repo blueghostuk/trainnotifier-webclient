@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.30723.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "trainnotifier-webclient", "trainnotifier-webclient.csproj", "{52089E18-1423-49CF-BDC2-12493B18DE09}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C8B1785B-D1C1-4F98-ACB1-BD3220F166C9}"
+	ProjectSection(SolutionItems) = preProject
+		.gitattributes = .gitattributes
+		.gitignore = .gitignore
+		.gitmodules = .gitmodules
+		_config.yml = _config.yml
+		CNAME = CNAME
+		Gemfile = Gemfile
+		LICENSE = LICENSE
+		README.md = README.md
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{52089E18-1423-49CF-BDC2-12493B18DE09}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{52089E18-1423-49CF-BDC2-12493B18DE09}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{52089E18-1423-49CF-BDC2-12493B18DE09}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{52089E18-1423-49CF-BDC2-12493B18DE09}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

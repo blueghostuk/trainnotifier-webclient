@@ -1,0 +1,62 @@
+---
+layout: default
+title: trainnotifier.co.uk
+menu: <li><a href="/">Home</a></li><li class="active"><a>Train</a></li><li><a href="route/">Routes</a></li><li><a href="http://www.whattrain.co.uk/" target="_blank">Stations</a></li><li><a href="ppm/">PPM</a></li><li><a href="about/">About</a></li><li><a href="#" id="advancedSwitch" title="Switch to this Mode">Advanced</a></li>
+css: train.css
+js:
+    - src: app/trainModels.js
+    - src: app/train.js
+---
+<!--<div class="navbar-form navbar-right">
+    <a class="btn btn-primary btn-sm btn-disconnect" id="btn_Subscribe" onclick="subTrain();" disabled="true" title="Get Live Updates for this train">
+        <span class="glyphicon glyphicon-refresh"></span>
+    </a>
+    <a class="btn btn-primary btn-sm btn-connect" id="status" onclick="tryConnect(); return false;">Connection Status</a>
+</div>-->
+<div class="row">
+    <!--/.col-md-2-->
+    <div class="col-md-12" id="resultsBlock">
+        <div class="row alert alert-info hide" id="no-results-row">
+            <strong>No Results Found</strong>
+        </div>
+        <div class="row alert alert-error hide" id="error-row">
+            <strong>Error fetching data. Please Refresh to try again</strong>
+        </div>
+        <div class="progress progress-striped active">
+            <div class="progress-bar" role="progressbar" style="width: 100%"></div>
+        </div>
+        <div class="row" id="title" data-bind="visible: id">
+            <span data-bind="text: id" class="xxl"></span>
+            <span data-bind="text: from" class="stationName xl"></span><span data-bind="visible: to">&nbsp;to&nbsp;</span><span data-bind="text: to" class="stationName xl"></span>
+            <span data-bind="text: start"></span><span data-bind="visible: end"> - </span>
+            <span data-bind="text: end"></span>
+            <span data-bind="text: fullTitle" class="hide"></span>
+            <hr style="margin: 5px 0px;" />
+        </div>
+        <div class="row">
+            <ul class="nav nav-tabs" id="trainNav">
+                <li class="active"><a href="#mix" data-toggle="tab">Train</a></li>
+                <li><a href="#schedule" data-toggle="tab">Schedule</a></li>
+                <li><a href="#trains" data-toggle="tab">Live</a></li>
+                <li><a href="#details" data-toggle="tab">Details</a></li>
+                <!--<li><a href="/history#!" data-bind="attr: { href: '/history#!' + $data }">History</a></li>-->
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane active" id="mix" data-bind="visible: $data.length > 0">
+                    {% include train-mix.html %}
+                </div>
+                <div class="tab-pane" id="schedule">
+                    {% include train-schedule.html %}
+                </div>
+                <div class="tab-pane" id="trains">
+                    {% include train-live.html %}
+                </div>
+                <div class="tab-pane" id="details">
+                    {% include train-details.html %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--/.col-md-12-->
+</div>
+<!--/row-fluid-->

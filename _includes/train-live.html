@@ -1,0 +1,39 @@
+<table class="table table-hover" id="tableView">
+    <thead>
+        <tr>
+            <th>Location</th>
+            <th><abbr title="Platform">Pfm.</abbr></th>
+            <th class="hidden-xs hidden-sm visible-md visible-lg" title="Expected WTT time is tooltip. Delay is shown next to time">Arrive</th>
+            <th class="visible-xs visible-sm hidden-md hidden-lg" title="Expected WTT time is tooltip. Delay is shown next to time">Arr</th>
+            <th class="hidden-xs hidden-sm visible-md visible-lg" title="Expected WTT time is tooltip. Delay is shown next to time">Depart</th>
+            <th class="visible-xs visible-sm hidden-md hidden-lg" title="Expected WTT time is tooltip. Delay is shown next to time">Dept</th>
+            <th class="hidden-xs hidden-sm visible-md visible-lg">Line</th>
+            <th class="hidden-xs hidden-sm visible-md visible-lg">Notes</th>
+        </tr>
+    </thead>
+    <tbody data-bind="foreach: $data">
+        <tr data-bind="css: { info: offRoute, pass: berthUpdate }">
+            <td class="col station stationName">
+                <a class="pointer" data-bind="text: location"></a>
+            </td>
+            <td class="col extra platform" data-bind="text: platform"></td>
+            <td class="col arrive actual time">
+                <span data-bind="text: actualArrival, attr: { title: plannedArrival }" class="tooltip-dynamic"></span>&nbsp;
+                <span data-bind="visible: arrivalDelay" title="Delay">(<span class="badge" data-bind="text: arrivalDelay, css: arrivalDelayCss"></span>)</span>
+            </td>
+            <td class="col depart actual time">
+                <span data-bind="text: actualDeparture, attr: { title: plannedDeparture }" class="tooltip-dynamic"></span>&nbsp;
+                <span data-bind="visible: departureDelay" title="Delay">(<span class="badge" data-bind="text: departureDelay, css: departureDelayCss"></span>)</span>
+            </td>
+            <td class="col extra line hidden-xs hidden-sm visible-md visible-lg" data-bind="text: line"></td>
+            <td class="col extra notes hidden-xs hidden-sm visible-md visible-lg">
+                <span data-bind="visible: nextLocation">Next @@ <span data-bind="text: nextLocation" class="stationName"></span>&nbsp;in&nbsp;<span data-bind="text: nextAt"></span></span>
+                <span data-bind="visible: notes, text: notes"></span>
+            </td>
+        </tr>
+    </tbody>
+</table>
+<p class="text-info info-text">
+    <span class="glyphicon glyphicon-info-sign"></span>&nbsp;This page shows the Current running information. Click the <span class="glyphicon glyphicon-refresh"></span> icon above to activate live tracking.<br />
+    <span class="glyphicon glyphicon-info-sign"></span>&nbsp;Live tracking of berth movements will return movements of trains with the same description as this one (head code) if they are running at the same time.
+</p>

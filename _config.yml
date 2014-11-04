@@ -1,0 +1,17 @@
+﻿url: http://www.trainnotifier.co.uk
+api: api.trainnotifier.co.uk
+apiname: trainnotifier
+ws: ws.trainnotifier.co.uk:81
+name: trainnotifier.co.uk
+localstorage: true
+# exclude showads to not show them
+showads: yes
+adclient: ca-pub-5958326255808267
+adslot: 2634981258
+# exclude useanalytics to not use them
+useanalytics: yes
+analyticsid: UA-40610278-2
+analyticsite: trainnotifier.co.uk
+
+# exclude visual studio and other stuff from deployment
+exclude: ["bin",".nuget",".gitattributes",".gitignore","CNAME","TrainDelayed.*","traindelayed.*","Gemfile*","README.md","LICENSE","Scripts/typings","Scripts/app/*.ts","Scripts/app/*.js.map"]

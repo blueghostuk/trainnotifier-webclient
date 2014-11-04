@@ -1,0 +1,23 @@
+<script type="text/javascript" src="{{ site.baseurl }}/Scripts/jquery-2.1.1.min.js"></script>
+<script type="text/javascript" src="{{ site.baseurl }}/Scripts/jquery.color-2.1.2.min.js"></script>
+<script type="text/javascript" src="{{ site.baseurl }}/Scripts/jquery.cookie.js"></script>
+<script type="text/javascript" src="{{ site.baseurl }}/Scripts/jquery.ba-hashchange.js"></script>
+<script type="text/javascript" src="{{ site.baseurl }}/Scripts/knockout-3.2.0.js"></script>
+<script type="text/javascript" src="{{ site.baseurl }}/Scripts/bootstrap.min.js"></script>
+<script type="text/javascript" src="{{ site.baseurl }}/Scripts/typeahead.bundle.min.js"></script>
+<script type="text/javascript" src="{{ site.baseurl }}/Scripts/moment.min.js"></script>
+<script type="text/javascript" src="{{ site.baseurl }}/Scripts/app/global.js"></script>
+<script type="text/javascript" src="{{ site.baseurl }}/Scripts/app/webApi.js"></script>
+<script type="text/javascript" src="{{ site.baseurl }}/Scripts/app/websockets.js"></script>
+<script type="text/javascript">
+    TrainNotifier.Common.serverSettings = {
+        apiUrl: "{{ site.api }}",
+        wsUrl: "{{ site.ws }}",
+        trainLink: "{{ site.trainurl }}",
+        apiName: "{{ site.apiname }}",
+        useLocalStorage: {{ site.localstorage }}
+    };
+</script>
+{% if page.js %}{% for item in page.js %}
+<script type="text/javascript" src="{{ site.baseurl }}/Scripts/{{ item.src }}"></script>
+{% endfor %}{% endif %}

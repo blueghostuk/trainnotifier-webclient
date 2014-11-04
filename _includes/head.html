@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="View real time trains information in the United Kingdom on the National Rail Network" />
+    <title>{{ page.title }}</title>
+    <style type="text/css">
+        @import url('//fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,400,700');
+    </style>
+    <style type="text/css">
+        @import url('//fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,400,700');
+    </style>
+    <link rel="stylesheet" href="{{ site.baseurl }}/Content/yeti.min.css" />
+    <link rel="stylesheet" href="{{ site.baseurl }}/Content/app/overrides.css" />
+    <link rel="stylesheet" href="{{ site.baseurl }}/Content/app/typeahead-fix.css" />
+    <link rel="stylesheet" href="{{ site.baseurl }}/Content/app/styles.css" />
+    <link rel="stylesheet" href="{{ site.baseurl }}/Content/app/tocs.css" />
+    {% if site.showads %}
+    <style>
+        .trainnotifier-responsive {
+            width: 320px;
+            height: 50px;
+            margin-left: -15px !important;
+        }
+
+        @media(min-width: 500px) {
+            .trainnotifier-responsive {
+                width: 468px;
+                height: 60px;
+            }
+        }
+
+        @media(min-width: 800px) {
+            .trainnotifier-responsive {
+                width: 728px;
+                height: 90px;
+            }
+        }
+    </style>
+    {% endif %}
+    <link rel="stylesheet" href="{{ site.baseurl }}/Content/app/{{ page.css }}" />
+    {% include analytics.html %}
+</head>
