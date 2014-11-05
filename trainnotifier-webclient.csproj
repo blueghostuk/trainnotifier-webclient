@@ -65,6 +65,10 @@
     <Content Include="_includes\ppm-operator.html" />
     <Content Include="_includes\ppm-table.html" />
     <Content Include="_includes\scripts.html" />
+    <Content Include="_includes\search-calling-at.html" />
+    <Content Include="_includes\search-calling-between.html" />
+    <Content Include="_includes\search-nearest.html" />
+    <Content Include="_includes\search-start-end.html" />
     <Content Include="_includes\train-details.html" />
     <Content Include="_includes\train-history.html" />
     <Content Include="_includes\train-live.html" />
