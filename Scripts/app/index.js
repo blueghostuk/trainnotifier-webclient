@@ -20,7 +20,7 @@ $(function () {
     $(".station-lookup").attr("placeholder", "Loading stations ...");
     $("#nearest").click(function () {
         navigator.geolocation.getCurrentPosition(function (position) {
-            document.location.href = "search-schedule/#!nearest/" + position.coords.latitude + "/" + position.coords.longitude;
+            document.location.href = "search-results/#!nearest/" + position.coords.latitude + "/" + position.coords.longitude;
         }, function (err) {
             alert("Could not determine current location: " + err.message);
         });
@@ -125,14 +125,14 @@ function showLocation() {
 
     if (fromQuery) {
         if (toQuery) {
-            document.location.href = "search-schedule/#!from/" + fromQuery + "/to/" + toQuery + date + time + tocVal;
+            document.location.href = "search-results/#!from/" + fromQuery + "/to/" + toQuery + date + time + tocVal;
         } else {
-            document.location.href = "search-schedule/#!from/" + fromQuery + date + time + tocVal;
+            document.location.href = "search-results/#!from/" + fromQuery + date + time + tocVal;
         }
     } else if (toCrs) {
-        document.location.href = "search-schedule/#!to/" + toQuery + date + time + tocVal;
+        document.location.href = "search-results/#!to/" + toQuery + date + time + tocVal;
     } else if (atCrs) {
-        document.location.href = "search-schedule/#!at/" + atQuery + date + time + tocVal;
+        document.location.href = "search-results/#!at/" + atQuery + date + time + tocVal;
     }
 
     return false;
