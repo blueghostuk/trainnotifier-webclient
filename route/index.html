@@ -1,20 +1,14 @@
-﻿@{
-    Layout = "~/_Layout.cshtml";
-}
-@using System.Web.Optimization;
-@section CustomCss{
-    @Styles.Render("~/bundles/css/route")
-}
-@section FooterJs{
-    @Scripts.Render("~/bundles/js/route")
-}
-@section TopMenu{
-    <li><a href="~/">Home</a></li>
-    <li><a class="active">Routes</a></li>
-    <li><a href="http://www.whattrain.co.uk/" target="_blank">Stations</a></li>
-    <li><a href="~/ppm">PPM</a></li>
-    <li><a href="~/about">About</a></li>
-}
+﻿---
+layout: default
+title: trainnotifier.co.uk
+menu: <li><a href="/">Home</a></li><li class="active"><a>Routes</a></li><li><a href="http://www.whattrain.co.uk/" target="_blank">Stations</a></li><li><a href="ppm/">PPM</a></li><li><a href="about/">About</a></li><li>
+css: route.css
+js:
+    - src: app/trainModels.js
+    - src: app/searchModels.js
+    - src: app/routeModels.js                                                                                                                                                                 
+    - src: app/route.js
+---
 <div class="row">
     <div class="col-md-4 col-xs-12">
         Select Route:
