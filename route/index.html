@@ -72,7 +72,7 @@ js:
             </thead>
             <tbody data-bind="foreach: results">
                 <tr data-bind="css: { info: highlight }">
-                    <td><a data-bind="text: headCode, attr: { href: 'trains/' + trainId + '/' + departureDate }"></a></td>
+                    <td><a data-bind="text: headCode, attr: { href: '../train/#!' + trainId + '/' + departureDate }"></a></td>
                     <td data-bind="text: operatorCode, attr: { title: operatorName }"></td>
                     <td class="stationName" data-bind="css: fromStationCss">
                         <span data-bind="text: fromStation, css: { changeOfOrigin: changeOfOriginStation }"></span>

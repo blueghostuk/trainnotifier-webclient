@@ -43,7 +43,6 @@ module TrainNotifier.KnockoutModels.Routes {
                 this.arrival = pubArr || wttArr || "Unknown";
                 var arrive = toStop.PublicArrival || toStop.Arrival || null;
 
-
                 if (depart && arrive) {
                     var qs = moment(queryStartDate).add({ minutes: 10 });
                     var qe = moment(queryStartDate).subtract({ minutes: 10 });
