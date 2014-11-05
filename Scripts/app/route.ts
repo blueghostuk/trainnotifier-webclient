@@ -233,7 +233,7 @@ function showTrain(berth: Berth) {
     runningTrains().results.removeAll();
     if (berth && berth.contents()) {
         //trainDetails.id(berth.contents())
-        webApi.getTrainMovementsByHeadcode(berth.contents(), berth.fulltimestamp.format(TrainNotifier.DateTimeFormats.dateQueryFormat))
+        webApi.getTrainMovementsByHeadcode(berth.contents(), berth.fulltimestamp.format(TrainNotifier.DateTimeFormats.dateUrlFormat))
             .done(function (data: ITrainMovementResults) {
                 if (data && data.Movements.length > 0) {
                     var viewModels: TrainNotifier.KnockoutModels.Routes.RouteTrainMovement[] = data.Movements.map(function (movement: ITrainMovementResult) {

@@ -199,7 +199,7 @@ function showTrain(berth) {
     $("#no-results-row").hide();
     runningTrains().results.removeAll();
     if (berth && berth.contents()) {
-        webApi.getTrainMovementsByHeadcode(berth.contents(), berth.fulltimestamp.format(TrainNotifier.DateTimeFormats.dateQueryFormat)).done(function (data) {
+        webApi.getTrainMovementsByHeadcode(berth.contents(), berth.fulltimestamp.format(TrainNotifier.DateTimeFormats.dateUrlFormat)).done(function (data) {
             if (data && data.Movements.length > 0) {
                 var viewModels = data.Movements.map(function (movement) {
                     return new TrainNotifier.KnockoutModels.Routes.RouteTrainMovement(movement, data.Tiplocs, berth.fulltimestamp);

@@ -136,7 +136,7 @@ function getDateTime(args) {
         if (args.length == 2) {
             return moment(args.join('/'), TrainNotifier.DateTimeFormats.dateTimeHashFormat);
         } else if (args[0] && args[0].length > 0) {
-            return moment(args[0], TrainNotifier.DateTimeFormats.dateQueryFormat);
+            return moment(args[0], TrainNotifier.DateTimeFormats.dateUrlFormat);
         }
     }
     return moment();

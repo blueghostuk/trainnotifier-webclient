@@ -401,7 +401,7 @@ module TrainNotifier.KnockoutModels.Train {
         }
 
         get javascript(): string {
-            return this.trainId + "/" + this.date.format(DateTimeFormats.dateQueryFormat);
+            return this.trainId + "/" + this.date.format(DateTimeFormats.dateUrlFormat);
         }
 
     }
@@ -449,7 +449,7 @@ module TrainNotifier.KnockoutModels.Train {
                 this.id(train.Actual.HeadCode);
                 this.liveId(train.Actual.TrainId);
                 this.activated(moment(train.Actual.Activated).format(DateTimeFormats.dateTimeFormat));
-                this.scheduleDate(moment(train.Actual.OriginDepartTimestamp).format(DateTimeFormats.dateQueryFormat));
+                this.scheduleDate(moment(train.Actual.OriginDepartTimestamp).format(DateTimeFormats.dateUrlFormat));
             } else {
                 this.id(null);
                 this.liveId(null);
@@ -510,7 +510,7 @@ module TrainNotifier.KnockoutModels.Train {
                 this.speed(null);
             }
             if (!this.scheduleDate() && date) {
-                this.scheduleDate(moment(date).format(DateTimeFormats.dateQueryFormat));
+                this.scheduleDate(moment(date).format(DateTimeFormats.dateUrlFormat));
             }
 
             for (var i = 0; i < this.otherSites.length; i++) {

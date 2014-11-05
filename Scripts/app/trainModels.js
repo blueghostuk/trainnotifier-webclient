@@ -362,7 +362,7 @@ var TrainNotifier;
 
                 Object.defineProperty(TrainAssociation.prototype, "javascript", {
                     get: function () {
-                        return this.trainId + "/" + this.date.format(TrainNotifier.DateTimeFormats.dateQueryFormat);
+                        return this.trainId + "/" + this.date.format(TrainNotifier.DateTimeFormats.dateUrlFormat);
                     },
                     enumerable: true,
                     configurable: true
@@ -406,7 +406,7 @@ var TrainNotifier;
                         this.id(train.Actual.HeadCode);
                         this.liveId(train.Actual.TrainId);
                         this.activated(moment(train.Actual.Activated).format(TrainNotifier.DateTimeFormats.dateTimeFormat));
-                        this.scheduleDate(moment(train.Actual.OriginDepartTimestamp).format(TrainNotifier.DateTimeFormats.dateQueryFormat));
+                        this.scheduleDate(moment(train.Actual.OriginDepartTimestamp).format(TrainNotifier.DateTimeFormats.dateUrlFormat));
                     } else {
                         this.id(null);
                         this.liveId(null);
@@ -467,7 +467,7 @@ var TrainNotifier;
                         this.speed(null);
                     }
                     if (!this.scheduleDate() && date) {
-                        this.scheduleDate(moment(date).format(TrainNotifier.DateTimeFormats.dateQueryFormat));
+                        this.scheduleDate(moment(date).format(TrainNotifier.DateTimeFormats.dateUrlFormat));
                     }
 
                     for (var i = 0; i < this.otherSites.length; i++) {

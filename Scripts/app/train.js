@@ -250,7 +250,7 @@ function getById(id) {
     webApi.getTrainMovementById(id).done(function (data) {
         if (data) {
             thisPage.setCommand("!" + data.TrainUid + "/" + moment(data.OriginDepartTimestamp).format(TrainNotifier.DateTimeFormats.dateUrlFormat));
-            getTrainData(data.TrainUid, moment(data.OriginDepartTimestamp).format(TrainNotifier.DateTimeFormats.dateQueryFormat), false);
+            getTrainData(data.TrainUid, moment(data.OriginDepartTimestamp).format(TrainNotifier.DateTimeFormats.dateUrlFormat), false);
         } else {
             show($("#no-results-row"));
         }
@@ -414,7 +414,7 @@ function getAssociations(date) {
         return;
     }
     var queryDate = _lastTrainData.Movement.Actual ? _lastTrainData.Movement.Actual.OriginDepartTimestamp : date;
-    return webApi.getTrainMovementAssociations(_lastTrainData.Movement.Schedule.TrainUid, moment(queryDate).format(TrainNotifier.DateTimeFormats.dateQueryFormat)).done(function (associations) {
+    return webApi.getTrainMovementAssociations(_lastTrainData.Movement.Schedule.TrainUid, moment(queryDate).format(TrainNotifier.DateTimeFormats.dateUrlFormat)).done(function (associations) {
         if (associations.length == 0)
             return;
 
