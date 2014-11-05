@@ -1,20 +1,12 @@
-﻿@{
-    Layout = "~/_Layout.cshtml";
-}
-@using System.Web.Optimization;
-@section CustomCss{
-    @Styles.Render("~/bundles/css/ppm")
-}
-@section FooterJs{
-    @Scripts.Render("~/bundles/js/ppm")
-}
-@section TopMenu{
-    <li><a href="~/">Home</a></li>
-    <li><a href="~/route">Routes</a></li>
-    <li><a href="http://www.whattrain.co.uk/" target="_blank">Stations</a></li>
-    <li class="active"><a>PPM</a></li>
-    <li><a href="~/about">About</a></li>
-}
+﻿---
+layout: default
+title: trainnotifier.co.uk
+menu: <li><a href="/">Home</a></li><li><a href="route/">Routes</a></li><li><a href="http://www.whattrain.co.uk/" target="_blank">Stations</a></li><li class="active"><a>PPM</a></li><li><a href="about/">About</a></li><li>
+css: ppm.css
+js:
+- src: app/ppmModels.js
+- src: app/ppm.js
+---
 <div class="row">
     <div class="col-md-2 hidden-xs hidden-sm">
         <div class="list-group" id="commandOptions">
@@ -32,8 +24,8 @@
         <div class="alert alert-info" id="title">
             Last Updated: <span data-bind="text: ts"></span><span style="font-size: small;" title="Approx. update time">(Update in &asymp; <span data-bind="text: next"></span>s)</span>
         </div>
-        @RenderPage("_ppmTable.cshtml")
-        @RenderPage("_ppmOperator.cshtml")
+        {% include ppm-table.html %}
+        {% include ppm-operator.html %}
     </div>
     <!--/span10-->
 </div>
