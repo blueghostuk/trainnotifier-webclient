@@ -691,7 +691,7 @@ function setTimeLinks() {
     $(".neg-hrs").attr("href", "#!" + url + minusStartDate.format(TrainNotifier.DateTimeFormats.dateTimeHashFormat) + tocUrl);
     $(".plus-hrs").attr("href", "#!" + url + plusStartDate.format(TrainNotifier.DateTimeFormats.dateTimeHashFormat) + tocUrl);
 
-    setHash("!" + url, moment(currentStartDate).format(TrainNotifier.DateTimeFormats.dateTimeHashFormat) + "/" + moment(currentEndDate).format(timeUrlFormat), true);
+    setHash("!" + url, moment(currentStartDate).format(TrainNotifier.DateTimeFormats.dateTimeHashFormat) + "/" + moment(currentEndDate).format(TrainNotifier.DateTimeFormats.timeUrlFormat), true);
 }
 
 function loadHashCommand() {

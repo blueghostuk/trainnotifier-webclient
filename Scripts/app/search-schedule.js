@@ -1,4 +1,4 @@
-﻿var searchTitleModel = new TrainNotifier.KnockoutModels.Search.TitleViewModel();
+var searchTitleModel = new TrainNotifier.KnockoutModels.Search.TitleViewModel();
 
 var startEndSearchResults = ko.observableArray();
 var callingAtSearchResults = ko.observableArray();
@@ -641,7 +641,7 @@ function setTimeLinks() {
     $(".neg-hrs").attr("href", "#!" + url + minusStartDate.format(TrainNotifier.DateTimeFormats.dateTimeHashFormat) + tocUrl);
     $(".plus-hrs").attr("href", "#!" + url + plusStartDate.format(TrainNotifier.DateTimeFormats.dateTimeHashFormat) + tocUrl);
 
-    setHash("!" + url, moment(currentStartDate).format(TrainNotifier.DateTimeFormats.dateTimeHashFormat) + "/" + moment(currentEndDate).format(timeUrlFormat), true);
+    setHash("!" + url, moment(currentStartDate).format(TrainNotifier.DateTimeFormats.dateTimeHashFormat) + "/" + moment(currentEndDate).format(TrainNotifier.DateTimeFormats.timeUrlFormat), true);
 }
 
 function loadHashCommand() {
