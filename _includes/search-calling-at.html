@@ -40,23 +40,23 @@
             <tr data-bind="css: computedCss, attr: { title: title }">
                 <!-- 1 -->
                 <td class="visible-md visible-lg">
-                    <a data-bind="text: headCode, attr: { href: '../trains/' + trainId + '/' + departureDate }"></a>
+                    <a data-bind="text: headCode, attr: { href: '../train/#!' + trainId + '/' + departureDate }"></a>
                 </td>
                 <td class="visible-md visible-lg">
-                    <a data-bind="text: operatorCode, attr: { title: operatorName, href: '../trains/' + trainId + '/' + departureDate }"></a>
+                    <a data-bind="text: operatorCode, attr: { title: operatorName, href: '../train/#!' + trainId + '/' + departureDate }"></a>
                 </td>
                 <!-- 2 -->
                 <td class="visible-md visible-lg advanced-col time" title="WTT Arrival">
-                    <a data-bind="text: atWttArrival, attr: { href: '../trains/' + trainId + '/' + departureDate }"></a>
+                    <a data-bind="text: atWttArrival, attr: { href: '../train/#!' + trainId + '/' + departureDate }"></a>
                 </td>
                 <td class="visible-md visible-lg time" title="Public Arrival">
-                    <a data-bind="text: atPublicArrival, attr: { href: '../trains/' + trainId + '/' + departureDate }"></a>
+                    <a data-bind="text: atPublicArrival, attr: { href: '../train/#!' + trainId + '/' + departureDate }"></a>
                 </td>
                 <td class="visible-md visible-lg time actual" title="Actual Arrival">
-                    <a data-bind="text: atActualArrival, attr: { href: '../trains/' + trainId + '/' + departureDate }"></a>
+                    <a data-bind="text: atActualArrival, attr: { href: '../train/#!' + trainId + '/' + departureDate }"></a>
                 </td>
                 <td class="visible-xs visible-sm time">
-                    <a data-bind="attr: { href: '../trains/' + trainId + '/' + departureDate }">
+                    <a data-bind="attr: { href: '../train/#!' + trainId + '/' + departureDate }">
                         <!-- ko if: atActualArrival -->
                         <span class="actual" data-bind="text: atActualArrival"></span>
                         <!-- /ko -->
@@ -75,34 +75,34 @@
                 </td>
                 <!-- 3 -->
                 <td class="stationName" data-bind="css : fromStationCss">
-                    <a data-bind="attr: { href: '../trains/' + trainId + '/' + departureDate }">
+                    <a data-bind="attr: { href: '../train/#!' + trainId + '/' + departureDate }">
                         <span data-bind="text: fromStation, css: { changeOfOrigin: changeOfOriginStation }"></span>
                         <span data-bind="text: changeOfOriginStation"></span>
                     </a>
                 </td>
                 <!-- 4 -->
                 <td class="centerText platform">
-                    <a data-bind="text: atPlatform, attr: { href: '../trains/' + trainId + '/' + departureDate }"></a>
+                    <a data-bind="text: atPlatform, attr: { href: '../train/#!' + trainId + '/' + departureDate }"></a>
                 </td>
                 <!-- 5 -->
                 <td class="stationName" data-bind="css: toStationCss">
-                    <a data-bind="attr: { href: '../trains/' + trainId + '/' + departureDate }">
+                    <a data-bind="attr: { href: '../train/#!' + trainId + '/' + departureDate }">
                         <span data-bind="text: toStation, css: { changeOfDestination: cancelEnRoute }"></span>
                         <span data-bind="text: cancelEnRoute"></span>
                     </a>
                 </td>
                 <!-- 6 -->
                 <td class="visible-md visible-lg advanced-col time" title="WTT Departure">
-                    <a data-bind="text: atWttDeparture, attr: { href: '../trains/' + trainId + '/' + departureDate }"></a>
+                    <a data-bind="text: atWttDeparture, attr: { href: '../train/#!' + trainId + '/' + departureDate }"></a>
                 </td>
                 <td class="visible-md visible-lg time" title="Public Departure">
-                    <a data-bind="text: atPublicDeparture, attr: { href: '../trains/' + trainId + '/' + departureDate }"></a>
+                    <a data-bind="text: atPublicDeparture, attr: { href: '../train/#!' + trainId + '/' + departureDate }"></a>
                 </td>
                 <td class="visible-md visible-lg time actual" title="Actual Departure">
-                    <a data-bind="text: atActualDeparture, attr: { href: '../trains/' + trainId + '/' + departureDate}"></a>
+                    <a data-bind="text: atActualDeparture, attr: { href: '../train/#!' + trainId + '/' + departureDate}"></a>
                 </td>
                 <td class="visible-xs visible-sm time">
-                    <a data-bind="attr: { href: '../trains/' + trainId + '/' + departureDate }">
+                    <a data-bind="attr: { href: '../train/#!' + trainId + '/' + departureDate }">
                         <!-- ko if: atActualDeparture -->
                         <span class="actual" data-bind="text: atActualDeparture"></span>
                         <!-- /ko -->
