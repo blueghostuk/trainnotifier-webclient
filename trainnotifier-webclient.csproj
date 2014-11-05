@@ -69,7 +69,7 @@
     <Content Include="_includes\train-history.html" />
     <Content Include="_includes\train-live.html" />
     <Content Include="_includes\train-mix.html" />
-    <Content Include="_includes\train-scheduled.html" />
+    <Content Include="_includes\train-schedule.html" />
     <Content Include="_layouts\default.html" />
     <None Include="Scripts\jquery-2.1.1.intellisense.js" />
     <Content Include="Scripts\jquery-2.1.1.js" />
