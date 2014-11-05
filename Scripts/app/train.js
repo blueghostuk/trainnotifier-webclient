@@ -6,7 +6,6 @@ var currentTrainDetails = new TrainNotifier.KnockoutModels.Train.TrainDetails();
 
 var _lastTrainData;
 var currentTiplocs = [];
-var map;
 var webSockets = new TrainNotifier.WebSockets();
 var currentCommand;
 
@@ -126,9 +125,6 @@ function reset() {
     liveStops.removeAll();
     currentTrainDetails.reset();
     currentTiplocs = [];
-}
-
-function loadLiveMap() {
 }
 
 function connectToWebsocketServer() {

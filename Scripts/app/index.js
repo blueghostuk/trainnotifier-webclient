@@ -1,10 +1,3 @@
-﻿/// <reference path="tocs.ts" />
-/// <reference path="global.ts" />
-/// <reference path="webApi.ts" />
-/// <reference path="../typings/moment/moment.d.ts" />
-/// <reference path="../typings/bootstrap/bootstrap.d.ts" />
-/// <reference path="../typings/knockout/knockout.d.ts" />
-/// <reference path="../typings/jquery/jquery.d.ts" />
 var fromLocal = ko.observableArray();
 var toLocal = ko.observableArray();
 var atLocal = ko.observableArray();
@@ -203,4 +196,3 @@ function lookupLocalAt() {
         alert("Could not determine current location: " + err.message);
     });
 }
-//# sourceMappingURL=index.js.map

@@ -3,7 +3,6 @@
 /// <reference path="websockets.ts" />
 /// <reference path="global.ts" />
 /// <reference path="../typings/jquery.cookie/jquery.cookie.d.ts" />
-/// <reference path="../typings/leaflet/leaflet.d.ts" />
 /// <reference path="../typings/knockout/knockout.d.ts" />
 /// <reference path="../typings/jquery/jquery.d.ts" />
 /// <reference path="../typings/moment/moment.d.ts" />
@@ -16,7 +15,6 @@ var currentTrainDetails = new TrainNotifier.KnockoutModels.Train.TrainDetails();
 
 var _lastTrainData: ISingleTrainMovementResult;
 var currentTiplocs: IStationTiploc[] = [];
-var map: L.Map;
 var webSockets = new TrainNotifier.WebSockets();
 var currentCommand: string;
 
@@ -111,26 +109,6 @@ $(function () {
         thisPage.advancedMode = true;
         thisPage.advancedSwitch(false);
     }
-    //$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
-    //    if ($(e.target).attr("href") == "#map") {
-    //        if (!map) {
-    //            map = new L.Map('map').setView(new L.LatLng(51.505, -0.09), 13);
-    //            var layer = new L.TileLayer('http://otile{s}.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.png', {
-    //                subdomains: ["1", "2", "3", "4"],
-    //                attribution: 'Tiles Courtesy of <a href="http://www.mapquest.com/" target="_blank">MapQuest</a><img src="http://developer.mapquest.com/content/osm/mq_logo.png">. Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>.',
-    //                maxZoom: 18
-    //            });
-    //            layer.addTo(map);
-
-    //            loadScheduleMap();
-    //            loadLiveMap();
-    //        } else {
-    //            $("#map, .leaflet-map-pane, .leaflet-control-container").show();
-    //        }
-    //    } else {
-    //        $("#map, .leaflet-map-pane, .leaflet-control-container").hide();
-    //    }
-    //});
 
     try {
         connectToWebsocketServer();
@@ -155,36 +133,6 @@ function reset() {
     liveStops.removeAll();
     currentTrainDetails.reset();
     currentTiplocs = [];
-}
-
-//function loadScheduleMap() {
-//    if (!_lastTrainData
-//        || !_lastTrainData.Movement
-//        || !_lastTrainData.Movement.Schedule
-//        || !_lastTrainData.Movement.Schedule.Stops
-//        || !currentTiplocs)
-//        return;
-
-//    var points: Array<L.LatLng> = [];
-
-//    for (var i = 0; i < _lastTrainData.Movement.Schedule.Stops.length; i++) {
-//        var stop = _lastTrainData.Movement.Schedule.Stops[i];
-//        var stopTiploc = TrainNotifier.StationTiploc.findStationTiploc(stop.TiplocStanoxCode, currentTiplocs);
-//        if (stopTiploc && stopTiploc.Lat && stopTiploc.Lon) {
-//            var location = new L.LatLng(stopTiploc.Lat, stopTiploc.Lon);
-//            points.push(location);
-//            var marker = new L.Marker(location, {
-//                title: stopTiploc.Description
-//            });
-//            marker.addTo(map);
-//        }
-//    }
-//    var bounds = new L.LatLngBounds(points);
-//    map.fitBounds(bounds);
-//}
-
-function loadLiveMap() {
-    // need co-ords of stops from schedule
 }
 
 function connectToWebsocketServer() {
