@@ -118,7 +118,7 @@ var TrainNotifier;
         DateTimeFormats.dateTimeFormat = "DD/MM/YY HH:mm:ss";
         DateTimeFormats.dateTimeHashFormat = "YYYY-MM-DD/HH-mm";
         DateTimeFormats.dateQueryFormat = "YYYY-MM-DD";
-        DateTimeFormats.dateUrlFormat = "YYYY/MM/DD";
+        DateTimeFormats.dateUrlFormat = "YYYY-MM-DD";
         DateTimeFormats.dateTitleFormat = "ddd Do MMM YYYY";
         DateTimeFormats.dateTimeApiFormat = "YYYY-MM-DDTHH:mm";
         DateTimeFormats.timeFrameMinutesBefore = 15;

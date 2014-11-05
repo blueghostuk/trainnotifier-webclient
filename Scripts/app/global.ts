@@ -101,7 +101,7 @@ module TrainNotifier {
         public static dateTimeFormat = "DD/MM/YY HH:mm:ss";
         public static dateTimeHashFormat = "YYYY-MM-DD/HH-mm";
         public static dateQueryFormat = "YYYY-MM-DD";
-        public static dateUrlFormat = "YYYY/MM/DD";
+        public static dateUrlFormat = "YYYY-MM-DD";
         public static dateTitleFormat = "ddd Do MMM YYYY";
         public static dateTimeApiFormat = "YYYY-MM-DDTHH:mm";
         public static timeFrameMinutesBefore = 15;
