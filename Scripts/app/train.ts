@@ -33,10 +33,8 @@ var thisPage: IPage = {
         var cmdString = thisPage.getCommand();
         var cmd = "get";
         var args = cmdString.split('/');
-        if (args.length == 5) {
-            cmd = args[4];
-        } else if (args.length == 2) {
-            cmd = args[0];
+        if (args.length == 3) {
+            cmd = args[2];
         }
 
         if (cmd == "id") {
@@ -44,10 +42,8 @@ var thisPage: IPage = {
             return true;
         } else if (cmd == "get" || cmd == "sub") {
             var subscribe = cmd == "sub";
-            var date = "";
-            var trainUid = "";
-            trainUid = args[0]
-            date = args[1] + "-" + args[2] + "-" + args[3];
+            var date = args[1];
+            var trainUid = args[0];
             getTrainData(trainUid, date, subscribe);
             return true;
         }
