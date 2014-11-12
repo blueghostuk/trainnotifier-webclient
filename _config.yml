@@ -14,4 +14,4 @@ analyticsid: UA-40610278-2
 analyticsite: trainnotifier.co.uk
 
 # exclude visual studio and other stuff from deployment
-exclude: ["bin",".nuget",".gitattributes",".gitignore","CNAME","TrainDelayed.*","traindelayed.*","Gemfile*","README.md","LICENSE","Scripts/typings","Scripts/app/*.ts","Scripts/app/*.js.map"]
+exclude: ["bin",".nuget",".gitattributes",".gitignore","CNAME","trainnotifier-webclient.*","traindelayed.*","packages.config","Gemfile*","README.md","LICENSE","Scripts/typings","Scripts/app/*.ts","Scripts/app/*.js.map"]
