@@ -628,13 +628,17 @@ var TrainNotifier;
                     _super.call(this, "Raildar");
                 }
                 RaildarExternalSite.prototype.updateFromTrainMovement = function (train, date) {
-                    if (train && train.Schedule) {
+                    if (train && train.Schedule && (train.Actual || date)) {
+                        this.url(RaildarExternalSite.baseUrlTrain + train.Schedule.TrainUid + "&dt="
+                            + moment(train.Actual ? train.Actual.OriginDepartTimestamp : date).format("YYYY-MM-DD")));
+                    } else if (train && train.Schedule) {
                         this.url(RaildarExternalSite.baseUrl + train.Schedule.TrainUid);
                     } else {
                         this.url(null);
                     }
                 };
                 RaildarExternalSite.baseUrl = "http://raildar.co.uk/timetable/train/trainid/";
+                RaildarExternalSite.baseUrlTrain = "http://raildar.co.uk/timetable/journey?trainid=";
                 return RaildarExternalSite;
             })(ExternalSiteBase);
             Train.RaildarExternalSite = RaildarExternalSite;
