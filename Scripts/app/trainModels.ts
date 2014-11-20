@@ -687,7 +687,7 @@ module TrainNotifier.KnockoutModels.Train {
         updateFromTrainMovement(train: ITrainMovementResult, date?: string) {
             if (train && train.Schedule && (train.Actual || date)) {
                 this.url(RaildarExternalSite.baseUrlTrain + train.Schedule.TrainUid + "&dt="
-                    + moment(train.Actual ? train.Actual.OriginDepartTimestamp : date).format("YYYY-MM-DD")));
+                    + moment(train.Actual ? train.Actual.OriginDepartTimestamp : date).format("YYYY-MM-DD"));
             } else if (train && train.Schedule) {
                 this.url(RaildarExternalSite.baseUrl + train.Schedule.TrainUid);
             } else {
