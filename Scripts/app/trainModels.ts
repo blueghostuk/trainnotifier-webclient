@@ -678,13 +678,17 @@ module TrainNotifier.KnockoutModels.Train {
     export class RaildarExternalSite extends ExternalSiteBase {
 
         private static baseUrl: string = "http://raildar.co.uk/timetable/train/trainid/";
+        private static baseUrlTrain: string = "http://raildar.co.uk/timetable/journey?trainid=";
 
         constructor() {
             super("Raildar");
         }
 
         updateFromTrainMovement(train: ITrainMovementResult, date?: string) {
-            if (train && train.Schedule) {
+            if (train && train.Schedule && (train.Actual || date)) {
+                this.url(RaildarExternalSite.baseUrlTrain + train.Schedule.TrainUid + "&dt="
+                    + moment(train.Actual ? train.Actual.OriginDepartTimestamp : date).format("YYYY-MM-DD")));
+            } else if (train && train.Schedule) {
                 this.url(RaildarExternalSite.baseUrl + train.Schedule.TrainUid);
             } else {
                 this.url(null);
