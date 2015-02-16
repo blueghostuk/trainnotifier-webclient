@@ -327,7 +327,7 @@ function getTrainData(trainUid: string, date, subscribe: boolean) {
                     if (matchingStops.length > 0) {
                         var startStopNumber = matchingStops[0].StopNumber;
                         for (var i = 0; i < scheduleStops().length; i++) {
-                            if (scheduleStops()[i].stopNumber() == startStopNumber) {
+                            if (scheduleStops()[i].stopNumber == startStopNumber) {
                                 break;
                             }
                             scheduleStops()[i].cancel(true);
