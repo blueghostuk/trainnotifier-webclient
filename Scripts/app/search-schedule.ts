@@ -44,19 +44,19 @@ var thisPage: IPage = {
         switch (cmd) {
             case 'from':
                 if (args.length >= 3 && args[1] == "to") {
-                    getCallingBetweenByCrs(args[0], args[2], convertFromCrs, getDateTime(args.slice(3, 5)), (args.length <= 5 ? null : getDateTime(args.slice(3, 4).concat(args.slice(5, 7)))));
+                    getCallingBetweenByCrs(args[0], args[2], convertFromCrs, getDateTime(args.slice(3, 5)),(args.length <= 5 ? null : getDateTime(args.slice(3, 4).concat(args.slice(5, 7)))));
                     return true;
                 } else {
-                    getStartingAtByCrs(args[0], convertFromCrs, getDateTime(args.slice(1, 3)), (args.length <= 3 ? null : getDateTime(args.slice(1, 2).concat(args.slice(3, 5)))));
+                    getStartingAtByCrs(args[0], convertFromCrs, getDateTime(args.slice(1, 3)),(args.length <= 3 ? null : getDateTime(args.slice(1, 2).concat(args.slice(3, 5)))));
                     return true;
                 }
                 break;
             case 'to':
-                getDestinationByCrs(args[0], convertFromCrs, getDateTime(args.slice(1, 3)), (args.length <= 3 ? null : getDateTime(args.slice(1, 2).concat(args.slice(3, 5)))));
+                getDestinationByCrs(args[0], convertFromCrs, getDateTime(args.slice(1, 3)),(args.length <= 3 ? null : getDateTime(args.slice(1, 2).concat(args.slice(3, 5)))));
                 return true;
 
             case 'at':
-                getStation(args[0], convertFromCrs, getDateTime(args.slice(1, 3)), (args.length <= 3 ? null : getDateTime(args.slice(1, 2).concat(args.slice(3, 5)))));
+                getStation(args[0], convertFromCrs, getDateTime(args.slice(1, 3)),(args.length <= 3 ? null : getDateTime(args.slice(1, 2).concat(args.slice(3, 5)))));
                 return true;
 
             case 'nearest':
@@ -165,7 +165,7 @@ function getNearest(lat: number, lon: number) {
 
     var getMovements = webApi.getTrainMovementsNearLocation(lat, lon, 10);
     var getStations = webApi.getStationByLocation(lat, lon, 3);
-    $.when(getStations, getMovements).done(function (stations : any, movements : any) {
+    $.when(getStations, getMovements).done(function (stations: any, movements: any) {
         var data: ITrainMovementResults = movements[0];
         if (data && data.Movements.length > 0) {
             $("#no-results-row").hide();
@@ -191,11 +191,11 @@ function getNearest(lat: number, lon: number) {
         });
         searchTitleModel.from(stationNames.join(", ").capitalize() + ", & others");
     }).always(function () {
-            hide($(".progress"));
-            thisPage.advancedSwitch(false);
-        }).fail(function () {
-            show($("#error-row"));
-        });
+        hide($(".progress"));
+        thisPage.advancedSwitch(false);
+    }).fail(function () {
+        show($("#error-row"));
+    });
 }
 
 function getCallingBetweenByCrs(from: string, to: string, convertFromCrs: boolean, fromDate: Moment, toDate?: Moment) {
@@ -238,9 +238,9 @@ function getCallingBetweenByCrs(from: string, to: string, convertFromCrs: boolea
         }
         getCallingBetweenByTiploc(fromTiplocs, toTiplocs, startDate, endDate);
     }).fail(function () {
-            hide($(".progress"));
-            show($("#error-row"));
-        });
+        hide($(".progress"));
+        show($("#error-row"));
+    });
 }
 
 function getDestinationByCrs(crs: string, convertFromCrs: boolean, fromDate: Moment, toDate?: Moment) {
@@ -268,9 +268,9 @@ function getDestinationByCrs(crs: string, convertFromCrs: boolean, fromDate: Mom
     query.done(function (from) {
         getDestinationByTiploc(from, startDate, endDate);
     }).fail(function () {
-            hide($(".progress"));
-            show($("#error-row"));
-        });
+        hide($(".progress"));
+        show($("#error-row"));
+    });
 }
 
 function getStartingAtByCrs(crs: string, convertFromCrs: boolean, fromDate: Moment, toDate?: Moment) {
@@ -300,9 +300,9 @@ function getStartingAtByCrs(crs: string, convertFromCrs: boolean, fromDate: Mome
             from = [from];
         getStartingAtByTiploc(from, startDate, endDate);
     }).fail(function () {
-            hide($(".progress"));
-            show($("#error-row"));
-        });
+        hide($(".progress"));
+        show($("#error-row"));
+    });
 }
 
 function getStation(crs: string, convertFromCrs: boolean, fromDate: Moment, toDate?: Moment) {
@@ -335,9 +335,9 @@ function getStation(crs: string, convertFromCrs: boolean, fromDate: Moment, toDa
         }
         getCallingAtTiploc(at, startDate, endDate);
     }).fail(function () {
-            hide($(".progress"));
-            show($("#error-row"));
-        });
+        hide($(".progress"));
+        show($("#error-row"));
+    });
 }
 
 function getDestinationByTiploc(to: IStationTiploc, startDate: Moment, endDate: Moment) {
@@ -384,11 +384,11 @@ function getDestinationByTiploc(to: IStationTiploc, startDate: Moment, endDate: 
             show($("#no-results-row"));
         }
     }).always(function () {
-            hide($(".progress"));
-            thisPage.advancedSwitch(false);
-        }).fail(function () {
-            show($("#error-row"));
-        });
+        hide($(".progress"));
+        thisPage.advancedSwitch(false);
+    }).fail(function () {
+        show($("#error-row"));
+    });
 }
 
 function getStartingAtByTiploc(from: IStationTiploc[], startDate: Moment, endDate: Moment) {
@@ -432,11 +432,11 @@ function getStartingAtByTiploc(from: IStationTiploc[], startDate: Moment, endDat
             show($("#no-results-row"));
         }
     }).always(function () {
-            hide($(".progress"));
-            thisPage.advancedSwitch(false);
-        }).fail(function () {
-            show($("#error-row"));
-        });
+        hide($(".progress"));
+        thisPage.advancedSwitch(false);
+    }).fail(function () {
+        show($("#error-row"));
+    });
 }
 
 function getCallingAtTiploc(at: IStationTiploc[], startDate, endDate) {
@@ -482,11 +482,11 @@ function getCallingAtTiploc(at: IStationTiploc[], startDate, endDate) {
             show($("#no-results-row"));
         }
     }).always(function () {
-            hide($(".progress"));
-            thisPage.advancedSwitch(false);
-        }).fail(function () {
-            show($("#error-row"));
-        });
+        hide($(".progress"));
+        thisPage.advancedSwitch(false);
+    }).fail(function () {
+        show($("#error-row"));
+    });
 }
 
 function getCallingBetweenByTiploc(from: IStationTiploc[], to: IStationTiploc[], startDate, endDate) {
@@ -541,12 +541,12 @@ function getCallingBetweenByTiploc(from: IStationTiploc[], to: IStationTiploc[],
             $("#no-results-row").show();
         }
     }).always(function () {
-            hide($(".progress"));
-            thisPage.advancedSwitch(false);
-        }).fail(function () {
-            hide($(".progress"));
-            show($("#error-row"));
-        });
+        hide($(".progress"));
+        thisPage.advancedSwitch(false);
+    }).fail(function () {
+        hide($(".progress"));
+        show($("#error-row"));
+    });
 }
 
 function previousDate() {
