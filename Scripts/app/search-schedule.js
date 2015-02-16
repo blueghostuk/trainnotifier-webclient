@@ -70,6 +70,22 @@ var thisPage = {
         }
     }
 };
+startEndSearchResults.subscribe(function (val) {
+    onResultsChange(val);
+});
+callingAtSearchResults.subscribe(function (val) {
+    onResultsChange(val);
+});
+nearestSearchResults.subscribe(function (val) {
+    onResultsChange(val);
+});
+callingBetweenSearchResults.results.subscribe(function (val) {
+    onResultsChange(val);
+});
+function onResultsChange(val) {
+    if (val && val.length > 0)
+        thisPage.advancedSwitch(false);
+}
 TrainNotifier.Common.page = thisPage;
 var webApi;
 var toc;
@@ -158,7 +174,6 @@ function getNearest(lat, lon) {
         searchTitleModel.from(stationNames.join(", ").capitalize() + ", & others");
     }).always(function () {
         hide($(".progress"));
-        thisPage.advancedSwitch(false);
     }).fail(function () {
         show($("#error-row"));
     });
@@ -306,7 +321,7 @@ function getStation(crs, convertFromCrs, fromDate, toDate) {
     });
 }
 function getDestinationByTiploc(to, startDate, endDate) {
-    currentMode = 1 /* terminate */;
+    currentMode = TrainNotifier.Search.SearchMode.terminate;
     if (to) {
         currentToStanox = [to];
     }
@@ -339,13 +354,12 @@ function getDestinationByTiploc(to, startDate, endDate) {
         }
     }).always(function () {
         hide($(".progress"));
-        thisPage.advancedSwitch(false);
     }).fail(function () {
         show($("#error-row"));
     });
 }
 function getStartingAtByTiploc(from, startDate, endDate) {
-    currentMode = 2 /* origin */;
+    currentMode = TrainNotifier.Search.SearchMode.origin;
     if (from) {
         currentStanox = from;
     }
@@ -378,13 +392,12 @@ function getStartingAtByTiploc(from, startDate, endDate) {
         }
     }).always(function () {
         hide($(".progress"));
-        thisPage.advancedSwitch(false);
     }).fail(function () {
         show($("#error-row"));
     });
 }
 function getCallingAtTiploc(at, startDate, endDate) {
-    currentMode = 3 /* callingAt */;
+    currentMode = TrainNotifier.Search.SearchMode.callingAt;
     if (at && at.length > 0) {
         currentStanox = at;
     }
@@ -417,13 +430,12 @@ function getCallingAtTiploc(at, startDate, endDate) {
         }
     }).always(function () {
         hide($(".progress"));
-        thisPage.advancedSwitch(false);
     }).fail(function () {
         show($("#error-row"));
     });
 }
 function getCallingBetweenByTiploc(from, to, startDate, endDate) {
-    currentMode = 4 /* between */;
+    currentMode = TrainNotifier.Search.SearchMode.between;
     if (from) {
         currentStanox = from;
     }
@@ -463,7 +475,6 @@ function getCallingBetweenByTiploc(from, to, startDate, endDate) {
         }
     }).always(function () {
         hide($(".progress"));
-        thisPage.advancedSwitch(false);
     }).fail(function () {
         hide($(".progress"));
         show($("#error-row"));
@@ -474,16 +485,16 @@ function previousDate() {
     var startDate = moment(currentStartDate).subtract({ hours: TrainNotifier.DateTimeFormats.timeFrameHours });
     var endDate = moment(currentEndDate).subtract({ hours: TrainNotifier.DateTimeFormats.timeFrameHours });
     switch (currentMode) {
-        case 2 /* origin */:
+        case TrainNotifier.Search.SearchMode.origin:
             getStartingAtByTiploc(null, startDate, endDate);
             break;
-        case 1 /* terminate */:
+        case TrainNotifier.Search.SearchMode.terminate:
             getDestinationByTiploc(null, startDate, endDate);
             break;
-        case 3 /* callingAt */:
+        case TrainNotifier.Search.SearchMode.callingAt:
             getCallingAtTiploc(null, startDate, endDate);
             break;
-        case 4 /* between */:
+        case TrainNotifier.Search.SearchMode.between:
             getCallingBetweenByTiploc(null, null, startDate, endDate);
             break;
     }
@@ -493,16 +504,16 @@ function nextDate() {
     var startDate = moment(currentStartDate).add({ hours: TrainNotifier.DateTimeFormats.timeFrameHours });
     var endDate = moment(currentEndDate).add({ hours: TrainNotifier.DateTimeFormats.timeFrameHours });
     switch (currentMode) {
-        case 2 /* origin */:
+        case TrainNotifier.Search.SearchMode.origin:
             getStartingAtByTiploc(null, startDate, endDate);
             break;
-        case 1 /* terminate */:
+        case TrainNotifier.Search.SearchMode.terminate:
             getDestinationByTiploc(null, startDate, endDate);
             break;
-        case 3 /* callingAt */:
+        case TrainNotifier.Search.SearchMode.callingAt:
             getCallingAtTiploc(null, startDate, endDate);
             break;
-        case 4 /* between */:
+        case TrainNotifier.Search.SearchMode.between:
             getCallingBetweenByTiploc(null, null, startDate, endDate);
             break;
     }
@@ -520,11 +531,11 @@ function setTitle(start) {
         title += from;
         searchTitleModel.from(from);
         switch (currentMode) {
-            case 3 /* callingAt */:
+            case TrainNotifier.Search.SearchMode.callingAt:
                 searchTitleModel.link("search/at/" + currentStanox[0].CRS);
                 searchTitleModel.title("Use this as a permanent link for trains calling at this location around the current time");
                 break;
-            case 2 /* origin */:
+            case TrainNotifier.Search.SearchMode.origin:
                 searchTitleModel.link("search/from/" + currentStanox[0].CRS);
                 searchTitleModel.title("Use this as a permanent link for trains starting from this location around the current time");
                 break;
@@ -546,11 +557,11 @@ function setTitle(start) {
             searchTitleModel.to(null);
         }
         switch (currentMode) {
-            case 4 /* between */:
+            case TrainNotifier.Search.SearchMode.between:
                 searchTitleModel.link("search/from/" + currentStanox[0].CRS + "/to/" + currentToStanox[0].CRS);
                 searchTitleModel.title("Use this as a permanent link for trains calling at this location around the current time");
                 break;
-            case 1 /* terminate */:
+            case TrainNotifier.Search.SearchMode.terminate:
                 searchTitleModel.link("search/to/" + currentToStanox[0].CRS);
                 searchTitleModel.title("Use this as a permanent link for trains terminating at this location around the current time");
                 break;
@@ -570,7 +581,7 @@ function setTimeLinks() {
     var plusStartDate = moment(currentStartDate).add({ hours: TrainNotifier.DateTimeFormats.timeFrameHours });
     var url = "";
     switch (currentMode) {
-        case 2 /* origin */:
+        case TrainNotifier.Search.SearchMode.origin:
             if (currentStanox[0].CRS) {
                 url = "from/" + currentStanox[0].CRS;
             }
@@ -578,7 +589,7 @@ function setTimeLinks() {
                 url = "from/" + currentStanox[0].Stanox;
             }
             break;
-        case 1 /* terminate */:
+        case TrainNotifier.Search.SearchMode.terminate:
             if (currentToStanox[0].CRS) {
                 url = "to/" + currentToStanox[0].CRS;
             }
@@ -586,7 +597,7 @@ function setTimeLinks() {
                 url = "to/" + currentToStanox[0].Stanox;
             }
             break;
-        case 3 /* callingAt */:
+        case TrainNotifier.Search.SearchMode.callingAt:
             if (currentStanox[0].CRS) {
                 url = "at/" + currentStanox[0].CRS;
             }
@@ -594,7 +605,7 @@ function setTimeLinks() {
                 url = "at/" + currentStanox[0].Stanox;
             }
             break;
-        case 4 /* between */:
+        case TrainNotifier.Search.SearchMode.between:
             if (currentStanox[0].CRS && currentToStanox[0].CRS) {
                 url = "from/" + currentStanox[0].CRS + "/to/" + currentToStanox[0].CRS;
             }

@@ -91,6 +91,24 @@ var thisPage: IPage = {
     }
 };
 
+startEndSearchResults.subscribe((val) => {
+    onResultsChange(val);
+});
+callingAtSearchResults.subscribe((val) => {
+    onResultsChange(val);
+});
+nearestSearchResults.subscribe((val) => {
+    onResultsChange(val);
+});
+callingBetweenSearchResults.results.subscribe((val) => {
+    onResultsChange(val);
+});
+
+function onResultsChange(val: Array<any>) {
+    if (val && val.length > 0)
+        thisPage.advancedSwitch(false);
+}
+
 TrainNotifier.Common.page = thisPage;
 var webApi: IWebApi;
 var toc: string;
@@ -192,7 +210,6 @@ function getNearest(lat: number, lon: number) {
         searchTitleModel.from(stationNames.join(", ").capitalize() + ", & others");
     }).always(function () {
         hide($(".progress"));
-        thisPage.advancedSwitch(false);
     }).fail(function () {
         show($("#error-row"));
     });
@@ -385,7 +402,6 @@ function getDestinationByTiploc(to: IStationTiploc, startDate: Moment, endDate: 
         }
     }).always(function () {
         hide($(".progress"));
-        thisPage.advancedSwitch(false);
     }).fail(function () {
         show($("#error-row"));
     });
@@ -433,7 +449,6 @@ function getStartingAtByTiploc(from: IStationTiploc[], startDate: Moment, endDat
         }
     }).always(function () {
         hide($(".progress"));
-        thisPage.advancedSwitch(false);
     }).fail(function () {
         show($("#error-row"));
     });
@@ -483,7 +498,6 @@ function getCallingAtTiploc(at: IStationTiploc[], startDate, endDate) {
         }
     }).always(function () {
         hide($(".progress"));
-        thisPage.advancedSwitch(false);
     }).fail(function () {
         show($("#error-row"));
     });
@@ -542,7 +556,6 @@ function getCallingBetweenByTiploc(from: IStationTiploc[], to: IStationTiploc[],
         }
     }).always(function () {
         hide($(".progress"));
-        thisPage.advancedSwitch(false);
     }).fail(function () {
         hide($(".progress"));
         show($("#error-row"));
