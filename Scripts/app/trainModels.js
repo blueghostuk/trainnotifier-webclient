@@ -23,7 +23,7 @@ var TrainNotifier;
                     this.eAllowance = null;
                     this.paAllowance = null;
                     this.peAllowance = null;
-                    this.pass = null;
+                    this.pass = ko.observable(null);
                     this.cancel = ko.observable(false);
                     this.changePlatform = ko.observable(false);
                     this.associateLiveStop = ko.observable();
@@ -45,7 +45,7 @@ var TrainNotifier;
                         this.publicDepart = TrainNotifier.DateTimeFormats.formatTimeString(scheduleStop.PublicDeparture);
                     }
                     if (scheduleStop.Pass) {
-                        this.pass = TrainNotifier.DateTimeFormats.formatTimeString(scheduleStop.Pass);
+                        this.pass(TrainNotifier.DateTimeFormats.formatTimeString(scheduleStop.Pass));
                     }
                     this.line = scheduleStop.Line;
                     this.platform = scheduleStop.Platform;
@@ -288,16 +288,16 @@ var TrainNotifier;
             var TrainAssociation = (function () {
                 function TrainAssociation(association, currentTrainUid, currentDate) {
                     switch (association.AssociationType) {
-                        case 0 /* NextTrain */:
+                        case TrainNotifier.AssociationType.NextTrain:
                             if (association.MainTrainUid === currentTrainUid)
                                 this.title = "Forms next train: ";
                             else
                                 this.title = "Formed of train: ";
                             break;
-                        case 1 /* Join */:
+                        case TrainNotifier.AssociationType.Join:
                             this.title = "Joins with Train: ";
                             break;
-                        case 2 /* Split */:
+                        case TrainNotifier.AssociationType.Split:
                             this.title = "Splits from Train: ";
                             break;
                     }
@@ -309,10 +309,10 @@ var TrainNotifier;
                     }
                     this.date = moment(currentDate);
                     switch (association.DateType) {
-                        case 2 /* NextDay */:
+                        case TrainNotifier.AssociationDateType.NextDay:
                             this.date = this.date.add({ days: 1 });
                             break;
-                        case 1 /* PreviousDay */:
+                        case TrainNotifier.AssociationDateType.PreviousDay:
                             this.date = this.date.subtract({ days: 1 });
                             break;
                     }

@@ -29,7 +29,7 @@ module TrainNotifier.KnockoutModels.Train {
         public eAllowance: string = null;
         public paAllowance: string = null;
         public peAllowance: string = null;
-        public pass: string = null;
+        public pass = ko.observable<string>(null);
         public cancel = ko.observable<boolean>(false);
         public stopNumber: number;
         public changePlatform = ko.observable<boolean>(false);
@@ -56,7 +56,7 @@ module TrainNotifier.KnockoutModels.Train {
                 this.publicDepart = DateTimeFormats.formatTimeString(scheduleStop.PublicDeparture);
             }
             if (scheduleStop.Pass) {
-                this.pass = DateTimeFormats.formatTimeString(scheduleStop.Pass);
+                this.pass(DateTimeFormats.formatTimeString(scheduleStop.Pass));
             }
 
             this.line = scheduleStop.Line;
