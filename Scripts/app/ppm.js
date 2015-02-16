@@ -1,4 +1,4 @@
-var data = ko.observableArray();
+var data = ko.observableArray().extend({ rateLimit: 500 });
 var title = {
     ts: ko.observable(),
     next: ko.observable(65)

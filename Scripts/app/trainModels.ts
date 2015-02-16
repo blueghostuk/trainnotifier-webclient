@@ -430,7 +430,8 @@ module TrainNotifier.KnockoutModels.Train {
 
         public otherSites: IExternalSite[] = [];
 
-        public associations = ko.observableArray<TrainAssociation>();
+        public associations = ko.observableArray<TrainAssociation>()
+            .extend({ rateLimit: 500 });
 
         constructor() {
             this.otherSites.push(new RealtimeTrainsExternalSite());

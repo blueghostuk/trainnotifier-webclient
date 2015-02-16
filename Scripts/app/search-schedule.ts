@@ -8,10 +8,13 @@
 
 var searchTitleModel = new TrainNotifier.KnockoutModels.Search.TitleViewModel();
 
-var startEndSearchResults = ko.observableArray<TrainNotifier.KnockoutModels.Search.TrainMovement>();
-var callingAtSearchResults = ko.observableArray<TrainNotifier.KnockoutModels.Search.TrainMovement>();
+var startEndSearchResults = ko.observableArray<TrainNotifier.KnockoutModels.Search.TrainMovement>()
+    .extend({ rateLimit: 500 });
+var callingAtSearchResults = ko.observableArray<TrainNotifier.KnockoutModels.Search.TrainMovement>()
+    .extend({ rateLimit: 500 });
 var callingBetweenSearchResults = new TrainNotifier.KnockoutModels.Search.CallingBetweenResults();
-var nearestSearchResults = ko.observableArray<TrainNotifier.KnockoutModels.Search.NearestTrainMovement>();
+var nearestSearchResults = ko.observableArray<TrainNotifier.KnockoutModels.Search.NearestTrainMovement>()
+    .extend({ rateLimit: 500 });
 
 var currentStanox: IStationTiploc[];
 var currentToStanox: IStationTiploc[];
@@ -162,7 +165,7 @@ function getNearest(lat: number, lon: number) {
 
     var getMovements = webApi.getTrainMovementsNearLocation(lat, lon, 10);
     var getStations = webApi.getStationByLocation(lat, lon, 3);
-    $.when(getStations, getMovements).done(function (stations, movements) {
+    $.when(getStations, getMovements).done(function (stations : any, movements : any) {
         var data: ITrainMovementResults = movements[0];
         if (data && data.Movements.length > 0) {
             $("#no-results-row").hide();

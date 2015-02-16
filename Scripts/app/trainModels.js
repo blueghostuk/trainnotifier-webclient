@@ -353,7 +353,7 @@ var TrainNotifier;
                     this.changeOfOrigin = ko.observable();
                     this.reinstatement = ko.observable();
                     this.otherSites = [];
-                    this.associations = ko.observableArray();
+                    this.associations = ko.observableArray().extend({ rateLimit: 500 });
                     this.otherSites.push(new RealtimeTrainsExternalSite());
                     this.otherSites.push(new OpenTrainTimesExternalSite());
                     this.otherSites.push(new TrainsImExternalSite());

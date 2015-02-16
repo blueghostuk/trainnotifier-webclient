@@ -431,7 +431,8 @@ module TrainNotifier.KnockoutModels.Search {
         public fromShortStation = ko.observable<string>();
         public toStation = ko.observable<string>();
         public toShortStation = ko.observable<string>();
-        public results = ko.observableArray<CallingBetweenTrainMovement>();
+        public results = ko.observableArray<CallingBetweenTrainMovement>()
+            .extend({ rateLimit: 500 });
     }
 
     export class CallingBetweenTrainMovement extends TrainMovement {

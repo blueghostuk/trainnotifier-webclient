@@ -9,8 +9,10 @@
 
 var currentTrainUid = ko.observable<string>();
 var trainTitleModel = new TrainNotifier.KnockoutModels.Train.TrainTitleViewModel();
-var scheduleStops = ko.observableArray<TrainNotifier.KnockoutModels.Train.ScheduleStop>();
-var liveStops = ko.observableArray<TrainNotifier.KnockoutModels.Train.LiveStopBase>();
+var scheduleStops = ko.observableArray<TrainNotifier.KnockoutModels.Train.ScheduleStop>()
+    .extend({ rateLimit: 500 });;
+var liveStops = ko.observableArray<TrainNotifier.KnockoutModels.Train.LiveStopBase>()
+    .extend({ rateLimit: 500 });
 var currentTrainDetails = new TrainNotifier.KnockoutModels.Train.TrainDetails();
 
 var _lastTrainData: ISingleTrainMovementResult;

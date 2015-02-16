@@ -1,17 +1,14 @@
 var searchTitleModel = new TrainNotifier.KnockoutModels.Search.TitleViewModel();
-
-var startEndSearchResults = ko.observableArray();
-var callingAtSearchResults = ko.observableArray();
+var startEndSearchResults = ko.observableArray().extend({ rateLimit: 500 });
+var callingAtSearchResults = ko.observableArray().extend({ rateLimit: 500 });
 var callingBetweenSearchResults = new TrainNotifier.KnockoutModels.Search.CallingBetweenResults();
-var nearestSearchResults = ko.observableArray();
-
+var nearestSearchResults = ko.observableArray().extend({ rateLimit: 500 });
 var currentStanox;
 var currentToStanox;
 var currentStartDate = null;
 var currentEndDate = null;
 var currentMode = null;
 var currentCommand;
-
 var thisPage = {
     settingHash: true,
     setCommand: function (command) {
@@ -23,19 +20,17 @@ var thisPage = {
         var idx = cmdString.indexOf("/");
         if (idx == -1)
             return false;
-
         var cmd = cmdString.substring(0, idx);
         var args = cmdString.substring(idx + 1).split('/');
-
         $("#commandOptions > a.active").removeClass("active");
         var convertFromCrs = args[0].length == 3;
-
         switch (cmd) {
             case 'from':
                 if (args.length >= 3 && args[1] == "to") {
                     getCallingBetweenByCrs(args[0], args[2], convertFromCrs, getDateTime(args.slice(3, 5)), (args.length <= 5 ? null : getDateTime(args.slice(3, 4).concat(args.slice(5, 7)))));
                     return true;
-                } else {
+                }
+                else {
                     getStartingAtByCrs(args[0], convertFromCrs, getDateTime(args.slice(1, 3)), (args.length <= 3 ? null : getDateTime(args.slice(1, 2).concat(args.slice(3, 5)))));
                     return true;
                 }
@@ -43,16 +38,13 @@ var thisPage = {
             case 'to':
                 getDestinationByCrs(args[0], convertFromCrs, getDateTime(args.slice(1, 3)), (args.length <= 3 ? null : getDateTime(args.slice(1, 2).concat(args.slice(3, 5)))));
                 return true;
-
             case 'at':
                 getStation(args[0], convertFromCrs, getDateTime(args.slice(1, 3)), (args.length <= 3 ? null : getDateTime(args.slice(1, 2).concat(args.slice(3, 5)))));
                 return true;
-
             case 'nearest':
                 getNearest(+args[0], +args[1]);
                 return true;
         }
-
         return false;
     },
     getCommand: function () {
@@ -60,36 +52,32 @@ var thisPage = {
     },
     advancedMode: false,
     advancedSwitch: function (change) {
-        if (typeof change === "undefined") { change = true; }
+        if (change === void 0) { change = true; }
         if (change) {
             this.advancedMode = !this.advancedMode;
             $.cookie("advancedMode", this.advancedMode ? "on" : "off", { expires: 365 });
         }
         if (this.advancedMode) {
             $("#advancedSwitch").html("Simple");
-
             $(".toc-ZZ, .cat-EE, .passing, .advanced-col").removeClass("hide");
             $(".simple-col").addClass("hide");
             $(".cat-ee").show();
-        } else {
+        }
+        else {
             $("#advancedSwitch").html("Advanced");
-
             $(".toc-ZZ, .cat-EE, .passing, .advanced-col").addClass("hide");
             $(".simple-col").removeClass("hide");
         }
     }
 };
-
 TrainNotifier.Common.page = thisPage;
 var webApi;
 var toc;
-
 $(function () {
     (window.onpopstate = function () {
         var match, pl = /\+/g, search = /([^&=]+)=?([^&]*)/g, decode = function (s) {
             return decodeURIComponent(s.replace(pl, " "));
         }, query = window.location.hash.substring(1);
-
         while (match = search.exec(query)) {
             if (match[2].length > 0) {
                 toc = match[2];
@@ -111,16 +99,12 @@ $(function () {
     }
     webApi = new TrainNotifier.WebApi();
     TrainNotifier.Common.webApi = webApi;
-
     ko.applyBindings(searchTitleModel, $("#title").get(0));
-
     ko.applyBindings(startEndSearchResults, $("#start-end-at-search-results").get(0));
     ko.applyBindings(callingAtSearchResults, $("#calling-at-search-results").get(0));
     ko.applyBindings(callingBetweenSearchResults, $("#calling-between-search-results").get(0));
     ko.applyBindings(nearestSearchResults, $("#nearest-search-results").get(0));
-
     loadHashCommand();
-
     window.onhashchange = function () {
         if (!thisPage.settingHash) {
             thisPage.settingHash = true;
@@ -130,32 +114,28 @@ $(function () {
         thisPage.settingHash = false;
     };
 });
-
 function getDateTime(args) {
     if (args.length > 0) {
         if (args.length == 2) {
             return moment(args.join('/'), TrainNotifier.DateTimeFormats.dateTimeHashFormat);
-        } else if (args[0] && args[0].length > 0) {
+        }
+        else if (args[0] && args[0].length > 0) {
             return moment(args[0], TrainNotifier.DateTimeFormats.dateUrlFormat);
         }
     }
     return moment();
 }
-
 function getNearest(lat, lon) {
     preAjax();
-
     clear();
     $(".pager").hide();
     setTitle("Nearest Trains");
-
     var getMovements = webApi.getTrainMovementsNearLocation(lat, lon, 10);
     var getStations = webApi.getStationByLocation(lat, lon, 3);
     $.when(getStations, getMovements).done(function (stations, movements) {
         var data = movements[0];
         if (data && data.Movements.length > 0) {
             $("#no-results-row").hide();
-
             var viewModels = data.Movements.map(function (movement) {
                 var actualStops = movement.Actual.Stops.filter(function (element) {
                     return element.ActualTimestamp != null;
@@ -164,11 +144,11 @@ function getNearest(lat, lon) {
                 var lastTiploc = TrainNotifier.StationTiploc.findStationTiploc(lastStanox, data.Tiplocs);
                 return new TrainNotifier.KnockoutModels.Search.NearestTrainMovement(movement, lastTiploc, data.Tiplocs, currentStartDate);
             });
-
             for (var i = 0; i < viewModels.length; i++) {
                 nearestSearchResults.push(viewModels[i]);
             }
-        } else {
+        }
+        else {
             $("#no-results-row").show();
         }
         var stats = stations[0];
@@ -183,7 +163,6 @@ function getNearest(lat, lon) {
         show($("#error-row"));
     });
 }
-
 function getCallingBetweenByCrs(from, to, convertFromCrs, fromDate, toDate) {
     $("#commandOptions > a#from-to" + (convertFromCrs ? "-crs" : "")).addClass("active");
     var startDate;
@@ -191,35 +170,37 @@ function getCallingBetweenByCrs(from, to, convertFromCrs, fromDate, toDate) {
     if (toDate) {
         startDate = fromDate;
         endDate = toDate;
-    } else {
+    }
+    else {
         startDate = moment(fromDate).subtract({ minutes: TrainNotifier.DateTimeFormats.timeFrameMinutesBefore });
         endDate = moment(fromDate).add({ hours: TrainNotifier.DateTimeFormats.timeFrameHours });
     }
     if (endDate.isBefore(startDate)) {
         endDate.add('days', 1);
     }
-
     var fromQuery, toQuery;
     if (convertFromCrs) {
         fromQuery = webApi.getAllStanoxByCrsCode(from);
         toQuery = webApi.getAllStanoxByCrsCode(to);
-    } else {
+    }
+    else {
         fromQuery = webApi.getStanox(from);
         toQuery = webApi.getStanox(to);
     }
-
     preAjax();
     $.when(fromQuery, toQuery).done(function (from, to) {
         var fromTiplocs;
         var toTiplocs;
         if (!from[0].length) {
             fromTiplocs = [from[0]];
-        } else {
+        }
+        else {
             fromTiplocs = from[0];
         }
         if (!to[0].length) {
             toTiplocs = [to[0]];
-        } else {
+        }
+        else {
             toTiplocs = to[0];
         }
         getCallingBetweenByTiploc(fromTiplocs, toTiplocs, startDate, endDate);
@@ -228,7 +209,6 @@ function getCallingBetweenByCrs(from, to, convertFromCrs, fromDate, toDate) {
         show($("#error-row"));
     });
 }
-
 function getDestinationByCrs(crs, convertFromCrs, fromDate, toDate) {
     $("#commandOptions > a#to" + (convertFromCrs ? "-crs" : "")).addClass("active");
     var startDate;
@@ -236,7 +216,8 @@ function getDestinationByCrs(crs, convertFromCrs, fromDate, toDate) {
     if (toDate) {
         startDate = fromDate;
         endDate = toDate;
-    } else {
+    }
+    else {
         startDate = moment(fromDate).subtract({ minutes: TrainNotifier.DateTimeFormats.timeFrameMinutesBefore });
         endDate = moment(fromDate).add({ hours: TrainNotifier.DateTimeFormats.timeFrameHours });
     }
@@ -245,10 +226,10 @@ function getDestinationByCrs(crs, convertFromCrs, fromDate, toDate) {
     }
     var query;
     preAjax();
-
     if (convertFromCrs) {
         query = webApi.getStanoxByCrsCode(crs);
-    } else {
+    }
+    else {
         query = webApi.getStanox(crs);
     }
     query.done(function (from) {
@@ -258,7 +239,6 @@ function getDestinationByCrs(crs, convertFromCrs, fromDate, toDate) {
         show($("#error-row"));
     });
 }
-
 function getStartingAtByCrs(crs, convertFromCrs, fromDate, toDate) {
     $("#commandOptions > a#from" + (convertFromCrs ? "-crs" : "")).addClass("active");
     var startDate;
@@ -266,19 +246,20 @@ function getStartingAtByCrs(crs, convertFromCrs, fromDate, toDate) {
     if (toDate) {
         startDate = fromDate;
         endDate = toDate;
-    } else {
+    }
+    else {
         startDate = moment(fromDate).subtract({ minutes: TrainNotifier.DateTimeFormats.timeFrameMinutesBefore });
         endDate = moment(fromDate).add({ hours: TrainNotifier.DateTimeFormats.timeFrameHours });
     }
     if (endDate.isBefore(startDate)) {
         endDate.add('days', 1);
     }
-
     var query;
     preAjax();
     if (convertFromCrs) {
         query = webApi.getAllStanoxByCrsCode(crs);
-    } else {
+    }
+    else {
         query = webApi.getStanox(crs);
     }
     query.done(function (from) {
@@ -290,7 +271,6 @@ function getStartingAtByCrs(crs, convertFromCrs, fromDate, toDate) {
         show($("#error-row"));
     });
 }
-
 function getStation(crs, convertFromCrs, fromDate, toDate) {
     $("#commandOptions > a#at" + (convertFromCrs ? "-crs" : "")).addClass("active");
     var startDate;
@@ -298,20 +278,20 @@ function getStation(crs, convertFromCrs, fromDate, toDate) {
     if (toDate) {
         startDate = fromDate;
         endDate = toDate;
-    } else {
+    }
+    else {
         startDate = moment(fromDate).subtract({ minutes: TrainNotifier.DateTimeFormats.timeFrameMinutesBefore });
         endDate = moment(fromDate).add({ hours: TrainNotifier.DateTimeFormats.timeFrameHours });
     }
     if (endDate.isBefore(startDate)) {
         endDate.add('days', 1);
     }
-
     var query;
     preAjax();
-
     if (convertFromCrs) {
         query = webApi.getAllStanoxByCrsCode(crs);
-    } else {
+    }
+    else {
         query = webApi.getStanox(crs);
     }
     query.done(function (at) {
@@ -325,7 +305,6 @@ function getStation(crs, convertFromCrs, fromDate, toDate) {
         show($("#error-row"));
     });
 }
-
 function getDestinationByTiploc(to, startDate, endDate) {
     currentMode = 1 /* terminate */;
     if (to) {
@@ -335,29 +314,27 @@ function getDestinationByTiploc(to, startDate, endDate) {
     currentStartDate = startDate;
     currentEndDate = endDate;
     clear();
-
     setTitle("Trains terminating at " + TrainNotifier.StationTiploc.toDisplayString(currentToStanox[0]));
     setTimeLinks();
-
     var query;
     var startDateQuery = currentStartDate.format(TrainNotifier.DateTimeFormats.dateTimeApiFormat);
     var endDateQuery = currentEndDate.format(TrainNotifier.DateTimeFormats.dateTimeApiFormat);
     if (currentToStanox[0].CRS && currentToStanox[0].CRS.length == 3) {
         query = webApi.getTrainMovementsTerminatingAtStation(currentToStanox[0].CRS, startDateQuery, endDateQuery, toc);
-    } else {
+    }
+    else {
         query = webApi.getTrainMovementsTerminatingAtLocation(currentToStanox[0].Stanox, startDateQuery, endDateQuery, toc);
     }
-
     query.done(function (data) {
         if (data && data.Movements.length > 0) {
             var viewModels = data.Movements.map(function (movement) {
                 return new TrainNotifier.KnockoutModels.Search.TerminatingAtTrainMovement(movement, data.Tiplocs, currentStartDate);
             });
-
             for (var i = 0; i < viewModels.length; i++) {
                 startEndSearchResults.push(viewModels[i]);
             }
-        } else {
+        }
+        else {
             show($("#no-results-row"));
         }
     }).always(function () {
@@ -367,7 +344,6 @@ function getDestinationByTiploc(to, startDate, endDate) {
         show($("#error-row"));
     });
 }
-
 function getStartingAtByTiploc(from, startDate, endDate) {
     currentMode = 2 /* origin */;
     if (from) {
@@ -379,13 +355,13 @@ function getStartingAtByTiploc(from, startDate, endDate) {
     clear();
     setTitle("Trains starting at " + TrainNotifier.StationTiploc.toDisplayString(currentStanox[0]));
     setTimeLinks();
-
     var query;
     var startDateQuery = currentStartDate.format(TrainNotifier.DateTimeFormats.dateTimeApiFormat);
     var endDateQuery = currentEndDate.format(TrainNotifier.DateTimeFormats.dateTimeApiFormat);
     if (currentStanox[0].CRS && currentStanox[0].CRS.length == 3) {
         query = webApi.getTrainMovementsStartingAtStation(currentStanox[0].CRS, startDateQuery, endDateQuery, toc);
-    } else {
+    }
+    else {
         query = webApi.getTrainMovementsStartingAtLocation(currentStanox[0].Stanox, startDateQuery, endDateQuery, toc);
     }
     query.done(function (data) {
@@ -393,11 +369,11 @@ function getStartingAtByTiploc(from, startDate, endDate) {
             var viewModels = data.Movements.map(function (movement) {
                 return new TrainNotifier.KnockoutModels.Search.StartingAtTrainMovement(movement, data.Tiplocs, currentStartDate);
             });
-
             for (var i = 0; i < viewModels.length; i++) {
                 startEndSearchResults.push(viewModels[i]);
             }
-        } else {
+        }
+        else {
             show($("#no-results-row"));
         }
     }).always(function () {
@@ -407,7 +383,6 @@ function getStartingAtByTiploc(from, startDate, endDate) {
         show($("#error-row"));
     });
 }
-
 function getCallingAtTiploc(at, startDate, endDate) {
     currentMode = 3 /* callingAt */;
     if (at && at.length > 0) {
@@ -419,26 +394,25 @@ function getCallingAtTiploc(at, startDate, endDate) {
     clear();
     setTitle("Trains calling at " + TrainNotifier.StationTiploc.toDisplayString(currentStanox[0]));
     setTimeLinks();
-
     var query;
     var startDateQuery = currentStartDate.format(TrainNotifier.DateTimeFormats.dateTimeApiFormat);
     var endDateQuery = currentEndDate.format(TrainNotifier.DateTimeFormats.dateTimeApiFormat);
     if (currentStanox[0].CRS && currentStanox[0].CRS.length == 3) {
         query = webApi.getTrainMovementsCallingAtStation(currentStanox[0].CRS, startDateQuery, endDateQuery, toc);
-    } else {
+    }
+    else {
         query = webApi.getTrainMovementsCallingAtLocation(currentStanox[0].Stanox, startDateQuery, endDateQuery, toc);
     }
-
     query.done(function (data) {
         if (data && data.Movements.length > 0) {
             var viewModels = data.Movements.map(function (movement) {
                 return new TrainNotifier.KnockoutModels.Search.CallingAtTrainMovement(movement, currentStanox, data.Tiplocs, currentStartDate);
             });
-
             for (var i = 0; i < viewModels.length; i++) {
                 callingAtSearchResults.push(viewModels[i]);
             }
-        } else {
+        }
+        else {
             show($("#no-results-row"));
         }
     }).always(function () {
@@ -448,7 +422,6 @@ function getCallingAtTiploc(at, startDate, endDate) {
         show($("#error-row"));
     });
 }
-
 function getCallingBetweenByTiploc(from, to, startDate, endDate) {
     currentMode = 4 /* between */;
     if (from) {
@@ -466,28 +439,26 @@ function getCallingBetweenByTiploc(from, to, startDate, endDate) {
     callingBetweenSearchResults.toStation(TrainNotifier.StationTiploc.toDisplayString(currentToStanox[0]));
     callingBetweenSearchResults.toShortStation(currentToStanox[0].CRS ? currentToStanox[0].CRS : "");
     setTimeLinks();
-
     var query;
     var startDateQuery = currentStartDate.format(TrainNotifier.DateTimeFormats.dateTimeApiFormat);
     var endDateQuery = currentEndDate.format(TrainNotifier.DateTimeFormats.dateTimeApiFormat);
     if (currentStanox[0].CRS && currentStanox[0].CRS.length == 3 && currentToStanox[0].CRS && currentToStanox[0].CRS.length == 3) {
         query = webApi.getTrainMovementsBetweenStations(currentStanox[0].CRS, currentToStanox[0].CRS, startDateQuery, endDateQuery, toc);
-    } else {
+    }
+    else {
         query = webApi.getTrainMovementsBetweenLocations(currentStanox[0].Stanox, currentToStanox[0].Stanox, startDateQuery, endDateQuery, toc);
     }
-
     query.done(function (data) {
         if (data && data.Movements.length > 0) {
             $("#no-results-row").hide();
-
             var viewModels = data.Movements.map(function (movement) {
                 return new TrainNotifier.KnockoutModels.Search.CallingBetweenTrainMovement(movement, currentStanox, currentToStanox, data.Tiplocs, currentStartDate);
             });
-
             for (var i = 0; i < viewModels.length; i++) {
                 callingBetweenSearchResults.results.push(viewModels[i]);
             }
-        } else {
+        }
+        else {
             $("#no-results-row").show();
         }
     }).always(function () {
@@ -498,7 +469,6 @@ function getCallingBetweenByTiploc(from, to, startDate, endDate) {
         show($("#error-row"));
     });
 }
-
 function previousDate() {
     preAjax();
     var startDate = moment(currentStartDate).subtract({ hours: TrainNotifier.DateTimeFormats.timeFrameHours });
@@ -518,7 +488,6 @@ function previousDate() {
             break;
     }
 }
-
 function nextDate() {
     preAjax();
     var startDate = moment(currentStartDate).add({ hours: TrainNotifier.DateTimeFormats.timeFrameHours });
@@ -538,14 +507,12 @@ function nextDate() {
             break;
     }
 }
-
 function clear() {
     startEndSearchResults.removeAll();
     callingAtSearchResults.removeAll();
     callingBetweenSearchResults.results.removeAll();
     nearestSearchResults.removeAll();
 }
-
 function setTitle(start) {
     var title = start;
     if (currentStanox && currentStanox.length > 0) {
@@ -557,13 +524,13 @@ function setTitle(start) {
                 searchTitleModel.link("search/at/" + currentStanox[0].CRS);
                 searchTitleModel.title("Use this as a permanent link for trains calling at this location around the current time");
                 break;
-
             case 2 /* origin */:
                 searchTitleModel.link("search/from/" + currentStanox[0].CRS);
                 searchTitleModel.title("Use this as a permanent link for trains starting from this location around the current time");
                 break;
         }
-    } else {
+    }
+    else {
         searchTitleModel.from(null);
         searchTitleModel.link(null);
         searchTitleModel.title(null);
@@ -573,7 +540,8 @@ function setTitle(start) {
         if (currentStanox) {
             title += " to ";
             searchTitleModel.to(to);
-        } else {
+        }
+        else {
             searchTitleModel.from(to);
             searchTitleModel.to(null);
         }
@@ -582,7 +550,6 @@ function setTitle(start) {
                 searchTitleModel.link("search/from/" + currentStanox[0].CRS + "/to/" + currentToStanox[0].CRS);
                 searchTitleModel.title("Use this as a permanent link for trains calling at this location around the current time");
                 break;
-
             case 1 /* terminate */:
                 searchTitleModel.link("search/to/" + currentToStanox[0].CRS);
                 searchTitleModel.title("Use this as a permanent link for trains terminating at this location around the current time");
@@ -598,7 +565,6 @@ function setTitle(start) {
     }
     searchTitleModel.setTitle(title);
 }
-
 function setTimeLinks() {
     var minusStartDate = moment(currentStartDate).subtract({ hours: TrainNotifier.DateTimeFormats.timeFrameHours });
     var plusStartDate = moment(currentStartDate).add({ hours: TrainNotifier.DateTimeFormats.timeFrameHours });
@@ -607,43 +573,43 @@ function setTimeLinks() {
         case 2 /* origin */:
             if (currentStanox[0].CRS) {
                 url = "from/" + currentStanox[0].CRS;
-            } else {
+            }
+            else {
                 url = "from/" + currentStanox[0].Stanox;
             }
             break;
         case 1 /* terminate */:
             if (currentToStanox[0].CRS) {
                 url = "to/" + currentToStanox[0].CRS;
-            } else {
+            }
+            else {
                 url = "to/" + currentToStanox[0].Stanox;
             }
             break;
         case 3 /* callingAt */:
             if (currentStanox[0].CRS) {
                 url = "at/" + currentStanox[0].CRS;
-            } else {
+            }
+            else {
                 url = "at/" + currentStanox[0].Stanox;
             }
             break;
         case 4 /* between */:
             if (currentStanox[0].CRS && currentToStanox[0].CRS) {
                 url = "from/" + currentStanox[0].CRS + "/to/" + currentToStanox[0].CRS;
-            } else {
+            }
+            else {
                 url = "from/" + currentStanox[0].Stanox + "/to/" + currentToStanox[0].Stanox;
             }
             break;
     }
-
     var tocUrl = "";
     if (toc)
         tocUrl = "?toc=" + toc;
-
     $(".neg-hrs").attr("href", "#!" + url + minusStartDate.format(TrainNotifier.DateTimeFormats.dateTimeHashFormat) + tocUrl);
     $(".plus-hrs").attr("href", "#!" + url + plusStartDate.format(TrainNotifier.DateTimeFormats.dateTimeHashFormat) + tocUrl);
-
     setHash("!" + url, moment(currentStartDate).format(TrainNotifier.DateTimeFormats.dateTimeHashFormat) + "/" + moment(currentEndDate).format(TrainNotifier.DateTimeFormats.timeUrlFormat), true);
 }
-
 function loadHashCommand() {
     if (document.location.hash.length > 0) {
         thisPage.setCommand(document.location.hash.substr(1));
@@ -651,13 +617,12 @@ function loadHashCommand() {
     }
     return false;
 }
-
 var _lastHash;
-
 function setHash(hash, dateHash, dontLoad) {
     if (!hash) {
         hash = _lastHash;
-    } else {
+    }
+    else {
         _lastHash = hash;
     }
     if (dateHash) {

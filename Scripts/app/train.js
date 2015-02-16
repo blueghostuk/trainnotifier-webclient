@@ -1,7 +1,8 @@
 var currentTrainUid = ko.observable();
 var trainTitleModel = new TrainNotifier.KnockoutModels.Train.TrainTitleViewModel();
-var scheduleStops = ko.observableArray();
-var liveStops = ko.observableArray();
+var scheduleStops = ko.observableArray().extend({ rateLimit: 500 });
+;
+var liveStops = ko.observableArray().extend({ rateLimit: 500 });
 var currentTrainDetails = new TrainNotifier.KnockoutModels.Train.TrainDetails();
 var _lastTrainData;
 var currentTiplocs = [];
