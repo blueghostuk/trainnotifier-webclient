@@ -52,11 +52,13 @@ module TrainNotifier.KnockoutModels.Search {
         public toStation: string = "";
         public toStationCss: string = null;
 
-        public computedCss: string;
+        protected cssElements = ko.observableArray<string>();
+
+        public computedCss: KnockoutComputed<string>;
 
         public category = "cat-na";
 
-        constructor(trainMovement: ITrainMovementResult, tiplocs: IStationTiploc[], queryStartDate: Moment) {
+        constructor(trainMovement: ITrainMovementResult, tiplocs: IStationTiploc[], queryStartDate: Moment, advancedMode: KnockoutObservable<boolean>) {
             var self = this;
 
             this.trainId = trainMovement.Schedule.TrainUid;
@@ -135,27 +137,33 @@ module TrainNotifier.KnockoutModels.Search {
                 }
             }
 
-            var css = [];
             if (this.cancel) {
-                css.push("cancel");
+                this.cssElements.push("cancel");
             }
             if (this.changeOfOrigin) {
-                css.push("info");
+                this.cssElements.push("info");
             }
             if (this.reinstate) {
-                css.push("reinstatement");
+                this.cssElements.push("reinstatement");
             }
             if (this.operatorCode) {
-                css.push("toc-" + self.operatorCode);
+                this.cssElements.push("toc-" + self.operatorCode);
             }
             if (this.category) {
-                css.push("cat-" + self.category);
+                this.cssElements.push("cat-" + self.category);
             }
             if (!trainMovement.Actual || !trainMovement.Actual.Activated) {
-                css.push("unactivated");
+                this.cssElements.push("unactivated");
             }
 
-            this.computedCss = css.join(" ");
+            this.computedCss = ko.pureComputed(() => {
+                var css = this.cssElements().join(" ");
+
+                if (!advancedMode() && this.cssElements().some((val) => val == "toc-ZZ" || val == "cat-EE" || val == "passing"))
+                    css += " hide";
+
+                return css;
+            });
         }
 
         public static matchesTiploc(stanoxCode: string, tiplocs: IStationTiploc[]) {
@@ -177,8 +185,8 @@ module TrainNotifier.KnockoutModels.Search {
         public wttArrival: string = null;
         public actualArrival: string = null;
 
-        constructor(trainMovement: ITrainMovementResult, tiplocs: IStationTiploc[], queryStartDate: Moment) {
-            super(trainMovement, tiplocs, queryStartDate);
+        constructor(trainMovement: ITrainMovementResult, tiplocs: IStationTiploc[], queryStartDate: Moment, advancedMode: KnockoutObservable<boolean>) {
+            super(trainMovement, tiplocs, queryStartDate, advancedMode);
 
             var toStop: IRunningScheduleTrainStop;
             if (trainMovement.Schedule.Stops.length > 0) {
@@ -241,8 +249,8 @@ module TrainNotifier.KnockoutModels.Search {
         public wttArrival: string = null;
         public actualArrival: string = null;
 
-        constructor(trainMovement: ITrainMovementResult, tiplocs: IStationTiploc[], queryStartDate: Moment) {
-            super(trainMovement, tiplocs, queryStartDate);
+        constructor(trainMovement: ITrainMovementResult, tiplocs: IStationTiploc[], queryStartDate: Moment, advancedMode: KnockoutObservable<boolean>) {
+            super(trainMovement, tiplocs, queryStartDate, advancedMode);
 
             var toStop: IRunningScheduleTrainStop;
             if (trainMovement.Schedule.Stops.length > 0) {
@@ -308,8 +316,8 @@ module TrainNotifier.KnockoutModels.Search {
 
         public pass = false;
 
-        constructor(trainMovement: ITrainMovementResult, atTiplocs: IStationTiploc[], tiplocs: IStationTiploc[], queryStartDate: Moment) {
-            super(trainMovement, tiplocs, queryStartDate);
+        constructor(trainMovement: ITrainMovementResult, atTiplocs: IStationTiploc[], tiplocs: IStationTiploc[], queryStartDate: Moment, advancedMode: KnockoutObservable<boolean>) {
+            super(trainMovement, tiplocs, queryStartDate, advancedMode);
 
             var atStop: IRunningScheduleTrainStop;
             if (trainMovement.Schedule.Stops.length > 0) {
@@ -399,30 +407,10 @@ module TrainNotifier.KnockoutModels.Search {
                 this.atActualDeparture = DateTimeFormats.formatTimeDuration(this.departure);
             }
 
-            var css = [];
             if (this.pass) {
-                css.push("passing")
-                }
-            if (this.cancel) {
-                css.push("cancel");
-            }
-            if (this.changeOfOrigin) {
-                css.push("info");
-            }
-            if (this.reinstate) {
-                css.push("reinstatement");
-            }
-            if (this.operatorCode) {
-                css.push("toc-" + this.operatorCode);
-            }
-            if (this.category) {
-                css.push("cat-" + this.category);
-            }
-            if (!trainMovement.Actual || !trainMovement.Actual.Activated) {
-                css.push("unactivated");
+                this.cssElements.push("passing")
             }
 
-            this.computedCss = css.join(" ");
         }
     }
 
@@ -450,8 +438,8 @@ module TrainNotifier.KnockoutModels.Search {
         public passDeparture = false;
         public passArrival = false;
 
-        constructor(trainMovement: ITrainMovementResult, fromTiplocs: IStationTiploc[], toTiplocs: IStationTiploc[], tiplocs: IStationTiploc[], queryStartDate: Moment) {
-            super(trainMovement, tiplocs, queryStartDate);
+        constructor(trainMovement: ITrainMovementResult, fromTiplocs: IStationTiploc[], toTiplocs: IStationTiploc[], tiplocs: IStationTiploc[], queryStartDate: Moment, advancedMode: KnockoutObservable<boolean>) {
+            super(trainMovement, tiplocs, queryStartDate, advancedMode);
 
             if (trainMovement.Schedule.Stops.length > 0) {
                 var originStop = trainMovement.Schedule.Stops[0];
@@ -532,31 +520,9 @@ module TrainNotifier.KnockoutModels.Search {
                 }
             }
 
-
-            var css = [];
-            if (this.cancel) {
-                css.push("cancel");
-            }
-            if (this.changeOfOrigin) {
-                css.push("info");
-            }
-            if (this.reinstate) {
-                css.push("reinstatement");
-            }
-            if (this.operatorCode) {
-                css.push("toc-" + this.operatorCode);
-            }
-            if (this.category) {
-                css.push("cat-" + this.category);
-            }
             if (this.passArrival || this.passDeparture) {
-                css.push("passing");
+                this.cssElements.push("passing");
             }
-            if (!trainMovement.Actual || !trainMovement.Actual.Activated) {
-                css.push("unactivated");
-            }
-
-            this.computedCss = css.join(" ");
         }
     }
 
@@ -564,8 +530,8 @@ module TrainNotifier.KnockoutModels.Search {
 
         public atStation: string = "";
 
-        constructor(trainMovement: ITrainMovementResult, atTiploc: IStationTiploc, tiplocs: IStationTiploc[], queryStartDate: Moment) {
-            super(trainMovement, [atTiploc], [atTiploc], tiplocs, queryStartDate);
+        constructor(trainMovement: ITrainMovementResult, atTiploc: IStationTiploc, tiplocs: IStationTiploc[], queryStartDate: Moment, advancedMode: KnockoutObservable<boolean>) {
+            super(trainMovement, [atTiploc], [atTiploc], tiplocs, queryStartDate, advancedMode);
 
             this.atStation = atTiploc.Description.toLowerCase();
         }

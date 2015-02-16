@@ -20,7 +20,7 @@ module TrainNotifier.KnockoutModels.Routes {
         public highlight: boolean = false;
 
         constructor(trainMovement: ITrainMovementResult, tiplocs: IStationTiploc[], queryStartDate: Moment) {
-            super(trainMovement, tiplocs, queryStartDate);
+            super(trainMovement, tiplocs, queryStartDate, ko.observable(true));
 
             if (trainMovement.Schedule.Stops.length > 0) {
                 var fromStop = trainMovement.Schedule.Stops[0];

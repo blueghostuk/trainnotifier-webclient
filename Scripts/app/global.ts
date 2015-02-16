@@ -3,7 +3,7 @@
 /// <reference path="../typings/bootstrap/bootstrap.d.ts" />
 /// <reference path="webApi.ts" />
 
-interface IPage {
+interface Page {
     setCommand? (command: string);
     parseCommand? (): boolean;
     getCommand? (): string;
@@ -11,11 +11,11 @@ interface IPage {
     wsOpenCommand? ();
     settingHash: boolean;
     pageTitle?: string;
-    advancedMode?: boolean;
+    advancedMode?: KnockoutObservable<boolean>;
     advancedSwitch? (change?: boolean);
 }
 
-interface IServerSettings {
+interface ServerSettings {
     apiUrl: string;
     wsUrl: string;
     apiName: string;
@@ -53,8 +53,8 @@ module TrainNotifier {
     // Class
     export class Common {
 
-        static serverSettings: IServerSettings;
-        static page: IPage;
+        static serverSettings: ServerSettings;
+        static page: Page;
         static webApi: IWebApi;
 
         static displayStanox(stanox: IStationTiploc) {

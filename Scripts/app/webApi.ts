@@ -48,7 +48,7 @@ module TrainNotifier {
 
         private static tiplocsLocalStorageKey = "tn-tiplocs";
 
-        constructor(public serverSettings?: IServerSettings) {
+        constructor(public serverSettings?: ServerSettings) {
             if (!serverSettings) {
                 this.serverSettings = TrainNotifier.Common.serverSettings;
             }

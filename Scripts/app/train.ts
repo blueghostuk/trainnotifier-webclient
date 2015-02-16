@@ -10,9 +10,9 @@
 var currentTrainUid = ko.observable<string>();
 var trainTitleModel = new TrainNotifier.KnockoutModels.Train.TrainTitleViewModel();
 var scheduleStops = ko.observableArray<TrainNotifier.KnockoutModels.Train.ScheduleStop>()
-    .extend({ rateLimit: 500 });;
+    .extend({ method: "notifyWhenChangesStop", rateLimit: 500 });;
 var liveStops = ko.observableArray<TrainNotifier.KnockoutModels.Train.LiveStopBase>()
-    .extend({ rateLimit: 500 });
+    .extend({ method: "notifyWhenChangesStop", rateLimit: 500 });
 var currentTrainDetails = new TrainNotifier.KnockoutModels.Train.TrainDetails();
 
 var _lastTrainData: ISingleTrainMovementResult;
@@ -20,7 +20,7 @@ var currentTiplocs: IStationTiploc[] = [];
 var webSockets = new TrainNotifier.WebSockets();
 var currentCommand: string;
 
-var thisPage: IPage = {
+var thisPage: Page = {
     settingHash: false,
     setCommand: function (command: string) {
         var original = command;
@@ -61,13 +61,13 @@ var thisPage: IPage = {
     setStatus: function (status: string) {
         $("#status").html(status);
     },
-    advancedMode: false,
+    advancedMode: ko.observable(false),
     advancedSwitch: function (change: boolean = true) {
         if (change) {
-            this.advancedMode = !this.advancedMode;
+            this.advancedMode(!this.advancedMode());
             $.cookie("advancedMode-train", this.advancedMode ? "on" : "off", { expires: 365 });
         }
-        if (this.advancedMode) {
+        if (this.advancedMode()) {
             $("#advancedSwitch").html("Simple");
 
             $(".pass, .advanced-col").removeClass("hide");
@@ -80,21 +80,6 @@ var thisPage: IPage = {
         }
     }
 };
-
-scheduleStops.subscribe((val) => {
-    onTrainResultsChange(val);
-});
-liveStops.subscribe((val) => {
-    onTrainResultsChange(val);
-});
-currentTrainDetails.associations.subscribe((val) => {
-    onTrainResultsChange(val);
-});
-
-function onTrainResultsChange(val: Array<any>) {
-    if (val && val.length > 0)
-        thisPage.advancedSwitch(false);
-}
 
 TrainNotifier.Common.page = thisPage;
 var webApi: IWebApi;
@@ -119,7 +104,7 @@ $(function () {
     });
     var advancedCookie = $.cookie("advancedMode-train");
     if (advancedCookie && advancedCookie == "on") {
-        thisPage.advancedMode = true;
+        thisPage.advancedMode(true);
         thisPage.advancedSwitch(false);
     }
 

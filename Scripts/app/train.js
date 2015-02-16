@@ -1,8 +1,8 @@
 var currentTrainUid = ko.observable();
 var trainTitleModel = new TrainNotifier.KnockoutModels.Train.TrainTitleViewModel();
-var scheduleStops = ko.observableArray().extend({ rateLimit: 500 });
+var scheduleStops = ko.observableArray().extend({ method: "notifyWhenChangesStop", rateLimit: 500 });
 ;
-var liveStops = ko.observableArray().extend({ rateLimit: 500 });
+var liveStops = ko.observableArray().extend({ method: "notifyWhenChangesStop", rateLimit: 500 });
 var currentTrainDetails = new TrainNotifier.KnockoutModels.Train.TrainDetails();
 var _lastTrainData;
 var currentTiplocs = [];
@@ -49,14 +49,14 @@ var thisPage = {
     setStatus: function (status) {
         $("#status").html(status);
     },
-    advancedMode: false,
+    advancedMode: ko.observable(false),
     advancedSwitch: function (change) {
         if (change === void 0) { change = true; }
         if (change) {
-            this.advancedMode = !this.advancedMode;
+            this.advancedMode(!this.advancedMode());
             $.cookie("advancedMode-train", this.advancedMode ? "on" : "off", { expires: 365 });
         }
-        if (this.advancedMode) {
+        if (this.advancedMode()) {
             $("#advancedSwitch").html("Simple");
             $(".pass, .advanced-col").removeClass("hide");
             $(".simple-col").addClass("hide");
@@ -68,19 +68,6 @@ var thisPage = {
         }
     }
 };
-scheduleStops.subscribe(function (val) {
-    onTrainResultsChange(val);
-});
-liveStops.subscribe(function (val) {
-    onTrainResultsChange(val);
-});
-currentTrainDetails.associations.subscribe(function (val) {
-    onTrainResultsChange(val);
-});
-function onTrainResultsChange(val) {
-    if (val && val.length > 0)
-        thisPage.advancedSwitch(false);
-}
 TrainNotifier.Common.page = thisPage;
 var webApi;
 $(function () {
@@ -101,7 +88,7 @@ $(function () {
     });
     var advancedCookie = $.cookie("advancedMode-train");
     if (advancedCookie && advancedCookie == "on") {
-        thisPage.advancedMode = true;
+        thisPage.advancedMode(true);
         thisPage.advancedSwitch(false);
     }
     try {
@@ -324,10 +311,10 @@ function getTrainData(trainUid, date, subscribe) {
                 trainTitleModel.id(data.Movement.Actual.HeadCode);
                 if (data.Movement.Actual.Stops.length > 0) {
                     var arrivals = data.Movement.Actual.Stops.filter(function (stop) {
-                        return stop.EventType === TrainNotifier.EventType.Arrival && (stop.ScheduleStopNumber != 0 || (stop.ScheduleStopNumber == 0 && stop.Source == TrainNotifier.LiveTrainStopSource.TD));
+                        return stop.EventType === 2 /* Arrival */ && (stop.ScheduleStopNumber != 0 || (stop.ScheduleStopNumber == 0 && stop.Source == 1 /* TD */));
                     });
                     var departures = data.Movement.Actual.Stops.filter(function (stop) {
-                        return stop.EventType === TrainNotifier.EventType.Departure;
+                        return stop.EventType === 1 /* Departure */;
                     });
                     var modelStops = [];
                     for (var i = 0; i < arrivals.length; i++) {

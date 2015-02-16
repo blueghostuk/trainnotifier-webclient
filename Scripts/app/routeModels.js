@@ -21,7 +21,7 @@ var TrainNotifier;
             var RouteTrainMovement = (function (_super) {
                 __extends(RouteTrainMovement, _super);
                 function RouteTrainMovement(trainMovement, tiplocs, queryStartDate) {
-                    _super.call(this, trainMovement, tiplocs, queryStartDate);
+                    _super.call(this, trainMovement, tiplocs, queryStartDate, ko.observable(true));
                     this.departure = "";
                     this.arrival = "";
                     this.highlight = false;
