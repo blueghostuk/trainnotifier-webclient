@@ -288,16 +288,16 @@ var TrainNotifier;
             var TrainAssociation = (function () {
                 function TrainAssociation(association, currentTrainUid, currentDate) {
                     switch (association.AssociationType) {
-                        case TrainNotifier.AssociationType.NextTrain:
+                        case 0 /* NextTrain */:
                             if (association.MainTrainUid === currentTrainUid)
                                 this.title = "Forms next train: ";
                             else
                                 this.title = "Formed of train: ";
                             break;
-                        case TrainNotifier.AssociationType.Join:
+                        case 1 /* Join */:
                             this.title = "Joins with Train: ";
                             break;
-                        case TrainNotifier.AssociationType.Split:
+                        case 2 /* Split */:
                             this.title = "Splits from Train: ";
                             break;
                     }
@@ -309,10 +309,10 @@ var TrainNotifier;
                     }
                     this.date = moment(currentDate);
                     switch (association.DateType) {
-                        case TrainNotifier.AssociationDateType.NextDay:
+                        case 2 /* NextDay */:
                             this.date = this.date.add({ days: 1 });
                             break;
-                        case TrainNotifier.AssociationDateType.PreviousDay:
+                        case 1 /* PreviousDay */:
                             this.date = this.date.subtract({ days: 1 });
                             break;
                     }
