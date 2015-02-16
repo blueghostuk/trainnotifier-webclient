@@ -310,8 +310,7 @@ function getTrainData(trainUid: string, date, subscribe: boolean) {
             if (data.Movement.Schedule && data.Movement.Schedule.Stops.length > 0) {
                 var previousStop: TrainNotifier.KnockoutModels.Train.ScheduleStop;
                 for (var i = 0; i < data.Movement.Schedule.Stops.length; i++) {
-                    var thisStop = new TrainNotifier.KnockoutModels.Train.ScheduleStop(
-                        data.Movement.Schedule.Stops[i], currentTiplocs);
+                    var thisStop = new TrainNotifier.KnockoutModels.Train.ScheduleStop(data.Movement.Schedule.Stops[i], currentTiplocs, thisPage.advancedMode);
 
                     previousStop = thisStop;
                     scheduleStops.push(thisStop);

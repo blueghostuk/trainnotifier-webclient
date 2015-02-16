@@ -11,7 +11,8 @@ var TrainNotifier;
         var Train;
         (function (Train) {
             var ScheduleStop = (function () {
-                function ScheduleStop(scheduleStop, tiplocs) {
+                function ScheduleStop(scheduleStop, tiplocs, advancedMode) {
+                    this.advancedMode = advancedMode;
                     this.wttArrive = null;
                     this.publicArrive = null;
                     this.wttDepart = null;
