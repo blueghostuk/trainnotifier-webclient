@@ -1,19 +1,14 @@
 var fromLocal = ko.observableArray();
 var toLocal = ko.observableArray();
 var atLocal = ko.observableArray();
-
 var webApi;
-
 var locations = [];
-
 $(function () {
     var now = moment();
     $("#date-picker").val(now.format("YYYY-MM-DD"));
     $("#time-picker").val(now.format("HH:mm"));
-
     webApi = new TrainNotifier.WebApi();
     TrainNotifier.Common.webApi = webApi;
-
     $("form").submit(function () {
         return showLocation();
     });
@@ -28,9 +23,7 @@ $(function () {
     ko.applyBindings(fromLocal, $("#from-local").get(0));
     ko.applyBindings(toLocal, $("#to-local").get(0));
     ko.applyBindings(atLocal, $("#at-local").get(0));
-
     ko.applyBindings(tocs, $("#tocs").get(0));
-
     webApi.getStations().done(function (results) {
         locations = results.filter(function (value) {
             return value.CRS != null;
@@ -41,34 +34,28 @@ $(function () {
                 stanox: value.Stanox
             };
         });
-
         var locationLookup = new Bloodhound({
             name: 'stations-lookup',
             datumTokenizer: function (datum) {
                 var nameTokens = Bloodhound.tokenizers.whitespace(datum.value);
                 var crsTokens = Bloodhound.tokenizers.whitespace(datum.crs);
-
                 return nameTokens.concat(crsTokens);
             },
             queryTokenizer: Bloodhound.tokenizers.whitespace,
             local: locations
         });
-
         locationLookup.initialize();
-
         $(".station-lookup").typeahead({
             highlight: true,
             autoselect: true
         }, {
             source: locationLookup.ttAdapter()
         });
-
         $("#from-crs").attr("placeholder", "Type from station name here");
         $("#to-crs").attr("placeholder", "Type to station name here");
         $("#at-crs").attr("placeholder", "Type calling at station name here");
     });
 });
-
 function findStation(value) {
     if (!value || value.length == 0)
         return null;
@@ -78,66 +65,60 @@ function findStation(value) {
     });
     return matches.length > 0 ? matches[0] : null;
 }
-
 function getStationQuery(value) {
     return value != null ? ((value.crs != null && value.crs.length > 0) ? value.crs.toUpperCase() : value.stanox) : null;
 }
-
 function showLocation() {
     var toc = "";
     var tocVal = $("#tocs").val();
     if (tocVal && tocVal.length > 0) {
         tocVal = "?toc=" + tocVal;
     }
-
     var fromStation = $("#from-crs").val();
     var fromCrs = findStation(fromStation);
-
     var toStation = $("#to-crs").val();
     var toCrs = findStation(toStation);
-
     var atStation = $("#at-crs").val();
     var atCrs = findStation(atStation);
-
     var date = $("#date-picker").val();
     if (date && date.length > 0) {
         var dateVal = moment(date, "YYYY-MM-DD");
         if (dateVal.isValid()) {
             date = "/" + dateVal.format(TrainNotifier.DateTimeFormats.dateUrlFormat);
         }
-    } else {
+    }
+    else {
         date = "/" + moment().format(TrainNotifier.DateTimeFormats.dateUrlFormat);
     }
-
     var time = $("#time-picker").val();
     if (time && time.length > 0) {
         var timeVal = moment(time, TrainNotifier.DateTimeFormats.timeUrlFormat);
         if (timeVal.isValid()) {
             time = "/" + timeVal.format(TrainNotifier.DateTimeFormats.timeUrlFormat);
         }
-    } else {
+    }
+    else {
         time = "/" + moment().format(TrainNotifier.DateTimeFormats.timeUrlFormat);
     }
-
     var fromQuery = getStationQuery(fromCrs);
     var toQuery = getStationQuery(toCrs);
     var atQuery = getStationQuery(atCrs);
-
     if (fromQuery) {
         if (toQuery) {
             document.location.href = "search-results/#!from/" + fromQuery + "/to/" + toQuery + date + time + tocVal;
-        } else {
+        }
+        else {
             document.location.href = "search-results/#!from/" + fromQuery + date + time + tocVal;
         }
-    } else if (toCrs) {
+    }
+    else if (toCrs) {
         document.location.href = "search-results/#!to/" + toQuery + date + time + tocVal;
-    } else if (atCrs) {
+    }
+    else if (atCrs) {
         document.location.href = "search-results/#!at/" + atQuery + date + time + tocVal;
     }
-
     return false;
 }
-
 function lookupLocalFrom() {
     navigator.geolocation.getCurrentPosition(function (position) {
         webApi.getStationByLocation(position.coords.latitude, position.coords.longitude).done(function (stations) {
@@ -157,7 +138,6 @@ function lookupLocalFrom() {
         alert("Could not determine current location: " + err.message);
     });
 }
-
 function lookupLocalTo() {
     navigator.geolocation.getCurrentPosition(function (position) {
         webApi.getStationByLocation(position.coords.latitude, position.coords.longitude).done(function (stations) {

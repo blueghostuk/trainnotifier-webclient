@@ -1,6 +1,8 @@
 var TrainNotifier;
 (function (TrainNotifier) {
+    var KnockoutModels;
     (function (KnockoutModels) {
+        var PPM;
         (function (PPM) {
             var PPMRecord = (function () {
                 function PPMRecord(stats) {
@@ -14,12 +16,12 @@ var TrainNotifier;
                     this.CancelVeryLate(stats.CancelVeryLate);
                     this.Total(stats.Total);
                     this.Timestamp(moment(stats.Timestamp).format(TrainNotifier.DateTimeFormats.timeFormat));
-
                     var self = this;
                     this.PPM = ko.computed(function () {
                         if (self.OnTime() && self.Total()) {
                             return Math.round((self.OnTime() / self.Total()) * 100);
-                        } else {
+                        }
+                        else {
                             return null;
                         }
                     });
@@ -27,10 +29,9 @@ var TrainNotifier;
                 return PPMRecord;
             })();
             PPM.PPMRecord = PPMRecord;
-
             var PPMViewModel = (function () {
                 function PPMViewModel(ppmModel, parent, createParent) {
-                    if (typeof createParent === "undefined") { createParent = true; }
+                    if (createParent === void 0) { createParent = true; }
                     this.Operator = ko.observable();
                     this.Sector = ko.observable();
                     this.Code = ko.observable();
@@ -43,16 +44,15 @@ var TrainNotifier;
                     }
                     if (parent) {
                         this.Parent = parent;
-                    } else if (createParent) {
+                    }
+                    else if (createParent) {
                         this.Parent = new PPMViewModel(null, null, false);
                     }
                     this.IsRegion = parent != null;
-
                     var self = this;
                     this.LatestPPM = ko.computed(function () {
                         if (self.PPMData().length > 0)
                             return self.PPMData()[self.PPMData().length - 1];
-
                         return {};
                     });
                     this.Id = ko.computed(function () {
@@ -61,19 +61,21 @@ var TrainNotifier;
                             id += "national-";
                             if (self.Sector()) {
                                 id += self.Sector();
-                            } else {
+                            }
+                            else {
                                 id += "all";
                             }
-                        } else {
+                        }
+                        else {
                             id += self.Code() + "-";
                             if (self.Sector()) {
                                 id += self.Sector() + "-";
-                            } else {
+                            }
+                            else {
                                 id += "all-";
                             }
                             id += self.Operator().toLowerCase().replace(/[^\w\s]|_/g, "").replace(/\s+/g, "");
                         }
-
                         return id;
                     });
                 }
@@ -83,8 +85,6 @@ var TrainNotifier;
                 return PPMViewModel;
             })();
             PPM.PPMViewModel = PPMViewModel;
-        })(KnockoutModels.PPM || (KnockoutModels.PPM = {}));
-        var PPM = KnockoutModels.PPM;
-    })(TrainNotifier.KnockoutModels || (TrainNotifier.KnockoutModels = {}));
-    var KnockoutModels = TrainNotifier.KnockoutModels;
+        })(PPM = KnockoutModels.PPM || (KnockoutModels.PPM = {}));
+    })(KnockoutModels = TrainNotifier.KnockoutModels || (TrainNotifier.KnockoutModels = {}));
 })(TrainNotifier || (TrainNotifier = {}));

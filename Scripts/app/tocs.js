@@ -1,4 +1,3 @@
-
 var TrainNotifier;
 (function (TrainNotifier) {
     var TrainOperatingCompany = (function () {
@@ -10,7 +9,6 @@ var TrainNotifier;
     })();
     TrainNotifier.TrainOperatingCompany = TrainOperatingCompany;
 })(TrainNotifier || (TrainNotifier = {}));
-
 var tocs = [];
 tocs.push(new TrainNotifier.TrainOperatingCompany("", "All"));
 tocs.push(new TrainNotifier.TrainOperatingCompany("ZZ", "Freight"));

@@ -5,17 +5,13 @@ var title = {
 };
 var timerIntervalId;
 var webApi;
-
 $(function () {
     webApi = new TrainNotifier.WebApi();
     TrainNotifier.Common.webApi = webApi;
-
     ko.applyBindings(data, $("#ppmTable").get(0));
     ko.applyBindings(data, $("#commandOptions").get(0));
     ko.applyBindings(title, $("#title").get(0));
-
     getPPMSectors();
-
     setInterval(function () {
         window.clearInterval(timerIntervalId);
         updatePPMData();
@@ -23,7 +19,6 @@ $(function () {
     }, 60500);
     startCountdown();
 });
-
 function parseHashCommand() {
     if (document.location.hash.length > 1) {
         var cmd = document.location.hash.substr(1);
@@ -32,7 +27,8 @@ function parseHashCommand() {
             if (split.length == 1) {
                 viewOperator(split[0]);
                 return;
-            } else if (split.length == 2) {
+            }
+            else if (split.length == 2) {
                 viewSubRegion(split[0], split[1]);
                 return;
             }
@@ -40,14 +36,12 @@ function parseHashCommand() {
     }
     showAll();
 }
-
 function startCountdown() {
     title.next(60);
     timerIntervalId = setInterval(function () {
         title.next(title.next() - 1);
     }, 1000);
 }
-
 function updatePPMData() {
     for (var i = 0; i < data().length; i++) {
         var model = data()[i];
@@ -65,7 +59,6 @@ function updatePPMData() {
         });
     }
 }
-
 function getPPMSectors() {
     return webApi.getPPMSectors().done(function (ppmSectors) {
         if (ppmSectors && ppmSectors.length > 0) {
@@ -83,7 +76,6 @@ function getPPMSectors() {
         updatePPMData();
     });
 }
-
 function updateRegions(regions) {
     if (!regions || regions.length == 0)
         return;
@@ -97,26 +89,21 @@ function updateRegions(regions) {
         }
     }
 }
-
 function updateModel(sectorData) {
     var model = getModel(sectorData);
     if (model) {
         if ($.isArray(sectorData))
             sectorData = sectorData[0];
-
         if (!sectorData || ($.isArray(sectorData) && sectorData.length == 0))
             return;
         model.updateStats(sectorData);
     }
 }
-
 function getModel(sectorData) {
     if ($.isArray(sectorData))
         sectorData = sectorData[0];
-
     if (!sectorData || ($.isArray(sectorData) && sectorData.length == 0))
         return null;
-
     title.ts(moment(sectorData.Timestamp).format("ddd DD/MM/YYYY HH:mm:ss"));
     for (var i = 0; i < data().length; i++) {
         if (data()[i].Operator() == sectorData.Name && data()[i].Code() == sectorData.Code) {
@@ -125,14 +112,11 @@ function getModel(sectorData) {
     }
     return null;
 }
-
 function updateRegionModel(sectorData) {
     if ($.isArray(sectorData))
         sectorData = sectorData[0];
-
     if (!sectorData || ($.isArray(sectorData) && sectorData.length == 0))
         return;
-
     for (var i = 0; i < data().length; i++) {
         var el = data()[i];
         if (el.Code() == sectorData.Code) {
@@ -147,18 +131,14 @@ function updateRegionModel(sectorData) {
         }
     }
 }
-
 function showAll() {
     $("#commandOptions > a.active").removeClass("active");
     $("#commandOptions > a:nth-child(2)").addClass("active");
-
     $("#ppmTable").show();
     $("#ppmOperator").hide();
     document.location.hash = "all";
-
     return false;
 }
-
 function viewOperator(id) {
     var model = null;
     for (var i = 0; i < data().length; i++) {
@@ -169,21 +149,17 @@ function viewOperator(id) {
     }
     if (!model)
         return;
-
     if (!_currentOperator) {
         _currentOperator = ko.observable(model);
         ko.applyBindings(_currentOperator, $("#ppmOperator").get(0));
-    } else {
+    }
+    else {
         _currentOperator(model);
     }
-
     updateOperatorPage();
-
     return false;
 }
-
 var _currentOperator;
-
 function updateOperatorPage() {
     var opId = _currentOperator().Id();
     var hash = _currentOperator().Id();
@@ -193,13 +169,10 @@ function updateOperatorPage() {
     }
     $("#commandOptions > a.active").removeClass("active");
     $("#commandOptions > a#op-" + opId).addClass("active");
-
     $("#ppmOperator").show();
     $("#ppmTable").hide();
-
     document.location.hash = hash;
 }
-
 function viewSubRegion(parentId, regionId) {
     var model = null;
     for (var i = 0; i < data().length; i++) {
@@ -210,7 +183,6 @@ function viewSubRegion(parentId, regionId) {
     }
     if (!model || !model.Regions() || model.Regions().length == 0)
         return;
-
     var region = null;
     for (var i = 0; i < model.Regions().length; i++) {
         if (model.Regions()[i].Id() == regionId) {
@@ -218,17 +190,15 @@ function viewSubRegion(parentId, regionId) {
             break;
         }
     }
-
     if (region != null) {
         if (!_currentOperator) {
             _currentOperator = ko.observable(region);
             ko.applyBindings(_currentOperator, $("#ppmOperator").get(0));
-        } else {
+        }
+        else {
             _currentOperator(region);
         }
-
         updateOperatorPage();
-
         return false;
     }
 }

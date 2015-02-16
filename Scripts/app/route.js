@@ -11,7 +11,8 @@ var Berth = (function () {
         if (text) {
             this.text = text;
             this.label = true;
-        } else if (this.area && this.berth) {
+        }
+        else if (this.area && this.berth) {
             this.text = berth;
         }
     }
@@ -19,18 +20,15 @@ var Berth = (function () {
         var b = new Berth(null, null, text, abbr);
         return b;
     };
-
     Object.defineProperty(Berth.prototype, "uniqueIdentifier", {
         get: function () {
             if (this.area && this.berth)
                 return this.area + "-" + this.berth;
-
             return null;
         },
         enumerable: true,
         configurable: true
     });
-
     Berth.prototype.setTime = function (timestamp) {
         this.fulltimestamp = moment.utc(timestamp);
         var ts = this.fulltimestamp.local();
@@ -41,7 +39,6 @@ var Berth = (function () {
     Berth.TsFormat = "HH:mm:ss";
     return Berth;
 })();
-
 var RouteRow = (function () {
     function RouteRow(down, up) {
         this.down = down;
@@ -49,7 +46,6 @@ var RouteRow = (function () {
     }
     return RouteRow;
 })();
-
 var routeXCSouth = [
     new RouteRow(new Berth("BN", "0215", "BHM P10", "Birmingham New Street"), new Berth("BN", "0167", "BHM P8", "Birmingham New Street")),
     new RouteRow(new Berth("BN", "0214", "BHM P11", "Birmingham New Street"), new Berth("BN", "0187", "BHM P9", "Birmingham New Street")),
@@ -72,9 +68,8 @@ var routeXCSouth = [
     new RouteRow(new Berth("SA", "0018"), new Berth("SA", "0019")),
     new RouteRow(new Berth("SA", "0014"), new Berth("SA", "0015")),
     new RouteRow(new Berth("SA", "0012"), new Berth("SA", "0013")),
-    new RouteRow(new Berth("SA", "0008", "BTG P4", "Barnt Green"), new Berth("SA", "0009", "BTG PX", "Barnt Green"))
+    new RouteRow(new Berth("SA", "0008", "BTG P4", "Barnt Green"), new Berth("SA", "0009", "BTG PX", "Barnt Green")),
 ];
-
 var routeXCNorth = [
     new RouteRow(Berth.empty("LIF", "Lichfield Trent Valley"), new Berth("AS", "TV06", "LIF", "Lichfield Trent Valley")),
     new RouteRow(Berth.empty(), new Berth("AS", "0165")),
@@ -116,9 +111,8 @@ var routeXCNorth = [
     new RouteRow(Berth.empty(), new Berth("BN", "0149")),
     new RouteRow(new Berth("BN", "0215", "BHM P10", "Birmingham New Street"), new Berth("BN", "0149", "BHM P8", "Birmingham New Street")),
     new RouteRow(new Berth("BN", "0214", "BHM P11", "Birmingham New Street"), new Berth("BN", "0187", "BHM P9", "Birmingham New Street")),
-    new RouteRow(new Berth("BN", "0212", "BHM P12", "Birmingham New Street"), new Berth("BN", "0184", "BHM P10", "Birmingham New Street"))
+    new RouteRow(new Berth("BN", "0212", "BHM P12", "Birmingham New Street"), new Berth("BN", "0184", "BHM P10", "Birmingham New Street")),
 ];
-
 var routeWvhBhm = [
     new RouteRow(new Berth("WO", "0063", "FROM XBJ", "From Bushbury Junction"), new Berth("WO", "0024", "TO XBJ", "To Bushbury Junction")),
     new RouteRow(new Berth("TD", "WNLS", "FROM BBK", "From Bilbrook"), new Berth("TD", "3703", "To Bilbrook")),
@@ -163,13 +157,10 @@ var routeWvhBhm = [
     new RouteRow(new Berth("BN", "0201", "BHM P5A", "Birmingham New Street"), new Berth("BN", "0202", "BHM P5B", "Birmingham New Street")),
     new RouteRow(Berth.empty("BHM P6A", "Birmingham New Street"), Berth.empty("BHM P6B", "Birmingham New Street")),
     new RouteRow(new Berth("BN", "0192", "BHM P7A", "Birmingham New Street"), new Berth("BN", "0193", "BHM P7B", "Birmingham New Street")),
-    new RouteRow(new Berth("BN", "0189", "BHM P8A", "Birmingham New Street"), new Berth("BN", "0191", "BHM P8B", "Birmingham New Street"))
+    new RouteRow(new Berth("BN", "0189", "BHM P8A", "Birmingham New Street"), new Berth("BN", "0191", "BHM P8B", "Birmingham New Street")),
 ];
-
 var webApi = new TrainNotifier.WebApi();
-
 var runningTrains = ko.observable(new TrainNotifier.KnockoutModels.Routes.RouteTrainMovementResults());
-
 function updateBerthContents() {
     for (var i = 0; i < route.length; i++) {
         var updateData = (function (berth) {
@@ -177,13 +168,13 @@ function updateBerthContents() {
                 if (data) {
                     berth.setTime(data.m_Item1);
                     berth.contents(data.m_Item2);
-                } else {
+                }
+                else {
                     berth.timestamp(moment().format(Berth.TsFormat));
                     berth.contents("");
                 }
             });
         });
-
         if (route[i].down && route[i].down.uniqueIdentifier) {
             updateData(route[i].down);
         }
@@ -192,7 +183,6 @@ function updateBerthContents() {
         }
     }
 }
-
 function showTrain(berth) {
     $(".progress").show();
     $("#error-row").hide();
@@ -204,13 +194,12 @@ function showTrain(berth) {
                 var viewModels = data.Movements.map(function (movement) {
                     return new TrainNotifier.KnockoutModels.Routes.RouteTrainMovement(movement, data.Tiplocs, berth.fulltimestamp);
                 });
-
                 runningTrains().trainId(viewModels[0].headCode);
-
                 for (var i = 0; i < viewModels.length; i++) {
                     runningTrains().results.push(viewModels[i]);
                 }
-            } else {
+            }
+            else {
                 $("#no-results-row").show();
             }
         }).always(function () {
@@ -218,16 +207,15 @@ function showTrain(berth) {
         }).fail(function () {
             $("#error-row").show();
         });
-    } else {
+    }
+    else {
         $("#no-results-row").show();
     }
 }
-
 var route = routeXCSouth;
 var routeBinding = ko.observableArray();
-
 function switchRoute(routeId, updateSelector) {
-    if (typeof updateSelector === "undefined") { updateSelector = false; }
+    if (updateSelector === void 0) { updateSelector = false; }
     switch (routeId) {
         case "wvh":
             route = routeWvhBhm;
@@ -251,22 +239,17 @@ function switchRoute(routeId, updateSelector) {
     }
     updateBerthContents();
 }
-
 $(function () {
     ko.applyBindings(routeBinding, $("#route").get(0));
     ko.applyBindings(runningTrains, $("#route-results").get(0));
-
     var routeId = "";
     if (document.location.hash.length > 0) {
         routeId = document.location.hash.substring(2);
     }
-
     switchRoute(routeId, true);
-
     $("#route-selector").change(function () {
         switchRoute($(this.options[this.selectedIndex]).data('routeid'));
     });
-
     updateBerthContents();
     setInterval(function () {
         updateBerthContents();

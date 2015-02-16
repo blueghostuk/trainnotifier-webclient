@@ -1,5 +1,3 @@
-﻿
-
 var TrainNotifier;
 (function (TrainNotifier) {
     var WebApi = (function () {
@@ -12,14 +10,12 @@ var TrainNotifier;
         WebApi.prototype.getBaseUrl = function () {
             return "http://" + this.serverSettings.apiUrl;
         };
-
         WebApi.prototype.getArgs = function () {
             return {
                 returnTiplocs: !this.serverSettings.useLocalStorage,
                 apiName: this.serverSettings.apiName
             };
         };
-
         WebApi.prototype.getTrainMovementResults = function (results) {
             if (this.serverSettings.useLocalStorage) {
                 return $.when(this.getStations(), results).then(function (stations, trainMovementResults) {
@@ -27,11 +23,11 @@ var TrainNotifier;
                     trainMovement.Tiplocs = stations;
                     return $.Deferred().resolve(trainMovement).promise();
                 });
-            } else {
+            }
+            else {
                 return results;
             }
         };
-
         WebApi.prototype.getTrainMovementResult = function (results) {
             if (this.serverSettings.useLocalStorage) {
                 return $.when(this.getStations(), results).then(function (stations, trainMovementResults) {
@@ -39,21 +35,21 @@ var TrainNotifier;
                     trainMovement.Tiplocs = stations;
                     return $.Deferred().resolve(trainMovement).promise();
                 });
-            } else {
+            }
+            else {
                 return results;
             }
         };
-
         WebApi.prototype.getStations = function () {
             return this.getTiplocs();
         };
-
         WebApi.prototype.getTiplocs = function () {
             if (this.serverSettings.useLocalStorage) {
                 var stations = localStorage.getItem(WebApi.tiplocsLocalStorageKey);
                 if (stations) {
                     return $.Deferred().resolve(JSON.parse(stations)).promise();
-                } else {
+                }
+                else {
                     return $.getJSON(this.getBaseUrl() + "/Stanox/", this.getArgs()).done(function (stations) {
                         localStorage.setItem(WebApi.tiplocsLocalStorageKey, JSON.stringify(stations));
                         return $.Deferred().resolve(stations).promise();
@@ -62,7 +58,6 @@ var TrainNotifier;
             }
             return $.getJSON(this.getBaseUrl() + "/Station/", this.getArgs());
         };
-
         WebApi.prototype.getStanox = function (stanox) {
             if (this.serverSettings.useLocalStorage) {
                 stanox = stanox.toLowerCase();
@@ -75,20 +70,17 @@ var TrainNotifier;
             }
             return $.getJSON(this.getBaseUrl() + "/Stanox/" + stanox);
         };
-
         WebApi.prototype.getStationByLocation = function (lat, lon, limit) {
-            if (typeof limit === "undefined") { limit = 5; }
+            if (limit === void 0) { limit = 5; }
             return $.getJSON(this.getBaseUrl() + "/Station/GeoLookup", $.extend({}, this.getArgs(), {
                 lat: lat,
                 lon: lon,
                 limit: limit
             }));
         };
-
         WebApi.prototype.getStanoxByCrsCode = function (crsCode) {
             return $.getJSON(this.getBaseUrl() + "/Stanox/Single/" + crsCode, this.getArgs());
         };
-
         WebApi.prototype.getAllStanoxByCrsCode = function (crsCode) {
             if (this.serverSettings.useLocalStorage) {
                 crsCode = crsCode.toLowerCase();
@@ -101,23 +93,18 @@ var TrainNotifier;
             }
             return $.getJSON(this.getBaseUrl() + "/Stanox/Find/" + crsCode, this.getArgs());
         };
-
         WebApi.prototype.getTrainMovementByUid = function (uid, date) {
             return this.getTrainMovementResult($.getJSON(this.getBaseUrl() + "/TrainMovement/Uid/" + uid + "/" + date, this.getArgs()));
         };
-
         WebApi.prototype.getTrainMovementById = function (id) {
             return $.getJSON(this.getBaseUrl() + "/TrainMovement/" + id, this.getArgs());
         };
-
         WebApi.prototype.getTrainMovementAssociations = function (uid, date) {
             return $.getJSON(this.getBaseUrl() + "/Association/" + uid + "/" + date, this.getArgs());
         };
-
         WebApi.prototype.getTrainMovementsByHeadcode = function (headcode, date) {
             return this.getTrainMovementResults($.getJSON(this.getBaseUrl() + "/TrainMovement/Headcode/" + headcode + "/" + date, this.getArgs()));
         };
-
         WebApi.prototype.getTrainMovementsTerminatingAtLocation = function (stanox, startDate, endDate, atocCode) {
             return this.getTrainMovementResults($.getJSON(this.getBaseUrl() + "/TrainMovement/TerminatingAt/Location/" + stanox, $.extend({}, this.getArgs(), {
                 startDate: startDate,
@@ -125,7 +112,6 @@ var TrainNotifier;
                 atocCode: atocCode
             })));
         };
-
         WebApi.prototype.getTrainMovementsTerminatingAtStation = function (crsCode, startDate, endDate, atocCode) {
             return this.getTrainMovementResults($.getJSON(this.getBaseUrl() + "/TrainMovement/TerminatingAt/Station/" + crsCode, $.extend({}, this.getArgs(), {
                 startDate: startDate,
@@ -133,16 +119,14 @@ var TrainNotifier;
                 atocCode: atocCode
             })));
         };
-
         WebApi.prototype.getTrainMovementsNearLocation = function (lat, lon, limit) {
-            if (typeof limit === "undefined") { limit = 10; }
+            if (limit === void 0) { limit = 10; }
             return this.getTrainMovementResults($.getJSON(this.getBaseUrl() + "/TrainMovement/Nearest/", $.extend({}, this.getArgs(), {
                 lat: lat,
                 lon: lon,
                 limit: limit
             })));
         };
-
         WebApi.prototype.getTrainMovementsCallingAtLocation = function (stanox, startDate, endDate, atocCode) {
             return this.getTrainMovementResults($.getJSON(this.getBaseUrl() + "/TrainMovement/CallingAt/Location/" + stanox, $.extend({}, this.getArgs(), {
                 startDate: startDate,
@@ -150,7 +134,6 @@ var TrainNotifier;
                 atocCode: atocCode
             })));
         };
-
         WebApi.prototype.getTrainMovementsCallingAtStation = function (crsCode, startDate, endDate, atocCode) {
             return this.getTrainMovementResults($.getJSON(this.getBaseUrl() + "/TrainMovement/CallingAt/Station/" + crsCode, $.extend({}, this.getArgs(), {
                 startDate: startDate,
@@ -158,7 +141,6 @@ var TrainNotifier;
                 atocCode: atocCode
             })));
         };
-
         WebApi.prototype.getTrainMovementsBetweenLocations = function (fromStanox, toStanox, startDate, endDate, atocCode) {
             return this.getTrainMovementResults($.getJSON(this.getBaseUrl() + "/TrainMovement/Between/Location/" + fromStanox + "/" + toStanox, $.extend({}, this.getArgs(), {
                 startDate: startDate,
@@ -166,7 +148,6 @@ var TrainNotifier;
                 atocCode: atocCode
             })));
         };
-
         WebApi.prototype.getTrainMovementsBetweenStations = function (fromCrsCode, toCrsCode, startDate, endDate, atocCode) {
             return this.getTrainMovementResults($.getJSON(this.getBaseUrl() + "/TrainMovement/Between/Station/" + fromCrsCode + "/" + toCrsCode, $.extend({}, this.getArgs(), {
                 startDate: startDate,
@@ -174,7 +155,6 @@ var TrainNotifier;
                 atocCode: atocCode
             })));
         };
-
         WebApi.prototype.getTrainMovementsStartingAtStation = function (crsCode, startDate, endDate, atocCode) {
             return this.getTrainMovementResults($.getJSON(this.getBaseUrl() + "/TrainMovement/StartingAt/Station/" + crsCode, $.extend({}, this.getArgs(), {
                 startDate: startDate,
@@ -182,7 +162,6 @@ var TrainNotifier;
                 atocCode: atocCode
             })));
         };
-
         WebApi.prototype.getTrainMovementsStartingAtLocation = function (stanox, startDate, endDate, atocCode) {
             return this.getTrainMovementResults($.getJSON(this.getBaseUrl() + "/TrainMovement/StartingAt/Location/" + stanox, $.extend({}, this.getArgs(), {
                 startDate: startDate,
@@ -190,27 +169,22 @@ var TrainNotifier;
                 atocCode: atocCode
             })));
         };
-
         WebApi.prototype.getTrainMovementLink = function (headcode, crsCode, platform) {
             return $.getJSON(this.getBaseUrl() + "/TrainMovement/Headcode/" + headcode + "/" + crsCode + "/" + platform + "/", this.getArgs());
         };
-
         WebApi.prototype.getPPMData = function (operatorCode, name) {
             return $.getJSON(this.getBaseUrl() + "/PPM/", $.extend({}, this.getArgs(), {
                 operatorCode: operatorCode,
                 name: name
             }));
         };
-
         WebApi.prototype.getPPMOperatorRegions = function (operatorCode) {
             operatorCode = operatorCode || "";
             return $.getJSON(this.getBaseUrl() + "/PPM/" + operatorCode, this.getArgs());
         };
-
         WebApi.prototype.getPPMSectors = function () {
             return $.getJSON(this.getBaseUrl() + "/PPM/", this.getArgs());
         };
-
         WebApi.prototype.getBerthContents = function (berth) {
             return $.getJSON(this.getBaseUrl() + "/Td/Berth/" + berth, this.getArgs());
         };
@@ -219,7 +193,6 @@ var TrainNotifier;
     })();
     TrainNotifier.WebApi = WebApi;
 })(TrainNotifier || (TrainNotifier = {}));
-
 var TrainNotifier;
 (function (TrainNotifier) {
     (function (LiveTrainStopSource) {
@@ -227,13 +200,11 @@ var TrainNotifier;
         LiveTrainStopSource[LiveTrainStopSource["TD"] = 1] = "TD";
     })(TrainNotifier.LiveTrainStopSource || (TrainNotifier.LiveTrainStopSource = {}));
     var LiveTrainStopSource = TrainNotifier.LiveTrainStopSource;
-
     (function (EventType) {
         EventType[EventType["Departure"] = 1] = "Departure";
         EventType[EventType["Arrival"] = 2] = "Arrival";
     })(TrainNotifier.EventType || (TrainNotifier.EventType = {}));
     var EventType = TrainNotifier.EventType;
-
     (function (TrainState) {
         TrainState[TrainState["Activated"] = 1] = "Activated";
         TrainState[TrainState["Cancelled"] = 2] = "Cancelled";
@@ -242,21 +213,18 @@ var TrainNotifier;
         TrainState[TrainState["ActivatedAndTerminated"] = 5] = "ActivatedAndTerminated";
     })(TrainNotifier.TrainState || (TrainNotifier.TrainState = {}));
     var TrainState = TrainNotifier.TrainState;
-
     (function (AssociationType) {
         AssociationType[AssociationType["NextTrain"] = 0] = "NextTrain";
         AssociationType[AssociationType["Join"] = 1] = "Join";
         AssociationType[AssociationType["Split"] = 2] = "Split";
     })(TrainNotifier.AssociationType || (TrainNotifier.AssociationType = {}));
     var AssociationType = TrainNotifier.AssociationType;
-
     (function (AssociationDateType) {
         AssociationDateType[AssociationDateType["SameDay"] = 0] = "SameDay";
         AssociationDateType[AssociationDateType["PreviousDay"] = 1] = "PreviousDay";
         AssociationDateType[AssociationDateType["NextDay"] = 2] = "NextDay";
     })(TrainNotifier.AssociationDateType || (TrainNotifier.AssociationDateType = {}));
     var AssociationDateType = TrainNotifier.AssociationDateType;
-
     var ScheduleStatus = (function () {
         function ScheduleStatus() {
         }
@@ -339,7 +307,6 @@ var TrainNotifier;
         return ScheduleStatus;
     })();
     TrainNotifier.ScheduleStatus = ScheduleStatus;
-
     var CancellationCodes = (function () {
         function CancellationCodes() {
         }
@@ -347,7 +314,6 @@ var TrainNotifier;
         return CancellationCodes;
     })();
     TrainNotifier.CancellationCodes = CancellationCodes;
-
     (function (STPIndicatorValue) {
         STPIndicatorValue[STPIndicatorValue["Cancellation"] = 1] = "Cancellation";
         STPIndicatorValue[STPIndicatorValue["STP"] = 2] = "STP";
@@ -355,7 +321,6 @@ var TrainNotifier;
         STPIndicatorValue[STPIndicatorValue["Permanent"] = 4] = "Permanent";
     })(TrainNotifier.STPIndicatorValue || (TrainNotifier.STPIndicatorValue = {}));
     var STPIndicatorValue = TrainNotifier.STPIndicatorValue;
-
     var STPIndicator = (function () {
         function STPIndicator() {
         }
@@ -396,7 +361,6 @@ var TrainNotifier;
         return STPIndicator;
     })();
     TrainNotifier.STPIndicator = STPIndicator;
-
     var StationTiploc = (function () {
         function StationTiploc() {
         }
@@ -410,25 +374,21 @@ var TrainNotifier;
             }
             return cached;
         };
-
         StationTiploc.findStationTiploc = function (stanoxCode, tiplocs) {
             return StationTiploc.findStationTiplocs(stanoxCode, tiplocs);
         };
-
         StationTiploc.stationTiplocMatches = function (tiploc, tiplocs) {
             return tiplocs.some(function (t) {
                 return t.CRS == tiploc.CRS || t.Stanox == tiploc.Stanox;
             });
         };
-
         StationTiploc.toDisplayString = function (tiploc, lowercase) {
-            if (typeof lowercase === "undefined") { lowercase = true; }
+            if (lowercase === void 0) { lowercase = true; }
             var value = (tiploc.StationName && tiploc.StationName.length > 0 ? tiploc.StationName : tiploc.Description && tiploc.Description.length > 0 ? tiploc.Description : tiploc.Tiploc);
             if (lowercase)
                 return value.toLowerCase();
             return value;
         };
-
         StationTiploc.find = function (array, callbackfn) {
             var result = null;
             array.some(function (el, i) {
@@ -440,7 +400,6 @@ var TrainNotifier;
         return StationTiploc;
     })();
     TrainNotifier.StationTiploc = StationTiploc;
-
     (function (PowerTypeId) {
         PowerTypeId[PowerTypeId["D"] = 1] = "D";
         PowerTypeId[PowerTypeId["DEM"] = 2] = "DEM";
@@ -454,46 +413,34 @@ var TrainNotifier;
         PowerTypeId[PowerTypeId["LDS"] = 10] = "LDS";
     })(TrainNotifier.PowerTypeId || (TrainNotifier.PowerTypeId = {}));
     var PowerTypeId = TrainNotifier.PowerTypeId;
-
     var PowerTypeLookup = (function () {
         function PowerTypeLookup() {
         }
         PowerTypeLookup.getPowerType = function (powerType) {
             if (!powerType)
                 return null;
-
             switch (powerType) {
                 case 1 /* D */:
                     return this._d;
-
                 case 2 /* DEM */:
                     return this._dem;
-
                 case 3 /* DMU */:
                     return this._dmu;
-
                 case 4 /* E */:
                     return this._e;
-
                 case 5 /* ED */:
                     return this._ed;
-
                 case 6 /* EML */:
                     return this._eml;
-
                 case 7 /* EMU */:
                     return this._emu;
-
                 case 8 /* EPU */:
                     return this._epu;
-
                 case 9 /* HST */:
                     return this._hst;
-
                 case 10 /* LDS */:
                     return this._lds;
             }
-
             return null;
         };
         PowerTypeLookup._d = {
@@ -549,7 +496,6 @@ var TrainNotifier;
         return PowerTypeLookup;
     })();
     TrainNotifier.PowerTypeLookup = PowerTypeLookup;
-
     (function (CategoryTypeId) {
         CategoryTypeId[CategoryTypeId["OL"] = 1] = "OL";
         CategoryTypeId[CategoryTypeId["OU"] = 2] = "OU";
@@ -606,123 +552,67 @@ var TrainNotifier;
         CategoryTypeId[CategoryTypeId["H6"] = 53] = "H6";
     })(TrainNotifier.CategoryTypeId || (TrainNotifier.CategoryTypeId = {}));
     var CategoryTypeId = TrainNotifier.CategoryTypeId;
-
     var CategoryTypeLookup = (function () {
         function CategoryTypeLookup() {
         }
         CategoryTypeLookup.getCategoryType = function (categoryType) {
             if (!categoryType)
                 return null;
-
             switch (categoryType) {
-                case 1 /* OL */:
-                    return this._ol;
-                case 2 /* OU */:
-                    return this._ou;
-                case 3 /* OO */:
-                    return this._oo;
-                case 4 /* OS */:
-                    return this._os;
-                case 5 /* OW */:
-                    return this._ow;
-                case 6 /* XC */:
-                    return this._xc;
-                case 7 /* XD */:
-                    return this._xd;
-                case 8 /* XI */:
-                    return this._xi;
-                case 9 /* XR */:
-                    return this._xr;
-                case 10 /* XU */:
-                    return this._xu;
-                case 11 /* XX */:
-                    return this._xx;
-                case 12 /* XZ */:
-                    return this._xz;
-                case 13 /* BR */:
-                    return this._br;
-                case 14 /* BS */:
-                    return this._bs;
-                case 15 /* EE */:
-                    return this._ee;
-                case 16 /* EL */:
-                    return this._el;
-                case 17 /* ES */:
-                    return this._es;
-                case 18 /* JJ */:
-                    return this._jj;
-                case 19 /* PM */:
-                    return this._pm;
-                case 20 /* PP */:
-                    return this._pp;
-                case 21 /* PV */:
-                    return this._pv;
-                case 22 /* DD */:
-                    return this._dd;
-                case 23 /* DH */:
-                    return this._dh;
-                case 24 /* DI */:
-                    return this._di;
-                case 25 /* DQ */:
-                    return this._dq;
-                case 26 /* DT */:
-                    return this._dt;
-                case 27 /* DY */:
-                    return this._dy;
-                case 28 /* ZB */:
-                    return this._zb;
-                case 29 /* ZZ */:
-                    return this._zz;
-                case 30 /* J2 */:
-                    return this._j2;
-                case 31 /* H2 */:
-                    return this._h2;
-                case 32 /* J3 */:
-                    return this._j3;
-                case 33 /* J4 */:
-                    return this._j4;
-                case 34 /* J5 */:
-                    return this._j5;
-                case 35 /* J6 */:
-                    return this._j6;
-                case 36 /* J8 */:
-                    return this._j8;
-                case 37 /* H8 */:
-                    return this._h8;
-                case 38 /* J9 */:
-                    return this._j9;
-                case 39 /* H9 */:
-                    return this._h9;
-                case 40 /* A0 */:
-                    return this._a0;
-                case 41 /* E0 */:
-                    return this._e0;
-                case 42 /* B0 */:
-                    return this._b0;
-                case 43 /* B1 */:
-                    return this._b1;
-                case 44 /* B4 */:
-                    return this._b4;
-                case 45 /* B5 */:
-                    return this._b5;
-                case 46 /* B6 */:
-                    return this._b6;
-                case 47 /* B7 */:
-                    return this._b7;
-                case 48 /* H0 */:
-                    return this._h0;
-                case 49 /* H1 */:
-                    return this._h1;
-                case 50 /* H3 */:
-                    return this._h3;
-                case 51 /* H4 */:
-                    return this._h4;
-                case 52 /* H5 */:
-                    return this._h5;
-                case 53 /* H6 */:
-                    return this._h6;
+                case 1 /* OL */: return this._ol;
+                case 2 /* OU */: return this._ou;
+                case 3 /* OO */: return this._oo;
+                case 4 /* OS */: return this._os;
+                case 5 /* OW */: return this._ow;
+                case 6 /* XC */: return this._xc;
+                case 7 /* XD */: return this._xd;
+                case 8 /* XI */: return this._xi;
+                case 9 /* XR */: return this._xr;
+                case 10 /* XU */: return this._xu;
+                case 11 /* XX */: return this._xx;
+                case 12 /* XZ */: return this._xz;
+                case 13 /* BR */: return this._br;
+                case 14 /* BS */: return this._bs;
+                case 15 /* EE */: return this._ee;
+                case 16 /* EL */: return this._el;
+                case 17 /* ES */: return this._es;
+                case 18 /* JJ */: return this._jj;
+                case 19 /* PM */: return this._pm;
+                case 20 /* PP */: return this._pp;
+                case 21 /* PV */: return this._pv;
+                case 22 /* DD */: return this._dd;
+                case 23 /* DH */: return this._dh;
+                case 24 /* DI */: return this._di;
+                case 25 /* DQ */: return this._dq;
+                case 26 /* DT */: return this._dt;
+                case 27 /* DY */: return this._dy;
+                case 28 /* ZB */: return this._zb;
+                case 29 /* ZZ */: return this._zz;
+                case 30 /* J2 */: return this._j2;
+                case 31 /* H2 */: return this._h2;
+                case 32 /* J3 */: return this._j3;
+                case 33 /* J4 */: return this._j4;
+                case 34 /* J5 */: return this._j5;
+                case 35 /* J6 */: return this._j6;
+                case 36 /* J8 */: return this._j8;
+                case 37 /* H8 */: return this._h8;
+                case 38 /* J9 */: return this._j9;
+                case 39 /* H9 */: return this._h9;
+                case 40 /* A0 */: return this._a0;
+                case 41 /* E0 */: return this._e0;
+                case 42 /* B0 */: return this._b0;
+                case 43 /* B1 */: return this._b1;
+                case 44 /* B4 */: return this._b4;
+                case 45 /* B5 */: return this._b5;
+                case 46 /* B6 */: return this._b6;
+                case 47 /* B7 */: return this._b7;
+                case 48 /* H0 */: return this._h0;
+                case 49 /* H1 */: return this._h1;
+                case 50 /* H3 */: return this._h3;
+                case 51 /* H4 */: return this._h4;
+                case 52 /* H5 */: return this._h5;
+                case 53 /* H6 */: return this._h6;
             }
-
             return null;
         };
         CategoryTypeLookup._ol = { CategoryTypeId: 1 /* OL */, Code: "OL", Description: "London Underground/Metro Service" };

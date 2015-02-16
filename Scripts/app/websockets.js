@@ -1,4 +1,3 @@
-
 var TrainNotifier;
 (function (TrainNotifier) {
     var WebSocketCommands = (function () {
@@ -6,13 +5,11 @@ var TrainNotifier;
         }
         WebSocketCommands.BerthUpdate = "subtrainupdate-berth";
         WebSocketCommands.LocationUpdate = "subtrainupdate";
-
         WebSocketCommands.Departure = "DEPARTURE";
         WebSocketCommands.Arrival = "ARRIVAL";
         return WebSocketCommands;
     })();
     TrainNotifier.WebSocketCommands = WebSocketCommands;
-
     var WebSockets = (function () {
         function WebSockets() {
             $(".btn-connect").attr("disabled", true);
@@ -21,23 +18,21 @@ var TrainNotifier;
         WebSockets.prototype.connect = function () {
             $(".btn-connect").attr("disabled", true);
             $(".btn-disconnect").attr("disabled", false);
-
             this.ws = new WebSocket("ws://" + TrainNotifier.Common.serverSettings.wsUrl);
             this.ws.onopen = function () {
                 if (TrainNotifier.Common.page.setStatus) {
                     TrainNotifier.Common.page.setStatus("Connected");
                 }
-
                 $("#status").removeClass("btn-warning");
                 $("#status").removeClass("btn-info");
                 $("#status").addClass("btn-success");
                 $(".btn-connect").prop("disabled", true);
-
-                try  {
+                try {
                     if (TrainNotifier.Common.page.wsOpenCommand) {
                         TrainNotifier.Common.page.wsOpenCommand();
                     }
-                } catch (err) {
+                }
+                catch (err) {
                     console.error(err.message);
                 }
             };
@@ -52,11 +47,9 @@ var TrainNotifier;
                 $(".btn-disconnect").prop("disabled", true);
             };
         };
-
         WebSockets.prototype.disconnect = function () {
             $(".btn-connect").attr("disabled", false);
             $(".btn-disconnect").attr("disabled", true);
-
             this.ws.close();
             if (TrainNotifier.Common.page.setStatus) {
                 TrainNotifier.Common.page.setStatus("Closed");
@@ -65,15 +58,12 @@ var TrainNotifier;
             $("#status").removeClass("btn-info");
             $("#status").addClass("btn-warning");
         };
-
         WebSockets.prototype.onMessageHandler = function (handler) {
             this.ws.onmessage = handler;
         };
-
         WebSockets.prototype.send = function (message) {
             this.ws.send(message);
         };
-
         Object.defineProperty(WebSockets.prototype, "state", {
             get: function () {
                 return this.ws !== null ? this.ws.readyState : WebSocket.CLOSED;

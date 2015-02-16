@@ -188,7 +188,7 @@ function addStop(stop: IWebSocketTrainMovement) {
     var stopTiploc = TrainNotifier.StationTiploc.findStationTiploc(stop.Stanox, currentTiplocs);
     var nextStopTiploc = TrainNotifier.StationTiploc.findStationTiploc(stop.NextStanox, currentTiplocs);
 
-    var queries: JQueryPromise<any>[] = [];
+    var queries: JQueryPromise<IStationTiploc>[] = [];
 
     if (!stopTiploc) {
         queries.push(webApi.getStanox(stop.Stanox));
@@ -197,7 +197,7 @@ function addStop(stop: IWebSocketTrainMovement) {
         queries.push(webApi.getStanox(stop.NextStanox));
     }
 
-    return <JQueryDeferred<any>>$.when(queries).done(function (tiplocA: IStationTiploc, tiplocB: IStationTiploc) {
+    return $.when(queries).done(function (tiplocA: any/*IStationTiploc*/, tiplocB: any/*IStationTiploc*/) {
         if (tiplocA && tiplocA.Stanox)
             currentTiplocs.push(tiplocA)
         if (tiplocB && tiplocB.Stanox)
