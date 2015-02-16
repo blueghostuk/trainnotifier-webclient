@@ -24,7 +24,7 @@
         </tr>
     </thead>
     <tbody data-bind="foreach: $data">
-        <tr data-bind="css: { pass: pass, hide: pass() && advancedMode() }">
+        <tr data-bind="css: { pass: pass, hide: pass() && !advancedMode() }">
             <td class="col station stationName">
                 <a class="pointer" data-bind="visible: locationCRS, text: location, attr: { href: '../search-results/#!at/' + locationCRS }"></a>
                 <a class="pointer" data-bind="visible: !locationCRS, text: location" onclick="    return false;"></a>
