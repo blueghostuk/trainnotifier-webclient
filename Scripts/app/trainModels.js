@@ -13,51 +13,56 @@ var TrainNotifier;
             var ScheduleStop = (function () {
                 function ScheduleStop(scheduleStop, tiplocs, advancedMode) {
                     this.advancedMode = advancedMode;
-                    this.wttArrive = null;
-                    this.publicArrive = null;
-                    this.wttDepart = null;
-                    this.publicDepart = null;
-                    this.line = null;
-                    this.platform = null;
+                    this.location = ko.observable(null);
+                    this.locationCRS = ko.observable(null);
+                    this.atLink = ko.observable(null);
+                    this.locationStanox = ko.observable(null);
+                    this.wttArrive = ko.observable(null);
+                    this.publicArrive = ko.observable(null);
+                    this.wttDepart = ko.observable(null);
+                    this.publicDepart = ko.observable(null);
+                    this.line = ko.observable(null);
+                    this.platform = ko.observable(null);
                     this.actualPlatform = ko.observable();
-                    this.eAllowance = null;
-                    this.paAllowance = null;
-                    this.peAllowance = null;
+                    this.eAllowance = ko.observable(null);
+                    this.paAllowance = ko.observable(null);
+                    this.peAllowance = ko.observable(null);
                     this.pass = ko.observable(null);
                     this.cancel = ko.observable(false);
+                    this.stopNumber = ko.observable(null);
                     this.changePlatform = ko.observable(false);
                     this.associateLiveStop = ko.observable();
                     var tiploc = TrainNotifier.StationTiploc.findStationTiploc(scheduleStop.TiplocStanoxCode, tiplocs);
-                    this.stopNumber = scheduleStop.StopNumber;
-                    this.location = tiploc.Description ? tiploc.Description.toLowerCase() : tiploc.Tiploc;
-                    this.locationCRS = tiploc.CRS && tiploc.CRS.length > 0 ? tiploc.CRS : null;
-                    this.locationStanox = scheduleStop.TiplocStanoxCode;
+                    this.stopNumber(scheduleStop.StopNumber);
+                    this.location(tiploc.Description ? tiploc.Description.toLowerCase() : tiploc.Tiploc);
+                    this.locationCRS(tiploc.CRS && tiploc.CRS.length > 0 ? tiploc.CRS : null);
+                    this.locationStanox(scheduleStop.TiplocStanoxCode);
                     if (scheduleStop.Arrival) {
-                        this.wttArrive = TrainNotifier.DateTimeFormats.formatTimeString(scheduleStop.Arrival);
+                        this.wttArrive(TrainNotifier.DateTimeFormats.formatTimeString(scheduleStop.Arrival));
                     }
                     if (scheduleStop.PublicArrival) {
-                        this.publicArrive = TrainNotifier.DateTimeFormats.formatTimeString(scheduleStop.PublicArrival);
+                        this.publicArrive(TrainNotifier.DateTimeFormats.formatTimeString(scheduleStop.PublicArrival));
                     }
                     if (scheduleStop.Departure) {
-                        this.wttDepart = TrainNotifier.DateTimeFormats.formatTimeString(scheduleStop.Departure);
+                        this.wttDepart(TrainNotifier.DateTimeFormats.formatTimeString(scheduleStop.Departure));
                     }
                     if (scheduleStop.PublicDeparture) {
-                        this.publicDepart = TrainNotifier.DateTimeFormats.formatTimeString(scheduleStop.PublicDeparture);
+                        this.publicDepart(TrainNotifier.DateTimeFormats.formatTimeString(scheduleStop.PublicDeparture));
                     }
                     if (scheduleStop.Pass) {
                         this.pass(TrainNotifier.DateTimeFormats.formatTimeString(scheduleStop.Pass));
                     }
-                    this.line = scheduleStop.Line;
-                    this.platform = scheduleStop.Platform;
+                    this.line(scheduleStop.Line);
+                    this.platform(scheduleStop.Platform);
                     this.actualPlatform(scheduleStop.Platform);
                     if (scheduleStop.EngineeringAllowance) {
-                        this.eAllowance = "[" + scheduleStop.EngineeringAllowance + "]";
+                        this.eAllowance("[" + scheduleStop.EngineeringAllowance + "]");
                     }
                     if (scheduleStop.PathingAllowance) {
-                        this.paAllowance = "(" + scheduleStop.PathingAllowance + ")";
+                        this.paAllowance("(" + scheduleStop.PathingAllowance + ")");
                     }
                     if (scheduleStop.PerformanceAllowance) {
-                        this.peAllowance = "<" + scheduleStop.PerformanceAllowance + ">";
+                        this.peAllowance("<" + scheduleStop.PerformanceAllowance + ">");
                     }
                     var self = this;
                     this.actualArrival = ko.computed(function () {
@@ -105,7 +110,7 @@ var TrainNotifier;
                 };
                 ScheduleStop.prototype.associateWithLiveStop = function (liveStop) {
                     this.associateLiveStop(liveStop);
-                    if ((liveStop.platform() != null) && (liveStop.platform() != this.platform)) {
+                    if ((liveStop.platform() != null) && (liveStop.platform() != this.platform())) {
                         this.actualPlatform(liveStop.platform());
                         this.changePlatform(true);
                     }
@@ -113,7 +118,7 @@ var TrainNotifier;
                 ScheduleStop.prototype.validateAssociation = function (liveStop) {
                     if (this.associateLiveStop())
                         return false;
-                    return liveStop.locationStanox === this.locationStanox;
+                    return liveStop.locationStanox === this.locationStanox();
                 };
                 return ScheduleStop;
             })();
@@ -288,16 +293,16 @@ var TrainNotifier;
             var TrainAssociation = (function () {
                 function TrainAssociation(association, currentTrainUid, currentDate) {
                     switch (association.AssociationType) {
-                        case TrainNotifier.AssociationType.NextTrain:
+                        case 0 /* NextTrain */:
                             if (association.MainTrainUid === currentTrainUid)
                                 this.title = "Forms next train: ";
                             else
                                 this.title = "Formed of train: ";
                             break;
-                        case TrainNotifier.AssociationType.Join:
+                        case 1 /* Join */:
                             this.title = "Joins with Train: ";
                             break;
-                        case TrainNotifier.AssociationType.Split:
+                        case 2 /* Split */:
                             this.title = "Splits from Train: ";
                             break;
                     }
@@ -309,10 +314,10 @@ var TrainNotifier;
                     }
                     this.date = moment(currentDate);
                     switch (association.DateType) {
-                        case TrainNotifier.AssociationDateType.NextDay:
+                        case 2 /* NextDay */:
                             this.date = this.date.add({ days: 1 });
                             break;
-                        case TrainNotifier.AssociationDateType.PreviousDay:
+                        case 1 /* PreviousDay */:
                             this.date = this.date.subtract({ days: 1 });
                             break;
                     }

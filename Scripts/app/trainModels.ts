@@ -7,69 +7,69 @@
 module TrainNotifier.KnockoutModels.Train {
 
     export class ScheduleStop {
-        public location: string;
-        public locationCRS: string;
-        public atLink: string;
-        private locationStanox: string;
-        public wttArrive: string = null;
-        public publicArrive: string = null;
+        public location = ko.observable<string>(null);
+        public locationCRS = ko.observable<string>(null);
+        public atLink = ko.observable<string>(null);
+        private locationStanox = ko.observable<string>(null);
+        public wttArrive = ko.observable<string>(null);
+        public publicArrive = ko.observable<string>(null);
         public actualArrival: KnockoutComputed<string>;
         public arrivalDelay: KnockoutComputed<number>;
         public arrivalDelayCss: KnockoutComputed<string>;
         public arrivalCss: KnockoutComputed<string>;
-        public wttDepart: string = null;
-        public publicDepart: string = null;
+        public wttDepart = ko.observable<string>(null);
+        public publicDepart = ko.observable<string>(null);
         public actualDeparture: KnockoutComputed<string>;
         public departureDelay: KnockoutComputed<number>;
         public departureDelayCss: KnockoutComputed<string>;
         public departureCss: KnockoutComputed<string>;
-        public line: string = null;
-        public platform: string = null;
+        public line = ko.observable<string>(null);
+        public platform = ko.observable<string>(null);
         public actualPlatform = ko.observable<string>();
-        public eAllowance: string = null;
-        public paAllowance: string = null;
-        public peAllowance: string = null;
+        public eAllowance = ko.observable<string>(null);
+        public paAllowance = ko.observable<string>(null);
+        public peAllowance = ko.observable<string>(null);
         public pass = ko.observable<string>(null);
         public cancel = ko.observable<boolean>(false);
-        public stopNumber: number;
+        public stopNumber = ko.observable<number>(null);
         public changePlatform = ko.observable<boolean>(false);
 
         private associateLiveStop = ko.observable<LiveStopBase>();
 
         constructor(scheduleStop: IRunningScheduleTrainStop, tiplocs: IStationTiploc[], public advancedMode: KnockoutObservable<boolean>) {
             var tiploc = StationTiploc.findStationTiploc(scheduleStop.TiplocStanoxCode, tiplocs);
-            this.stopNumber = scheduleStop.StopNumber;
-            this.location = tiploc.Description ? tiploc.Description.toLowerCase() : tiploc.Tiploc;
-            this.locationCRS = tiploc.CRS && tiploc.CRS.length > 0 ? tiploc.CRS : null;
-            this.locationStanox = scheduleStop.TiplocStanoxCode;
+            this.stopNumber(scheduleStop.StopNumber);
+            this.location(tiploc.Description ? tiploc.Description.toLowerCase() : tiploc.Tiploc);
+            this.locationCRS(tiploc.CRS && tiploc.CRS.length > 0 ? tiploc.CRS : null);
+            this.locationStanox(scheduleStop.TiplocStanoxCode);
 
             if (scheduleStop.Arrival) {
-                this.wttArrive = DateTimeFormats.formatTimeString(scheduleStop.Arrival);
+                this.wttArrive(DateTimeFormats.formatTimeString(scheduleStop.Arrival));
             }
             if (scheduleStop.PublicArrival) {
-                this.publicArrive = DateTimeFormats.formatTimeString(scheduleStop.PublicArrival);
+                this.publicArrive(DateTimeFormats.formatTimeString(scheduleStop.PublicArrival));
             }
             if (scheduleStop.Departure) {
-                this.wttDepart = DateTimeFormats.formatTimeString(scheduleStop.Departure);
+                this.wttDepart(DateTimeFormats.formatTimeString(scheduleStop.Departure));
             }
             if (scheduleStop.PublicDeparture) {
-                this.publicDepart = DateTimeFormats.formatTimeString(scheduleStop.PublicDeparture);
+                this.publicDepart(DateTimeFormats.formatTimeString(scheduleStop.PublicDeparture));
             }
             if (scheduleStop.Pass) {
                 this.pass(DateTimeFormats.formatTimeString(scheduleStop.Pass));
             }
 
-            this.line = scheduleStop.Line;
-            this.platform = scheduleStop.Platform;
+            this.line(scheduleStop.Line);
+            this.platform(scheduleStop.Platform);
             this.actualPlatform(scheduleStop.Platform);
             if (scheduleStop.EngineeringAllowance) {
-                this.eAllowance = "[" + scheduleStop.EngineeringAllowance + "]"
+                this.eAllowance("[" + scheduleStop.EngineeringAllowance + "]");
             }
             if (scheduleStop.PathingAllowance) {
-                this.paAllowance = "(" + scheduleStop.PathingAllowance + ")";
+                this.paAllowance("(" + scheduleStop.PathingAllowance + ")");
             }
             if (scheduleStop.PerformanceAllowance) {
-                this.peAllowance = "<" + scheduleStop.PerformanceAllowance + ">";
+                this.peAllowance("<" + scheduleStop.PerformanceAllowance + ">");
             }
 
             var self = this;
@@ -123,7 +123,7 @@ module TrainNotifier.KnockoutModels.Train {
 
         associateWithLiveStop(liveStop: LiveStopBase) {
             this.associateLiveStop(liveStop);
-            if ((liveStop.platform() != null) && (liveStop.platform() != this.platform)) {
+            if ((liveStop.platform() != null) && (liveStop.platform() != this.platform())) {
                 this.actualPlatform(liveStop.platform());
                 this.changePlatform(true);
             }
@@ -133,7 +133,7 @@ module TrainNotifier.KnockoutModels.Train {
             if (this.associateLiveStop())
                 return false;
 
-            return liveStop.locationStanox === this.locationStanox;
+            return liveStop.locationStanox === this.locationStanox();
         }
     }
 
