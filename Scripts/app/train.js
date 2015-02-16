@@ -68,6 +68,19 @@ var thisPage = {
         }
     }
 };
+scheduleStops.subscribe(function (val) {
+    onTrainResultsChange(val);
+});
+liveStops.subscribe(function (val) {
+    onTrainResultsChange(val);
+});
+currentTrainDetails.associations.subscribe(function (val) {
+    onTrainResultsChange(val);
+});
+function onTrainResultsChange(val) {
+    if (val && val.length > 0)
+        thisPage.advancedSwitch(false);
+}
 TrainNotifier.Common.page = thisPage;
 var webApi;
 $(function () {
@@ -311,10 +324,10 @@ function getTrainData(trainUid, date, subscribe) {
                 trainTitleModel.id(data.Movement.Actual.HeadCode);
                 if (data.Movement.Actual.Stops.length > 0) {
                     var arrivals = data.Movement.Actual.Stops.filter(function (stop) {
-                        return stop.EventType === 2 /* Arrival */ && (stop.ScheduleStopNumber != 0 || (stop.ScheduleStopNumber == 0 && stop.Source == 1 /* TD */));
+                        return stop.EventType === TrainNotifier.EventType.Arrival && (stop.ScheduleStopNumber != 0 || (stop.ScheduleStopNumber == 0 && stop.Source == TrainNotifier.LiveTrainStopSource.TD));
                     });
                     var departures = data.Movement.Actual.Stops.filter(function (stop) {
-                        return stop.EventType === 1 /* Departure */;
+                        return stop.EventType === TrainNotifier.EventType.Departure;
                     });
                     var modelStops = [];
                     for (var i = 0; i < arrivals.length; i++) {
@@ -369,7 +382,6 @@ function getTrainData(trainUid, date, subscribe) {
     }).fail(function () {
         show($("#error-row"));
     }).always(function () {
-        thisPage.advancedSwitch(false);
         hide($(".progress"));
     });
 }
