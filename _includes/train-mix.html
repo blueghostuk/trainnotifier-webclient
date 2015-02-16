@@ -46,7 +46,7 @@
         </tr>
     </thead>
     <tbody data-bind="foreach: $data">
-        <tr data-bind="css: { pass: pass, cancel: cancel, hide: pass() && !advancedMode()}">
+        <tr data-bind="css: { pass: pass(), cancel: cancel, hide: pass() && !advancedMode()}">
             <!-- 1. ALL - Location -->
             <td class="col station stationName">
                 <a class="pointer" data-bind="visible: locationCRS, text: location, attr: { href: '../search-results/#!at/' + locationCRS }"></a>
@@ -55,15 +55,15 @@
             <!-- 2. ALL - Platform -->
             <td class="col extra platform" data-bind="text: actualPlatform, css: { changePlatform: changePlatform }"></td>
             <!-- 3. Advanced - Pass(Pass)/WTT Expected Arrival -->
-            <td class="col arrive wtt time hidden-xs hidden-sm visible-md visible-lg advanced-col" data-bind="text: pass ? 'Pass' : wttArrive"></td>
+            <td class="col arrive wtt time hidden-xs hidden-sm visible-md visible-lg advanced-col" data-bind="text: pass() ? 'Pass' : wttArrive"></td>
             <!-- 4. Advanced - Pass(Empty)/Public Expected Arrival -->
-            <td class="col arrive public time" data-bind="text: pass ? '' : publicArrive"></td>
+            <td class="col arrive public time" data-bind="text: pass() ? '' : publicArrive"></td>
             <!-- 5. ALL - Actual Arrival -->
-            <td class="col arrive actual time actual" data-bind="text: pass ? '' : actualArrival, css: arrivalCss"></td>
+            <td class="col arrive actual time actual" data-bind="text: pass() ? '' : actualArrival, css: arrivalCss"></td>
             <!-- 6. Advanced - Pass/WTT Expected Departure -->
-            <td class="col depart wtt time hidden-xs hidden-sm visible-md visible-lg advanced-col" data-bind="text: pass ? pass : wttDepart"></td>
+            <td class="col depart wtt time hidden-xs hidden-sm visible-md visible-lg advanced-col" data-bind="text: pass() ? pass() : wttDepart"></td>
             <!-- 7. Advanced - Pass(Empty)/Public Expected Departure -->
-            <td class="col depart public time" data-bind="text: pass ? '' : publicDepart"></td>
+            <td class="col depart public time" data-bind="text: pass() ? '' : publicDepart"></td>
             <!-- 8. ALL - Actual Departure -->
             <td class="col depart actual time actual" data-bind="text: actualDeparture, css: departureCss"></td>
             <!-- 9. ALL - Line -->
