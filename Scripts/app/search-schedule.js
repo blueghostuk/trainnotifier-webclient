@@ -71,18 +71,18 @@ var thisPage = {
     }
 };
 startEndSearchResults.subscribe(function (val) {
-    onResultsChange(val);
+    onSearchResultsChange(val);
 });
 callingAtSearchResults.subscribe(function (val) {
-    onResultsChange(val);
+    onSearchResultsChange(val);
 });
 nearestSearchResults.subscribe(function (val) {
-    onResultsChange(val);
+    onSearchResultsChange(val);
 });
 callingBetweenSearchResults.results.subscribe(function (val) {
-    onResultsChange(val);
+    onSearchResultsChange(val);
 });
-function onResultsChange(val) {
+function onSearchResultsChange(val) {
     if (val && val.length > 0)
         thisPage.advancedSwitch(false);
 }

@@ -92,19 +92,19 @@ var thisPage: IPage = {
 };
 
 startEndSearchResults.subscribe((val) => {
-    onResultsChange(val);
+    onSearchResultsChange(val);
 });
 callingAtSearchResults.subscribe((val) => {
-    onResultsChange(val);
+    onSearchResultsChange(val);
 });
 nearestSearchResults.subscribe((val) => {
-    onResultsChange(val);
+    onSearchResultsChange(val);
 });
 callingBetweenSearchResults.results.subscribe((val) => {
-    onResultsChange(val);
+    onSearchResultsChange(val);
 });
 
-function onResultsChange(val: Array<any>) {
+function onSearchResultsChange(val: Array<any>) {
     if (val && val.length > 0)
         thisPage.advancedSwitch(false);
 }
