@@ -5,8 +5,7 @@
 /// <reference path="../typings/knockout/knockout.d.ts" />
 /// <reference path="../typings/moment/moment.d.ts" />
 
-var data = ko.observableArray<TrainNotifier.KnockoutModels.PPM.PPMViewModel>()
-    .extend({ rateLimit: 500 });
+var data = ko.observableArray<TrainNotifier.KnockoutModels.PPM.PPMViewModel>();
 var title = {
     ts: ko.observable(),
     next: ko.observable(65)
