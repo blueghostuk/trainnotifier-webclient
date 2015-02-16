@@ -1,8 +1,8 @@
 var searchTitleModel = new TrainNotifier.KnockoutModels.Search.TitleViewModel();
-var startEndSearchResults = ko.observableArray().extend({ rateLimit: 500 });
-var callingAtSearchResults = ko.observableArray().extend({ rateLimit: 500 });
+var startEndSearchResults = ko.observableArray().extend({ method: "notifyWhenChangesStop", rateLimit: 500 });
+var callingAtSearchResults = ko.observableArray().extend({ method: "notifyWhenChangesStop", rateLimit: 500 });
 var callingBetweenSearchResults = new TrainNotifier.KnockoutModels.Search.CallingBetweenResults();
-var nearestSearchResults = ko.observableArray().extend({ rateLimit: 500 });
+var nearestSearchResults = ko.observableArray().extend({ method: "notifyWhenChangesStop", rateLimit: 500 });
 var currentStanox;
 var currentToStanox;
 var currentStartDate = null;

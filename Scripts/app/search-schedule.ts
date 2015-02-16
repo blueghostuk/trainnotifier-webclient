@@ -9,12 +9,12 @@
 var searchTitleModel = new TrainNotifier.KnockoutModels.Search.TitleViewModel();
 
 var startEndSearchResults = ko.observableArray<TrainNotifier.KnockoutModels.Search.TrainMovement>()
-    .extend({ rateLimit: 500 });
+    .extend({ method: "notifyWhenChangesStop", rateLimit: 500 });
 var callingAtSearchResults = ko.observableArray<TrainNotifier.KnockoutModels.Search.TrainMovement>()
-    .extend({ rateLimit: 500 });
+    .extend({ method: "notifyWhenChangesStop", rateLimit: 500 });
 var callingBetweenSearchResults = new TrainNotifier.KnockoutModels.Search.CallingBetweenResults();
 var nearestSearchResults = ko.observableArray<TrainNotifier.KnockoutModels.Search.NearestTrainMovement>()
-    .extend({ rateLimit: 500 });
+    .extend({ method: "notifyWhenChangesStop", rateLimit: 500 });
 
 var currentStanox: IStationTiploc[];
 var currentToStanox: IStationTiploc[];
