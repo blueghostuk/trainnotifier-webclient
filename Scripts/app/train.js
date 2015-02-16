@@ -54,7 +54,7 @@ var thisPage = {
         if (change === void 0) { change = true; }
         if (change) {
             this.advancedMode(!this.advancedMode());
-            $.cookie("advancedMode-train", this.advancedMode ? "on" : "off", { expires: 365 });
+            $.cookie("advancedMode-train", this.advancedMode() ? "on" : "off", { expires: 365 });
         }
         if (this.advancedMode()) {
             $("#advancedSwitch").html("Simple");
