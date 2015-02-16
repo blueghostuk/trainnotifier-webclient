@@ -10,7 +10,7 @@
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <DebugType>full</DebugType>
     <DebugSymbols>true</DebugSymbols>
-    <TypeScriptToolsVersion>1.0</TypeScriptToolsVersion>
+    <TypeScriptToolsVersion>1.4</TypeScriptToolsVersion>
     <UseIISExpress>true</UseIISExpress>
     <IISExpressSSLPort />
     <IISExpressAnonymousAuthentication />
@@ -28,14 +28,14 @@
     <Content Include="Content\app\styles.css" />
     <Content Include="Content\app\tocs.css" />
     <Content Include="Content\app\train.css" />
-    <Content Include="Content\images\ios\apple-touch-icon-114x114.png" />
-    <Content Include="Content\images\ios\apple-touch-icon-144x144.png" />
-    <Content Include="Content\images\ios\apple-touch-startup-image-1496x2048.png" />
-    <Content Include="Content\images\ios\apple-touch-startup-image-1536x2008.png" />
-    <Content Include="Content\images\ios\apple-touch-startup-image-640x1096.png" />
+    <Content Include="Content\bootstrap-theme.css" />
+    <Content Include="Content\bootstrap-theme.min.css" />
+    <Content Include="Content\bootstrap.css" />
+    <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\app\overrides.css" />
     <Content Include="Content\paper.min.css" />
     <Content Include="Content\app\typeahead-fix.css" />
+    <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="history\index.html" />
     <Content Include="index.html" />
     <Content Include="ppm\index.html" />
@@ -43,13 +43,22 @@
     <Content Include="Scripts\bloodhound.js" />
     <Content Include="Scripts\bloodhound.min.js" />
     <Content Include="packages.config" />
+    <Content Include="fonts\glyphicons-halflings-regular.woff2" />
+    <Content Include="fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Content\bootstrap-theme.css.map" />
+    <Content Include="Content\bootstrap.css.map" />
     <None Include="Scripts\jquery-2.1.3.intellisense.js" />
+    <Content Include="Scripts\bootstrap.js" />
+    <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\jquery-2.1.3.js" />
     <Content Include="Scripts\jquery-2.1.3.min.js" />
     <Content Include="Scripts\moment-with-locales.js" />
     <Content Include="Scripts\moment-with-locales.min.js" />
     <Content Include="Scripts\moment.js" />
     <Content Include="Scripts\moment.min.js" />
+    <Content Include="Scripts\npm.js" />
     <Content Include="search-results\index.html" />
     <Content Include="train\index.html" />
     <Content Include="_includes\ads.html" />
