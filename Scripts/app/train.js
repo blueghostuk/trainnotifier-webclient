@@ -89,8 +89,8 @@ $(function () {
     var advancedCookie = $.cookie("advancedMode-train");
     if (advancedCookie && advancedCookie == "on") {
         thisPage.advancedMode(true);
-        thisPage.advancedSwitch(false);
     }
+    thisPage.advancedSwitch(false);
     try {
         connectToWebsocketServer();
     }
