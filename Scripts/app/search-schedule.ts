@@ -121,8 +121,8 @@ $(function () {
     var advancedCookie = $.cookie("advancedMode");
     if (advancedCookie && advancedCookie == "on") {
         thisPage.advancedMode(true);
-        thisPage.advancedSwitch(false);
     }
+    thisPage.advancedSwitch(false);
     webApi = new TrainNotifier.WebApi();
     TrainNotifier.Common.webApi = webApi;
 
