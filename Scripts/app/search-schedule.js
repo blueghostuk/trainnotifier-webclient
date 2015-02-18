@@ -306,7 +306,7 @@ function getStation(crs, convertFromCrs, fromDate, toDate) {
     });
 }
 function getDestinationByTiploc(to, startDate, endDate) {
-    currentMode = TrainNotifier.Search.SearchMode.terminate;
+    currentMode = 1 /* terminate */;
     if (to) {
         currentToStanox = [to];
     }
@@ -344,7 +344,7 @@ function getDestinationByTiploc(to, startDate, endDate) {
     });
 }
 function getStartingAtByTiploc(from, startDate, endDate) {
-    currentMode = TrainNotifier.Search.SearchMode.origin;
+    currentMode = 2 /* origin */;
     if (from) {
         currentStanox = from;
     }
@@ -382,7 +382,7 @@ function getStartingAtByTiploc(from, startDate, endDate) {
     });
 }
 function getCallingAtTiploc(at, startDate, endDate) {
-    currentMode = TrainNotifier.Search.SearchMode.callingAt;
+    currentMode = 3 /* callingAt */;
     if (at && at.length > 0) {
         currentStanox = at;
     }
@@ -420,7 +420,7 @@ function getCallingAtTiploc(at, startDate, endDate) {
     });
 }
 function getCallingBetweenByTiploc(from, to, startDate, endDate) {
-    currentMode = TrainNotifier.Search.SearchMode.between;
+    currentMode = 4 /* between */;
     if (from) {
         currentStanox = from;
     }
@@ -470,16 +470,16 @@ function previousDate() {
     var startDate = moment(currentStartDate).subtract({ hours: TrainNotifier.DateTimeFormats.timeFrameHours });
     var endDate = moment(currentEndDate).subtract({ hours: TrainNotifier.DateTimeFormats.timeFrameHours });
     switch (currentMode) {
-        case TrainNotifier.Search.SearchMode.origin:
+        case 2 /* origin */:
             getStartingAtByTiploc(null, startDate, endDate);
             break;
-        case TrainNotifier.Search.SearchMode.terminate:
+        case 1 /* terminate */:
             getDestinationByTiploc(null, startDate, endDate);
             break;
-        case TrainNotifier.Search.SearchMode.callingAt:
+        case 3 /* callingAt */:
             getCallingAtTiploc(null, startDate, endDate);
             break;
-        case TrainNotifier.Search.SearchMode.between:
+        case 4 /* between */:
             getCallingBetweenByTiploc(null, null, startDate, endDate);
             break;
     }
@@ -489,16 +489,16 @@ function nextDate() {
     var startDate = moment(currentStartDate).add({ hours: TrainNotifier.DateTimeFormats.timeFrameHours });
     var endDate = moment(currentEndDate).add({ hours: TrainNotifier.DateTimeFormats.timeFrameHours });
     switch (currentMode) {
-        case TrainNotifier.Search.SearchMode.origin:
+        case 2 /* origin */:
             getStartingAtByTiploc(null, startDate, endDate);
             break;
-        case TrainNotifier.Search.SearchMode.terminate:
+        case 1 /* terminate */:
             getDestinationByTiploc(null, startDate, endDate);
             break;
-        case TrainNotifier.Search.SearchMode.callingAt:
+        case 3 /* callingAt */:
             getCallingAtTiploc(null, startDate, endDate);
             break;
-        case TrainNotifier.Search.SearchMode.between:
+        case 4 /* between */:
             getCallingBetweenByTiploc(null, null, startDate, endDate);
             break;
     }
@@ -516,11 +516,11 @@ function setTitle(start) {
         title += from;
         searchTitleModel.from(from);
         switch (currentMode) {
-            case TrainNotifier.Search.SearchMode.callingAt:
+            case 3 /* callingAt */:
                 searchTitleModel.link("search/at/" + currentStanox[0].CRS);
                 searchTitleModel.title("Use this as a permanent link for trains calling at this location around the current time");
                 break;
-            case TrainNotifier.Search.SearchMode.origin:
+            case 2 /* origin */:
                 searchTitleModel.link("search/from/" + currentStanox[0].CRS);
                 searchTitleModel.title("Use this as a permanent link for trains starting from this location around the current time");
                 break;
@@ -542,11 +542,11 @@ function setTitle(start) {
             searchTitleModel.to(null);
         }
         switch (currentMode) {
-            case TrainNotifier.Search.SearchMode.between:
+            case 4 /* between */:
                 searchTitleModel.link("search/from/" + currentStanox[0].CRS + "/to/" + currentToStanox[0].CRS);
                 searchTitleModel.title("Use this as a permanent link for trains calling at this location around the current time");
                 break;
-            case TrainNotifier.Search.SearchMode.terminate:
+            case 1 /* terminate */:
                 searchTitleModel.link("search/to/" + currentToStanox[0].CRS);
                 searchTitleModel.title("Use this as a permanent link for trains terminating at this location around the current time");
                 break;
@@ -566,7 +566,7 @@ function setTimeLinks() {
     var plusStartDate = moment(currentStartDate).add({ hours: TrainNotifier.DateTimeFormats.timeFrameHours });
     var url = "";
     switch (currentMode) {
-        case TrainNotifier.Search.SearchMode.origin:
+        case 2 /* origin */:
             if (currentStanox[0].CRS) {
                 url = "from/" + currentStanox[0].CRS;
             }
@@ -574,7 +574,7 @@ function setTimeLinks() {
                 url = "from/" + currentStanox[0].Stanox;
             }
             break;
-        case TrainNotifier.Search.SearchMode.terminate:
+        case 1 /* terminate */:
             if (currentToStanox[0].CRS) {
                 url = "to/" + currentToStanox[0].CRS;
             }
@@ -582,7 +582,7 @@ function setTimeLinks() {
                 url = "to/" + currentToStanox[0].Stanox;
             }
             break;
-        case TrainNotifier.Search.SearchMode.callingAt:
+        case 3 /* callingAt */:
             if (currentStanox[0].CRS) {
                 url = "at/" + currentStanox[0].CRS;
             }
@@ -590,7 +590,7 @@ function setTimeLinks() {
                 url = "at/" + currentStanox[0].Stanox;
             }
             break;
-        case TrainNotifier.Search.SearchMode.between:
+        case 4 /* between */:
             if (currentStanox[0].CRS && currentToStanox[0].CRS) {
                 url = "from/" + currentStanox[0].CRS + "/to/" + currentToStanox[0].CRS;
             }
