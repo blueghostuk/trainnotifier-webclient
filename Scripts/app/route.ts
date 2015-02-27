@@ -211,7 +211,8 @@ function updateBerthContents() {
                     berth.setTime(data.m_Item1);
                     berth.contents(data.m_Item2);
                     if (data.m_Item3) {
-                        webApi.getTrainMovementByUid(data.m_Item3.TrainUid, data.m_Item3.OriginDepartTimestamp).done((tm) => {
+                        var ts = moment(data.m_Item3.OriginDepartTimestamp);
+                        webApi.getTrainMovementByUid(data.m_Item3.TrainUid, ts.format(TrainNotifier.DateTimeFormats.dateUrlFormat)).done((tm) => {
                             //tm.Movement.Schedule
                         });
                     }
