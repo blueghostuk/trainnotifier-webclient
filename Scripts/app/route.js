@@ -214,7 +214,7 @@ function showTrain(berth) {
             if (movement.Schedule && movement.Schedule.Stops.length > 0) {
                 var previousStop;
                 for (var i = 0; i < movement.Schedule.Stops.length; i++) {
-                    var thisStop = new TrainNotifier.KnockoutModels.Train.ScheduleStop(movement.Schedule.Stops[i], berth.trainMovement.Tiplocs, thisPage.advancedMode);
+                    var thisStop = new TrainNotifier.KnockoutModels.Train.ScheduleStop(movement.Schedule.Stops[i], berth.trainMovement.Tiplocs, advancedMode);
                     previousStop = thisStop;
                     scheduleStops.push(thisStop);
                 }
@@ -317,6 +317,7 @@ function showTrain(berth) {
         $("#no-results-row").show();
     }
 }
+var advancedMode = ko.observable(false);
 var route = routeXCSouth;
 var routeBinding = ko.observableArray();
 function switchRoute(routeId, updateSelector) {
