@@ -160,7 +160,6 @@ var routeWvhBhm = [
     new RouteRow(new Berth("BN", "0189", "BHM P8A", "Birmingham New Street"), new Berth("BN", "0191", "BHM P8B", "Birmingham New Street")),
 ];
 var webApi = new TrainNotifier.WebApi();
-var runningTrain = ko.observable(false);
 var currentTrainUid = ko.observable();
 var trainTitleModel = new TrainNotifier.KnockoutModels.Train.TrainTitleViewModel();
 var scheduleStops = ko.observableArray().extend({ method: "notifyWhenChangesStop", rateLimit: 500 });
@@ -312,12 +311,10 @@ function showTrain(berth) {
                 }
             }
             currentTrainDetails.updateFromTrainMovement(movement, currentTiplocs, berth.trainMovementDate);
-            runningTrain(true);
         }
     }
     else {
         $("#no-results-row").show();
-        runningTrain(false);
     }
 }
 var route = routeXCSouth;
@@ -354,7 +351,6 @@ function resetRoutes() {
 }
 $(function () {
     ko.applyBindings(routeBinding, $("#route").get(0));
-    ko.applyBindings(runningTrain, $("#route-results").get(0));
     ko.applyBindings(trainTitleModel, $("#title").get(0));
     ko.applyBindings(scheduleStops, $("#mix").get(0));
     ko.applyBindings(scheduleStops, $("#schedule").get(0));

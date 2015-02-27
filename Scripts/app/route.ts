@@ -203,8 +203,6 @@ var routeWvhBhm: Array<RouteRow> =
 
 var webApi: IWebApi = new TrainNotifier.WebApi();
 
-var runningTrain = ko.observable<boolean>(false);
-
 var currentTrainUid = ko.observable<string>();
 var trainTitleModel = new TrainNotifier.KnockoutModels.Train.TrainTitleViewModel();
 var scheduleStops = ko.observableArray<TrainNotifier.KnockoutModels.Train.ScheduleStop>()
@@ -371,11 +369,9 @@ function showTrain(berth: Berth) {
             }
 
             currentTrainDetails.updateFromTrainMovement(movement, currentTiplocs, berth.trainMovementDate);
-            runningTrain(true);
         }
     } else {
         $("#no-results-row").show();
-        runningTrain(false);
     }
 }
 
@@ -415,7 +411,6 @@ function resetRoutes() {
 
 $(function () {
     ko.applyBindings(routeBinding, $("#route").get(0));
-    ko.applyBindings(runningTrain, $("#route-results").get(0));
 
     ko.applyBindings(trainTitleModel, $("#title").get(0));
     ko.applyBindings(scheduleStops, $("#mix").get(0));
