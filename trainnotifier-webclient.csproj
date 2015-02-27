@@ -101,7 +101,6 @@
     <TypeScriptCompile Include="Scripts\app\ppm.ts" />
     <TypeScriptCompile Include="Scripts\app\ppmModels.ts" />
     <TypeScriptCompile Include="Scripts\app\route.ts" />
-    <TypeScriptCompile Include="Scripts\app\routeModels.ts" />
     <TypeScriptCompile Include="Scripts\app\search-schedule.ts" />
     <TypeScriptCompile Include="Scripts\app\searchModels.ts" />
     <TypeScriptCompile Include="Scripts\app\tocs.ts" />
