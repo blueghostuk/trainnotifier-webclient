@@ -168,6 +168,10 @@ function updateBerthContents() {
                 if (data) {
                     berth.setTime(data.m_Item1);
                     berth.contents(data.m_Item2);
+                    if (data.m_Item3) {
+                        webApi.getTrainMovementByUid(data.m_Item3.TrainUid, data.m_Item3.OriginDepartTimestamp).done(function (tm) {
+                        });
+                    }
                 }
                 else {
                     berth.timestamp(moment().format(Berth.TsFormat));
