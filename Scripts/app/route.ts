@@ -259,7 +259,7 @@ function showTrain(berth: Berth) {
             if (movement.Schedule && movement.Schedule.Stops.length > 0) {
                 var previousStop: TrainNotifier.KnockoutModels.Train.ScheduleStop;
                 for (var i = 0; i < movement.Schedule.Stops.length; i++) {
-                    var thisStop = new TrainNotifier.KnockoutModels.Train.ScheduleStop(movement.Schedule.Stops[i], currentTiplocs, thisPage.advancedMode);
+                    var thisStop = new TrainNotifier.KnockoutModels.Train.ScheduleStop(movement.Schedule.Stops[i], berth.trainMovement.Tiplocs, thisPage.advancedMode);
 
                     previousStop = thisStop;
                     scheduleStops.push(thisStop);
@@ -267,7 +267,7 @@ function showTrain(berth: Berth) {
 
                 if (movement.ChangeOfOrigins.length > 0) {
                     var coo = movement.ChangeOfOrigins[0];
-                    var cooTiploc = TrainNotifier.StationTiploc.findStationTiploc(coo.NewOriginStanoxCode, currentTiplocs);
+                    var cooTiploc = TrainNotifier.StationTiploc.findStationTiploc(coo.NewOriginStanoxCode, berth.trainMovement.Tiplocs);
                     trainTitleModel.from(cooTiploc.Description ? cooTiploc.Description.toLowerCase() : cooTiploc.Tiploc);
                     trainTitleModel.start(moment(coo.NewDepartureTime).format(TrainNotifier.DateTimeFormats.shortTimeFormat));
                     var matchingStops = movement.Schedule.Stops.filter(function (stop) {
@@ -285,7 +285,7 @@ function showTrain(berth: Berth) {
                 } else {
                     var start = movement.Schedule.Stops[0];
                     var startTiploc = TrainNotifier.StationTiploc.findStationTiploc(
-                        start.TiplocStanoxCode, currentTiplocs);
+                        start.TiplocStanoxCode, berth.trainMovement.Tiplocs);
                     trainTitleModel.from(startTiploc.Description ? startTiploc.Description.toLowerCase() : startTiploc.Tiploc);
                     var departureTs = start.PublicDeparture ? start.PublicDeparture : start.Departure;
                     trainTitleModel.start(moment(departureTs, TrainNotifier.DateTimeFormats.timeFormat)
@@ -293,13 +293,13 @@ function showTrain(berth: Berth) {
                 }
                 if (movement.Cancellations.length > 0) {
                     var cancel = movement.Cancellations[0];
-                    var cancelAtTiploc = TrainNotifier.StationTiploc.findStationTiploc(cancel.CancelledAtStanoxCode, currentTiplocs);
+                    var cancelAtTiploc = TrainNotifier.StationTiploc.findStationTiploc(cancel.CancelledAtStanoxCode, berth.trainMovement.Tiplocs);
                     trainTitleModel.to(cancelAtTiploc.Description ? cancelAtTiploc.Description.toLowerCase() : cancelAtTiploc.Tiploc);
                     trainTitleModel.end(moment(cancel.CancelledTimestamp).format(TrainNotifier.DateTimeFormats.shortTimeFormat));
                 } else if (movement.Schedule.Stops.length > 1) {
                     var end = movement.Schedule.Stops[movement.Schedule.Stops.length - 1];
                     var endTiploc = TrainNotifier.StationTiploc.findStationTiploc(
-                        end.TiplocStanoxCode, currentTiplocs);
+                        end.TiplocStanoxCode, berth.trainMovement.Tiplocs);
                     trainTitleModel.to(endTiploc.Description ? endTiploc.Description.toLowerCase() : endTiploc.Tiploc);
                     var arrivalTs = end.PublicArrival ? end.PublicArrival : end.Arrival;
                     trainTitleModel.end(moment(arrivalTs, TrainNotifier.DateTimeFormats.timeFormat).format(TrainNotifier.DateTimeFormats.shortTimeFormat));
@@ -323,22 +323,22 @@ function showTrain(berth: Berth) {
 
                     for (var i = 0; i < arrivals.length; i++) {
                         modelStops.push(new TrainNotifier.KnockoutModels.Train.ExistingLiveStop(
-                            currentTiplocs, arrivals[i]));
+                            berth.trainMovement.Tiplocs, arrivals[i]));
                     }
 
                     for (var i = 0; i < departures.length; i++) {
                         var departure = departures[i];
                         var setDept = false;
                         for (var j = 0; j < modelStops.length; j++) {
-                            if (modelStops[j].validDeparture(departure.TiplocStanoxCode, currentTiplocs)) {
-                                modelStops[j].updateExistingDeparture(departure, currentTiplocs);
+                            if (modelStops[j].validDeparture(departure.TiplocStanoxCode, berth.trainMovement.Tiplocs)) {
+                                modelStops[j].updateExistingDeparture(departure, berth.trainMovement.Tiplocs);
                                 setDept = true;
                                 break;
                             }
                         }
                         if (!setDept) {
                             modelStops.push(new TrainNotifier.KnockoutModels.Train.ExistingLiveStop(
-                                currentTiplocs, null, departure));
+                                berth.trainMovement.Tiplocs, null, departure));
                         }
                     }
                     for (var i = 0; i < modelStops.length; i++) {
@@ -368,7 +368,7 @@ function showTrain(berth: Berth) {
                 }
             }
 
-            currentTrainDetails.updateFromTrainMovement(movement, currentTiplocs, berth.trainMovementDate);
+            currentTrainDetails.updateFromTrainMovement(movement, berth.trainMovement.Tiplocs, berth.trainMovementDate);
         }
     } else {
         $("#no-results-row").show();
