@@ -275,11 +275,21 @@ interface IStationTiploc extends ITiploc {
     Lon: number;
 }
 
-interface IBerthContents {
+interface BerthContents {
     // timestamp
     m_Item1: string;
     // contents
     m_Item2: string;
+    m_Item3: BerthTrainDetails;
+}
+
+interface BerthTrainDetails {
+    // guid
+    Id: string;
+    // timestamp
+    OriginDepartTimestamp: string;
+    // uid
+    TrainUid: string;
 }
 
 module TrainNotifier {
